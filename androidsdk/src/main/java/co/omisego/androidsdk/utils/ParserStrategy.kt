@@ -1,5 +1,7 @@
 package co.omisego.androidsdk.utils
 
+import co.omisego.androidsdk.models.Balance
+import co.omisego.androidsdk.models.MintedToken
 import co.omisego.androidsdk.models.User
 import org.json.JSONArray
 import org.json.JSONObject
@@ -23,6 +25,29 @@ object ParseStrategy {
                 data.getString("username"),
                 parseJSONObject(data.getJSONObject("metadata"))
         )
+    }
+
+    val LIST_BALANCES: (String) -> List<Balance> = {
+        val jsonObject = JSONObject(it)
+        val data = jsonObject.getJSONObject("data").getJSONArray("data")
+        val listBalances = mutableListOf<Balance>()
+        for (index in 0 until data.length()) {
+            val balance = data.getJSONObject(index)
+            val mint = balance.getJSONObject("minted_token")
+            val mintedToken = MintedToken(
+                    mint.getString("symbol"),
+                    mint.getString("name"),
+                    mint.getDouble("subunit_to_unit")
+            )
+            val balanceObject = Balance(
+                    balance.getString("address"),
+                    balance.getDouble("amount"),
+                    mintedToken
+            )
+            listBalances.add(balanceObject)
+        }
+
+        listBalances.toList()
     }
 
     private fun parseJSONObject(json: JSONObject): HashMap<String, Any> {

@@ -2,6 +2,7 @@ package co.omisego.androidsdk.utils
 
 import co.omisego.androidsdk.extensions.getAsArray
 import co.omisego.androidsdk.extensions.getAsHashMap
+import co.omisego.androidsdk.models.Balance
 import co.omisego.androidsdk.models.User
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
@@ -21,6 +22,7 @@ import java.io.File
 
 class ParseStrategyTest {
     private lateinit var userFile: File
+    private lateinit var listBalancesFile: File
 
     @Rule
     @JvmField
@@ -29,9 +31,13 @@ class ParseStrategyTest {
 
     @Before
     fun setup() {
-        val resourceURL = javaClass.classLoader.getResource("user.me-post.json")
-        userFile = File(resourceURL.path)
+        val resourceUserURL = javaClass.classLoader.getResource("user.me-post.json")
+        userFile = File(resourceUserURL.path)
         userFile shouldNotBe null
+
+        val resourceListBalancesURL = javaClass.classLoader.getResource("me.list_balances-post.json")
+        listBalancesFile = File(resourceListBalancesURL.path)
+        listBalancesFile shouldNotBe null
     }
 
     @Test
@@ -97,4 +103,25 @@ class ParseStrategyTest {
         "test" shouldEqual user.metaData.getAsArray("object")
     }
 
+    @Test
+    fun `parse list balances correctly should success`() {
+        // Arrange
+        val listBalanceJson = listBalancesFile.readText()
+
+        // Action
+        val listBalances: List<Balance> = Serializer(ParseStrategy.LIST_BALANCES).serialize(listBalanceJson)
+
+        // Assert
+        listBalances[0].mintedToken.symbol shouldEqual "MNT"
+        listBalances[0].mintedToken.name shouldEqual "Mint"
+        listBalances[0].mintedToken.subUnitToUnit shouldEqual 100000.0
+        listBalances[0].address shouldEqual "my_mnt_address"
+        listBalances[0].amount shouldEqual 10.0
+
+        listBalances[1].mintedToken.symbol shouldEqual "OMG"
+        listBalances[1].mintedToken.name shouldEqual "OmiseGO"
+        listBalances[1].mintedToken.subUnitToUnit shouldEqual 100000000.0
+        listBalances[1].address shouldEqual "my_omg_address"
+        listBalances[1].amount shouldEqual 52.0
+    }
 }
