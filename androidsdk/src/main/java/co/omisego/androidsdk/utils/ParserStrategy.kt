@@ -2,6 +2,7 @@ package co.omisego.androidsdk.utils
 
 import co.omisego.androidsdk.models.Balance
 import co.omisego.androidsdk.models.MintedToken
+import co.omisego.androidsdk.models.Setting
 import co.omisego.androidsdk.models.User
 import org.json.JSONArray
 import org.json.JSONObject
@@ -48,6 +49,20 @@ object ParseStrategy {
         }
 
         listBalances.toList()
+    }
+
+    val SETTING: (String) -> Setting = {
+        val jsonObject = JSONObject(it)
+        val data = jsonObject.getJSONObject("data").getJSONArray("minted_tokens")
+        val listMintedTokens = (0 until data.length()).map {
+            MintedToken(
+                    data.getJSONObject(it).getString("symbol"),
+                    data.getJSONObject(it).getString("name"),
+                    data.getJSONObject(it).getDouble("subunit_to_unit")
+            )
+        }
+
+        Setting(listMintedTokens)
     }
 
     private fun parseJSONObject(json: JSONObject): HashMap<String, Any> {

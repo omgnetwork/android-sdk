@@ -3,6 +3,7 @@ package co.omisego.androidsdk.utils
 import co.omisego.androidsdk.extensions.getAsArray
 import co.omisego.androidsdk.extensions.getAsHashMap
 import co.omisego.androidsdk.models.Balance
+import co.omisego.androidsdk.models.Setting
 import co.omisego.androidsdk.models.User
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
@@ -23,6 +24,7 @@ import java.io.File
 class ParseStrategyTest {
     private lateinit var userFile: File
     private lateinit var listBalancesFile: File
+    private lateinit var settingFile: File
 
     @Rule
     @JvmField
@@ -38,6 +40,10 @@ class ParseStrategyTest {
         val resourceListBalancesURL = javaClass.classLoader.getResource("me.list_balances-post.json")
         listBalancesFile = File(resourceListBalancesURL.path)
         listBalancesFile shouldNotBe null
+
+        val resourceSettingURL = javaClass.classLoader.getResource("me.get_settings-post.json")
+        settingFile = File(resourceSettingURL.path)
+        settingFile shouldNotBe null
     }
 
     @Test
@@ -124,4 +130,25 @@ class ParseStrategyTest {
         listBalances[1].address shouldEqual "my_omg_address"
         listBalances[1].amount shouldEqual 52.0
     }
+
+    @Test
+    fun `parse setting correctly should success`() {
+        // Arrange
+        val settingJson = settingFile.readText()
+
+        // Action
+        val setting: Setting = Serializer(ParseStrategy.SETTING).serialize(settingJson)
+
+        // Assert
+        setting.mintedTokens.size shouldEqual 2
+
+        setting.mintedTokens[0].symbol shouldEqual "MNT"
+        setting.mintedTokens[0].name shouldEqual "Mint"
+        setting.mintedTokens[0].subUnitToUnit shouldEqual 100000.0
+
+        setting.mintedTokens[1].symbol shouldEqual "OMG"
+        setting.mintedTokens[1].name shouldEqual "OmiseGO"
+        setting.mintedTokens[1].subUnitToUnit shouldEqual 100000000.0
+    }
+
 }
