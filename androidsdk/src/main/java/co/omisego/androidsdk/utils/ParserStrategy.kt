@@ -1,9 +1,6 @@
 package co.omisego.androidsdk.utils
 
-import co.omisego.androidsdk.models.Balance
-import co.omisego.androidsdk.models.MintedToken
-import co.omisego.androidsdk.models.Setting
-import co.omisego.androidsdk.models.User
+import co.omisego.androidsdk.models.*
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -16,6 +13,15 @@ import org.json.JSONObject
  */
 
 object ParseStrategy {
+    val API_ERROR: (String) -> ApiError = {
+        val jsonObject = JSONObject(it)
+        val errorObject = jsonObject.getJSONObject("data")
+        ApiError(
+                errorObject.getString("code"),
+                errorObject.getString("description")
+        )
+    }
+
     val USER: (String) -> User = {
         val jsonObject = JSONObject(it)
         val data = jsonObject.getJSONObject("data")

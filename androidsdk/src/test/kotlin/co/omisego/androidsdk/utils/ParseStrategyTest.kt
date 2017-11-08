@@ -2,6 +2,7 @@ package co.omisego.androidsdk.utils
 
 import co.omisego.androidsdk.extensions.getAsArray
 import co.omisego.androidsdk.extensions.getAsHashMap
+import co.omisego.androidsdk.models.ApiError
 import co.omisego.androidsdk.models.Balance
 import co.omisego.androidsdk.models.Setting
 import co.omisego.androidsdk.models.User
@@ -25,6 +26,7 @@ class ParseStrategyTest {
     private lateinit var userFile: File
     private lateinit var listBalancesFile: File
     private lateinit var settingFile: File
+    private lateinit var errorFile: File
 
     @Rule
     @JvmField
@@ -44,6 +46,10 @@ class ParseStrategyTest {
         val resourceSettingURL = javaClass.classLoader.getResource("me.get_settings-post.json")
         settingFile = File(resourceSettingURL.path)
         settingFile shouldNotBe null
+
+        val resourceErrorURL = javaClass.classLoader.getResource("dummy.failure-post.json")
+        errorFile = File(resourceErrorURL.path)
+        errorFile shouldNotBe null
     }
 
     @Test
@@ -149,6 +155,20 @@ class ParseStrategyTest {
         setting.mintedTokens[1].symbol shouldEqual "OMG"
         setting.mintedTokens[1].name shouldEqual "OmiseGO"
         setting.mintedTokens[1].subUnitToUnit shouldEqual 100000000.0
+    }
+
+
+    @Test
+    fun `parse error response`() {
+        // Arrange
+        val errorJson = errorFile.readText()
+
+        // Action
+        val error: ApiError = Serializer(ParseStrategy.API_ERROR).serialize(errorJson)
+
+        // Assert
+        error.code shouldEqual "error_code"
+        error.description shouldEqual "error_message"
     }
 
 }
