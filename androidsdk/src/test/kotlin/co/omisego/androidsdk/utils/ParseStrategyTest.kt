@@ -3,6 +3,10 @@ package co.omisego.androidsdk.utils
 import co.omisego.androidsdk.extensions.getAsArray
 import co.omisego.androidsdk.extensions.getAsHashMap
 import co.omisego.androidsdk.models.*
+import co.omisego.androidsdk.models.ApiError
+import co.omisego.androidsdk.models.Balance
+import co.omisego.androidsdk.models.Setting
+import co.omisego.androidsdk.models.User
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
 import org.junit.Before
