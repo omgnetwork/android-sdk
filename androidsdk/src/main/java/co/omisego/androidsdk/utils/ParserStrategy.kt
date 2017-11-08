@@ -13,6 +13,11 @@ import org.json.JSONObject
  */
 
 object ParseStrategy {
+    val RESPONSE: (String) -> Response = {
+        val jsonObject = JSONObject(it)
+        Response(jsonObject.getString("version"), jsonObject.getBoolean("success"), JSONObject(it))
+    }
+
     val API_ERROR: (String) -> ApiError = {
         val jsonObject = JSONObject(it)
         val errorObject = jsonObject.getJSONObject("data")

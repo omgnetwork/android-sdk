@@ -2,10 +2,7 @@ package co.omisego.androidsdk.utils
 
 import co.omisego.androidsdk.extensions.getAsArray
 import co.omisego.androidsdk.extensions.getAsHashMap
-import co.omisego.androidsdk.models.ApiError
-import co.omisego.androidsdk.models.Balance
-import co.omisego.androidsdk.models.Setting
-import co.omisego.androidsdk.models.User
+import co.omisego.androidsdk.models.*
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
 import org.junit.Before
@@ -171,4 +168,83 @@ class ParseStrategyTest {
         error.description shouldEqual "error_message"
     }
 
+    @Test
+    fun `parse response to get version, success, and setting object successfully`() {
+        // Arrange
+        val settingJson = settingFile.readText()
+
+        // Action
+        val responseSetting: Response = Serializer(ParseStrategy.RESPONSE).serialize(settingJson)
+
+        // Assert
+        responseSetting.version shouldEqual "1"
+        responseSetting.success shouldEqual true
+
+        /* Test parse data object */
+        // Arrange
+        val responseSettingJson = responseSetting.data.toString()
+
+        val originalSettingJson = settingFile.readText()
+
+        // Action
+        val setting: Setting = Serializer(ParseStrategy.SETTING).serialize(responseSettingJson)
+
+        val expectedSetting = Serializer(ParseStrategy.SETTING).serialize(originalSettingJson)
+
+        // Assert
+        setting shouldEqual expectedSetting
+    }
+
+    @Test
+    fun `parse response to get version, success, and list balance object successfully`() {
+        // Arrange
+        val listBalancesJson = listBalancesFile.readText()
+
+        // Action
+        val responseListBalance: Response = Serializer(ParseStrategy.RESPONSE).serialize(listBalancesJson)
+
+        // Assert
+        responseListBalance.version shouldEqual "1"
+        responseListBalance.success shouldEqual true
+
+        /* Test parse list balance object */
+
+        // Arrange
+        val responseListBalanceJson = responseListBalance.data.toString()
+
+        // Action
+        val originalListBalanceJson = listBalancesFile.readText()
+        val listBalance: List<Balance> = Serializer(ParseStrategy.LIST_BALANCES).serialize(responseListBalanceJson)
+        val expectedListBalance = Serializer(ParseStrategy.LIST_BALANCES).serialize(originalListBalanceJson)
+
+        // Assert
+        listBalance shouldEqual expectedListBalance
+    }
+
+    @Test
+    fun `parse response to get version, success, and user object successfully`() {
+
+        // Arrange
+        val userJson = userFile.readText()
+
+        // Action
+        val responseUser: Response = Serializer(ParseStrategy.RESPONSE).serialize(userJson)
+
+        // Assert
+        responseUser.version shouldEqual "1"
+        responseUser.success shouldEqual true
+
+        /* Test parse user object */
+
+        // Arrange
+        val responseUserJson = responseUser.data.toString()
+
+        // Action
+        val originalUserJson = userFile.readText()
+        val user: User = Serializer(ParseStrategy.USER).serialize(responseUserJson)
+        val expectedUser = Serializer(ParseStrategy.USER).serialize(originalUserJson)
+
+        // Assert
+        user shouldEqual expectedUser
+    }
 }
