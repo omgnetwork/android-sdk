@@ -10,4 +10,4 @@ import org.json.JSONObject
  * Copyright © 2017 OmiseGO. All rights reserved.
  */
 
-data class Response(val version: String, val success: Boolean, val data: JSONObject)
+data class General(val version: String, val success: Boolean, val data: JSONObject)

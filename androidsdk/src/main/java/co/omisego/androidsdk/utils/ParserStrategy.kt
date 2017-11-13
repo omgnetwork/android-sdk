@@ -13,9 +13,9 @@ import org.json.JSONObject
  */
 
 object ParseStrategy {
-    val RESPONSE: (String) -> Response = {
+    val GENERAL: (String) -> General = {
         val jsonObject = JSONObject(it)
-        Response(jsonObject.getString("version"), jsonObject.getBoolean("success"), JSONObject(it))
+        General(jsonObject.getString("version"), jsonObject.getBoolean("success"), JSONObject(it))
     }
 
     val API_ERROR: (String) -> ApiError = {

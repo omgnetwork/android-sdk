@@ -178,7 +178,7 @@ class ParseStrategyTest {
         val settingJson = settingFile.readText()
 
         // Action
-        val responseSetting: Response = Serializer(ParseStrategy.RESPONSE).serialize(settingJson)
+        val responseSetting: General = Serializer(ParseStrategy.GENERAL).serialize(settingJson)
 
         // Assert
         responseSetting.version shouldEqual "1"
@@ -205,7 +205,7 @@ class ParseStrategyTest {
         val listBalancesJson = listBalancesFile.readText()
 
         // Action
-        val responseListBalance: Response = Serializer(ParseStrategy.RESPONSE).serialize(listBalancesJson)
+        val responseListBalance: General = Serializer(ParseStrategy.GENERAL).serialize(listBalancesJson)
 
         // Assert
         responseListBalance.version shouldEqual "1"
@@ -232,7 +232,7 @@ class ParseStrategyTest {
         val userJson = userFile.readText()
 
         // Action
-        val responseUser: Response = Serializer(ParseStrategy.RESPONSE).serialize(userJson)
+        val responseUser: General = Serializer(ParseStrategy.GENERAL).serialize(userJson)
 
         // Assert
         responseUser.version shouldEqual "1"
