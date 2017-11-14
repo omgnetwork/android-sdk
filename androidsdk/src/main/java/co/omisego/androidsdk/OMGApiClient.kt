@@ -12,6 +12,7 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import org.json.JSONObject
 import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.experimental.EmptyCoroutineContext
 
 
 /**
@@ -51,8 +52,18 @@ object OMGApiClient : KuberaAPI {
 
     }
 
-    override fun listBalances() {
 
+    override fun listBalances(callback: Callback<List<Address>>) {
+        async(main) {
+            process("me.list_balances",
+                    fail = {
+                        callback.fail(response = provideCommonFailure(it))
+                    },
+                    success = {
+                        callback.success(response = provideCommonSuccess(it, ParseStrategy.LIST_BALANCES))
+                    }
+            )
+        }
     }
 
     override fun getSettings(callback: Callback<Setting>) {

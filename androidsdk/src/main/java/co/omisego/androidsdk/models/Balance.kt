@@ -8,4 +8,4 @@ package co.omisego.androidsdk.models
  * Copyright © 2017 OmiseGO. All rights reserved.
  */
 
-data class Balance(val address: String, val amount: Double, val mintedToken: MintedToken)
+data class Balance(val amount: Double, val mintedToken: MintedToken)

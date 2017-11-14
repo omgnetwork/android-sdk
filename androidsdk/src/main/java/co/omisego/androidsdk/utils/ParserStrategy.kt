@@ -39,27 +39,33 @@ object ParseStrategy {
         )
     }
 
-    val LIST_BALANCES: (String) -> List<Balance> = {
+    val LIST_BALANCES: (String) -> List<Address> = {
         val jsonObject = JSONObject(it)
         val data = jsonObject.getJSONObject("data").getJSONArray("data")
-        val listBalances = mutableListOf<Balance>()
+        val listAddress = mutableListOf<Address>()
         for (index in 0 until data.length()) {
-            val balance = data.getJSONObject(index)
-            val mint = balance.getJSONObject("minted_token")
-            val mintedToken = MintedToken(
-                    mint.getString("symbol"),
-                    mint.getString("name"),
-                    mint.getDouble("subunit_to_unit")
-            )
-            val balanceObject = Balance(
-                    balance.getString("address"),
-                    balance.getDouble("amount"),
-                    mintedToken
-            )
-            listBalances.add(balanceObject)
+            val balances = data.getJSONObject(index).getJSONArray("balances")
+            val listBalances = mutableListOf<Balance>()
+
+            // Add balance to list
+            for (balanceIndex in 0 until balances.length()) {
+                val token = balances.getJSONObject(balanceIndex).getJSONObject("minted_token")
+                val mintedToken = MintedToken(
+                        token.getString("symbol"),
+                        token.getString("name"),
+                        token.getDouble("subunit_to_unit")
+                )
+
+                val balance = Balance(balances.getJSONObject(balanceIndex).getDouble("amount"), mintedToken)
+                listBalances.add(balance)
+            }
+
+            // Add address to the list
+            val address = Address(data.getJSONObject(index).getString("address"), listBalances)
+            listAddress.add(address)
         }
 
-        listBalances.toList()
+        listAddress.toList()
     }
 
     val SETTING: (String) -> Setting = {

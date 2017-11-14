@@ -1,9 +1,6 @@
 package co.omisego.androidsdk
 
-import co.omisego.androidsdk.models.ApiError
-import co.omisego.androidsdk.models.Response
-import co.omisego.androidsdk.models.Setting
-import co.omisego.androidsdk.models.User
+import co.omisego.androidsdk.models.*
 import co.omisego.androidsdk.utils.APIErrorCode
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.runBlocking
@@ -13,6 +10,7 @@ import org.amshove.kluent.shouldNotBeInstanceOf
 import org.junit.Before
 import org.junit.Test
 import kotlin.coroutines.experimental.EmptyCoroutineContext
+import kotlin.test.assertTrue
 
 /**
  * OmiseGO
@@ -96,8 +94,69 @@ class OMGApiClientTest {
     }
 
     @Test
-    fun listBalances() {
+    fun `list balances success`() = runBlocking {
+        // Arrange
+        var actualResponse: Response<Any>? = null
 
+        // Just don't care about thread here. Because in android, will work properly.
+        // Action
+        OMGApiClient.listBalances(object : Callback<List<Address>> {
+            override fun success(response: Response<List<Address>>) {
+                actualResponse = response
+            }
+
+            override fun fail(response: Response<ApiError>) {
+                actualResponse = response
+            }
+        })
+
+        delay(3000)
+
+        // Assert
+        actualResponse shouldNotBe null
+
+        val model = actualResponse!!.data
+        assertTrue(model is List<*>)
+
+        val listAddress = model as List<Address>
+        listAddress.size shouldEqual 1
+        listAddress[0].balances.size shouldEqual 1
+        listAddress[0].balances[0].amount shouldEqual 10000.0
+        listAddress[0].balances[0].mintedToken.symbol shouldEqual "OMG"
+        listAddress[0].balances[0].mintedToken.name shouldEqual "OmiseGO"
+        listAddress[0].balances[0].mintedToken.subUnitToUnit shouldEqual 100.0
+    }
+
+    @Test
+    fun `list balances should fail because wrong token given`() = runBlocking {
+        // Arrange
+        var actualResponse: Response<Any>? = null
+        OMGApiClient.init("wrong token", EmptyCoroutineContext)
+
+        // Just don't care about thread here. Because in android, will work properly.
+        // Action
+        OMGApiClient.listBalances(object : Callback<List<Address>> {
+            override fun success(response: Response<List<Address>>) {
+                actualResponse = response
+            }
+
+            override fun fail(response: Response<ApiError>) {
+                actualResponse = response
+            }
+        })
+
+        delay(3000)
+
+        // Assert
+        actualResponse shouldNotBe null
+
+        println(actualResponse)
+
+        val model = actualResponse!!.data
+        assertTrue(model !is List<*>)
+
+        val setting = model as ApiError
+        setting.code shouldEqual APIErrorCode.CLIENT_INVALID_AUTH_SCHEME
     }
 
     @Test

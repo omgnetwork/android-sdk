@@ -1,6 +1,8 @@
 package co.omisego.androidsdk.api
 
 import co.omisego.androidsdk.Callback
+import co.omisego.androidsdk.models.Address
+import co.omisego.androidsdk.models.Balance
 import co.omisego.androidsdk.models.Setting
 import co.omisego.androidsdk.models.User
 
@@ -18,6 +20,6 @@ interface KuberaAPI {
 
     fun getCurrentUser(callback: Callback<User>)
     fun logout()
-    fun listBalances()
+    fun listBalances(callback: Callback<List<Address>>)
     fun getSettings(callback: Callback<Setting>)
 }

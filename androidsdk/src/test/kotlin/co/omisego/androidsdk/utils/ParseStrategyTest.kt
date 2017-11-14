@@ -3,10 +3,6 @@ package co.omisego.androidsdk.utils
 import co.omisego.androidsdk.extensions.getAsArray
 import co.omisego.androidsdk.extensions.getAsHashMap
 import co.omisego.androidsdk.models.*
-import co.omisego.androidsdk.models.ApiError
-import co.omisego.androidsdk.models.Balance
-import co.omisego.androidsdk.models.Setting
-import co.omisego.androidsdk.models.User
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
 import org.junit.Before
@@ -122,20 +118,16 @@ class ParseStrategyTest {
         val listBalanceJson = listBalancesFile.readText()
 
         // Action
-        val listBalances: List<Balance> = Serializer(ParseStrategy.LIST_BALANCES).serialize(listBalanceJson)
+        val listBalances: List<Address> = Serializer(ParseStrategy.LIST_BALANCES).serialize(listBalanceJson)
 
         // Assert
-        listBalances[0].mintedToken.symbol shouldEqual "MNT"
-        listBalances[0].mintedToken.name shouldEqual "Mint"
-        listBalances[0].mintedToken.subUnitToUnit shouldEqual 100000.0
-        listBalances[0].address shouldEqual "my_mnt_address"
-        listBalances[0].amount shouldEqual 10.0
-
-        listBalances[1].mintedToken.symbol shouldEqual "OMG"
-        listBalances[1].mintedToken.name shouldEqual "OmiseGO"
-        listBalances[1].mintedToken.subUnitToUnit shouldEqual 100000000.0
-        listBalances[1].address shouldEqual "my_omg_address"
-        listBalances[1].amount shouldEqual 52.0
+        listBalances.size shouldEqual 1
+        listBalances[0].balances.size shouldEqual 1
+        listBalances[0].address shouldEqual "b4ebb868-b542-455d-98b2-5a3ad347e567"
+        listBalances[0].balances[0].mintedToken.symbol shouldEqual "OMG"
+        listBalances[0].balances[0].mintedToken.name shouldEqual "OmiseGO"
+        listBalances[0].balances[0].mintedToken.subUnitToUnit shouldEqual 100.0
+        listBalances[0].balances[0].amount shouldEqual 110200.0
     }
 
     @Test
@@ -218,7 +210,7 @@ class ParseStrategyTest {
 
         // Action
         val originalListBalanceJson = listBalancesFile.readText()
-        val listBalance: List<Balance> = Serializer(ParseStrategy.LIST_BALANCES).serialize(responseListBalanceJson)
+        val listBalance: List<Address> = Serializer(ParseStrategy.LIST_BALANCES).serialize(responseListBalanceJson)
         val expectedListBalance = Serializer(ParseStrategy.LIST_BALANCES).serialize(originalListBalanceJson)
 
         // Assert
