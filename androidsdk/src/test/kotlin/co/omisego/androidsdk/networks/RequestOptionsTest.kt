@@ -27,7 +27,12 @@ class RequestOptionsTest {
         val expectedHeaders = hashMapOf("Content-Type" to "application/json", "Authorization" to "key")
 
         // Action
-        requestOptions.setHeaders("Content-Type" to "application/json", "Authorization" to "key")
+        requestOptions.apply {
+            setHeaders(
+                    "Content-Type" to "application/json",
+                    "Authorization" to "key"
+            )
+        }
 
         // Assert
         requestOptions.getHeader() shouldEqual expectedHeaders
@@ -42,7 +47,13 @@ class RequestOptionsTest {
                 "}")
 
         // Action
-        requestOptions.setBody(hashMapOf("key_1" to "value", "key_2" to 3))
+        requestOptions.apply {
+            setBody(
+                    "key_1" to "value",
+                    "key_2" to 3
+            )
+        }
+
 
         // Assert
         requestOptions.getPostBody() shouldEqual expectedJson.toString()

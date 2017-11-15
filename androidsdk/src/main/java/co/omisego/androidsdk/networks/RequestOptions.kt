@@ -14,11 +14,11 @@ class RequestOptions {
     private val headers: MutableMap<String, String> by lazy { hashMapOf<String, String>() }
     private val body: JSONObject by lazy { JSONObject() }
 
-    fun setHeaders(vararg pair: Pair<String, String>) {
-        headers.putAll(pair)
+    fun setHeaders(vararg pairs: Pair<String, String>) {
+        headers.putAll(pairs)
     }
 
-    fun setBody(map: HashMap<String, Any>) {
+    fun setBody(vararg map: Pair<String, Any>) {
         for ((k, v) in map) {
             body.put(k, v)
         }

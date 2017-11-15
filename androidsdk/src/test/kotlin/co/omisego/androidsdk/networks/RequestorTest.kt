@@ -35,7 +35,7 @@ class RequestorTest {
     fun `network request headers and body should be matched with the requestOptions`() = runBlocking {
         // Arrange
         val requestOptions = RequestOptions().apply {
-            setBody(mockBody)
+            setBody(*mockBody.toList().toTypedArray())
             setHeaders(*mockHeaders)
         }
         val expectedBody = MockHttpBin(mockBody["name"] as String, mockBody["amount"] as Double, mockBody["done"] as Boolean)
