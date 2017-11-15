@@ -1,10 +1,7 @@
 package co.omisego.androidsdk
 
 import co.omisego.androidsdk.api.KuberaAPI
-import co.omisego.androidsdk.models.ApiError
-import co.omisego.androidsdk.models.General
-import co.omisego.androidsdk.models.Response
-import co.omisego.androidsdk.models.User
+import co.omisego.androidsdk.models.*
 import co.omisego.androidsdk.networks.RequestOptions
 import co.omisego.androidsdk.networks.Requestor
 import co.omisego.androidsdk.utils.APIErrorCode
@@ -39,7 +36,7 @@ object OMGApiClient : KuberaAPI {
 
     override fun getCurrentUser(callback: Callback<User>) {
         async(main) {
-            process(
+            process("me.get",
                     fail = {
                         callback.fail(response = provideCommonFailure(it))
                     },
@@ -58,17 +55,26 @@ object OMGApiClient : KuberaAPI {
 
     }
 
-    override fun getSettings() {
-
+    override fun getSettings(callback: Callback<Setting>) {
+        async(main) {
+            process("me.get_settings",
+                    fail = {
+                        callback.fail(response = provideCommonFailure(it))
+                    },
+                    success = {
+                        callback.success(response = provideCommonSuccess(it, ParseStrategy.SETTING))
+                    }
+            )
+        }
     }
 
-    private fun process(fail: (general: General) -> Unit, success: (general: General) -> Unit) = runBlocking {
+    private fun process(endpoint: String, fail: (general: General) -> Unit, success: (general: General) -> Unit) = runBlocking {
         checkIfAuthorizationTokenSet(authorization)?.let { error ->
             fail(error)
             return@runBlocking
         }
 
-        val job = Requestor.asyncRequest(BASE_URL + "me.get", RequestOptions().apply {
+        val job = Requestor.asyncRequest(BASE_URL + endpoint, RequestOptions().apply {
             setHeaders("Authorization" to authorization, "Accept" to "application/vnd.omisego.v1+json")
         })
 

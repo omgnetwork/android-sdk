@@ -2,6 +2,7 @@ package co.omisego.androidsdk
 
 import co.omisego.androidsdk.models.ApiError
 import co.omisego.androidsdk.models.Response
+import co.omisego.androidsdk.models.Setting
 import co.omisego.androidsdk.models.User
 import co.omisego.androidsdk.utils.APIErrorCode
 import kotlinx.coroutines.experimental.delay
@@ -100,7 +101,60 @@ class OMGApiClientTest {
     }
 
     @Test
-    fun getSettings() {
+    fun `get settings success`() = runBlocking {
+        // Arrange
+        var actualResponse: Response<Any>? = null
 
+        // Just don't care about thread here. Because in android, will work properly.
+        // Action
+        OMGApiClient.getSettings(object : Callback<Setting> {
+            override fun success(response: Response<Setting>) {
+                actualResponse = response
+            }
+
+            override fun fail(response: Response<ApiError>) {
+                actualResponse = response
+            }
+        })
+
+        delay(3000)
+
+        // Assert
+        actualResponse shouldNotBe null
+        val model = actualResponse!!.data
+        model shouldNotBeInstanceOf ApiError::class
+
+        val setting = model as Setting
+        setting.mintedTokens.size shouldEqual 2
     }
+
+    @Test
+    fun `get settings failed because invalid auth scheme`() = runBlocking {
+        // Arrange
+        var actualResponse: Response<Any>? = null
+        OMGApiClient.init("wrong token", EmptyCoroutineContext)
+
+        // Just don't care about thread here. Because in android, will work properly.
+        // Action
+        OMGApiClient.getSettings(object : Callback<Setting> {
+            override fun success(response: Response<Setting>) {
+                actualResponse = response
+            }
+
+            override fun fail(response: Response<ApiError>) {
+                actualResponse = response
+            }
+        })
+
+        delay(3000)
+
+        // Assert
+        actualResponse shouldNotBe null
+        val model = actualResponse!!.data
+        model shouldNotBeInstanceOf Setting::class
+
+        val setting = model as ApiError
+        setting.code shouldEqual APIErrorCode.CLIENT_INVALID_AUTH_SCHEME
+    }
+
 }
