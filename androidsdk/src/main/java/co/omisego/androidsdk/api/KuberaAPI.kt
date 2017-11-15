@@ -1,5 +1,8 @@
 package co.omisego.androidsdk.api
 
+import co.omisego.androidsdk.Callback
+import co.omisego.androidsdk.models.User
+
 
 /**
  * OmiseGO
@@ -12,7 +15,7 @@ interface KuberaAPI {
     val BASE_URL: String
         get() = "https://kubera.omisego.io/"
 
-    fun getCurrentUser()
+    fun getCurrentUser(callback: Callback<User>)
     fun logout()
     fun listBalances()
     fun getSettings()
