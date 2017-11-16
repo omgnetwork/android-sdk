@@ -12,7 +12,6 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import org.json.JSONObject
 import kotlin.coroutines.experimental.CoroutineContext
-import kotlin.coroutines.experimental.EmptyCoroutineContext
 
 
 /**
@@ -23,7 +22,7 @@ import kotlin.coroutines.experimental.EmptyCoroutineContext
  */
 
 object OMGApiClient : KuberaAPI {
-    private var authorization: String = ""
+    private var authorization: String? = null
 
 
     @JvmOverloads
@@ -48,8 +47,20 @@ object OMGApiClient : KuberaAPI {
         }
     }
 
-    override fun logout() {
-
+    override fun logout(callback: Callback<String>) {
+        val empty: (String) -> String = { "" }
+        async(main) {
+            process("logout",
+                    fail = {
+                        callback.fail(response = provideCommonFailure(it))
+                    },
+                    success = {
+                        // Invalidate token
+                        authorization = null
+                        callback.success(response = provideCommonSuccess(it, empty))
+                    }
+            )
+        }
     }
 
 
@@ -86,7 +97,7 @@ object OMGApiClient : KuberaAPI {
         }
 
         val job = Requestor.asyncRequest(BASE_URL + endpoint, RequestOptions().apply {
-            setHeaders("Authorization" to authorization, "Accept" to "application/vnd.omisego.v1+json")
+            setHeaders("Authorization" to (authorization ?: ""), "Accept" to "application/vnd.omisego.v1+json")
         })
 
         try {
@@ -115,8 +126,8 @@ object OMGApiClient : KuberaAPI {
                 Serializer(ParseStrategy.API_ERROR).serialize(general.data.toString()))
     }
 
-    private fun checkIfAuthorizationTokenSet(authorizationToken: String): General? {
-        if (authorizationToken.isEmpty()) {
+    private fun checkIfAuthorizationTokenSet(authorizationToken: String?): General? {
+        if (authorizationToken == null || authorizationToken.isEmpty()) {
             val failJsonObject = JSONObject()
             failJsonObject.put("code", APIErrorCode.CLIENT_INVALID_AUTH_SCHEME)
             failJsonObject.put("description", "OMGApiClient has not been initialized with the correct authorization token. Please call init(authorizationToken) first.")

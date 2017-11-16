@@ -19,7 +19,7 @@ interface KuberaAPI {
         get() = "https://kubera.omisego.io/"
 
     fun getCurrentUser(callback: Callback<User>)
-    fun logout()
+    fun logout(callback: Callback<String>)
     fun listBalances(callback: Callback<List<Address>>)
     fun getSettings(callback: Callback<Setting>)
 }

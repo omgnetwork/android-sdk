@@ -8,3 +8,4 @@
 /captures
 .externalNativeBuild
 /app/
+/androidsdk/src/test/resources/secret.json
