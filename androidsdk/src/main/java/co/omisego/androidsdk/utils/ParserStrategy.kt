@@ -2,6 +2,7 @@ package co.omisego.androidsdk.utils
 
 import co.omisego.androidsdk.models.*
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 
 
@@ -31,11 +32,17 @@ object ParseStrategy {
         val jsonObject = JSONObject(it)
         val data = jsonObject.getJSONObject("data")
 
+        val metadata: JSONObject? = try {
+            data.getJSONObject("metadata")
+        } catch (e: JSONException) {
+            null
+        }
+
         User(
                 data.getString("id"),
                 data.getString("provider_user_id"),
                 data.getString("username"),
-                parseJSONObject(data.getJSONObject("metadata"))
+                parseJSONObject(metadata)
         )
     }
 
@@ -82,12 +89,13 @@ object ParseStrategy {
         Setting(listMintedTokens)
     }
 
-    private fun parseJSONObject(json: JSONObject): HashMap<String, Any> {
+    private fun parseJSONObject(json: JSONObject?): HashMap<String, Any>? {
+        if (json == null) return null
         val map = hashMapOf<String, Any>()
         for (key in json.keys()) {
             val value = json[key]
             when (value) {
-                is JSONObject -> map.put(key, parseJSONObject(value))
+                is JSONObject -> map.put(key, parseJSONObject(value)!!)
                 is JSONArray -> map.put(key, parseJSONArray(value))
                 else -> map.put(key, value)
             }

@@ -1,22 +1,24 @@
 package co.omisego.androidsdk
 
 import co.omisego.androidsdk.models.*
+import co.omisego.androidsdk.networks.DefaultHttpConnection
+import co.omisego.androidsdk.networks.HttpConnection
 import co.omisego.androidsdk.networks.RequestOptions
 import co.omisego.androidsdk.networks.Requestor
 import co.omisego.androidsdk.utils.APIErrorCode
 import co.omisego.androidsdk.utils.ParseStrategy
 import co.omisego.androidsdk.utils.Serializer
+import junit.framework.Assert
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.runBlocking
-import org.amshove.kluent.shouldBeInstanceOf
-import org.amshove.kluent.shouldEqual
-import org.amshove.kluent.shouldNotBe
-import org.amshove.kluent.shouldNotBeInstanceOf
+import org.amshove.kluent.*
 import org.json.JSONObject
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.junit.MockitoJUnitRunner
 import java.io.File
 import java.util.*
 import kotlin.coroutines.experimental.EmptyCoroutineContext
@@ -31,11 +33,19 @@ import kotlin.test.assertTrue
  */
 
 
+@RunWith(MockitoJUnitRunner::class)
 class OMGApiClientTest {
-    private val TEST_AUTHORIZATION_TOKEN = "OMGClient MTQ4MnFOeFBleTdBNF9ycktrQU9iNGtBT1RzRDJIb0x5c1M3ZVExWmQzWTo5WFdoSWR0a0FOTUZ4RGhBRlRVUUJTaFItakdvR2V5b0MyRjQ0ZFpmcGlJ"
+    private val TEST_AUTHORIZATION_TOKEN = "OMGClient MTQ4MnFOeFBleTdBNF9ycktrQU9iNGtBT1RzRDJIb0x5c1M3ZVExWmQzWTpVOExtQUZjbFFQWE9SV0RHcS1aLVNJNS0zQ3hKMllnMm0wRzdYaVJFNFRv"
+    private val BASE_URL: String = "https://kubera.omisego.io/"
     private var secret: File? = null
+    private lateinit var httpConnection: HttpConnection
+    private lateinit var requestor: Requestor
+
     @Before
     fun setUp() {
+        httpConnection = DefaultHttpConnection(BASE_URL)
+        requestor = Requestor(httpConnection)
+
         val resourceUserURL = javaClass.classLoader.getResource("secret.json") // This is invisible because it's stored in local ("secret").
         secret = File(resourceUserURL.path)
 
@@ -45,12 +55,12 @@ class OMGApiClientTest {
     private fun asyncLogin(): Deferred<String> {
         return async(EmptyCoroutineContext) {
             val authenticationServer = JSONObject(secret!!.readText()).getString("authenticationTokenServer")
-            val job = Requestor.asyncRequest("https://kubera.omisego.io/login", RequestOptions().apply {
+            val job = requestor.asyncRequest("login", RequestOptions().apply {
                 setHeaders("Authorization" to "OMGServer $authenticationServer",
                         "Accept" to "application/vnd.omisego.v1+json",
                         "Content-Type" to "application/vnd.omisego.v1+json")
 
-                setBody(hashMapOf("provider_user_id" to "user12345678"))
+                setBody("provider_user_id" to "user12345678")
             })
 
             val response = job.await().response
@@ -86,9 +96,6 @@ class OMGApiClientTest {
 
         val user = model as User
         user.id shouldNotBe null
-        user.metaData shouldNotBe null
-        user.providerUserId shouldNotBe null
-        user.username shouldNotBe null
     }
 
     @Test
@@ -176,6 +183,7 @@ class OMGApiClientTest {
         actualResponse?.data shouldBeInstanceOf ApiError::class
         val error = actualResponse?.data as ApiError
         error.code shouldEqual "user:access_token_expired"
+
     }
 
     @Test
@@ -203,13 +211,24 @@ class OMGApiClientTest {
         val model = actualResponse!!.data
         assertTrue(model is List<*>)
 
+
         val listAddress = model as List<Address>
         listAddress.size shouldEqual 1
-        listAddress[0].balances.size shouldEqual 2
-        listAddress[0].balances[0].amount shouldEqual 10000.0
-        listAddress[0].balances[0].mintedToken.symbol shouldEqual "OMG"
-        listAddress[0].balances[0].mintedToken.name shouldEqual "OmiseGO"
-        listAddress[0].balances[0].mintedToken.subUnitToUnit shouldEqual 100.0
+        Assert.assertTrue(listAddress[0].balances.isNotEmpty())
+
+        println(listAddress)
+
+        listAddress
+                .asSequence()
+                .flatMap { it.balances.asSequence() }
+                .forEach {
+                    with(it) {
+                        amount shouldNotBeLessThan 0.0
+                        Assert.assertTrue(!mintedToken.symbol.isEmpty())
+                        Assert.assertTrue(!mintedToken.name.isEmpty())
+                        mintedToken.subUnitToUnit shouldBeGreaterThan 0.0
+                    }
+                }
     }
 
     @Test
@@ -268,8 +287,14 @@ class OMGApiClientTest {
         val model = actualResponse!!.data
         model shouldNotBeInstanceOf ApiError::class
 
-        val setting = model as Setting
-        setting.mintedTokens.size shouldEqual 2
+        println(model.toString())
+        model shouldBeInstanceOf Setting::class
+        val listMintedToken = (model as Setting).mintedTokens
+        for (mintedToken in listMintedToken) {
+            assertTrue(mintedToken.subUnitToUnit.toString().isNotEmpty())
+            assertTrue(mintedToken.name.isNotEmpty())
+            assertTrue(mintedToken.symbol.isNotEmpty())
+        }
     }
 
     @Test
@@ -300,5 +325,4 @@ class OMGApiClientTest {
         val setting = model as ApiError
         setting.code shouldEqual APIErrorCode.CLIENT_INVALID_AUTH_SCHEME
     }
-
 }

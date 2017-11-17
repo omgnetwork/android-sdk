@@ -1,6 +1,7 @@
 
 package co.omisego.androidsdk.networks
 
+import java.io.InputStream
 import java.io.InputStreamReader
 import javax.net.ssl.HttpsURLConnection
 
@@ -13,10 +14,12 @@ import javax.net.ssl.HttpsURLConnection
  */
 
 interface HttpConnection {
-    fun provideConnection(endpoint: String): HttpsURLConnection
-    fun HttpsURLConnection.setup()
-    fun HttpsURLConnection.setHeaders(headers: Map<String, String>)
-    fun HttpsURLConnection.setPostBody(body: String)
-    fun HttpsURLConnection.request()
-    fun InputStreamReader.response(): String
+    fun setup(endpoint: String)
+    fun setHeaders(headers: Map<String, String>)
+    fun setPostBody(body: String)
+    fun request()
+    fun closeInputStream()
+    fun closeOutputStream()
+    fun response(): String
+    fun InputStreamReader?.stringify(): String?
 }

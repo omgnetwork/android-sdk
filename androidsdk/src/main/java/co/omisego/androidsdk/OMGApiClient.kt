@@ -2,6 +2,8 @@ package co.omisego.androidsdk
 
 import co.omisego.androidsdk.api.KuberaAPI
 import co.omisego.androidsdk.models.*
+import co.omisego.androidsdk.networks.DefaultHttpConnection
+import co.omisego.androidsdk.networks.HttpConnection
 import co.omisego.androidsdk.networks.RequestOptions
 import co.omisego.androidsdk.networks.Requestor
 import co.omisego.androidsdk.utils.APIErrorCode
@@ -23,7 +25,8 @@ import kotlin.coroutines.experimental.CoroutineContext
 
 object OMGApiClient : KuberaAPI {
     private var authorization: String? = null
-
+    private val httpConnection: HttpConnection by lazy { DefaultHttpConnection(BASE_URL) }
+    private val requestor: Requestor by lazy { Requestor(httpConnection) }
 
     @JvmOverloads
     fun init(authorization: String, ui: CoroutineContext = UI) {
@@ -41,6 +44,7 @@ object OMGApiClient : KuberaAPI {
                         callback.fail(response = provideCommonFailure(it))
                     },
                     success = {
+
                         callback.success(response = provideCommonSuccess(it, ParseStrategy.USER))
                     }
             )
@@ -96,7 +100,7 @@ object OMGApiClient : KuberaAPI {
             return@runBlocking
         }
 
-        val job = Requestor.asyncRequest(BASE_URL + endpoint, RequestOptions().apply {
+        val job = requestor.asyncRequest(endpoint, RequestOptions().apply {
             setHeaders("Authorization" to (authorization ?: ""), "Accept" to "application/vnd.omisego.v1+json")
         })
 

@@ -11,4 +11,4 @@ package co.omisego.androidsdk.models
 data class User(val id: String,
                 val providerUserId: String,
                 val username: String,
-                val metaData: HashMap<String, Any>)
+                val metaData: HashMap<String, Any>?)
