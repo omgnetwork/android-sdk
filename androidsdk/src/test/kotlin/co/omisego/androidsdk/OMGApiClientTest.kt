@@ -17,8 +17,6 @@ import org.amshove.kluent.*
 import org.json.JSONObject
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 import java.io.File
 import java.util.*
 import kotlin.coroutines.experimental.EmptyCoroutineContext
@@ -33,13 +31,13 @@ import kotlin.test.assertTrue
  */
 
 
-@RunWith(MockitoJUnitRunner::class)
 class OMGApiClientTest {
-    private val TEST_AUTHORIZATION_TOKEN = "OMGClient MTQ4MnFOeFBleTdBNF9ycktrQU9iNGtBT1RzRDJIb0x5c1M3ZVExWmQzWTpVOExtQUZjbFFQWE9SV0RHcS1aLVNJNS0zQ3hKMllnMm0wRzdYaVJFNFRv"
+    private val TEST_STAGING_AUTH_HEADER_TOKEN = "OMGClient MTQ4MnFOeFBleTdBNF9ycktrQU9iNGtBT1RzRDJIb0x5c1M3ZVExWmQzWTpVOExtQUZjbFFQWE9SV0RHcS1aLVNJNS0zQ3hKMllnMm0wRzdYaVJFNFRv"
     private val BASE_URL: String = "https://kubera.omisego.io/"
     private var secret: File? = null
     private lateinit var httpConnection: HttpConnection
     private lateinit var requestor: Requestor
+    private lateinit var omgApiClient: OMGApiClient
 
     @Before
     fun setUp() {
@@ -49,7 +47,10 @@ class OMGApiClientTest {
         val resourceUserURL = javaClass.classLoader.getResource("secret.json") // This is invisible because it's stored in local ("secret").
         secret = File(resourceUserURL.path)
 
-        OMGApiClient.init(TEST_AUTHORIZATION_TOKEN, EmptyCoroutineContext)
+        omgApiClient = OMGApiClient.Builder {
+            setAuthorizationToken(TEST_STAGING_AUTH_HEADER_TOKEN)
+            setCoroutineContext(EmptyCoroutineContext)
+        }.build()
     }
 
     private fun asyncLogin(): Deferred<String> {
@@ -77,7 +78,7 @@ class OMGApiClientTest {
 
         // Just don't care about thread here. Because in android, will work properly.
         // Action
-        OMGApiClient.getCurrentUser(object : Callback<User> {
+        omgApiClient.getCurrentUser(object : Callback<User> {
             override fun success(response: Response<User>) {
                 actualResponse = response
             }
@@ -102,11 +103,14 @@ class OMGApiClientTest {
     fun `get user failed because invalid auth scheme`() = runBlocking {
         // Arrange
         var actualResponse: Response<Any>? = null
-        OMGApiClient.init("wrong token", EmptyCoroutineContext)
+        omgApiClient = OMGApiClient.Builder {
+            setAuthorizationToken("wrong")
+            setCoroutineContext(EmptyCoroutineContext)
+        }.build()
 
         // Just don't care about thread here. Because in android, will work properly.
         // Action
-        OMGApiClient.getCurrentUser(object : Callback<User> {
+        omgApiClient.getCurrentUser(object : Callback<User> {
             override fun success(response: Response<User>) {
                 actualResponse = response
             }
@@ -134,23 +138,27 @@ class OMGApiClientTest {
         val secretObject = JSONObject(secret!!.readText())
 
         var actualResponse: Response<Any>? = null
+
+        // Retrieve token from login API
         val token = asyncLogin().await()
 
+        // Retrieve token from local file.
         val apiKey = secretObject.getString("apiKey")
 
         val authenticationToken = "OMGClient ${String(Base64.getEncoder().encode("$apiKey:$token".toByteArray()))}"
 
         // Action
-        OMGApiClient.init(authenticationToken, EmptyCoroutineContext)
+        omgApiClient = OMGApiClient.Builder {
+            setAuthorizationToken(authenticationToken)
+            setCoroutineContext(EmptyCoroutineContext)
+        }.build()
 
-        OMGApiClient.logout(object : Callback<String> {
+        omgApiClient.logout(object : Callback<String> {
             override fun success(response: Response<String>) {
-                println(response.toString())
                 actualResponse = response
             }
 
             override fun fail(response: Response<ApiError>) {
-                println(response.toString())
                 actualResponse = response
             }
         })
@@ -162,15 +170,17 @@ class OMGApiClientTest {
         actualResponse?.success shouldEqual true
 
         // Try to use the same token
-        OMGApiClient.init(authenticationToken, EmptyCoroutineContext)
-        OMGApiClient.logout(object : Callback<String> {
+        omgApiClient = OMGApiClient.Builder {
+            setAuthorizationToken(authenticationToken)
+            setCoroutineContext(EmptyCoroutineContext)
+        }.build()
+
+        omgApiClient.logout(object : Callback<String> {
             override fun success(response: Response<String>) {
-                println(response.toString())
                 actualResponse = response
             }
 
             override fun fail(response: Response<ApiError>) {
-                println(response.toString())
                 actualResponse = response
             }
         })
@@ -193,7 +203,7 @@ class OMGApiClientTest {
 
         // Just don't care about thread here. Because in android, will work properly.
         // Action
-        OMGApiClient.listBalances(object : Callback<List<Address>> {
+        omgApiClient.listBalances(object : Callback<List<Address>> {
             override fun success(response: Response<List<Address>>) {
                 actualResponse = response
             }
@@ -216,8 +226,6 @@ class OMGApiClientTest {
         listAddress.size shouldEqual 1
         Assert.assertTrue(listAddress[0].balances.isNotEmpty())
 
-        println(listAddress)
-
         listAddress
                 .asSequence()
                 .flatMap { it.balances.asSequence() }
@@ -235,11 +243,14 @@ class OMGApiClientTest {
     fun `list balances should fail because wrong token given`() = runBlocking {
         // Arrange
         var actualResponse: Response<Any>? = null
-        OMGApiClient.init("wrong token", EmptyCoroutineContext)
+        omgApiClient = OMGApiClient.Builder {
+            setAuthorizationToken("wrong")
+            setCoroutineContext(EmptyCoroutineContext)
+        }.build()
 
         // Just don't care about thread here. Because in android, will work properly.
         // Action
-        OMGApiClient.listBalances(object : Callback<List<Address>> {
+        omgApiClient.listBalances(object : Callback<List<Address>> {
             override fun success(response: Response<List<Address>>) {
                 actualResponse = response
             }
@@ -253,8 +264,6 @@ class OMGApiClientTest {
 
         // Assert
         actualResponse shouldNotBe null
-
-        println(actualResponse)
 
         val model = actualResponse!!.data
         assertTrue(model !is List<*>)
@@ -270,7 +279,7 @@ class OMGApiClientTest {
 
         // Just don't care about thread here. Because in android, will work properly.
         // Action
-        OMGApiClient.getSettings(object : Callback<Setting> {
+        omgApiClient.getSettings(object : Callback<Setting> {
             override fun success(response: Response<Setting>) {
                 actualResponse = response
             }
@@ -287,7 +296,6 @@ class OMGApiClientTest {
         val model = actualResponse!!.data
         model shouldNotBeInstanceOf ApiError::class
 
-        println(model.toString())
         model shouldBeInstanceOf Setting::class
         val listMintedToken = (model as Setting).mintedTokens
         for (mintedToken in listMintedToken) {
@@ -301,11 +309,14 @@ class OMGApiClientTest {
     fun `get settings failed because invalid auth scheme`() = runBlocking {
         // Arrange
         var actualResponse: Response<Any>? = null
-        OMGApiClient.init("wrong token", EmptyCoroutineContext)
+        omgApiClient = OMGApiClient.Builder {
+            setAuthorizationToken("wrong")
+            setCoroutineContext(EmptyCoroutineContext)
+        }.build()
 
         // Just don't care about thread here. Because in android, will work properly.
         // Action
-        OMGApiClient.getSettings(object : Callback<Setting> {
+        omgApiClient.getSettings(object : Callback<Setting> {
             override fun success(response: Response<Setting>) {
                 actualResponse = response
             }

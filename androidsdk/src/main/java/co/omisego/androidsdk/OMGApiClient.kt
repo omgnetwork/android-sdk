@@ -1,13 +1,17 @@
 package co.omisego.androidsdk
 
 import co.omisego.androidsdk.api.KuberaAPI
-import co.omisego.androidsdk.models.*
+import co.omisego.androidsdk.models.Address
+import co.omisego.androidsdk.models.General
+import co.omisego.androidsdk.models.Setting
+import co.omisego.androidsdk.models.User
 import co.omisego.androidsdk.networks.DefaultHttpConnection
 import co.omisego.androidsdk.networks.HttpConnection
 import co.omisego.androidsdk.networks.RequestOptions
 import co.omisego.androidsdk.networks.Requestor
 import co.omisego.androidsdk.utils.APIErrorCode
 import co.omisego.androidsdk.utils.ParseStrategy
+import co.omisego.androidsdk.utils.ResponseProvider
 import co.omisego.androidsdk.utils.Serializer
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -23,29 +27,47 @@ import kotlin.coroutines.experimental.CoroutineContext
  * Copyright © 2017 OmiseGO. All rights reserved.
  */
 
-object OMGApiClient : KuberaAPI {
+class OMGApiClient : KuberaAPI {
     private var authorization: String? = null
+    private lateinit var main: CoroutineContext // main thread
+    private val BASE_URL: String = "https://kubera.omisego.io/"
     private val httpConnection: HttpConnection by lazy { DefaultHttpConnection(BASE_URL) }
     private val requestor: Requestor by lazy { Requestor(httpConnection) }
+    private val responseProvider: ResponseProvider by lazy { ResponseProvider() }
 
-    @JvmOverloads
-    fun init(authorization: String, ui: CoroutineContext = UI) {
-        this.authorization = authorization
-        this.main = ui
+    class Builder(init: Builder.() -> Unit) {
+        private var authorizationKey: String? = null
+        private var context: CoroutineContext? = null
+
+        fun setAuthorizationToken(authorizationToken: String) {
+            authorizationKey = authorizationToken
+        }
+
+        fun setCoroutineContext(context: CoroutineContext) {
+            this.context = context
+        }
+
+        fun build(): OMGApiClient {
+            val apiClient = OMGApiClient()
+            apiClient.authorization = authorizationKey
+            apiClient.main = context ?: UI
+            return apiClient
+        }
+
+        init {
+            init()
+        }
     }
-
-    // Main thread
-    private lateinit var main: CoroutineContext
 
     override fun getCurrentUser(callback: Callback<User>) {
         async(main) {
             process("me.get",
                     fail = {
-                        callback.fail(response = provideCommonFailure(it))
+                        callback.fail(response = responseProvider.failure(it))
                     },
                     success = {
 
-                        callback.success(response = provideCommonSuccess(it, ParseStrategy.USER))
+                        callback.success(response = responseProvider.success(it, ParseStrategy.USER))
                     }
             )
         }
@@ -56,12 +78,12 @@ object OMGApiClient : KuberaAPI {
         async(main) {
             process("logout",
                     fail = {
-                        callback.fail(response = provideCommonFailure(it))
+                        callback.fail(response = responseProvider.failure(it))
                     },
                     success = {
                         // Invalidate token
                         authorization = null
-                        callback.success(response = provideCommonSuccess(it, empty))
+                        callback.success(response = responseProvider.success(it, empty))
                     }
             )
         }
@@ -72,10 +94,10 @@ object OMGApiClient : KuberaAPI {
         async(main) {
             process("me.list_balances",
                     fail = {
-                        callback.fail(response = provideCommonFailure(it))
+                        callback.fail(response = responseProvider.failure(it))
                     },
                     success = {
-                        callback.success(response = provideCommonSuccess(it, ParseStrategy.LIST_BALANCES))
+                        callback.success(response = responseProvider.success(it, ParseStrategy.LIST_BALANCES))
                     }
             )
         }
@@ -85,10 +107,10 @@ object OMGApiClient : KuberaAPI {
         async(main) {
             process("me.get_settings",
                     fail = {
-                        callback.fail(response = provideCommonFailure(it))
+                        callback.fail(response = responseProvider.failure(it))
                     },
                     success = {
-                        callback.success(response = provideCommonSuccess(it, ParseStrategy.SETTING))
+                        callback.success(response = responseProvider.success(it, ParseStrategy.SETTING))
                     }
             )
         }
@@ -113,21 +135,8 @@ object OMGApiClient : KuberaAPI {
                 fail(general)
             }
         } catch (e: Exception) {
-            println("Fail")
             e.printStackTrace()
         }
-    }
-
-    private fun <T> provideCommonSuccess(general: General, handler: (String) -> T): Response<T> {
-        return Response(general.version,
-                true,
-                Serializer(handler).serialize(general.data.toString()))
-    }
-
-    private fun provideCommonFailure(general: General): Response<ApiError> {
-        return Response(general.version,
-                false,
-                Serializer(ParseStrategy.API_ERROR).serialize(general.data.toString()))
     }
 
     private fun checkIfAuthorizationTokenSet(authorizationToken: String?): General? {
