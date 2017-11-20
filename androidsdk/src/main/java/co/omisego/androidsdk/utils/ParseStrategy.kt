@@ -23,7 +23,7 @@ object ParseStrategy {
         val jsonObject = JSONObject(it)
         val errorObject = jsonObject.getJSONObject("data")
         ApiError(
-                errorObject.getString("code"),
+                ErrorCode.from(errorObject.getString("code")),
                 errorObject.getString("description")
         )
     }

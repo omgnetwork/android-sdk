@@ -1,6 +1,8 @@
 package co.omisego.androidsdk.networks
 
+import co.omisego.androidsdk.exceptions.OmiseGOServerErrorException
 import co.omisego.androidsdk.models.RawData
+import co.omisego.androidsdk.utils.ErrorCode
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
 import java.io.IOException
@@ -39,9 +41,11 @@ class Requestor(private val connection: HttpConnection) {
             val response = connection.response()
             return@async RawData(response, true)
         } catch (e: IOException) {
-            return@async RawData(e.message, false)
+            return@async RawData(e.message, false, ErrorCode.SDK_NETWORK_ERROR)
+        } catch (e: OmiseGOServerErrorException) {
+            return@async RawData(e.message, false, ErrorCode.SERVER_INTERNAL_SERVER_ERROR)
         } catch (e: Exception) {
-            return@async RawData(e.message, false)
+            return@async RawData(e.message, false, ErrorCode.SDK_UNKNOWN_ERROR)
         } finally {
             /* Close input stream because we're already finished read the api response. */
             connection.closeInputStream()

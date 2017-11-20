@@ -1,5 +1,6 @@
 package co.omisego.androidsdk.networks
 
+import co.omisego.androidsdk.exceptions.OmiseGOServerErrorException
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.InputStreamReader
@@ -45,6 +46,9 @@ class DefaultHttpConnection(baseURL: String) : HttpConnection {
     }
 
     override fun response(): String {
+        if (this.httpsURLConnection?.responseCode == HttpsURLConnection.HTTP_INTERNAL_ERROR) {
+            throw OmiseGOServerErrorException()
+        }
         val result = InputStreamReader(this.httpsURLConnection?.inputStream).stringify()
         this.httpsURLConnection?.inputStream?.close()
         return result ?: ""

@@ -5,9 +5,11 @@ import co.omisego.androidsdk.networks.DefaultHttpConnection
 import co.omisego.androidsdk.networks.HttpConnection
 import co.omisego.androidsdk.networks.RequestOptions
 import co.omisego.androidsdk.networks.Requestor
-import co.omisego.androidsdk.utils.APIErrorCode
+import co.omisego.androidsdk.utils.ErrorCode
 import co.omisego.androidsdk.utils.ParseStrategy
 import co.omisego.androidsdk.utils.Serializer
+import com.nhaarman.mockito_kotlin.eq
+import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.Assert
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.async
@@ -17,6 +19,9 @@ import org.amshove.kluent.*
 import org.json.JSONObject
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
 import java.io.File
 import java.util.*
 import kotlin.coroutines.experimental.EmptyCoroutineContext
@@ -30,7 +35,7 @@ import kotlin.test.assertTrue
  * Copyright © 2017 OmiseGO. All rights reserved.
  */
 
-
+@RunWith(MockitoJUnitRunner::class)
 class OMGApiClientTest {
     private val TEST_STAGING_AUTH_HEADER_TOKEN = "OMGClient MTQ4MnFOeFBleTdBNF9ycktrQU9iNGtBT1RzRDJIb0x5c1M3ZVExWmQzWTpVOExtQUZjbFFQWE9SV0RHcS1aLVNJNS0zQ3hKMllnMm0wRzdYaVJFNFRv"
     private val BASE_URL: String = "https://kubera.omisego.io/"
@@ -38,6 +43,9 @@ class OMGApiClientTest {
     private lateinit var httpConnection: HttpConnection
     private lateinit var requestor: Requestor
     private lateinit var omgApiClient: OMGApiClient
+    @Mock
+    private lateinit var mockRequestor: Requestor
+
 
     @Before
     fun setUp() {
@@ -128,7 +136,7 @@ class OMGApiClientTest {
         model shouldNotBeInstanceOf User::class
 
         val user = model as ApiError
-        user.code shouldEqual APIErrorCode.CLIENT_INVALID_AUTH_SCHEME
+        user.code shouldEqual ErrorCode.CLIENT_INVALID_AUTH_SCHEME
     }
 
     @Test
@@ -192,7 +200,7 @@ class OMGApiClientTest {
         actualResponse?.success shouldEqual false
         actualResponse?.data shouldBeInstanceOf ApiError::class
         val error = actualResponse?.data as ApiError
-        error.code shouldEqual "user:access_token_expired"
+        error.code shouldEqual ErrorCode.USER_ACCESS_TOKEN_EXPIRED
 
     }
 
@@ -220,7 +228,6 @@ class OMGApiClientTest {
 
         val model = actualResponse!!.data
         assertTrue(model is List<*>)
-
 
         val listAddress = model as List<Address>
         listAddress.size shouldEqual 1
@@ -269,7 +276,7 @@ class OMGApiClientTest {
         assertTrue(model !is List<*>)
 
         val setting = model as ApiError
-        setting.code shouldEqual APIErrorCode.CLIENT_INVALID_AUTH_SCHEME
+        setting.code shouldEqual ErrorCode.CLIENT_INVALID_AUTH_SCHEME
     }
 
     @Test
@@ -291,6 +298,8 @@ class OMGApiClientTest {
 
         delay(3000)
 
+        println(actualResponse)
+
         // Assert
         actualResponse shouldNotBe null
         val model = actualResponse!!.data
@@ -309,7 +318,7 @@ class OMGApiClientTest {
     fun `get settings failed because invalid auth scheme`() = runBlocking {
         // Arrange
         var actualResponse: Response<Any>? = null
-        omgApiClient = OMGApiClient.Builder {
+        val omgApiClient = OMGApiClient.Builder {
             setAuthorizationToken("wrong")
             setCoroutineContext(EmptyCoroutineContext)
         }.build()
@@ -334,6 +343,45 @@ class OMGApiClientTest {
         model shouldNotBeInstanceOf Setting::class
 
         val setting = model as ApiError
-        setting.code shouldEqual APIErrorCode.CLIENT_INVALID_AUTH_SCHEME
+        setting.code shouldEqual ErrorCode.CLIENT_INVALID_AUTH_SCHEME
+    }
+
+    @Test
+    fun `sdk network failed should show error correctly`() = runBlocking {
+        // Arrange
+        val errorDescription = "The rat bit the internet cable"
+        val mockRawData = RawData(errorDescription, false, ErrorCode.SDK_NETWORK_ERROR)
+        whenever(mockRequestor.asyncRequest(eq("me.get_settings"), any()))
+                .thenReturn(async { return@async mockRawData })
+        val mockApiClient = OMGApiClient.Builder {
+            setAuthorizationToken(TEST_STAGING_AUTH_HEADER_TOKEN)
+            setCoroutineContext(EmptyCoroutineContext)
+            setRequestor(mockRequestor)
+        }.build()
+
+        var actualResponse: Response<Any>? = null
+
+        // Action
+        mockApiClient.getSettings(object : Callback<Setting> {
+            override fun success(response: Response<Setting>) {
+                actualResponse = response
+            }
+
+            override fun fail(response: Response<ApiError>) {
+                actualResponse = response
+            }
+        })
+
+        delay(3000)
+
+        // Assert
+        actualResponse shouldNotBe null
+        val model = actualResponse!!.data
+        model shouldBeInstanceOf ApiError::class
+
+        val apiError = model as ApiError
+        apiError.code shouldEqual ErrorCode.SDK_NETWORK_ERROR
+        apiError.description shouldEqual errorDescription
+
     }
 }

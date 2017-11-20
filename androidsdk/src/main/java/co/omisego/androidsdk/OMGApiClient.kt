@@ -9,7 +9,7 @@ import co.omisego.androidsdk.networks.DefaultHttpConnection
 import co.omisego.androidsdk.networks.HttpConnection
 import co.omisego.androidsdk.networks.RequestOptions
 import co.omisego.androidsdk.networks.Requestor
-import co.omisego.androidsdk.utils.APIErrorCode
+import co.omisego.androidsdk.utils.ErrorCode
 import co.omisego.androidsdk.utils.ParseStrategy
 import co.omisego.androidsdk.utils.ResponseProvider
 import co.omisego.androidsdk.utils.Serializer
@@ -31,26 +31,35 @@ class OMGApiClient : KuberaAPI {
     private var authorization: String? = null
     private lateinit var main: CoroutineContext // main thread
     private val BASE_URL: String = "https://kubera.omisego.io/"
-    private val httpConnection: HttpConnection by lazy { DefaultHttpConnection(BASE_URL) }
-    private val requestor: Requestor by lazy { Requestor(httpConnection) }
+    private var httpConnection: HttpConnection = DefaultHttpConnection(BASE_URL)
+    private var requestor: Requestor = Requestor(httpConnection)
     private val responseProvider: ResponseProvider by lazy { ResponseProvider() }
 
     class Builder(init: Builder.() -> Unit) {
         private var authorizationKey: String? = null
         private var context: CoroutineContext? = null
+        private var requestor: Requestor? = null
 
         fun setAuthorizationToken(authorizationToken: String) {
-            authorizationKey = authorizationToken
+            this.authorizationKey = authorizationToken
         }
 
         fun setCoroutineContext(context: CoroutineContext) {
             this.context = context
         }
 
+        /* For testing purpose */
+        fun setRequestor(requestor: Requestor) {
+            this.requestor = requestor
+        }
+
         fun build(): OMGApiClient {
             val apiClient = OMGApiClient()
             apiClient.authorization = authorizationKey
             apiClient.main = context ?: UI
+            this.requestor?.let {
+                apiClient.requestor = it
+            }
             return apiClient
         }
 
@@ -66,7 +75,6 @@ class OMGApiClient : KuberaAPI {
                         callback.fail(response = responseProvider.failure(it))
                     },
                     success = {
-
                         callback.success(response = responseProvider.success(it, ParseStrategy.USER))
                     }
             )
@@ -118,7 +126,7 @@ class OMGApiClient : KuberaAPI {
 
     private fun process(endpoint: String, fail: (general: General) -> Unit, success: (general: General) -> Unit) = runBlocking {
         checkIfAuthorizationTokenSet(authorization)?.let { error ->
-            fail(error)
+            fail.invoke(error)
             return@runBlocking
         }
 
@@ -127,14 +135,31 @@ class OMGApiClient : KuberaAPI {
         })
 
         try {
-            val response = job.await().response
-            val general = Serializer(ParseStrategy.GENERAL).serialize(response!!)
-            if (general.success) {
-                success(general)
-            } else {
-                fail(general)
+            val rawData = job.await()
+
+            if (!rawData.success) {
+                val error = JSONObject().apply {
+                    put("code", rawData.errorCode)
+                    put("description", rawData.response)
+                }
+                val jsonObject = JSONObject().put("data", error)
+                fail.invoke(General("1", false, jsonObject))
+                return@runBlocking
+            }
+
+            val general = Serializer(ParseStrategy.GENERAL).serialize(rawData.response!!)
+
+            when {
+                !general.success -> fail.invoke(general)
+                else -> success.invoke(general)
             }
         } catch (e: Exception) {
+            val error = JSONObject()
+            error.put("code", ErrorCode.SDK_PARSE_ERROR)
+            error.put("description", e.message)
+            val jsonObject = JSONObject().put("data", error)
+            val general = General("1", false, jsonObject)
+            fail.invoke(general)
             e.printStackTrace()
         }
     }
@@ -142,7 +167,7 @@ class OMGApiClient : KuberaAPI {
     private fun checkIfAuthorizationTokenSet(authorizationToken: String?): General? {
         if (authorizationToken == null || authorizationToken.isEmpty()) {
             val failJsonObject = JSONObject()
-            failJsonObject.put("code", APIErrorCode.CLIENT_INVALID_AUTH_SCHEME)
+            failJsonObject.put("code", ErrorCode.CLIENT_INVALID_AUTH_SCHEME)
             failJsonObject.put("description", "OMGApiClient has not been initialized with the correct authorization token. Please call init(authorizationToken) first.")
             return General("1", false, failJsonObject)
         }

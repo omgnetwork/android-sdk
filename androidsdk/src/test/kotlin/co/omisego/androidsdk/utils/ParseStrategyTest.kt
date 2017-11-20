@@ -159,7 +159,7 @@ class ParseStrategyTest {
         val error: ApiError = Serializer(ParseStrategy.API_ERROR).serialize(errorJson)
 
         // Assert
-        error.code shouldEqual "error_code"
+        error.code shouldEqual ErrorCode.SDK_UNKNOWN_ERROR
         error.description shouldEqual "error_message"
     }
 

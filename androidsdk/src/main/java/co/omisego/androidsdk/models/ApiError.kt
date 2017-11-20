@@ -1,5 +1,7 @@
 package co.omisego.androidsdk.models
 
+import co.omisego.androidsdk.utils.ErrorCode
+
 
 /**
  * OmiseGO
@@ -8,4 +10,4 @@ package co.omisego.androidsdk.models
  * Copyright © 2017 OmiseGO. All rights reserved.
  */
 
-data class ApiError(val code: String, val description: String)
+data class ApiError(val code: ErrorCode, val description: String)

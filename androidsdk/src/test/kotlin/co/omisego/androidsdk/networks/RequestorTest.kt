@@ -1,5 +1,6 @@
 package co.omisego.androidsdk.networks
 
+import co.omisego.androidsdk.exceptions.OmiseGOServerErrorException
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -34,7 +35,6 @@ class RequestorTest {
 
     @Mock
     private lateinit var mockHttpConnection: HttpConnection
-
     private lateinit var mockRequestor: Requestor
 
     @Before
@@ -113,6 +113,24 @@ class RequestorTest {
         // Verify that input stream should be closed.
         verify(mockHttpConnection, times(1)).closeInputStream()
     }
+
+    @Test
+    fun `network response should not success when parsing response throw OmiseGOServerErrorException`() = runBlocking {
+        whenever(mockHttpConnection.response()).thenThrow(OmiseGOServerErrorException::class.java)
+
+        val job = mockRequestor.asyncRequest(MOCK_ENDPOINT, RequestOptions().apply {
+            setHeaders(*mockHeaders)
+            setBody(*mockBody.toList().toTypedArray())
+        })
+
+        val resp = job.await()
+
+        resp.response shouldBe "OmiseGO server error with code 500"
+        resp.success shouldBe false
+
+        // Verify that input stream should be closed.
+        verify(mockHttpConnection, times(1)).closeInputStream()
+    }
+    data class MockHttpBin(val name: String, val amount: Double, val done: Boolean)
 }
 
-data class MockHttpBin(val name: String, val amount: Double, val done: Boolean)
