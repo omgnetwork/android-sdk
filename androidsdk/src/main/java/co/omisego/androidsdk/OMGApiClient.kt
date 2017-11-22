@@ -27,6 +27,30 @@ import kotlin.coroutines.experimental.CoroutineContext
  * Copyright © 2017 OmiseGO. All rights reserved.
  */
 
+/**
+ * The class OMGApiClient represents an object that knows how to interact with OmiseGO API.
+ *
+ * Create instances using [OMGApiClient.Builder] and pass your implementation of [Callback<T>] interface
+ * to generate an implementation
+ *
+ * For example,
+ * <code>
+ * val omgApiClient = OMGApiClient.Builder {
+ *      setAuthorizationToken(YOUR_TOKEN)
+ * }.build()
+ *
+ * omgApiClient.getCurrentUser(object : Callback<User> {
+ *      override fun success(response: Response<User>) {
+ *          // Do something
+ *      }
+ *
+ *      override fun fail(response: Response<ApiError>) {
+ *          // Handle fail case properly
+ *      }
+ * })
+ * </code>
+ *
+ */
 class OMGApiClient : KuberaAPI {
     private var authorization: String? = null
     private lateinit var main: CoroutineContext // main thread
@@ -35,24 +59,51 @@ class OMGApiClient : KuberaAPI {
     private var requestor: Requestor = Requestor(httpConnection)
     private val responseProvider: ResponseProvider by lazy { ResponseProvider() }
 
+
+    /**
+     * Build a new [OMGApiClient].
+     * Calling [Builder.setAuthorizationToken] is required before calling [Builder.build].
+     * All other methods are not necessary.
+     *
+     * @receiver A [Builder]'s methods.
+     */
     class Builder(init: Builder.() -> Unit) {
         private var authorizationKey: String? = null
         private var context: CoroutineContext? = null
         private var requestor: Requestor? = null
 
+        /**
+         * Set the API [authorizationToken].
+         * The [authorizationToken] should be "OMG Base64(api_key:authentication_token)"
+         *
+         * @param authorizationToken token sent in the headers of the request for authentication.
+         */
         fun setAuthorizationToken(authorizationToken: String) {
             this.authorizationKey = authorizationToken
         }
 
+        /**
+         * For testing purpose
+         *
+         * @param context the mocked CoroutineContext, usually [kotlin.coroutines.experimental.EmptyCoroutineContext] for testing.
+         */
         fun setCoroutineContext(context: CoroutineContext) {
             this.context = context
         }
 
-        /* For testing purpose */
+        /**
+         * For testing purpose
+         *
+         * @param requestor the mocked [Requestor]
+         */
         fun setRequestor(requestor: Requestor) {
             this.requestor = requestor
         }
 
+        /**
+         * Create the [OMGApiClient] instance using the configured values.
+         * Note: Calling [Builder.setAuthorizationToken] is required before calling this.
+         */
         fun build(): OMGApiClient {
             val apiClient = OMGApiClient()
             apiClient.authorization = authorizationKey
@@ -68,6 +119,13 @@ class OMGApiClient : KuberaAPI {
         }
     }
 
+    /**
+     * Asynchronously send the request to get the [User] corresponding to the provided authentication token.
+     * if *success* the [callback] will be invoked with the [User] parameter,
+     * if *fail* [callback] will be invoked with the [co.omisego.androidsdk.models.ApiError] parameter.
+     *
+     * @param callback A callback to receive the response from server.
+     */
     override fun getCurrentUser(callback: Callback<User>) {
         async(main) {
             process("me.get",
@@ -81,6 +139,13 @@ class OMGApiClient : KuberaAPI {
         }
     }
 
+    /**
+     * Asynchronously send the request to expire a user's authentication_token.
+     * if *success* the [callback] will be invoked with the empty [String] parameter,
+     * if *fail* [callback] will be invoked with the [co.omisego.androidsdk.models.ApiError] parameter.
+     *
+     * @param callback A callback to receive the response from server.
+     */
     override fun logout(callback: Callback<String>) {
         val empty: (String) -> String = { "" }
         async(main) {
@@ -97,7 +162,13 @@ class OMGApiClient : KuberaAPI {
         }
     }
 
-
+    /**
+     * Asynchronously send the request to get the balances of a user corresponding to the provided authentication token.
+     * if *success* the [callback] will be invoked with the list of [Address] parameter,
+     * if *fail* [callback] will be invoked with the [co.omisego.androidsdk.models.ApiError] parameter.
+     *
+     * @param callback A callback to receive the response from server.
+     */
     override fun listBalances(callback: Callback<List<Address>>) {
         async(main) {
             process("me.list_balances",
@@ -111,6 +182,13 @@ class OMGApiClient : KuberaAPI {
         }
     }
 
+    /**
+     * Asynchronously send the request to get the global settings.
+     * if *success* the [callback] will be invoked with [Setting] parameter,
+     * if *fail* [callback] will be invoked with the [co.omisego.androidsdk.models.ApiError] parameter.
+     *
+     * @param callback A callback to receive the response from server.
+     */
     override fun getSettings(callback: Callback<Setting>) {
         async(main) {
             process("me.get_settings",

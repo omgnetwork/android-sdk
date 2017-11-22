@@ -14,6 +14,9 @@ import co.omisego.androidsdk.models.User
  * Copyright © 2017 OmiseGO. All rights reserved.
  */
 
+/**
+ * An interface used to define all the available endpoints in the OmiseGO SDK.
+ */
 interface KuberaAPI {
     fun getCurrentUser(callback: Callback<User>)
     fun logout(callback: Callback<String>)

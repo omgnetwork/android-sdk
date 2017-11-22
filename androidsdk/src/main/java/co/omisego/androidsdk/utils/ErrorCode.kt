@@ -35,6 +35,13 @@ enum class ErrorCode constructor(private val code: String) {
     override fun toString(): String = this.code
 
     companion object {
+
+        /**
+         * Convert an error code string to [ErrorCode]
+         *
+         * @param code An error code string
+         * @return Enum error code representation.
+         */
         fun from(code: String): ErrorCode {
             return try {
                 ErrorCode.values().first { it.code == code }

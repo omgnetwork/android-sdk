@@ -58,6 +58,7 @@ object ParseStrategy {
             for (balanceIndex in 0 until balances.length()) {
                 val token = balances.getJSONObject(balanceIndex).getJSONObject("minted_token")
                 val mintedToken = MintedToken(
+                        token.getString("id"),
                         token.getString("symbol"),
                         token.getString("name"),
                         token.getDouble("subunit_to_unit")
@@ -80,6 +81,7 @@ object ParseStrategy {
         val data = jsonObject.getJSONObject("data").getJSONArray("minted_tokens")
         val listMintedTokens = (0 until data.length()).map {
             MintedToken(
+                    data.getJSONObject(it).getString("id"),
                     data.getJSONObject(it).getString("symbol"),
                     data.getJSONObject(it).getString("name"),
                     data.getJSONObject(it).getDouble("subunit_to_unit")

@@ -1,25 +1,37 @@
 {
+  "version": "1",
+  "success": true,
   "data": {
+    "object": "list",
     "data": [
       {
+        "object": "address",
+        "address": "2c2e0f2e-fa0f-4abe-8516-9e92cf003486",
         "balances": [
           {
+            "object": "balance",
+            "amount": 103100,
             "minted_token": {
+              "id": "OMG:123",
               "symbol": "OMG",
-              "subunit_to_unit": 100,
-              "name": "OmiseGO",
-              "object": "minted_token"
-            },
-            "amount": 110200,
-            "object": "balance"
+              "subunit_to_unit": 10000,
+              "object": "minted_token",
+              "name": "OmiseGO"
+            }
+          },
+          {
+            "object": "balance",
+            "amount": 133700,
+            "minted_token": {
+              "id": "KNC:123",
+              "symbol": "KNC",
+              "subunit_to_unit": 10000,
+              "object": "minted_token",
+              "name": "Kyber"
+            }
           }
-        ],
-        "address": "b4ebb868-b542-455d-98b2-5a3ad347e567",
-        "object": "address"
+        ]
       }
-    ],
-    "object": "list"
-  },
-  "success": true,
-  "version": "1"
+    ]
+  }
 }

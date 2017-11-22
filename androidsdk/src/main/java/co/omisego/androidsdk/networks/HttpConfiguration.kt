@@ -10,6 +10,11 @@ import javax.net.ssl.HttpsURLConnection
  * Created by Phuchit Sirimongkolsathien on 11/9/2017 AD.
  * Copyright © 2017 OmiseGO. All rights reserved.
  */
+
+/**
+ * Provide default configuration of http connection
+ * 
+ */
 object HttpConfiguration {
     private val REQUEST_METHOD = "POST"
     private val READ_TIMEOUT = 10_000

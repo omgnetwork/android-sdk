@@ -121,12 +121,19 @@ class ParseStrategyTest {
 
         // Assert
         listBalances.size shouldEqual 1
-        listBalances[0].balances.size shouldEqual 1
-        listBalances[0].address shouldEqual "b4ebb868-b542-455d-98b2-5a3ad347e567"
+        listBalances[0].balances.size shouldEqual 2
+        listBalances[0].address shouldEqual "2c2e0f2e-fa0f-4abe-8516-9e92cf003486"
+        listBalances[0].balances[0].mintedToken.id shouldEqual "OMG:123"
         listBalances[0].balances[0].mintedToken.symbol shouldEqual "OMG"
         listBalances[0].balances[0].mintedToken.name shouldEqual "OmiseGO"
-        listBalances[0].balances[0].mintedToken.subUnitToUnit shouldEqual 100.0
-        listBalances[0].balances[0].amount shouldEqual 110200.0
+        listBalances[0].balances[0].mintedToken.subUnitToUnit shouldEqual 10000.0
+        listBalances[0].balances[0].amount shouldEqual 103100.0
+
+        listBalances[0].balances[1].mintedToken.id shouldEqual "KNC:123"
+        listBalances[0].balances[1].mintedToken.symbol shouldEqual "KNC"
+        listBalances[0].balances[1].mintedToken.name shouldEqual "Kyber"
+        listBalances[0].balances[1].mintedToken.subUnitToUnit shouldEqual 10000.0
+        listBalances[0].balances[1].amount shouldEqual 133700.0
     }
 
     @Test
