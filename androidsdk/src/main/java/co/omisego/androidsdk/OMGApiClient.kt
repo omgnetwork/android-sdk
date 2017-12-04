@@ -1,6 +1,7 @@
 package co.omisego.androidsdk
 
 import co.omisego.androidsdk.api.KuberaAPI
+import co.omisego.androidsdk.exceptions.OmiseGOServerException
 import co.omisego.androidsdk.models.Address
 import co.omisego.androidsdk.models.General
 import co.omisego.androidsdk.models.Setting
@@ -214,7 +215,6 @@ class OMGApiClient : KuberaAPI {
 
         try {
             val rawData = job.await()
-
             if (!rawData.success) {
                 val error = JSONObject().apply {
                     put("code", rawData.errorCode)
@@ -232,10 +232,14 @@ class OMGApiClient : KuberaAPI {
                 else -> success.invoke(general)
             }
         } catch (e: Exception) {
-            val error = JSONObject()
-            error.put("code", ErrorCode.SDK_PARSE_ERROR)
-            error.put("description", e.message)
-            val jsonObject = JSONObject().put("data", error)
+            val error = JSONObject().apply {
+                put("code", ErrorCode.SDK_PARSE_ERROR)
+                put("description", e.message)
+            }
+
+            val jsonObject = JSONObject().apply {
+                put("data", error)
+            }
             val general = General("1", false, jsonObject)
             fail.invoke(general)
             e.printStackTrace()

@@ -1,8 +1,9 @@
 package co.omisego.androidsdk.networks
 
-import co.omisego.androidsdk.exceptions.OmiseGOServerErrorException
+import co.omisego.androidsdk.exceptions.OmiseGOServerException
 import java.io.BufferedReader
 import java.io.DataOutputStream
+import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
@@ -46,16 +47,27 @@ class DefaultHttpConnection(baseURL: String) : HttpConnection {
     }
 
     override fun response(): String {
-        if (this.httpsURLConnection?.responseCode == HttpsURLConnection.HTTP_INTERNAL_ERROR) {
-            throw OmiseGOServerErrorException()
+        val responseCode = this.httpsURLConnection?.responseCode
+        when (responseCode) {
+            HttpsURLConnection.HTTP_INTERNAL_ERROR,
+            HttpsURLConnection.HTTP_NOT_FOUND -> {
+                val exception = OmiseGOServerException(responseCode)
+                throw exception
+            }
+            else -> {
+                val result = InputStreamReader(this.httpsURLConnection?.inputStream).stringify()
+                this.httpsURLConnection?.inputStream?.close()
+                return result ?: ""
+            }
         }
-        val result = InputStreamReader(this.httpsURLConnection?.inputStream).stringify()
-        this.httpsURLConnection?.inputStream?.close()
-        return result ?: ""
     }
 
     override fun closeInputStream() {
-        this.httpsURLConnection?.inputStream?.close()
+        try {
+            this.httpsURLConnection?.inputStream?.close()
+        } catch (e: IOException) {
+            // It's already closed
+        }
     }
 
     override fun InputStreamReader?.stringify(): String? {

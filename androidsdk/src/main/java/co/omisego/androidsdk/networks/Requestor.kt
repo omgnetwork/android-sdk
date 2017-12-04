@@ -1,6 +1,6 @@
 package co.omisego.androidsdk.networks
 
-import co.omisego.androidsdk.exceptions.OmiseGOServerErrorException
+import co.omisego.androidsdk.exceptions.OmiseGOServerException
 import co.omisego.androidsdk.models.RawData
 import co.omisego.androidsdk.utils.ErrorCode
 import kotlinx.coroutines.experimental.CommonPool
@@ -42,7 +42,7 @@ class Requestor(private val connection: HttpConnection) {
             return@async RawData(response, true)
         } catch (e: IOException) {
             return@async RawData(e.message, false, ErrorCode.SDK_NETWORK_ERROR)
-        } catch (e: OmiseGOServerErrorException) {
+        } catch (e: OmiseGOServerException) {
             return@async RawData(e.message, false, ErrorCode.SERVER_INTERNAL_SERVER_ERROR)
         } catch (e: Exception) {
             return@async RawData(e.message, false, ErrorCode.SDK_UNKNOWN_ERROR)
