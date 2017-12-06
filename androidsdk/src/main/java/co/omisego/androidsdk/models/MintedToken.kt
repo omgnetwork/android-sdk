@@ -1,5 +1,7 @@
 package co.omisego.androidsdk.models
 
+import java.math.BigDecimal
+
 
 /**
  * OmiseGO
@@ -18,4 +20,4 @@ package co.omisego.androidsdk.models
  *  i.e: If I want to give or receive 13 minted tokens and the [subUnitToUnit] is 1000,
  *  then the amount will be 13*1000 = 13000
  */
-data class MintedToken(val id: String, val symbol: String, val name: String, val subUnitToUnit: Double)
+data class MintedToken(val id: String, val symbol: String, val name: String, val subUnitToUnit: BigDecimal)

@@ -1,9 +1,11 @@
 package co.omisego.androidsdk.utils
 
+import co.omisego.androidsdk.extensions.bd
 import co.omisego.androidsdk.models.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.math.BigDecimal
 
 
 /**
@@ -61,10 +63,10 @@ object ParseStrategy {
                         token.getString("id"),
                         token.getString("symbol"),
                         token.getString("name"),
-                        token.getDouble("subunit_to_unit")
+                        token.getDouble("subunit_to_unit").bd
                 )
 
-                val balance = Balance(balances.getJSONObject(balanceIndex).getDouble("amount"), mintedToken)
+                val balance = Balance(balances.getJSONObject(balanceIndex).getDouble("amount").bd, mintedToken)
                 listBalances.add(balance)
             }
 
@@ -84,7 +86,7 @@ object ParseStrategy {
                     data.getJSONObject(it).getString("id"),
                     data.getJSONObject(it).getString("symbol"),
                     data.getJSONObject(it).getString("name"),
-                    data.getJSONObject(it).getDouble("subunit_to_unit")
+                    data.getJSONObject(it).getDouble("subunit_to_unit").bd
             )
         }
 

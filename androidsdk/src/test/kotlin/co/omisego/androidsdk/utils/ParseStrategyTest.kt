@@ -1,5 +1,6 @@
 package co.omisego.androidsdk.utils
 
+import co.omisego.androidsdk.extensions.bd
 import co.omisego.androidsdk.extensions.getAsArray
 import co.omisego.androidsdk.extensions.getAsHashMap
 import co.omisego.androidsdk.models.*
@@ -126,14 +127,14 @@ class ParseStrategyTest {
         listBalances[0].balances[0].mintedToken.id shouldEqual "OMG:123"
         listBalances[0].balances[0].mintedToken.symbol shouldEqual "OMG"
         listBalances[0].balances[0].mintedToken.name shouldEqual "OmiseGO"
-        listBalances[0].balances[0].mintedToken.subUnitToUnit shouldEqual 10000.0
-        listBalances[0].balances[0].amount shouldEqual 103100.0
+        listBalances[0].balances[0].mintedToken.subUnitToUnit shouldEqual 10000.0.bd
+        listBalances[0].balances[0].amount shouldEqual 103100.0.bd
 
         listBalances[0].balances[1].mintedToken.id shouldEqual "KNC:123"
         listBalances[0].balances[1].mintedToken.symbol shouldEqual "KNC"
         listBalances[0].balances[1].mintedToken.name shouldEqual "Kyber"
-        listBalances[0].balances[1].mintedToken.subUnitToUnit shouldEqual 10000.0
-        listBalances[0].balances[1].amount shouldEqual 133700.0
+        listBalances[0].balances[1].mintedToken.subUnitToUnit shouldEqual 10000.0.bd
+        listBalances[0].balances[1].amount shouldEqual 133700.0.bd
     }
 
     @Test
@@ -149,11 +150,11 @@ class ParseStrategyTest {
 
         setting.mintedTokens[0].symbol shouldEqual "MNT"
         setting.mintedTokens[0].name shouldEqual "Mint"
-        setting.mintedTokens[0].subUnitToUnit shouldEqual 100000.0
+        setting.mintedTokens[0].subUnitToUnit shouldEqual 100000.0.bd
 
         setting.mintedTokens[1].symbol shouldEqual "OMG"
         setting.mintedTokens[1].name shouldEqual "OmiseGO"
-        setting.mintedTokens[1].subUnitToUnit shouldEqual 100000000.0
+        setting.mintedTokens[1].subUnitToUnit shouldEqual 100000000.0.bd
     }
 
 

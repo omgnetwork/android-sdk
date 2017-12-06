@@ -1,5 +1,6 @@
 package co.omisego.androidsdk
 
+import co.omisego.androidsdk.extensions.bd
 import co.omisego.androidsdk.models.*
 import co.omisego.androidsdk.networks.DefaultHttpConnection
 import co.omisego.androidsdk.networks.HttpConnection
@@ -23,6 +24,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import java.io.File
+import java.math.BigDecimal
 import java.util.*
 import kotlin.coroutines.experimental.EmptyCoroutineContext
 import kotlin.test.assertTrue
@@ -238,10 +240,10 @@ class OMGApiClientTest {
                 .flatMap { it.balances.asSequence() }
                 .forEach {
                     with(it) {
-                        amount shouldNotBeLessThan 0.0
+                        Assert.assertTrue(amount.compareTo(0.0.bd) == 0)
                         Assert.assertTrue(!mintedToken.symbol.isEmpty())
                         Assert.assertTrue(!mintedToken.name.isEmpty())
-                        mintedToken.subUnitToUnit shouldBeGreaterThan 0.0
+                        Assert.assertTrue(mintedToken.subUnitToUnit > 0.0.bd)
                     }
                 }
     }
