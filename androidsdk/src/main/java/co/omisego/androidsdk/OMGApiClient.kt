@@ -1,7 +1,7 @@
 package co.omisego.androidsdk
 
+import android.util.Log
 import co.omisego.androidsdk.api.KuberaAPI
-import co.omisego.androidsdk.exceptions.OmiseGOServerException
 import co.omisego.androidsdk.models.Address
 import co.omisego.androidsdk.models.General
 import co.omisego.androidsdk.models.Setting
@@ -227,10 +227,17 @@ class OMGApiClient : KuberaAPI {
 
             val general = Serializer(ParseStrategy.GENERAL).serialize(rawData.response!!)
 
-            when {
-                !general.success -> fail.invoke(general)
-                else -> success.invoke(general)
+            try {
+                when {
+                    !general.success -> fail.invoke(general)
+                    else -> success.invoke(general)
+                }
+            } catch (e: Exception) {
+                // This error is happen inside the code of the sdk user.
+                Log.e("OMGApiClient", e.message)
+                e.printStackTrace()
             }
+
         } catch (e: Exception) {
             val error = JSONObject().apply {
                 put("code", ErrorCode.SDK_PARSE_ERROR)
