@@ -39,8 +39,8 @@ import kotlin.test.assertTrue
 
 @RunWith(MockitoJUnitRunner::class)
 class OMGApiClientTest {
-    private val TEST_STAGING_AUTH_HEADER_TOKEN = "OMGClient MTQ4MnFOeFBleTdBNF9ycktrQU9iNGtBT1RzRDJIb0x5c1M3ZVExWmQzWTpVOExtQUZjbFFQWE9SV0RHcS1aLVNJNS0zQ3hKMllnMm0wRzdYaVJFNFRv"
-    private val BASE_URL: String = "https://kubera.omisego.io/"
+    private val TEST_STAGING_AUTH_HEADER_TOKEN = "" // Replace your token here
+    private val BASE_URL: String = "" // Replace your base url here
     private var secret: File? = null
     private lateinit var httpConnection: HttpConnection
     private lateinit var requestor: Requestor
@@ -48,9 +48,11 @@ class OMGApiClientTest {
     @Mock
     private lateinit var mockRequestor: Requestor
 
-
     @Before
     fun setUp() {
+        Assert.assertTrue("Assign your authenticationToken before run the test", TEST_STAGING_AUTH_HEADER_TOKEN != "")
+        Assert.assertTrue("Assign your baseURL before run the test", BASE_URL != "")
+
         httpConnection = DefaultHttpConnection(BASE_URL)
         requestor = Requestor(httpConnection)
 
@@ -71,7 +73,7 @@ class OMGApiClientTest {
                         "Accept" to "application/vnd.omisego.v1+json",
                         "Content-Type" to "application/vnd.omisego.v1+json")
 
-                setBody("provider_user_id" to "user12345678")
+                setBody("provider_user_id" to "1234")
             })
 
             val response = job.await().response

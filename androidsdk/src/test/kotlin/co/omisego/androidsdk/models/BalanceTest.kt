@@ -70,6 +70,36 @@ class BalanceTest {
 
         balance.displayAmount(99) shouldEqual "0.000001002003004005006007008009010011012013014015016017018019020021022023024025026027028029030031032"
     }
+
+    @Test
+    fun `test balance + another balance should be correct`() {
+        val balance1 = Balance(1_999_000_000_000.0.bd, MintedToken("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd))
+        val balance2 = Balance(9_999_000_000_000.0.bd, MintedToken("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd))
+
+        val result = balance1 + balance2
+        result.amount shouldEqual 11_998_000_000_000.0.bd
+    }
+
+    @Test
+    fun `test balance - another balance should be correct`() {
+        val balance1 = Balance(11_998_000_000_000.0.bd, MintedToken("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd))
+        val balance2 = Balance(9_999_000_000_000.0.bd, MintedToken("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd))
+
+        val result = balance1 - balance2
+        result.amount shouldEqual 1_999_000_000_000.0.bd
+
+        val result2 = balance2 - balance1
+        result2.amount shouldEqual (-1_999_000_000_000.0).bd
+    }
+
+    @Test(expected = UnsupportedOperationException::class)
+    fun `test balance + incompatible balance should throw UnSupportOperationException`() {
+        val balance1 = Balance(1_999_000_000_000.0.bd, MintedToken("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd))
+        val balance2 = Balance(9_999_000_000_000.0.bd, MintedToken("ETH:8bcda572-9411-43c8-baae-cd56eb0155f3", "ETH", "Etherium", 10000.0.bd))
+
+        balance1 + balance2
+    }
+
 }
 
 

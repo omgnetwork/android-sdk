@@ -20,4 +20,14 @@ import java.math.BigDecimal
  *  i.e: If I want to give or receive 13 minted tokens and the [subUnitToUnit] is 1000,
  *  then the amount will be 13*1000 = 13000
  */
-data class MintedToken(val id: String, val symbol: String, val name: String, val subUnitToUnit: BigDecimal)
+data class MintedToken(val id: String, val symbol: String, val name: String, val subUnitToUnit: BigDecimal) {
+
+    /**
+     * Compares the current [MintedToken] with the specified [MintedToken] for verifying both [MintedToken] are compatible.
+     * Returns a boolean, true, or false as the [symbol] and the [subUnitToUnit] are equal to, or are not equal to the specified [MintedToken].
+     *
+     * @param mintedToken the mintedToken to be compared.
+     * @return a boolean, true, or false as the [symbol] and the [subUnitToUnit] are equal to, or are not equal to the specified [MintedToken].
+     */
+    infix fun compatWith(mintedToken: MintedToken) = this.symbol == mintedToken.symbol && this.subUnitToUnit == mintedToken.subUnitToUnit
+}
