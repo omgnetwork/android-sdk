@@ -144,4 +144,4 @@ OmiseGO is released under the Apache license. See `LICENSE` for details.
 ## Sample Project
 
 ---
-You can check out the latest sample app from the following repo : [OMGShop](https://phabricator.omisego.io/source/OMGShop/)
+You can check out the latest sample app from the following repo : [OMGShop](https://github.com/omisego/sample-android)
