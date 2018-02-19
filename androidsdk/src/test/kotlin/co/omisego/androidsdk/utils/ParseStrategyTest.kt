@@ -148,8 +148,8 @@ class ParseStrategyTest {
         // Assert
         setting.mintedTokens.size shouldEqual 2
 
-        setting.mintedTokens[0].symbol shouldEqual "MNT"
-        setting.mintedTokens[0].name shouldEqual "Mint"
+        setting.mintedTokens[0].symbol shouldEqual "BTC"
+        setting.mintedTokens[0].name shouldEqual "Bitcoin"
         setting.mintedTokens[0].subUnitToUnit shouldEqual 100000.0.bd
 
         setting.mintedTokens[1].symbol shouldEqual "OMG"
