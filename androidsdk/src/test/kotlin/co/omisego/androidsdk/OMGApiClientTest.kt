@@ -7,6 +7,7 @@ import co.omisego.androidsdk.networks.HttpConnection
 import co.omisego.androidsdk.networks.RequestOptions
 import co.omisego.androidsdk.networks.Requestor
 import co.omisego.androidsdk.utils.ErrorCode
+import co.omisego.androidsdk.utils.OMGEncryptionHelper
 import co.omisego.androidsdk.utils.ParseStrategy
 import co.omisego.androidsdk.utils.Serializer
 import com.nhaarman.mockito_kotlin.eq
@@ -24,8 +25,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import java.io.File
-import java.math.BigDecimal
-import java.util.*
 import kotlin.coroutines.experimental.EmptyCoroutineContext
 import kotlin.test.assertTrue
 
@@ -39,37 +38,44 @@ import kotlin.test.assertTrue
 
 @RunWith(MockitoJUnitRunner::class)
 class OMGApiClientTest {
-    private val TEST_STAGING_AUTH_HEADER_TOKEN = "" // Replace your token here
-    private val BASE_URL: String = "" // Replace your base url here
-    private var secret: File? = null
+    private val baseURL: String = "https://ewallet.staging.omisego.io/api/" // Replace your base url here
+    private val secretFileName: String = "secret.json" // Replace your secret file here
+    private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
     private lateinit var httpConnection: HttpConnection
     private lateinit var requestor: Requestor
     private lateinit var omgApiClient: OMGApiClient
+    private lateinit var mAuthtoken: String
     @Mock
     private lateinit var mockRequestor: Requestor
 
     @Before
     fun setUp() {
-        Assert.assertTrue("Assign your authenticationToken before run the test", TEST_STAGING_AUTH_HEADER_TOKEN != "")
-        Assert.assertTrue("Assign your baseURL before run the test", BASE_URL != "")
+        assertKeyIsNotEmpty()
 
-        httpConnection = DefaultHttpConnection(BASE_URL)
+        httpConnection = DefaultHttpConnection(baseURL)
         requestor = Requestor(httpConnection)
 
-        val resourceUserURL = javaClass.classLoader.getResource("secret.json") // This is invisible because it's stored in local ("secret").
-        secret = File(resourceUserURL.path)
+        val auth = OMGEncryptionHelper.encryptBase64(
+                secret.getString("api_key"),
+                secret.getString("auth_token")
+        )
+        mAuthtoken = "OMGClient $auth"
 
         omgApiClient = OMGApiClient.Builder {
-            setAuthorizationToken(TEST_STAGING_AUTH_HEADER_TOKEN)
+            setAuthorizationToken(mAuthtoken)
             setCoroutineContext(EmptyCoroutineContext)
         }.build()
     }
 
     private fun asyncLogin(): Deferred<String> {
         return async(EmptyCoroutineContext) {
-            val authenticationServer = JSONObject(secret!!.readText()).getString("authenticationTokenServer")
+            val authorization = OMGEncryptionHelper.encryptBase64(
+                    secret.getString("access_key"),
+                    secret.getString("secret_key")
+            )
+
             val job = requestor.asyncRequest("login", RequestOptions().apply {
-                setHeaders("Authorization" to "OMGServer $authenticationServer",
+                setHeaders("Authorization" to "OMGServer $authorization",
                         "Accept" to "application/vnd.omisego.v1+json",
                         "Content-Type" to "application/vnd.omisego.v1+json")
 
@@ -147,7 +153,6 @@ class OMGApiClientTest {
     fun `logout success`() = runBlocking {
         // Arrange
         secret shouldNotBe null
-        val secretObject = JSONObject(secret!!.readText())
 
         var actualResponse: Response<Any>? = null
 
@@ -155,9 +160,9 @@ class OMGApiClientTest {
         val token = asyncLogin().await()
 
         // Retrieve token from local file.
-        val apiKey = secretObject.getString("apiKey")
+        val apiKey = secret.getString("api_key")
 
-        val authenticationToken = "OMGClient ${String(Base64.getEncoder().encode("$apiKey:$token".toByteArray()))}"
+        val authenticationToken = "OMGClient ${OMGEncryptionHelper.encryptBase64(apiKey, token)}"
 
         // Action
         omgApiClient = OMGApiClient.Builder {
@@ -358,7 +363,7 @@ class OMGApiClientTest {
         whenever(mockRequestor.asyncRequest(eq("me.get_settings"), any()))
                 .thenReturn(async { return@async mockRawData })
         val mockApiClient = OMGApiClient.Builder {
-            setAuthorizationToken(TEST_STAGING_AUTH_HEADER_TOKEN)
+            setAuthorizationToken(mAuthtoken)
             setCoroutineContext(EmptyCoroutineContext)
             setRequestor(mockRequestor)
         }.build()
@@ -387,5 +392,20 @@ class OMGApiClientTest {
         apiError.code shouldEqual ErrorCode.SDK_NETWORK_ERROR
         apiError.description shouldEqual errorDescription
 
+    }
+
+    private fun loadSecretFile(filename: String): JSONObject {
+        val resourceUserURL = javaClass.classLoader.getResource(filename) // This is invisible because it's stored in local ("secret").
+
+        return try {
+            val secretFile = File(resourceUserURL.path)
+            JSONObject(secretFile.readText())
+        } catch (e: IllegalStateException) {
+            throw IllegalStateException("Please create the file $filename. See the file secret.example.json for the reference.")
+        }
+    }
+
+    private fun assertKeyIsNotEmpty() {
+        Assert.assertTrue("Assign your baseURL before run the test", baseURL != "")
     }
 }
