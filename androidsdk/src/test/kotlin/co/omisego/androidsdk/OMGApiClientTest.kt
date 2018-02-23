@@ -242,9 +242,9 @@ class OMGApiClientTest {
                 .flatMap { it.balances.asSequence() }
                 .forEach {
                     with(it) {
-                        Assert.assertTrue(amount.compareTo(0.0.bd) == 0)
                         Assert.assertTrue(!mintedToken.symbol.isEmpty())
                         Assert.assertTrue(!mintedToken.name.isEmpty())
+                        Assert.assertTrue(!mintedToken.id.isEmpty())
                         Assert.assertTrue(mintedToken.subUnitToUnit > 0.0.bd)
                     }
                 }
