@@ -42,7 +42,7 @@ class RequestorTest {
         httpConnection = DefaultHttpConnection(MOCK_BASE_URL)
         requestor = Requestor(httpConnection)
         mockRequestor = Requestor(mockHttpConnection)
-        mockHeaders = arrayOf("Content-Type" to "application/json", "User-Agent" to "mozilla/5.0", "Authorization" to "OMGServer T21pc2VHTyBpcyBhd2Vzb21lIQ==", "Accept" to "application/vnd.omisego.v1+json")
+        mockHeaders = arrayOf("Content-Type" to "application/json", "User-Agent" to "mozilla/5.0", "Authorization" to "OMGClient T21pc2VHTyBpcyBhd2Vzb21lIQ==", "Accept" to "application/vnd.omisego.v1+json")
         mockBody = hashMapOf("name" to "OmiseGO", "amount" to 123.33, "done" to false)
     }
 

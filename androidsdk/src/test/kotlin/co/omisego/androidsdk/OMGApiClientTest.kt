@@ -73,7 +73,7 @@ class OMGApiClientTest {
                         "Accept" to "application/vnd.omisego.v1+json",
                         "Content-Type" to "application/vnd.omisego.v1+json")
 
-                setBody("provider_user_id" to "1234")
+                setBody("provider_user_id" to "provider_user_id01")
             })
 
             val response = job.await().response
