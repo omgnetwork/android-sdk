@@ -55,7 +55,7 @@ import kotlin.coroutines.experimental.CoroutineContext
 class OMGApiClient : KuberaAPI {
     private var authorization: String? = null
     private lateinit var main: CoroutineContext // main thread
-    private val BASE_URL: String = "https://kubera.omisego.io/"
+    private val BASE_URL: String = "https://ewallet.staging.omisego.io/api/"
     private var httpConnection: HttpConnection = DefaultHttpConnection(BASE_URL)
     private var requestor: Requestor = Requestor(httpConnection)
     private val responseProvider: ResponseProvider by lazy { ResponseProvider() }
@@ -69,7 +69,7 @@ class OMGApiClient : KuberaAPI {
      * @receiver A [Builder]'s methods.
      */
     class Builder(init: Builder.() -> Unit) {
-        private var authorizationKey: String? = null
+        private var authenticationToken: String? = null
         private var context: CoroutineContext? = null
         private var requestor: Requestor? = null
 
@@ -80,7 +80,7 @@ class OMGApiClient : KuberaAPI {
          * @param authorizationToken token sent in the headers of the request for authentication.
          */
         fun setAuthorizationToken(authorizationToken: String) {
-            this.authorizationKey = authorizationToken
+            this.authenticationToken = authorizationToken
         }
 
         /**
@@ -107,7 +107,7 @@ class OMGApiClient : KuberaAPI {
          */
         fun build(): OMGApiClient {
             val apiClient = OMGApiClient()
-            apiClient.authorization = authorizationKey
+            apiClient.authorization = authenticationToken
             apiClient.main = context ?: UI
             this.requestor?.let {
                 apiClient.requestor = it
