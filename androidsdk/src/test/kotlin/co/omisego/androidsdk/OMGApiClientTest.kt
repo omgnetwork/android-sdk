@@ -38,7 +38,7 @@ import kotlin.test.assertTrue
 
 @RunWith(MockitoJUnitRunner::class)
 class OMGApiClientTest {
-    private val baseURL: String = "https://ewallet.staging.omisego.io/api/" // Replace your base url here
+    private lateinit var baseURL: String
     private val secretFileName: String = "secret.json" // Replace your secret file here
     private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
     private lateinit var httpConnection: HttpConnection
@@ -50,8 +50,8 @@ class OMGApiClientTest {
 
     @Before
     fun setUp() {
+        baseURL = secret.getString("base_url")
         assertKeyIsNotEmpty()
-
         httpConnection = DefaultHttpConnection(baseURL)
         requestor = Requestor(httpConnection)
 
