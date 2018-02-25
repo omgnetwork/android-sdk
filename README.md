@@ -9,15 +9,11 @@ It supports the following functionalities:
 
 ## Requirements
 
----
+- Minimum Android SDK version 19
 
-- Minimum SDK version 19 or above
-
-- Kotlin version 1.2.0
+- Kotlin version 1.2.21
 
 ## Installation
-
----
 
 Since we are not hosting the packaged SDK yet, you should add the library manually following these steps:
 
@@ -48,8 +44,6 @@ dependencies {
 You're done.
 
 ## Usage
-
----
 
 ### Initialization
 
@@ -138,10 +132,8 @@ omgApiClient.getSettings(object : Callback<Setting> {
 
 ## License
 
----
 OmiseGO is released under the Apache license. See `LICENSE` for details.
 
 ## Sample Project
 
----
 You can check out the latest sample app from the following repo : [OMGShop](https://github.com/omisego/sample-android)
