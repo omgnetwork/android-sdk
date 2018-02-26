@@ -135,6 +135,7 @@ omgApiClient.getSettings(object : Callback<Setting> {
 ## Test
 In order to run the live tests (bound to a working server) you need to fill the corresponding in the file `src/test/resources/secret.json`. 
 > Note : You can see the reference in the file `secret.example.json`
+
 The variables are:
 
 * `base_url`
