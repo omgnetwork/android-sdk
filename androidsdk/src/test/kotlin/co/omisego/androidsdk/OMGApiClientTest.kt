@@ -20,7 +20,9 @@ import kotlinx.coroutines.experimental.runBlocking
 import org.amshove.kluent.*
 import org.json.JSONObject
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
@@ -48,6 +50,10 @@ class OMGApiClientTest {
     @Mock
     private lateinit var mockRequestor: Requestor
 
+    @Rule
+    @JvmField
+    val expectedEx = ExpectedException.none()!!
+
     @Before
     fun setUp() {
         baseURL = secret.getString("base_url")
@@ -63,6 +69,7 @@ class OMGApiClientTest {
 
         omgApiClient = OMGApiClient.Builder {
             setAuthorizationToken(mAuthtoken)
+            setBaseURL(baseURL)
             setCoroutineContext(EmptyCoroutineContext)
         }.build()
     }
@@ -123,6 +130,7 @@ class OMGApiClientTest {
         var actualResponse: Response<Any>? = null
         omgApiClient = OMGApiClient.Builder {
             setAuthorizationToken("wrong")
+            setBaseURL(baseURL)
             setCoroutineContext(EmptyCoroutineContext)
         }.build()
 
@@ -167,6 +175,7 @@ class OMGApiClientTest {
         // Action
         omgApiClient = OMGApiClient.Builder {
             setAuthorizationToken(authenticationToken)
+            setBaseURL(baseURL)
             setCoroutineContext(EmptyCoroutineContext)
         }.build()
 
@@ -189,6 +198,7 @@ class OMGApiClientTest {
         // Try to use the same token
         omgApiClient = OMGApiClient.Builder {
             setAuthorizationToken(authenticationToken)
+            setBaseURL(baseURL)
             setCoroutineContext(EmptyCoroutineContext)
         }.build()
 
@@ -261,6 +271,7 @@ class OMGApiClientTest {
         var actualResponse: Response<Any>? = null
         omgApiClient = OMGApiClient.Builder {
             setAuthorizationToken("wrong")
+            setBaseURL(baseURL)
             setCoroutineContext(EmptyCoroutineContext)
         }.build()
 
@@ -329,6 +340,7 @@ class OMGApiClientTest {
         var actualResponse: Response<Any>? = null
         val omgApiClient = OMGApiClient.Builder {
             setAuthorizationToken("wrong")
+            setBaseURL(baseURL)
             setCoroutineContext(EmptyCoroutineContext)
         }.build()
 
@@ -356,6 +368,17 @@ class OMGApiClientTest {
     }
 
     @Test
+    fun `initialize the sdk without baseURL should be throw correct exception`() {
+        expectedEx.expect(IllegalStateException::class.java)
+        expectedEx.expectMessage("baseURL should be set before build!")
+
+        OMGApiClient.Builder {
+            setAuthorizationToken(mAuthtoken)
+            setCoroutineContext(EmptyCoroutineContext)
+        }.build()
+    }
+
+    @Test
     fun `sdk network failed should show error correctly`() = runBlocking {
         // Arrange
         val errorDescription = "The rat bit the internet cable"
@@ -364,6 +387,7 @@ class OMGApiClientTest {
                 .thenReturn(async { return@async mockRawData })
         val mockApiClient = OMGApiClient.Builder {
             setAuthorizationToken(mAuthtoken)
+            setBaseURL(baseURL)
             setCoroutineContext(EmptyCoroutineContext)
             setRequestor(mockRequestor)
         }.build()
