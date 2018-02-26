@@ -54,12 +54,14 @@ You should to this as soon as you obtain a valid authentication token correspond
  val token = Base64.encode("$api_key:$authentication_token")
  val omgApiClient = OMGApiClient.Builder {
       setAuthorizationToken(token)
+      setBaseURL(baseURL)
  }.build()
 ```
 
 Where:
 `apiKey` is the api key generated from your OmiseGO admin panel.
 `authenticationToken` is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
+`baseURL` is the URL of the OmiseGO Wallet API.
 > You can find more info on how to retrieve this token in the OmiseGO server SDK documentations.
 
 ### Retrieving resources
