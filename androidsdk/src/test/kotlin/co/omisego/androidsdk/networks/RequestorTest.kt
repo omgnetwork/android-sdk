@@ -49,6 +49,7 @@ class RequestorTest {
     @Test
     fun `network request headers and body should be matched with the requestOptions`() = runBlocking {
         // Arrange
+        println(Thread.currentThread().name)
         val requestOptions = RequestOptions().apply {
             setBody(*mockBody.toList().toTypedArray())
             setHeaders(*mockHeaders)

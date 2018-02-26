@@ -130,6 +130,19 @@ omgApiClient.getSettings(object : Callback<Setting> {
 })
 ```
 
+## Test
+In order to run the live tests (bound to a working server) you need to fill the corresponding in the file `src/test/resources/secret.json`. 
+> Note : You can see the reference in the file `secret.example.json`
+The variables are:
+
+* `base_url`
+* `api_key`
+* `auth_token`
+* `access_key`
+* `secret_key`
+
+You can then run the test under the `src/test` folder from the Android Studio.
+
 ## License
 
 OmiseGO is released under the Apache license. See `LICENSE` for details.
