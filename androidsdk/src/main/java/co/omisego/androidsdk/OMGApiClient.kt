@@ -55,9 +55,9 @@ import kotlin.coroutines.experimental.CoroutineContext
 class OMGApiClient : KuberaAPI {
     private var authorization: String? = null
     private lateinit var main: CoroutineContext // main thread
-    private val BASE_URL: String = "https://kubera.omisego.io/"
-    private var httpConnection: HttpConnection = DefaultHttpConnection(BASE_URL)
-    private var requestor: Requestor = Requestor(httpConnection)
+    private var baseUrl: String? = null
+    private lateinit var httpConnection: HttpConnection
+    private lateinit var requestor: Requestor
     private val responseProvider: ResponseProvider by lazy { ResponseProvider() }
 
 
@@ -69,8 +69,9 @@ class OMGApiClient : KuberaAPI {
      * @receiver A [Builder]'s methods.
      */
     class Builder(init: Builder.() -> Unit) {
-        private var authorizationKey: String? = null
+        private var authenticationToken: String? = null
         private var context: CoroutineContext? = null
+        private var baseURL: String? = null
         private var requestor: Requestor? = null
 
         /**
@@ -80,7 +81,16 @@ class OMGApiClient : KuberaAPI {
          * @param authorizationToken token sent in the headers of the request for authentication.
          */
         fun setAuthorizationToken(authorizationToken: String) {
-            this.authorizationKey = authorizationToken
+            this.authenticationToken = authorizationToken
+        }
+
+        /**
+         * Set the API [baseURL].
+         *
+         * @param baseURL is the URL of the OmiseGO Wallet API.
+         */
+        fun setBaseURL(baseURL: String) {
+            this.baseURL = baseURL
         }
 
         /**
@@ -106,13 +116,21 @@ class OMGApiClient : KuberaAPI {
          * Note: Calling [Builder.setAuthorizationToken] is required before calling this.
          */
         fun build(): OMGApiClient {
+            checkBaseURLSet()
             val apiClient = OMGApiClient()
-            apiClient.authorization = authorizationKey
+            apiClient.authorization = authenticationToken
             apiClient.main = context ?: UI
+            apiClient.baseUrl = baseURL
+            apiClient.httpConnection = DefaultHttpConnection(baseURL!!)
+            apiClient.requestor = Requestor(apiClient.httpConnection)
             this.requestor?.let {
                 apiClient.requestor = it
             }
             return apiClient
+        }
+
+        private fun checkBaseURLSet() {
+            if (baseURL == null) throw IllegalStateException("baseURL should be set before build!")
         }
 
         init {
@@ -210,7 +228,10 @@ class OMGApiClient : KuberaAPI {
         }
 
         val job = requestor.asyncRequest(endpoint, RequestOptions().apply {
-            setHeaders("Authorization" to (authorization ?: ""), "Accept" to "application/vnd.omisego.v1+json")
+            setHeaders(
+                    "Authorization" to (authorization ?: ""),
+                    "Accept" to "application/vnd.omisego.v1+json"
+            )
         })
 
         try {

@@ -9,15 +9,11 @@ It supports the following functionalities:
 
 ## Requirements
 
----
+- Minimum Android SDK version 19
 
-- Minimum SDK version 19 or above
-
-- Kotlin version 1.2.0
+- Kotlin version 1.2.21
 
 ## Installation
-
----
 
 Since we are not hosting the packaged SDK yet, you should add the library manually following these steps:
 
@@ -49,8 +45,6 @@ You're done.
 
 ## Usage
 
----
-
 ### Initialization
 
 Before using the SDK to retrieve a resource, you need to initialize the client (`OMGApiClient`) with a builder (`OMGApiClient.builder`).
@@ -60,12 +54,14 @@ You should to this as soon as you obtain a valid authentication token correspond
  val token = Base64.encode("$api_key:$authentication_token")
  val omgApiClient = OMGApiClient.Builder {
       setAuthorizationToken(token)
+      setBaseURL(baseURL)
  }.build()
 ```
 
 Where:
 `apiKey` is the api key generated from your OmiseGO admin panel.
 `authenticationToken` is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
+`baseURL` is the URL of the OmiseGO Wallet API.
 > You can find more info on how to retrieve this token in the OmiseGO server SDK documentations.
 
 ### Retrieving resources
@@ -136,12 +132,24 @@ omgApiClient.getSettings(object : Callback<Setting> {
 })
 ```
 
+## Test
+In order to run the live tests (bound to a working server) you need to fill the corresponding in the file `src/test/resources/secret.json`. 
+> Note : You can see the reference in the file `secret.example.json`
+
+The variables are:
+
+* `base_url`
+* `api_key`
+* `auth_token`
+* `access_key`
+* `secret_key`
+
+You can then run the test under the `src/test` folder from the Android Studio.
+
 ## License
 
----
 OmiseGO is released under the Apache license. See `LICENSE` for details.
 
 ## Sample Project
 
----
 You can check out the latest sample app from the following repo : [OMGShop](https://github.com/omisego/sample-android)
