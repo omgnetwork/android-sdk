@@ -1,11 +1,21 @@
 # OmiseGO Android SDK
 
 The [OmiseGO](https://omisego.network) Android SDK allows developers to easily interact with a node of the OmiseGO eWallet.
-It supports the following functionalities:
 
-- Retrieve the current user
-- Get the user addresses and balances
-- List the settings for a node
+
+# Table of Contents
+
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Initialization](#initialization)
+  - [Retrieving resources](#retrieving-resources)
+    - [Get the current user](#get-the-current-user)
+    - [Get the addresses of the current user](#get-the-addresses-of-the-current-user)
+    - [Get the provider settings](#get-the-provider-settings)
+- [Tests](#tests)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Requirements
 
@@ -146,9 +156,13 @@ The variables are:
 
 You can then run the test under the `src/test` folder from the Android Studio.
 
+# Contributing
+
+See [how you can help](.github/CONTRIBUTING.md).
+
 ## License
 
-OmiseGO is released under the Apache license. See `LICENSE` for details.
+The OmiseGO Android SDK is released under the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
 
 ## Sample Project
 
