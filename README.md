@@ -29,11 +29,13 @@ Since we are not hosting the packaged SDK yet, you should add the library manual
 
 1. Create `libs` folder in your app module if it doesn't existed.
 
-2. Build the OmiseGO SDK project from Android Studio by going to `Build > Rebuild Project`
+2. Clone the android-sdk project by `git clone https://github.com/omisego/android-sdk.git`
 
-3. Copy .aar file from the `build/outputs/aar` folder and paste in the `libs` folder.
+3. Build the OmiseGO SDK project from Android Studio by going to `Build > Rebuild Project`
 
-4. Add the following code to your 'app/build.gradle', to make gradle able to see the file in `libs` folder.
+4. Copy .aar file from the `build/outputs/aar` folder and paste in the `libs` folder of your project.
+
+5. Add the following code to your 'app/build.gradle', to make gradle able to see the file in `libs` folder.
 
 ```groovy
 repositories {
@@ -43,7 +45,7 @@ repositories {
 }
 ```
 
-5. Add the following code to your `app/build.gradle`, since we're using kotlin coroutines to handle thread.
+6. Add the following code to your `app/build.gradle`, since we're using kotlin coroutines to handle thread.
 
 ```groovy
 kotlin {
@@ -53,7 +55,7 @@ kotlin {
 }
 ```
 
-6. Finally, add the following code to your `app/build.gradle` to add the required dependencies.
+7. Finally, add the following code to your `app/build.gradle` to add the required dependencies.
 
 ```groovy
 dependencies {
