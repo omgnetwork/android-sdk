@@ -27,11 +27,23 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
 
 Since we are not hosting the packaged SDK yet, you should add the library manually following these steps:
 
-1. Create `libs` folder in your app module.
+1. Create `libs` folder in your app module if it doesn't existed.
 
-2. Copy .aar file from the `build/outputs/aar` folder and paste in the `libs` folder.
+2. Build your project from Android Studio by going to `Build > Rebuild Project`
 
-3. Add the following code to your `app/build.gradle`, since we're using kotlin coroutines to handle thread.
+3. Copy .aar file from the `build/outputs/aar` folder and paste in the `libs` folder.
+
+4. Add the following code to your 'app/build.gradle', to make gradle able to see the file in `libs` folder.
+
+```groovy
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+```
+
+5. Add the following code to your `app/build.gradle`, since we're using kotlin coroutines to handle thread.
 
 ```groovy
 kotlin {
@@ -41,15 +53,18 @@ kotlin {
 }
 ```
 
+6. Finally, add the following code to your `app/build.gradle` to add the required dependencies.
+
 ```groovy
 dependencies {
     // ... your dependencies
-    implementation(name: 'androidsdk-release', ext: 'aar')
+    // TODO: replace the `your-aar-file` with your .arr's filename.
+    implementation (name: 'your-aar-file', ext: 'aar') 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.19.3'
 }
 ```
 
-4. Sync the gradle
+7. Sync the gradle
 
 You're done.
 
