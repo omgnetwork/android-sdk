@@ -29,7 +29,7 @@ Since we are not hosting the packaged SDK yet, you should add the library manual
 
 1. Create `libs` folder in your app module if it doesn't existed.
 
-2. Build your project from Android Studio by going to `Build > Rebuild Project`
+2. Build the OmiseGO SDK project from Android Studio by going to `Build > Rebuild Project`
 
 3. Copy .aar file from the `build/outputs/aar` folder and paste in the `libs` folder.
 
