@@ -66,7 +66,7 @@ dependencies {
 }
 ```
 
-7. Sync the gradle
+8. Sync the gradle
 
 You're done.
 
