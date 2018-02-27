@@ -13,7 +13,7 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
     - [Get the current user](#get-the-current-user)
     - [Get the addresses of the current user](#get-the-addresses-of-the-current-user)
     - [Get the provider settings](#get-the-provider-settings)
-- [Tests](#tests)
+- [Test](#test)
 - [Contributing](#contributing)
 - [License](#license)
 
