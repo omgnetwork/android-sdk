@@ -171,7 +171,7 @@ The variables are:
 * `access_key`
 * `secret_key`
 
-You can then run the test under the `src/test` folder from the Android Studio.
+You can then run the test under the `src/test` folder from the Android Studio or run the command `./gradlew test`.
 
 # Contributing
 

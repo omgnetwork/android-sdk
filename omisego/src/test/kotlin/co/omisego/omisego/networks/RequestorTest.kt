@@ -49,7 +49,7 @@ class RequestorTest {
     @Test
     fun `network request headers and body should be matched with the requestOptions`() = runBlocking {
         // Arrange
-        println(Thread.currentThread().name)
+        val beforeThreadName = Thread.currentThread().name
         val requestOptions = RequestOptions().apply {
             setBody(*mockBody.toList().toTypedArray())
             setHeaders(*mockHeaders)
@@ -67,7 +67,7 @@ class RequestorTest {
         val actualBody = MockHttpBin(bodyJson.getString("name"), bodyJson.getDouble("amount"), bodyJson.getBoolean("done"))
 
         // Assert thread
-        Thread.currentThread().name shouldEqual "main" // Validate that we're already in the main thread now.
+        Thread.currentThread().name shouldEqual beforeThreadName // Validate that we're already be backing to the old thread.
 
         // Assert body
         actualBody shouldEqual expectedBody
