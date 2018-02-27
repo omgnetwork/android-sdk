@@ -1,11 +1,21 @@
 # OmiseGO Android SDK
 
 The [OmiseGO](https://omisego.network) Android SDK allows developers to easily interact with a node of the OmiseGO eWallet.
-It supports the following functionalities:
 
-- Retrieve the current user
-- Get the user addresses and balances
-- List the settings for a node
+
+# Table of Contents
+
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Initialization](#initialization)
+  - [Retrieving resources](#retrieving-resources)
+    - [Get the current user](#get-the-current-user)
+    - [Get the addresses of the current user](#get-the-addresses-of-the-current-user)
+    - [Get the provider settings](#get-the-provider-settings)
+- [Tests](#tests)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Requirements
 
@@ -17,11 +27,25 @@ It supports the following functionalities:
 
 Since we are not hosting the packaged SDK yet, you should add the library manually following these steps:
 
-1. Create `libs` folder in your app module.
+1. Create `libs` folder in your app module if it doesn't existed.
 
-2. Copy .aar file from the `build/outputs/aar` folder and paste in the `libs` folder.
+2. Clone the android-sdk project by `git clone https://github.com/omisego/android-sdk.git`
 
-3. Add the following code to your `app/build.gradle`, since we're using kotlin coroutines to handle thread.
+3. Build the OmiseGO SDK project from Android Studio by going to `Build > Rebuild Project`
+
+4. Copy .aar file from the `build/outputs/aar` folder and paste in the `libs` folder of your project.
+
+5. Add the following code to your 'app/build.gradle', to make gradle able to see the file in `libs` folder.
+
+```groovy
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+```
+
+6. Add the following code to your `app/build.gradle`, since we're using kotlin coroutines to handle thread.
 
 ```groovy
 kotlin {
@@ -31,15 +55,18 @@ kotlin {
 }
 ```
 
+7. Finally, add the following code to your `app/build.gradle` to add the required dependencies.
+
 ```groovy
 dependencies {
     // ... your dependencies
-    implementation(name: 'androidsdk-release', ext: 'aar')
+    // TODO: replace the `your-aar-file` with your .arr's filename.
+    implementation (name: 'your-aar-file', ext: 'aar') 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.19.3'
 }
 ```
 
-4. Sync the gradle
+8. Sync the gradle
 
 You're done.
 
@@ -146,9 +173,13 @@ The variables are:
 
 You can then run the test under the `src/test` folder from the Android Studio.
 
+# Contributing
+
+See [how you can help](.github/CONTRIBUTING.md).
+
 ## License
 
-OmiseGO is released under the Apache license. See `LICENSE` for details.
+The OmiseGO Android SDK is released under the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
 
 ## Sample Project
 
