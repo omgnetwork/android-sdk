@@ -13,7 +13,7 @@ package co.omisego.omisego.models
  *
  * @param id The unique identifier on the wallet server side.
  * @param providerUserId The user identifier on the provider server side.
- * @param username The user's username, it can be an email or any name describing this usert
+ * @param username The user's username, it can be an email or any name describing this user
  * @param metaData Any additional metadata that need to be stored as a [HashMap]
  *
  */
