@@ -1,12 +1,11 @@
 package co.omisego.omisego.security
 
+import android.content.Context
 import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.support.annotation.RequiresApi
-import android.util.Base64
 import java.security.Key
-import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.spec.GCMParameterSpec
@@ -20,53 +19,48 @@ import javax.crypto.spec.GCMParameterSpec
  */
 
 // IV or Initialization Vector used in encryption and decryption. It must be the same value and contain 12 characters.
-internal class KeyManagerMarshmallow(private var keyAlias: String, private var iv: String = String(ByteArray(12))) {
-    private lateinit var keyStore: KeyStore
+@RequiresApi(Build.VERSION_CODES.M)
+internal class KeyManagerMarshmallow(
+        keyHolder: KeyHolder,
+        private var iv: String = String(ByteArray(12))
+) : KeyManager(keyHolder) {
+
+    override val encryptCipher: Cipher by lazy {
+        Cipher.getInstance(AES_MODE).also { initCipher(it, Cipher.ENCRYPT_MODE) }
+    }
+    override val decryptCipher: Cipher by lazy {
+        Cipher.getInstance(AES_MODE).also { initCipher(it, Cipher.DECRYPT_MODE) }
+    }
+
+    private val secretKey: Key
+        get() = keyStore.getKey(keyAlias, null)
+    private val gcmParameterSpec: GCMParameterSpec
+        get() = GCMParameterSpec(128, iv.toByteArray())
 
     companion object {
-        val ANDROID_KEY_STORE = "AndroidKeyStore"
-        val AES_MODE = "AES/GCM/NoPadding"
+        const val AES_MODE = "AES/GCM/NoPadding"
     }
 
     // Generate key function for Android version 6.0 Marshmallow or above
-    @RequiresApi(Build.VERSION_CODES.M)
-    fun create() {
-        keyStore = KeyStore.getInstance(ANDROID_KEY_STORE)
-        keyStore.load(null)
-        if (!keyStore.containsAlias(keyAlias)) {
-            val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
+    override fun generateKey(context: Context) {
+        val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES,
+                                                    ANDROID_KEY_STORE)
 
-            val spec = KeyGenParameterSpec.Builder(keyAlias, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
-                    .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                    .setRandomizedEncryptionRequired(false)
-                    .build()
+        val spec = KeyGenParameterSpec.Builder(keyAlias,
+                                               KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
+                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                .setRandomizedEncryptionRequired(false)
+                .build()
 
-            keyGenerator.init(spec)
-            keyGenerator.generateKey()
+        keyGenerator.init(spec)
+        keyGenerator.generateKey()
+    }
+
+    override fun initCipher(cipher: Cipher, opmode: Int) {
+        if (opmode !in arrayOf(Cipher.ENCRYPT_MODE, Cipher.ENCRYPT_MODE)) {
+            throw IllegalArgumentException("Unsupported opmode $opmode")
         }
-    }
-
-    fun setIV(iv: String) {
-        this.iv = iv
-    }
-
-    private fun getSecretKey(): Key = keyStore.getKey(keyAlias, null)
-
-    // Encrypt data
-    fun encrypt(input: ByteArray): String {
-        val cipher = Cipher.getInstance(AES_MODE)
-        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(), GCMParameterSpec(128, iv.toByteArray()))
-        val encodedBytes: ByteArray = cipher.doFinal(input)
-        return Base64.encodeToString(encodedBytes, Base64.DEFAULT)
-    }
-
-    // Decrypt data
-    fun decrypt(encrypted: ByteArray): String {
-        val c = Cipher.getInstance(AES_MODE)
-        c.init(Cipher.DECRYPT_MODE, getSecretKey(), GCMParameterSpec(128, iv.toByteArray()))
-        val decoded = Base64.decode(encrypted, Base64.DEFAULT)
-        val decodedBytes = c.doFinal(decoded)
-        return String(decodedBytes)
+        cipher.init(opmode, secretKey, gcmParameterSpec)
     }
 }
