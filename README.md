@@ -23,10 +23,12 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
 
 ## Installation
 
-Add the following line in the module's build.gradle
+To use the OmiseGO SDK in your android project, simply add the following line in the module's build.gradle
  
 ```groovy
-implementation 'co.omisego:omisego-sdk:0.8.0'
+dependencies {
+    implementation 'co.omisego:omisego-sdk:0.8.0'
+}
 ```
 
 ## Usage
