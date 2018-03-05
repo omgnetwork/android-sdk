@@ -2,29 +2,10 @@
   "version": "1",
   "success": true,
   "data": {
+    "username": "user01",
+    "provider_user_id": "provider_user_id01",
     "object": "user",
-    "id": "cec34607-0761-4a59-8357-18963e42a1aa",
-    "provider_user_id": "wijf-fbancomw-dqwjudb",
-    "username": "john.doe@example.com",
-    "metadata": {
-      "first_name": "John",
-      "last_name": "Doe",
-      "object": {
-        "my_key": "my_value",
-        "my_nested_object": {
-          "my_nested_key": "my_nested_value"
-        }
-      },
-      "array": [
-        {
-          "key_1": "value_1",
-          "key_2": "value_2"
-        },
-        {
-          "key_1": "value_3",
-          "key_2": "value_4"
-        }
-      ]
-    }
+    "metadata": {},
+    "id": "48236187-9c5c-4568-8cdf-f0233d035574"
   }
 }

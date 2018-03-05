@@ -1,5 +1,7 @@
 package co.omisego.omisego.models
 
+import com.google.gson.annotations.SerializedName
+
 
 /**
  * OmiseGO
@@ -18,6 +20,6 @@ package co.omisego.omisego.models
  *
  */
 data class User(val id: String,
-                val providerUserId: String,
+                @SerializedName("provider_user_id") val providerUserId: String,
                 val username: String,
-                val metaData: HashMap<String, Any>?)
+                @SerializedName("meta_data") val metaData: HashMap<String, Any>?)

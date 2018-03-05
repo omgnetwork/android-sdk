@@ -1,0 +1,14 @@
+package co.omisego.omisego.constants
+
+
+/**
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.
+ * Copyright © 2017 OmiseGO. All rights reserved.
+ */
+
+object Exceptions {
+    val emptyBaseURL = IllegalStateException("baseURL should not be empty.")
+    val emptyAuthenticationToken = IllegalStateException("Authentication token should not be empty.")
+}
