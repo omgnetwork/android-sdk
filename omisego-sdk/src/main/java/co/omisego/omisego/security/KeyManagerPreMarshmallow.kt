@@ -57,7 +57,7 @@ internal class KeyManagerPreMarshmallow(
     }
 
     override fun initCipher(cipher: Cipher, opmode: Int) {
-        if (opmode !in arrayOf(Cipher.ENCRYPT_MODE, Cipher.ENCRYPT_MODE)) {
+        if (opmode !in arrayOf(Cipher.ENCRYPT_MODE, Cipher.DECRYPT_MODE)) {
             throw IllegalArgumentException("Unsupported opmode $opmode")
         }
         cipher.init(opmode, secretKey)

@@ -8,7 +8,8 @@ import javax.crypto.Cipher
 /**
  * OmiseGO
  *
- * Copyright © 2017 OmiseGO. All rights reserved.
+ * Created by Yannick Badoual on 2/28/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
 internal abstract class KeyManager(private val keyHolder: KeyHolder) {

@@ -22,7 +22,7 @@ import javax.crypto.spec.GCMParameterSpec
 @RequiresApi(Build.VERSION_CODES.M)
 internal class KeyManagerMarshmallow(
         keyHolder: KeyHolder,
-        private var iv: String = String(ByteArray(12))
+        private val iv: String = String(ByteArray(12))
 ) : KeyManager(keyHolder) {
 
     override val encryptCipher: Cipher by lazy {
@@ -58,7 +58,7 @@ internal class KeyManagerMarshmallow(
     }
 
     override fun initCipher(cipher: Cipher, opmode: Int) {
-        if (opmode !in arrayOf(Cipher.ENCRYPT_MODE, Cipher.ENCRYPT_MODE)) {
+        if (opmode !in arrayOf(Cipher.ENCRYPT_MODE, Cipher.DECRYPT_MODE)) {
             throw IllegalArgumentException("Unsupported opmode $opmode")
         }
         cipher.init(opmode, secretKey, gcmParameterSpec)

@@ -7,6 +7,13 @@ import javax.crypto.Cipher
 import javax.crypto.CipherInputStream
 import javax.crypto.CipherOutputStream
 
+/**
+ * OmiseGO
+ *
+ * Created by Yannick Badoual on 2/28/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 internal class RSACipher(private val keyHolder: KeyHolder) {
 
     private val keyStore: KeyStore
