@@ -8,6 +8,8 @@ package co.omisego.omisego.constant
  */
 
 object Exceptions {
-    val emptyBaseURL = IllegalStateException("baseURL should not be empty.")
-    val emptyAuthenticationToken = IllegalStateException("Authentication token should not be empty.")
+    val emptyBaseURL
+        get() = IllegalStateException("baseURL should not be empty.")
+    val emptyAuthenticationToken
+        get() = IllegalStateException("Authentication token should not be empty.")
 }
