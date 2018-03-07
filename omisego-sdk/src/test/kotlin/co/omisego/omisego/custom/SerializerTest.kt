@@ -1,5 +1,13 @@
 package co.omisego.omisego.custom
 
+/**
+ * OmiseGO
+ *
+ *
+ * Created by Phuchit Sirimongkolsathien on 7/3/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import co.omisego.omisego.constant.ErrorCode
 import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.model.ApiError
@@ -14,13 +22,6 @@ import java.io.File
 import java.io.IOException
 import kotlin.test.Test
 
-/**
- * OmiseGO
- *
- *
- * Created by Phuchit Sirimongkolsathien on 7/3/2018 AD.
- * Copyright © 2017-2018 OmiseGO. All rights reserved.
- */
 class SerializerTest {
     private val serializer by lazy { Serializer() }
     private val failFile: File by lazy {
