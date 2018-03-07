@@ -2,11 +2,11 @@ package co.omisego.sample
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import co.omisego.omisego.Callback
+import co.omisego.omisego.custom.Callback
 import co.omisego.omisego.NewOMGAPIClient
-import co.omisego.omisego.models.*
-import co.omisego.omisego.networks.core.ewallet.EWalletClient
-import co.omisego.omisego.utils.OMGEncryptionHelper
+import co.omisego.omisego.model.*
+import co.omisego.omisego.network.ewallet.EWalletClient
+import co.omisego.omisego.utils.EncryptionHelper
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val auth = OMGEncryptionHelper.encryptBase64(
+        val auth = EncryptionHelper.encryptBase64(
                 "LFBcGM9chCf39XY0saZFbZPOjF_kKNxvun61yGqafpo",
                 "-ewI2XoyTztIAJORaQC6cTyMvMUiCGG4NVD26rC_AkY"
         )
@@ -26,24 +26,25 @@ class MainActivity : AppCompatActivity() {
         }.build()
 
         val omgApiClient = NewOMGAPIClient(eWalletClient)
-//        omgApiClient.getCurrentUser(object : Callback<User> {
-//            override fun success(response: Response<User>) {
+
+//        omgApiClient.getSetting(object : Callback<Setting> {
+//            override fun success(response: OMGResponse<Setting>) {
 //                print(response)
 //            }
 //
-//            override fun fail(response: Response<ApiError>) {
+//            override fun fail(response: OMGResponse<ApiError>) {
 //                println(response)
 //            }
 //        })
 
-        omgApiClient.getSetting(object : Callback<Setting> {
-            override fun success(response: Response<Setting>) {
-                print(response)
+        omgApiClient.getCurrentUser(object: Callback<User> {
+            override fun success(response: OMGResponse<User>) {
+                println(response.data.username)
             }
 
-            override fun fail(response: Response<ApiError>) {
-                println(response)
+            override fun fail(response: OMGResponse<ApiError>) {
             }
+
         })
     }
 }

@@ -2,7 +2,7 @@
 //
 //import co.omisego.omisego.extensions.bd
 //import co.omisego.omisego.models.*
-//import co.omisego.omisego.utils.ErrorCode
+//import co.omisego.omisego.constants.ErrorCode
 //import co.omisego.omisego.utils.OMGEncryptionHelper
 //import com.nhaarman.mockito_kotlin.eq
 //import com.nhaarman.mockito_kotlin.whenever
@@ -91,19 +91,19 @@
 //    }
 //
 //    @Test
-//    fun `get user success`() = runBlocking {
+//    fun `transform user success`() = runBlocking {
 //        // Arrange
-//        var actualResponse: Response<Any>? = null
+//        var actualResponse: OMGResponse<Any>? = null
 //
 //        // Just don't care about thread here. Because in android, will work properly.
 //        // Action
 //        omgApiClient.getCurrentUser(object : Callback<User> {
-//            override fun success(response: Response<User>) {
+//            override fun success(response: OMGResponse<User>) {
 //                println(response)
 //                actualResponse = response
 //            }
 //
-//            override fun fail(response: Response<ApiError>) {
+//            override fun fail(response: OMGResponse<ApiError>) {
 //                actualResponse = response
 //            }
 //        })
@@ -120,9 +120,9 @@
 //    }
 //
 //    @Test
-//    fun `get user failed because invalid auth scheme`() = runBlocking {
+//    fun `transform user failed because invalid auth scheme`() = runBlocking {
 //        // Arrange
-//        var actualResponse: Response<Any>? = null
+//        var actualResponse: OMGResponse<Any>? = null
 //        omgApiClient = OMGApiClient.Builder {
 //            setAuthorizationToken("wrong")
 //            setBaseURL(baseURL)
@@ -132,11 +132,11 @@
 //        // Just don't care about thread here. Because in android, will work properly.
 //        // Action
 //        omgApiClient.getCurrentUser(object : Callback<User> {
-//            override fun success(response: Response<User>) {
+//            override fun success(response: OMGResponse<User>) {
 //                actualResponse = response
 //            }
 //
-//            override fun fail(response: Response<ApiError>) {
+//            override fun fail(response: OMGResponse<ApiError>) {
 //                actualResponse = response
 //            }
 //        })
@@ -157,7 +157,7 @@
 //        // Arrange
 //        secret shouldNotBe null
 //
-//        var actualResponse: Response<Any>? = null
+//        var actualResponse: OMGResponse<Any>? = null
 //
 //        // Retrieve token from login API
 //        val token = asyncLogin().await()
@@ -175,11 +175,11 @@
 //        }.build()
 //
 //        omgApiClient.logout(object : Callback<String> {
-//            override fun success(response: Response<String>) {
+//            override fun success(response: OMGResponse<String>) {
 //                actualResponse = response
 //            }
 //
-//            override fun fail(response: Response<ApiError>) {
+//            override fun fail(response: OMGResponse<ApiError>) {
 //                actualResponse = response
 //            }
 //        })
@@ -198,11 +198,11 @@
 //        }.build()
 //
 //        omgApiClient.logout(object : Callback<String> {
-//            override fun success(response: Response<String>) {
+//            override fun success(response: OMGResponse<String>) {
 //                actualResponse = response
 //            }
 //
-//            override fun fail(response: Response<ApiError>) {
+//            override fun fail(response: OMGResponse<ApiError>) {
 //                actualResponse = response
 //            }
 //        })
@@ -221,16 +221,16 @@
 //    @Test
 //    fun `list balances success`() = runBlocking {
 //        // Arrange
-//        var actualResponse: Response<Any>? = null
+//        var actualResponse: OMGResponse<Any>? = null
 //
 //        // Just don't care about thread here. Because in android, will work properly.
 //        // Action
 //        omgApiClient.listBalances(object : Callback<List<Address>> {
-//            override fun success(response: Response<List<Address>>) {
+//            override fun success(response: OMGResponse<List<Address>>) {
 //                actualResponse = response
 //            }
 //
-//            override fun fail(response: Response<ApiError>) {
+//            override fun fail(response: OMGResponse<ApiError>) {
 //                actualResponse = response
 //            }
 //        })
@@ -263,7 +263,7 @@
 //    @Test
 //    fun `list balances should fail because wrong token given`() = runBlocking {
 //        // Arrange
-//        var actualResponse: Response<Any>? = null
+//        var actualResponse: OMGResponse<Any>? = null
 //        omgApiClient = OMGApiClient.Builder {
 //            setAuthorizationToken("wrong")
 //            setBaseURL(baseURL)
@@ -273,11 +273,11 @@
 //        // Just don't care about thread here. Because in android, will work properly.
 //        // Action
 //        omgApiClient.listBalances(object : Callback<List<Address>> {
-//            override fun success(response: Response<List<Address>>) {
+//            override fun success(response: OMGResponse<List<Address>>) {
 //                actualResponse = response
 //            }
 //
-//            override fun fail(response: Response<ApiError>) {
+//            override fun fail(response: OMGResponse<ApiError>) {
 //                actualResponse = response
 //            }
 //        })
@@ -295,18 +295,18 @@
 //    }
 //
 //    @Test
-//    fun `get settings success`() = runBlocking {
+//    fun `transform settings success`() = runBlocking {
 //        // Arrange
-//        var actualResponse: Response<Any>? = null
+//        var actualResponse: OMGResponse<Any>? = null
 //
 //        // Just don't care about thread here. Because in android, will work properly.
 //        // Action
 //        omgApiClient.getSettings(object : Callback<Setting> {
-//            override fun success(response: Response<Setting>) {
+//            override fun success(response: OMGResponse<Setting>) {
 //                actualResponse = response
 //            }
 //
-//            override fun fail(response: Response<ApiError>) {
+//            override fun fail(response: OMGResponse<ApiError>) {
 //                actualResponse = response
 //            }
 //        })
@@ -330,9 +330,9 @@
 //    }
 //
 //    @Test
-//    fun `get settings failed because invalid auth scheme`() = runBlocking {
+//    fun `transform settings failed because invalid auth scheme`() = runBlocking {
 //        // Arrange
-//        var actualResponse: Response<Any>? = null
+//        var actualResponse: OMGResponse<Any>? = null
 //        val omgApiClient = OMGApiClient.Builder {
 //            setAuthorizationToken("wrong")
 //            setBaseURL(baseURL)
@@ -342,11 +342,11 @@
 //        // Just don't care about thread here. Because in android, will work properly.
 //        // Action
 //        omgApiClient.getSettings(object : Callback<Setting> {
-//            override fun success(response: Response<Setting>) {
+//            override fun success(response: OMGResponse<Setting>) {
 //                actualResponse = response
 //            }
 //
-//            override fun fail(response: Response<ApiError>) {
+//            override fun fail(response: OMGResponse<ApiError>) {
 //                actualResponse = response
 //            }
 //        })
@@ -387,15 +387,15 @@
 //            setRequestor(mockRequestor)
 //        }.build()
 //
-//        var actualResponse: Response<Any>? = null
+//        var actualResponse: OMGResponse<Any>? = null
 //
 //        // Action
 //        mockApiClient.getSettings(object : Callback<Setting> {
-//            override fun success(response: Response<Setting>) {
+//            override fun success(response: OMGResponse<Setting>) {
 //                actualResponse = response
 //            }
 //
-//            override fun fail(response: Response<ApiError>) {
+//            override fun fail(response: OMGResponse<ApiError>) {
 //                actualResponse = response
 //            }
 //        })

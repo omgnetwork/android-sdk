@@ -6,7 +6,7 @@
 //import co.omisego.omisego.models.General
 //import co.omisego.omisego.models.Setting
 //import co.omisego.omisego.models.User
-//import co.omisego.omisego.utils.ErrorCode
+//import co.omisego.omisego.constants.ErrorCode
 //import kotlinx.coroutines.experimental.android.UI
 //import kotlinx.coroutines.experimental.async
 //import kotlinx.coroutines.experimental.runBlocking
@@ -34,11 +34,11 @@
 // * }.build()
 // *
 // * omgApiClient.getCurrentUser(object : Callback<User> {
-// *      override fun success(response: Response<User>) {
+// *      override fun success(response: OMGResponse<User>) {
 // *          // Do something
 // *      }
 // *
-// *      override fun fail(response: Response<ApiError>) {
+// *      override fun fail(response: OMGResponse<ApiError>) {
 // *          // Handle fail case properly
 // *      }
 // * })
@@ -132,7 +132,7 @@
 //    }
 //
 //    /**
-//     * Asynchronously send the request to get the [User] corresponding to the provided authentication token.
+//     * Asynchronously send the request to transform the [User] corresponding to the provided authentication token.
 //     * if *success* the [callback] will be invoked with the [User] parameter,
 //     * if *fail* [callback] will be invoked with the [co.omisego.omisego.models.ApiError] parameter.
 //     *
@@ -140,7 +140,7 @@
 //     */
 //    override fun getCurrentUser(callback: Callback<User>) {
 //        async(main) {
-//            process("me.get",
+//            process("me.transform",
 //                    fail = {
 //                        callback.fail(response = responseProvider.failure(it))
 //                    },
@@ -175,7 +175,7 @@
 //    }
 //
 //    /**
-//     * Asynchronously send the request to get the balances of a user corresponding to the provided authentication token.
+//     * Asynchronously send the request to transform the balances of a user corresponding to the provided authentication token.
 //     * if *success* the [callback] will be invoked with the list of [Address] parameter,
 //     * if *fail* [callback] will be invoked with the [co.omisego.omisego.models.ApiError] parameter.
 //     *
@@ -195,7 +195,7 @@
 //    }
 //
 //    /**
-//     * Asynchronously send the request to get the global settings.
+//     * Asynchronously send the request to transform the global settings.
 //     * if *success* the [callback] will be invoked with [Setting] parameter,
 //     * if *fail* [callback] will be invoked with the [co.omisego.omisego.models.ApiError] parameter.
 //     *
@@ -235,7 +235,7 @@
 //                    put("description", rawData.response)
 //                }
 //                val jsonObject = JSONObject().put("data", error)
-//                fail.invoke(General("1", false, jsonObject))
+//                fail.invoke(General(Versions.EWALLET_API, false, jsonObject))
 //                return@runBlocking
 //            }
 //
@@ -261,7 +261,7 @@
 //            val jsonObject = JSONObject().apply {
 //                put("data", error)
 //            }
-//            val general = General("1", false, jsonObject)
+//            val general = General(Versions.EWALLET_API, false, jsonObject)
 //            fail.invoke(general)
 //            e.printStackTrace()
 //        }
@@ -272,7 +272,7 @@
 //            val failJsonObject = JSONObject()
 //            failJsonObject.put("code", ErrorCode.CLIENT_INVALID_AUTH_SCHEME)
 //            failJsonObject.put("description", "OMGApiClient has not been initialized with the correct authorization token. Please call init(authorizationToken) first.")
-//            return General("1", false, failJsonObject)
+//            return General(Versions.EWALLET_API, false, failJsonObject)
 //        }
 //        return null
 //    }
