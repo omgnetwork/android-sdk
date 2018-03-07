@@ -3,7 +3,7 @@ package co.omisego.sample
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import co.omisego.omisego.custom.Callback
-import co.omisego.omisego.NewOMGAPIClient
+import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.model.*
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.utils.EncryptionHelper
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         }.build()
 
 
-        val omgApiClient = NewOMGAPIClient(eWalletClient)
+        val omgApiClient = OMGAPIClient(eWalletClient)
 
 //        omgApiClient.getSetting(object : Callback<Setting> {
 //            override fun success(response: OMGResponse<Setting>) {

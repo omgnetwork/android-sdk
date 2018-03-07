@@ -40,7 +40,7 @@ import com.google.gson.reflect.TypeToken
  * </code>
  *
  */
-class NewOMGAPIClient(private val eWalletClient: EWalletClient) {
+class OMGAPIClient(private val eWalletClient: EWalletClient) {
     private val serializer = Serializer()
 
     /**

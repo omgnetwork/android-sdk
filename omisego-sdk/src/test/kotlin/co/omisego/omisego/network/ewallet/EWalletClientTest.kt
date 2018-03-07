@@ -1,4 +1,4 @@
-package co.omisego.omisego
+package co.omisego.omisego.network.ewallet
 
 import co.omisego.omisego.constant.Endpoints
 import co.omisego.omisego.constant.Exceptions
@@ -7,7 +7,6 @@ import co.omisego.omisego.model.Balance
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
-import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.utils.OMGEncryptionHelper
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -54,7 +53,6 @@ class EWalletClientTest {
     @JvmField
     val expectedEx = ExpectedException.none()!!
 
-
     @Before
     fun setUp() {
         val auth = OMGEncryptionHelper.encryptBase64(
@@ -71,8 +69,6 @@ class EWalletClientTest {
             authenticationToken = auth
             debug = false
         }.build()
-
-        println("Start")
     }
 
     @After
@@ -231,5 +227,4 @@ class EWalletClientTest {
         val token = object : TypeToken<OMGResponse<T>>() {}.type
         return Gson().fromJson<OMGResponse<T>>(responseText, token)
     }
-
 }
