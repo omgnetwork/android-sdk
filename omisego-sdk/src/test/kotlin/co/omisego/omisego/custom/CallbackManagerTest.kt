@@ -4,11 +4,14 @@ import co.omisego.omisego.constant.ErrorCode
 import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.custom.Callback
 import co.omisego.omisego.custom.CallbackManager
+import co.omisego.omisego.custom.Serializer
 import co.omisego.omisego.model.ApiError
 import co.omisego.omisego.model.OMGResponse
+import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import com.google.gson.Gson
 import com.google.gson.JsonElement
+import com.google.gson.reflect.TypeToken
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -41,7 +44,8 @@ class CallbackManagerTest {
     @Before
     fun setup() {
         callbackUser = mock()
-        responseObject = CallbackManager.newInstance<User>().transform(callbackUser)
+        val type = object : TypeToken<OMGResponse<User>>() {}.type
+        responseObject = CallbackManager<User>(Serializer(), type).transform(callbackUser)
     }
 
     @Test

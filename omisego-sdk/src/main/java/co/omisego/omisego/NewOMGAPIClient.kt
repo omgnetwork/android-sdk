@@ -19,25 +19,25 @@ class NewOMGAPIClient(private val eWalletClient: EWalletClient) {
     private val serializer = Serializer()
     fun getCurrentUser(callback: Callback<User>) {
         val type = object : TypeToken<OMGResponse<User>>() {}.type
-        val callbackManager = CallbackManager<User>(Serializer(), type)
+        val callbackManager = CallbackManager<User>(serializer, type)
         eWalletClient.eWalletAPI.getCurrentUser().enqueue(callbackManager.transform(callback))
     }
 
     fun getSettings(callback: Callback<Setting>) {
         val type = object : TypeToken<OMGResponse<Setting>>() {}.type
-        val callbackManager = CallbackManager<Setting>(Serializer(), type)
+        val callbackManager = CallbackManager<Setting>(serializer, type)
         eWalletClient.eWalletAPI.getSettings().enqueue(callbackManager.transform(callback))
     }
 
     fun logout(callback: Callback<Logout>) {
         val type = object : TypeToken<OMGResponse<Logout>>() {}.type
-        val callbackManager = CallbackManager<Logout>(Serializer(), type)
+        val callbackManager = CallbackManager<Logout>(serializer, type)
         eWalletClient.eWalletAPI.logout().enqueue(callbackManager.transform(callback))
     }
 
     fun listBalances(callback: Callback<BalanceList>) {
         val type = object : TypeToken<OMGResponse<BalanceList>>() {}.type
-        val callbackManager = CallbackManager<BalanceList>(Serializer(), type)
+        val callbackManager = CallbackManager<BalanceList>(serializer, type)
         eWalletClient.eWalletAPI.listBalance().enqueue(callbackManager.transform(callback))
     }
 
