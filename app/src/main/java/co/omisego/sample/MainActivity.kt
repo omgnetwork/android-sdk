@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
             debug = true
         }.build()
 
+
         val omgApiClient = NewOMGAPIClient(eWalletClient)
 
 //        omgApiClient.getSetting(object : Callback<Setting> {
