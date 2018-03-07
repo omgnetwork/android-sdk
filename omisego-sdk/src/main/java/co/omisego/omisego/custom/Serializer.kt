@@ -1,5 +1,12 @@
 package co.omisego.omisego.custom
 
+/**
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 6/3/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import co.omisego.omisego.constant.ErrorCode
 import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.model.ApiError
@@ -8,14 +15,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import retrofit2.Response
 import java.lang.reflect.Type
-
-
-/**
- * OmiseGO
- *
- * Created by Phuchit Sirimongkolsathien on 6/3/2018 AD.
- * Copyright © 2017-2018 OmiseGO. All rights reserved.
- */
 
 internal class Serializer {
     fun failure(t: Throwable): OMGResponse<ApiError> {

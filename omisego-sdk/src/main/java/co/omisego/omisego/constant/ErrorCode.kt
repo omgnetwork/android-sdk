@@ -1,11 +1,10 @@
 package co.omisego.omisego.constant
 
-
 /**
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 11/7/2017 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
 // Represents all error codes.

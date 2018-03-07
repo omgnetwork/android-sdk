@@ -1,16 +1,16 @@
 package co.omisego.omisego.model
 
-import co.omisego.omisego.extension.bd
-import org.amshove.kluent.shouldEqualTo
-import org.junit.Test
-
 /**
  * OmiseGO
  *
  *
  * Created by Phuchit Sirimongkolsathien on 17/12/2017 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import co.omisego.omisego.extension.bd
+import org.amshove.kluent.shouldEqualTo
+import org.junit.Test
 
 class MintedTokenTest {
     val mintedToken1 = MintedToken("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd)

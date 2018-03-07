@@ -1,15 +1,14 @@
 package co.omisego.omisego.custom
 
-import co.omisego.omisego.model.ApiError
-import co.omisego.omisego.model.OMGResponse
-
-
 /**
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 11/12/2017 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import co.omisego.omisego.model.ApiError
+import co.omisego.omisego.model.OMGResponse
 
 /**
  * A callback that represents whether an API request was successful or returned an error.

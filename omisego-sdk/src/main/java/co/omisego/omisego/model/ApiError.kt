@@ -1,14 +1,13 @@
 package co.omisego.omisego.model
 
-import co.omisego.omisego.constant.ErrorCode
-
-
 /**
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 11/7/2017 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import co.omisego.omisego.constant.ErrorCode
 
 /**
  * Represents an error caused by the SDK or the OmiseGO API.

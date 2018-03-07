@@ -1,7 +1,13 @@
 package co.omisego.omisego.utils
 
-import android.util.Base64
+/**
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 1/12/2017 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
 
+import android.util.Base64
 
 object EncryptionHelper {
     /**

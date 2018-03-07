@@ -1,16 +1,15 @@
 package co.omisego.omisego.network
 
-import co.omisego.omisego.constant.Headers
-import okhttp3.Interceptor
-import okhttp3.Response
-
-
 /**
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import co.omisego.omisego.constant.Headers
+import okhttp3.Interceptor
+import okhttp3.Response
 
 class InterceptorProvider {
     class Header(private val authenticationToken: String) : Interceptor {

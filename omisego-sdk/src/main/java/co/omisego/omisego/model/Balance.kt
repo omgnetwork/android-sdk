@@ -1,16 +1,15 @@
 package co.omisego.omisego.model
 
-import com.google.gson.annotations.SerializedName
-import java.math.BigDecimal
-import java.math.RoundingMode
-
-
 /**
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 11/6/2017 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import com.google.gson.annotations.SerializedName
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 /**
  * Represents a balance of a minted token

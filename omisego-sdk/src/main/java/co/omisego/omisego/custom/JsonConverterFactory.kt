@@ -1,5 +1,12 @@
 package co.omisego.omisego.custom
 
+/**
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import okhttp3.ResponseBody
@@ -8,14 +15,6 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import java.io.IOException
 import java.lang.reflect.Type
-
-
-/**
- * OmiseGO
- *
- * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
- */
 
 internal class JsonConverterFactory : Converter.Factory() {
     override fun responseBodyConverter(type: Type, annotations: Array<Annotation>, retrofit: Retrofit): Converter<ResponseBody, *> {

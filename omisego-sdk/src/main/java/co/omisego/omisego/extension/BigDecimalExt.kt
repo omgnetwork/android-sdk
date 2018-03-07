@@ -1,14 +1,13 @@
 package co.omisego.omisego.extension
 
-import java.math.BigDecimal
-
-
 /**
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 6/12/2017 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import java.math.BigDecimal
 
 /**
  *  Convenient extension property to convert double to BigDecimal

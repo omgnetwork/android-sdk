@@ -1,4 +1,11 @@
-package co.omisego.omisego.utils
+package co.omisego.omisego.custom
+
+/**
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
 
 import co.omisego.omisego.constant.ErrorCode
 import co.omisego.omisego.constant.Versions
@@ -22,13 +29,6 @@ import retrofit2.mock.Calls
 import java.io.File
 import java.io.IOException
 import java.net.SocketTimeoutException
-
-/**
- * OmiseGO
- *
- * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
- */
 
 class CallbackManagerTest {
     private val failFile: File by lazy {

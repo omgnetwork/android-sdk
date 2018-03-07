@@ -1,20 +1,18 @@
 package co.omisego.omisego
 
+/**
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import co.omisego.omisego.custom.Callback
 import co.omisego.omisego.custom.CallbackManager
 import co.omisego.omisego.custom.Serializer
 import co.omisego.omisego.model.*
 import co.omisego.omisego.network.ewallet.EWalletClient
 import com.google.gson.reflect.TypeToken
-
-
-/**
- * OmiseGO
- *
- * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
- */
-
 
 /**
  * The class OMGApiClient represents an object that knows how to interact with OmiseGO API.

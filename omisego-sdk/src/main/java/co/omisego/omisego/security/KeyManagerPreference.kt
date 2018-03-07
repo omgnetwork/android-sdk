@@ -12,7 +12,7 @@ import javax.crypto.spec.SecretKeySpec
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 1/12/2017 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
 internal class KeyManagerPreference(private val context: Context) {

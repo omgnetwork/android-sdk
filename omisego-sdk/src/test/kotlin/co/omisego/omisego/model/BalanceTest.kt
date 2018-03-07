@@ -1,18 +1,18 @@
 package co.omisego.omisego.model
 
-import co.omisego.omisego.extension.bd
-import org.amshove.kluent.shouldEqual
-import org.junit.Before
-import org.junit.Test
-import java.math.BigDecimal
-
 /**
  * OmiseGO
  *
  *
  * Created by Phuchit Sirimongkolsathien on 6/12/2017 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import co.omisego.omisego.extension.bd
+import org.amshove.kluent.shouldEqual
+import org.junit.Before
+import org.junit.Test
+import java.math.BigDecimal
 
 class BalanceTest {
 

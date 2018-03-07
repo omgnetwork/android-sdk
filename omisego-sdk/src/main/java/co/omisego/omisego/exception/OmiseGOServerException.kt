@@ -1,14 +1,13 @@
 package co.omisego.omisego.exception
 
-import javax.net.ssl.HttpsURLConnection
-
-
 /**
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 11/20/2017 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import javax.net.ssl.HttpsURLConnection
 
 /**
  * Exception for an unexpected, 500 HTTP response.

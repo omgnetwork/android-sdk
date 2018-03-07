@@ -20,7 +20,7 @@ import javax.security.auth.x500.X500Principal
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 1/12/2017 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
 internal class KeyManagerPreMarshmallow(private var keyAlias: String) {

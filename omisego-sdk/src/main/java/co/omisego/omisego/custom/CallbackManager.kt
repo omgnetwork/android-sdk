@@ -1,21 +1,18 @@
 package co.omisego.omisego.custom
 
-import co.omisego.omisego.model.OMGResponse
+/**
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import com.google.gson.JsonElement
-import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Type
 import co.omisego.omisego.custom.Callback as OMGCallback
-
-
-/**
- * OmiseGO
- *
- * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
- */
 
 internal class CallbackManager<out T>(private val serializer: Serializer, private val type: Type) {
     fun transform(callback: OMGCallback<T>) = object : Callback<JsonElement> {

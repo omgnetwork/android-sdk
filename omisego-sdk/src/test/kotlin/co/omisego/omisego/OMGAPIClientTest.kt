@@ -1,5 +1,13 @@
 package co.omisego.omisego
 
+/**
+ * OmiseGO
+ *
+ *
+ * Created by Phuchit Sirimongkolsathien on 6/3/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import co.omisego.omisego.custom.Callback
 import co.omisego.omisego.custom.Serializer
 import co.omisego.omisego.model.BalanceList
@@ -23,13 +31,6 @@ import org.junit.Test
 import retrofit2.Response
 import java.io.File
 
-/**
- * OmiseGO
- *
- *
- * Created by Phuchit Sirimongkolsathien on 6/3/2018 AD.
- * Copyright © 2018 OmiseGO. All rights reserved.
- */
 class OMGAPIClientTest {
     private val secretFileName: String = "secret.json" // Replace your secret file here
     private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }

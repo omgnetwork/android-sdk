@@ -1,5 +1,13 @@
 package co.omisego.omisego.network.ewallet
 
+/**
+ * OmiseGO
+ *
+ *
+ * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import co.omisego.omisego.constant.Endpoints
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.Headers
@@ -23,15 +31,6 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import java.io.File
 import kotlin.test.Test
-
-
-/**
- * OmiseGO
- *
- *
- * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.
- * Copyright © 2018 OmiseGO. All rights reserved.
- */
 
 @RunWith(MockitoJUnitRunner::class)
 class EWalletClientTest {

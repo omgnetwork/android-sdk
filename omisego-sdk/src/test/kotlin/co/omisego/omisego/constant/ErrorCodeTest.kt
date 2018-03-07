@@ -1,17 +1,17 @@
 package co.omisego.omisego.constant
 
-import org.amshove.kluent.shouldBeInstanceOf
-import org.amshove.kluent.shouldEqual
-import org.amshove.kluent.shouldNotEqual
-import org.junit.Test
-
 /**
  * OmiseGO
  *
  *
  * Created by Phuchit Sirimongkolsathien on 11/20/2017 AD.
- * Copyright © 2017 OmiseGO. All rights reserved.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import org.amshove.kluent.shouldBeInstanceOf
+import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldNotEqual
+import org.junit.Test
 
 class ErrorCodeTest {
 
