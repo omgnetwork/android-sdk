@@ -85,7 +85,6 @@ class EWalletClientTest {
         val response = eWalletClient.eWalletAPI.getCurrentUser().execute()
         val actualResponse = buildResponse<User>(response.body().toString())
         val expectedResponse = buildResponse<User>(userFile.readText())
-        println(actualResponse)
         actualResponse shouldEqual expectedResponse
     }
 
@@ -98,7 +97,6 @@ class EWalletClientTest {
 
         val response = eWalletClient.eWalletAPI.getSettings().execute()
         val expectedResponse = buildResponse<Setting>(response.body().toString())
-        println(expectedResponse)
         val actualResponse = buildResponse<Setting>(getSettingFile.readText())
         actualResponse shouldEqual expectedResponse
     }
@@ -112,8 +110,6 @@ class EWalletClientTest {
 
         val response = eWalletClient.eWalletAPI.listBalance().execute()
         val expectedResponse = buildResponse<List<Balance>>(response.body().toString())
-
-        println(response)
 
         val actualResponse = buildResponse<List<Balance>>(listBalanceFile.readText())
         actualResponse shouldEqual expectedResponse
