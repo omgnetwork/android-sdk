@@ -21,54 +21,15 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
 
 - Minimum Android SDK version 19
 
-- Kotlin version 1.2.21
-
 ## Installation
 
-Since we are not hosting the packaged SDK yet, you should add the library manually following these steps:
-
-1. Create `libs` folder in your app module if it doesn't existed.
-
-2. Clone the android-sdk project by `git clone https://github.com/omisego/android-sdk.git`
-
-3. Build the OmiseGO SDK project from Android Studio by going to `Build > Rebuild Project`
-
-4. Copy .aar file from the `build/outputs/aar` folder and paste in the `libs` folder of your project.
-
-5. Add the following code to your 'app/build.gradle', to make gradle able to see the file in `libs` folder.
-
-```groovy
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
-```
-
-6. Add the following code to your `app/build.gradle`, since we're using kotlin coroutines to handle thread.
-
-```groovy
-kotlin {
-    experimental {
-        coroutines 'enable'
-    }
-}
-```
-
-7. Finally, add the following code to your `app/build.gradle` to add the required dependencies.
-
+To use the OmiseGO SDK in your android project, simply add the following line in the module's build.gradle
+ 
 ```groovy
 dependencies {
-    // ... your dependencies
-    // TODO: replace the `your-aar-file` with your .arr's filename.
-    implementation (name: 'your-aar-file', ext: 'aar') 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.19.3'
+    implementation 'co.omisego:omisego-sdk:0.8.0'
 }
 ```
-
-8. Sync the gradle
-
-You're done.
 
 ## Usage
 
