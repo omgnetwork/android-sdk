@@ -1,5 +1,6 @@
 package co.omisego.omisego.model
 
+import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
 
 
@@ -20,7 +21,7 @@ import java.math.BigDecimal
  *  i.e: If I want to give or receive 13 minted tokens and the [subUnitToUnit] is 1000,
  *  then the amount will be 13*1000 = 13000
  */
-data class MintedToken(val id: String, val symbol: String, val name: String, val subUnitToUnit: BigDecimal) {
+data class MintedToken(val id: String, val symbol: String, val name: String, @SerializedName("subunit_to_unit") val subUnitToUnit: BigDecimal) {
 
     /**
      * Compares the current [MintedToken] with the specified [MintedToken] for verifying both [MintedToken] are compatible.

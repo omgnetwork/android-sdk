@@ -1,5 +1,7 @@
 package co.omisego.omisego.model
 
+import com.google.gson.annotations.SerializedName
+
 
 /**
  * OmiseGO
@@ -13,4 +15,4 @@ package co.omisego.omisego.model
  *
  * @param mintedTokens A list of minted tokens available for the provider
  */
-data class Setting(val mintedTokens: List<MintedToken>)
+data class Setting(@SerializedName("minted_tokens") val mintedTokens: List<MintedToken>)

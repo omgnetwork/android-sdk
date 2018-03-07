@@ -1,5 +1,6 @@
 package co.omisego.omisego.model
 
+import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -17,7 +18,7 @@ import java.math.RoundingMode
  * @param mintedToken The minted token corresponding to the balance
  * @param amount The total amount of minted token available for the current user.
  */
-data class Balance(val amount: BigDecimal, val mintedToken: MintedToken) {
+data class Balance(val amount: BigDecimal, @SerializedName("minted_token") val mintedToken: MintedToken) {
 
     /**
      * Helper method that returns an easily readable value of the amount

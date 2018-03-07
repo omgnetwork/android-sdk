@@ -37,9 +37,9 @@ class MainActivity : AppCompatActivity() {
 //            }
 //        })
 
-        omgApiClient.getCurrentUser(object: Callback<User> {
-            override fun success(response: OMGResponse<User>) {
-                println(response.data.username)
+        omgApiClient.listBalances(object: Callback<BalanceList> {
+            override fun success(response: OMGResponse<BalanceList>) {
+                println(response.data)
             }
 
             override fun fail(response: OMGResponse<ApiError>) {

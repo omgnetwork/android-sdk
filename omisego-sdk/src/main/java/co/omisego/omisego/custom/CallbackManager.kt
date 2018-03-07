@@ -18,13 +18,6 @@ import co.omisego.omisego.custom.Callback as OMGCallback
  */
 
 internal class CallbackManager<out T>(private val serializer: Serializer, private val type: Type) {
-    companion object {
-        inline fun <reified T> newInstance(): CallbackManager<T> {
-            val type = object : TypeToken<OMGResponse<T>>() {}.type
-            return CallbackManager(Serializer(), type)
-        }
-    }
-
     fun transform(callback: OMGCallback<T>) = object : Callback<JsonElement> {
         override fun onFailure(call: Call<JsonElement>, t: Throwable) = callback.fail(serializer.failure(t))
 
