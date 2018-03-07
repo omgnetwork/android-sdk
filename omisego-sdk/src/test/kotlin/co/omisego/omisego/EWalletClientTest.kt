@@ -1,6 +1,8 @@
 package co.omisego.omisego
 
+import co.omisego.omisego.constant.Endpoints
 import co.omisego.omisego.constant.Exceptions
+import co.omisego.omisego.constant.Headers
 import co.omisego.omisego.model.Balance
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
@@ -9,7 +11,7 @@ import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.utils.OMGEncryptionHelper
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import junit.framework.Assert
+import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.shouldEqual
@@ -18,6 +20,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.ExpectedException
+import org.junit.runner.RunWith
+import org.mockito.junit.MockitoJUnitRunner
 import java.io.File
 import kotlin.test.Test
 
@@ -30,7 +34,7 @@ import kotlin.test.Test
  * Copyright © 2018 OmiseGO. All rights reserved.
  */
 
-//@RunWith(MockitoJUnitRunner::class)
+@RunWith(MockitoJUnitRunner::class)
 class EWalletClientTest {
     private lateinit var eWalletClient: EWalletClient
     private val secretFileName: String = "secret.json" // Replace your secret file here
@@ -45,30 +49,30 @@ class EWalletClientTest {
         File(javaClass.classLoader.getResource("me.get_settings-post.json").path)
     }
     private lateinit var mockWebServer: MockWebServer
+    private lateinit var mockUrl: HttpUrl
     @Rule
     @JvmField
     val expectedEx = ExpectedException.none()!!
 
+
     @Before
     fun setUp() {
-        assertKeyIsNotEmpty()
-
         val auth = OMGEncryptionHelper.encryptBase64(
                 secret.getString("api_key"),
                 secret.getString("auth_token")
         )
 
+        mockWebServer = MockWebServer()
+        mockWebServer.start()
+        mockUrl = mockWebServer.url("/api/")
+
         eWalletClient = EWalletClient.Builder {
-            baseURL = secret.getString("base_url")
+            debugURL = mockUrl
             authenticationToken = auth
             debug = false
         }.build()
 
         println("Start")
-
-        mockWebServer = MockWebServer()
-        mockWebServer.start()
-        mockWebServer.url(secret.getString("base_url"))
     }
 
     @After
@@ -114,18 +118,11 @@ class EWalletClientTest {
         val response = eWalletClient.eWalletAPI.listBalance().execute()
         val expectedResponse = buildResponse<List<Balance>>(response.body().toString())
 
-        println(expectedResponse)
+        println(response)
 
         val actualResponse = buildResponse<List<Balance>>(listBalanceFile.readText())
         actualResponse shouldEqual expectedResponse
     }
-
-    // TODO:
-    // 1. empty base url should throw illegal state
-    // 2. empty authentication token should throw illegal state
-    // 3. Check header should be correct
-    // 4. Check base url should be correct
-    // 5. Check Ewallet API should be correct
 
     @Test
     fun `Empty base_url should throw IllegalStateException`() {
@@ -144,22 +141,79 @@ class EWalletClientTest {
         expectedEx.expectMessage(Exceptions.emptyAuthenticationToken.message)
 
         EWalletClient.Builder {
-            baseURL = secret.getString("base_url")
+            debugURL = mockUrl
             debug = false
         }.build()
     }
 
     @Test
-    fun `EWalletClient should be set token header correctly`() {
+    fun `EWalletClient should be set the header correctly`() {
         mockWebServer.enqueue(MockResponse().apply {
             setBody(userFile.readText())
             setResponseCode(200)
         })
-        eWalletClient.eWalletAPI.getCurrentUser().execute()
-//        val request = mockWebServer.takeRequest()
+        val expectedAuth = "OMGClient ${OMGEncryptionHelper.encryptBase64(
+                secret.getString("api_key"),
+                secret.getString("auth_token")
+        )}"
 
-//        val request = mockWebServer.takeRequest(3, TimeUnit.SECONDS)
-//        println(request.requestLine + request.getHeader("Authorization"))
+        eWalletClient.eWalletAPI.getCurrentUser().execute()
+        val request = mockWebServer.takeRequest()
+
+        request.getHeader("Authorization") shouldEqual expectedAuth
+        request.getHeader("Accept") shouldEqual Headers.ACCEPT_OMG
+    }
+
+    @Test
+    fun `EWalletClient request to get_current_user with the correct path`() {
+        mockWebServer.enqueue(MockResponse().apply {
+            setBody(userFile.readText())
+            setResponseCode(200)
+        })
+
+        eWalletClient.eWalletAPI.getCurrentUser().execute()
+        val request = mockWebServer.takeRequest()
+
+        request.path shouldEqual "/api/${Endpoints.GET_CURRENT_USER}"
+    }
+
+    @Test
+    fun `EWalletClient request to get_setting with the correct path`() {
+        mockWebServer.enqueue(MockResponse().apply {
+            setBody(getSettingFile.readText())
+            setResponseCode(200)
+        })
+
+        eWalletClient.eWalletAPI.getSettings().execute()
+        val request = mockWebServer.takeRequest()
+
+        request.path shouldEqual "/api/${Endpoints.GET_SETTINGS}"
+    }
+
+    @Test
+    fun `EWalletClient request to list_balance with the correct path`() {
+        mockWebServer.enqueue(MockResponse().apply {
+            setBody(listBalanceFile.readText())
+            setResponseCode(200)
+        })
+
+        eWalletClient.eWalletAPI.listBalance().execute()
+        val request = mockWebServer.takeRequest()
+
+        request.path shouldEqual "/api/${Endpoints.LIST_BALANCE}"
+    }
+
+    @Test
+    fun `EWalletClient request to logout with the correct path`() {
+        mockWebServer.enqueue(MockResponse().apply {
+            setBody(userFile.readText())
+            setResponseCode(200)
+        })
+
+        eWalletClient.eWalletAPI.logout().execute()
+        val request = mockWebServer.takeRequest()
+
+        request.path shouldEqual "/api/${Endpoints.LOGOUT}"
     }
 
     private fun loadSecretFile(filename: String): JSONObject {
@@ -178,7 +232,4 @@ class EWalletClientTest {
         return Gson().fromJson<OMGResponse<T>>(responseText, token)
     }
 
-    private fun assertKeyIsNotEmpty() {
-        Assert.assertTrue("Assign your baseURL before run the test", secret.getString("base_url") != "")
-    }
 }

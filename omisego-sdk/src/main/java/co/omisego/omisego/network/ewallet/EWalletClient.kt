@@ -3,6 +3,7 @@ package co.omisego.omisego.network.ewallet
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.custom.JsonConverterFactory
 import co.omisego.omisego.network.InterceptorProvider
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -62,6 +63,12 @@ class EWalletClient {
                 field = value
             }
 
+
+        /**
+         * For testing purpose
+         */
+        internal var debugURL: HttpUrl? = null
+
         /**
          * Create the [EWalletClient] instance using the configured values.
          * Note: Set [Builder.authenticationToken] and [Builder.baseURL] are required before calling this.
@@ -69,7 +76,7 @@ class EWalletClient {
         fun build(): EWalletClient {
             when {
                 authenticationToken.isEmpty() -> throw Exceptions.emptyAuthenticationToken
-                baseURL.isEmpty() -> throw Exceptions.emptyBaseURL
+                baseURL.isEmpty() && debugURL == null -> throw Exceptions.emptyBaseURL
             }
 
             val eWalletClient = EWalletClient()
@@ -82,11 +89,14 @@ class EWalletClient {
                 }
             }.build()
 
-            val retrofit = Retrofit.Builder()
-                    .addConverterFactory(JsonConverterFactory())
-                    .baseUrl(baseURL)
-                    .client(client)
-                    .build()
+            val retrofit = Retrofit.Builder().apply {
+                addConverterFactory(JsonConverterFactory())
+                when {
+                    debugURL != null -> baseUrl(debugURL!!)
+                    else -> baseUrl(baseURL)
+                }
+                client(client)
+            }.build()
 
             eWalletClient.eWalletAPI = retrofit.create(EWalletAPI::class.java)
             return eWalletClient

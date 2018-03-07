@@ -17,8 +17,8 @@ class InterceptorProvider {
         override fun intercept(chain: Interceptor.Chain): Response {
             val originalRequest = chain.request()
             val newRequest = originalRequest.newBuilder().apply {
-                addHeader(Headers.HEADER_AUTHORIZATION, "${Headers.HEADER_AUTHORIZATION_SCHEME} $authenticationToken")
-                addHeader(Headers.HEADER_ACCEPT, Headers.HEADER_ACCEPT_OMG_TYPE)
+                addHeader(Headers.AUTHORIZATION, "${Headers.AUTHORIZATION_SCHEME} $authenticationToken")
+                addHeader(Headers.ACCEPT, Headers.ACCEPT_OMG)
             }.build()
             return chain.proceed(newRequest)
         }

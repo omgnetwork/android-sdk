@@ -9,8 +9,8 @@ package co.omisego.omisego.constant
  */
 
 object Headers {
-    const val HEADER_AUTHORIZATION = "Authorization"
-    const val HEADER_AUTHORIZATION_SCHEME = "OMGClient"
-    const val HEADER_ACCEPT = "Accept"
-    const val HEADER_ACCEPT_OMG_TYPE = "application/vnd.omisego.v1+json"
+    const val ACCEPT = "Accept"
+    const val ACCEPT_OMG = "application/vnd.omisego.v1+json"
+    const val AUTHORIZATION = "Authorization"
+    const val AUTHORIZATION_SCHEME = "OMGClient"
 }
