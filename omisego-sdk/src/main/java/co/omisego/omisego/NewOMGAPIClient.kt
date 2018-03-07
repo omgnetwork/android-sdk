@@ -29,9 +29,9 @@ class NewOMGAPIClient(private val eWalletClient: EWalletClient) {
         eWalletClient.eWalletAPI.getSettings().enqueue(callbackManager.transform(callback))
     }
 
-    fun logout(callback: Callback<String>) {
-        val type = object : TypeToken<OMGResponse<String>>() {}.type
-        val callbackManager = CallbackManager<String>(Serializer(), type)
+    fun logout(callback: Callback<Logout>) {
+        val type = object : TypeToken<OMGResponse<Logout>>() {}.type
+        val callbackManager = CallbackManager<Logout>(Serializer(), type)
         eWalletClient.eWalletAPI.logout().enqueue(callbackManager.transform(callback))
     }
 
