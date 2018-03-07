@@ -8,4 +8,9 @@ package co.omisego.omisego.model
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+/**
+ * Represent a list containing a list of addresses
+ *
+ * @param data The list of the addresses
+ */
 data class BalanceList(val data: List<Address>)
