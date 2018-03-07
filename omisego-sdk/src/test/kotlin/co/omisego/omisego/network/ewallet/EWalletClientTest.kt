@@ -46,8 +46,8 @@ class EWalletClientTest {
     private val getSettingFile: File by lazy {
         File(javaClass.classLoader.getResource("me.get_settings-post.json").path)
     }
-    private lateinit var mockWebServer: MockWebServer
-    private lateinit var mockUrl: HttpUrl
+    private var mockWebServer: MockWebServer = MockWebServer()
+    private var mockUrl: HttpUrl = mockWebServer.url("/api/")
     @Rule
     @JvmField
     val expectedEx = ExpectedException.none()!!
@@ -59,9 +59,7 @@ class EWalletClientTest {
                 secret.getString("auth_token")
         )
 
-        mockWebServer = MockWebServer()
         mockWebServer.start()
-        mockUrl = mockWebServer.url("/api/")
 
         eWalletClient = EWalletClient.Builder {
             debugURL = mockUrl
