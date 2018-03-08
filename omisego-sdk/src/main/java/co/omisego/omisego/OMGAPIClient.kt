@@ -11,8 +11,11 @@ import co.omisego.omisego.custom.Callback
 import co.omisego.omisego.custom.CallbackManager
 import co.omisego.omisego.custom.Serializer
 import co.omisego.omisego.model.*
+import co.omisego.omisego.network.ewallet.EWalletAPI
 import co.omisego.omisego.network.ewallet.EWalletClient
+import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
+import retrofit2.Call
 
 /**
  * The class OMGAPIClient represents an object that knows how to interact with OmiseGO API.
@@ -49,9 +52,10 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      * @param callback A callback to receive the response from server.
      */
     fun getCurrentUser(callback: Callback<User>) {
-        val type = object : TypeToken<OMGResponse<User>>() {}.type
-        val callbackManager = CallbackManager<User>(serializer, type)
-        eWalletClient.eWalletAPI.getCurrentUser().enqueue(callbackManager.transform(callback))
+//        val type = object : TypeToken<OMGResponse<User>>() {}.type
+//        val callbackManager = CallbackManager<User>(serializer, type)
+//        eWalletClient.eWalletAPI.getCurrentUser().enqueue(callbackManager.transform(callback))
+        enqueueCall(callback) { getCurrentUser() }
     }
 
     /**
@@ -93,4 +97,9 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
         eWalletClient.eWalletAPI.listBalance().enqueue(callbackManager.transform(callback))
     }
 
+    private inline fun <reified T> enqueueCall(callback: Callback<T>, call: EWalletAPI.() -> Call<JsonElement>){
+        val type = object : TypeToken<OMGResponse<T>>() {}.type
+        val callbackManager = CallbackManager<T>(serializer, type)
+        eWalletClient.eWalletAPI.run(call).enqueue(callbackManager.transform(callback))
+    }
 }

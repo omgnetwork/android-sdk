@@ -10,7 +10,7 @@ package co.omisego.omisego.network.ewallet
 
 import co.omisego.omisego.constant.Endpoints
 import co.omisego.omisego.constant.Exceptions
-import co.omisego.omisego.constant.Headers
+import co.omisego.omisego.constant.HTTPHeaders
 import co.omisego.omisego.model.Balance
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
@@ -58,8 +58,6 @@ class EWalletClientTest {
                 secret.getString("api_key"),
                 secret.getString("auth_token")
         )
-
-        mockWebServer.start()
 
         eWalletClient = EWalletClient.Builder {
             debugURL = mockUrl
@@ -150,7 +148,7 @@ class EWalletClientTest {
         val request = mockWebServer.takeRequest()
 
         request.getHeader("Authorization") shouldEqual expectedAuth
-        request.getHeader("Accept") shouldEqual Headers.ACCEPT_OMG
+        request.getHeader("Accept") shouldEqual HTTPHeaders.ACCEPT_OMG
     }
 
     @Test

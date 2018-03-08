@@ -2,9 +2,11 @@ package co.omisego.sample
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import co.omisego.omisego.custom.Callback
 import co.omisego.omisego.OMGAPIClient
-import co.omisego.omisego.model.*
+import co.omisego.omisego.custom.Callback
+import co.omisego.omisego.model.ApiError
+import co.omisego.omisego.model.OMGResponse
+import co.omisego.omisego.model.User
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.utils.EncryptionHelper
 
@@ -38,12 +40,23 @@ class MainActivity : AppCompatActivity() {
 //            }
 //        })
 
-        omgApiClient.listBalances(object: Callback<BalanceList> {
-            override fun success(response: OMGResponse<BalanceList>) {
-                println(response.data)
+//        omgApiClient.listBalances(object: Callback<BalanceList> {
+//            override fun success(response: OMGResponse<BalanceList>) {
+//                println(response.data)
+//            }
+//
+//            override fun fail(response: OMGResponse<ApiError>) {
+//            }
+//
+//        })
+
+        omgApiClient.getCurrentUser(object : Callback<User> {
+            override fun success(response: OMGResponse<User>) {
+                println(response)
             }
 
             override fun fail(response: OMGResponse<ApiError>) {
+                println(response)
             }
 
         })

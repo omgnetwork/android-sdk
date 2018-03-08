@@ -7,7 +7,7 @@ package co.omisego.omisego.constant
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-object Headers {
+object HTTPHeaders {
     const val ACCEPT = "Accept"
     const val ACCEPT_OMG = "application/vnd.omisego.v1+json"
     const val AUTHORIZATION = "Authorization"
