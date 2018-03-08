@@ -15,14 +15,14 @@ import co.omisego.omisego.network.ewallet.EWalletClient
 import com.google.gson.reflect.TypeToken
 
 /**
- * The class OMGApiClient represents an object that knows how to interact with OmiseGO API.
+ * The class OMGAPIClient represents an object that knows how to interact with OmiseGO API.
  *
- * Create instances using [OMGApiClient.Builder] and pass your implementation of [Callback<T>] interface
+ * Create instances using [OMGAPIClient.Builder] and pass your implementation of [Callback<T>] interface
  * to generate an implementation
  *
  * For example,
  * <code>
- * val omgApiClient = OMGApiClient.Builder {
+ * val omgApiClient = OMGAPIClient.Builder {
  *      setAuthorizationToken(YOUR_TOKEN)
  * }.build()
  *
