@@ -41,8 +41,8 @@ class ErrorCodeTest {
                 "user:access_token_expired" -> ErrorCode.USER_ACCESS_TOKEN_EXPIRED
                 "sdk:network_error" -> ErrorCode.SDK_NETWORK_ERROR
                 "sdk:parse_error" -> ErrorCode.SDK_PARSE_ERROR
-                "sdk:unknown_error" -> ErrorCode.SDK_UNKNOWN_ERROR
-                else -> ErrorCode.SDK_UNKNOWN_ERROR
+                "sdk:unknown_error" -> ErrorCode.SDK_UNEXPECTED_ERROR
+                else -> ErrorCode.SDK_UNEXPECTED_ERROR
             }
             actual shouldEqual expected
         }

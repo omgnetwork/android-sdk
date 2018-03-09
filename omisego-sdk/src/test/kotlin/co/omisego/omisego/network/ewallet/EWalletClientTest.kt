@@ -11,13 +11,13 @@ package co.omisego.omisego.network.ewallet
 import co.omisego.omisego.constant.Endpoints
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.HTTPHeaders
-import co.omisego.omisego.model.Balance
+import co.omisego.omisego.constant.Versions
+import co.omisego.omisego.model.BalanceList
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.utils.OMGEncryptionHelper
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -78,8 +78,7 @@ class EWalletClientTest {
             setResponseCode(200)
         })
 
-        val response = eWalletClient.eWalletAPI.getCurrentUser().execute()
-        val actualResponse = buildResponse<User>(response.body().toString())
+        val actualResponse = eWalletClient.eWalletAPI.getCurrentUser().execute().body()!!
         val expectedResponse = buildResponse<User>(userFile.readText())
         actualResponse shouldEqual expectedResponse
     }
@@ -91,9 +90,8 @@ class EWalletClientTest {
             setResponseCode(200)
         })
 
-        val response = eWalletClient.eWalletAPI.getSettings().execute()
-        val expectedResponse = buildResponse<Setting>(response.body().toString())
-        val actualResponse = buildResponse<Setting>(getSettingFile.readText())
+        val actualResponse = eWalletClient.eWalletAPI.getSettings().execute().body()!!
+        val expectedResponse = buildResponse<Setting>(getSettingFile.readText())
         actualResponse shouldEqual expectedResponse
     }
 
@@ -104,10 +102,8 @@ class EWalletClientTest {
             setResponseCode(200)
         })
 
-        val response = eWalletClient.eWalletAPI.listBalance().execute()
-        val expectedResponse = buildResponse<List<Balance>>(response.body().toString())
-
-        val actualResponse = buildResponse<List<Balance>>(listBalanceFile.readText())
+        val actualResponse = eWalletClient.eWalletAPI.listBalance().execute().body()!!
+        val expectedResponse = buildResponse<BalanceList>(listBalanceFile.readText())
         actualResponse shouldEqual expectedResponse
     }
 
@@ -146,7 +142,6 @@ class EWalletClientTest {
 
         eWalletClient.eWalletAPI.getCurrentUser().execute()
         val request = mockWebServer.takeRequest()
-
         request.getHeader("Authorization") shouldEqual expectedAuth
         request.getHeader("Accept") shouldEqual HTTPHeaders.ACCEPT_OMG
     }
@@ -173,7 +168,6 @@ class EWalletClientTest {
 
         eWalletClient.eWalletAPI.getSettings().execute()
         val request = mockWebServer.takeRequest()
-
         request.path shouldEqual "/api/${Endpoints.GET_SETTINGS}"
     }
 
@@ -186,7 +180,6 @@ class EWalletClientTest {
 
         eWalletClient.eWalletAPI.listBalance().execute()
         val request = mockWebServer.takeRequest()
-
         request.path shouldEqual "/api/${Endpoints.LIST_BALANCE}"
     }
 
@@ -214,8 +207,11 @@ class EWalletClientTest {
         }
     }
 
-    private fun <T> buildResponse(responseText: String): OMGResponse<T> {
-        val token = object : TypeToken<OMGResponse<T>>() {}.type
-        return Gson().fromJson<OMGResponse<T>>(responseText, token)
+    private inline fun <reified T> buildResponse(responseText: String): OMGResponse<T> {
+        val json = JSONObject(responseText)
+        val success = json.getBoolean("success")
+        val dataText = json.getJSONObject("data").toString()
+        val data = Gson().fromJson<T>(dataText, T::class.java)
+        return OMGResponse(Versions.EWALLET_API, success, data)
     }
 }

@@ -7,7 +7,7 @@ package co.omisego.omisego.custom
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.ApiError
+import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 
 /**
@@ -21,12 +21,12 @@ interface Callback<in T> {
      *
      * @param response The serialization of the provided associated data
      */
-    fun success(response: OMGResponse<T>)
+    fun success(response: T)
 
     /**
      * The request encountered an error resulting in a failure
      *
-     * @param response The serialization of an error which represents in [ApiError]
+     * @param response The serialization of an error which represents in [APIError]
      */
-    fun fail(response: OMGResponse<ApiError>)
+    fun fail(response: OMGResponse<APIError>)
 }

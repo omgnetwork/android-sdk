@@ -15,4 +15,4 @@ import co.omisego.omisego.constant.ErrorCode
  * @param code An error code contained in [ErrorCode]
  * @param description The description associated with the received error code
  */
-data class ApiError(val code: ErrorCode, val description: String)
+data class APIError(val code: ErrorCode, val description: String)

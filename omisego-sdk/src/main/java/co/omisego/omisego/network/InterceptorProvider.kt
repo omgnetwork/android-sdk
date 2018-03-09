@@ -12,7 +12,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 
 class InterceptorProvider {
-    class Header(private val authenticationToken: String) : Interceptor {
+    class Header(private var authenticationToken: String) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val originalRequest = chain.request()
             val newRequest = originalRequest.newBuilder().apply {
@@ -20,6 +20,10 @@ class InterceptorProvider {
                 addHeader(HTTPHeaders.ACCEPT, HTTPHeaders.ACCEPT_OMG)
             }.build()
             return chain.proceed(newRequest)
+        }
+
+        fun setHeader(token: String) {
+            authenticationToken = token
         }
     }
 }

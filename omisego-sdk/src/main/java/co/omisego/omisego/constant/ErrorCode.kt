@@ -29,7 +29,7 @@ enum class ErrorCode constructor(private val code: String) {
     // Error code from OmiseGO SDK itself
     SDK_NETWORK_ERROR("sdk:network_error"),
     SDK_PARSE_ERROR("sdk:parse_error"),
-    SDK_UNKNOWN_ERROR("sdk:unknown_error");
+    SDK_UNEXPECTED_ERROR("sdk:unexpected_error");
 
     override fun toString(): String = this.code
 
@@ -45,7 +45,7 @@ enum class ErrorCode constructor(private val code: String) {
             return try {
                 ErrorCode.values().first { it.code == code }
             } catch (e: NoSuchElementException) {
-                SDK_UNKNOWN_ERROR
+                SDK_UNEXPECTED_ERROR
             }
         }
     }

@@ -1,8 +1,10 @@
 package co.omisego.omisego.network.ewallet
 
 import co.omisego.omisego.constant.Exceptions
-import co.omisego.omisego.custom.JsonConverterFactory
+import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
+import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
 import co.omisego.omisego.network.InterceptorProvider
+import com.google.gson.Gson
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -33,6 +35,8 @@ import retrofit2.Retrofit
  */
 class EWalletClient {
     internal lateinit var eWalletAPI: EWalletAPI
+    internal lateinit var header: InterceptorProvider.Header
+    internal lateinit var retrofit: Retrofit
 
     /**
      * Build a new [EWalletClient].
@@ -79,9 +83,17 @@ class EWalletClient {
                 baseURL.isEmpty() && debugURL == null -> throw Exceptions.emptyBaseURL
             }
 
-            val eWalletClient = EWalletClient()
+            /* Initialize the header by authenticationToken */
+            val omgHeader = InterceptorProvider.Header(authenticationToken)
+
+            /* Initialize the EWalletClient and delegate the header from the Builder to EWalletClient */
+            val eWalletClient = EWalletClient().apply { header = omgHeader }
+
+            /* Initialize the OKHttpClient with header interceptor*/
             val client: OkHttpClient = OkHttpClient.Builder().apply {
-                addInterceptor(InterceptorProvider.Header(authenticationToken))
+                addInterceptor(omgHeader)
+
+                /* If set debug true, then print the http logging */
                 if (debug) {
                     addInterceptor(HttpLoggingInterceptor().apply {
                         level = HttpLoggingInterceptor.Level.BODY
@@ -89,8 +101,13 @@ class EWalletClient {
                 }
             }.build()
 
-            val retrofit = Retrofit.Builder().apply {
-                addConverterFactory(JsonConverterFactory())
+            /* Use a simple gson for now */
+            val gson = Gson()
+
+            /* Create retrofit with OMGConverter and OMGCallAdapter */
+            eWalletClient.retrofit = Retrofit.Builder().apply {
+                addConverterFactory(OMGConverterFactory.create(gson))
+                addCallAdapterFactory(OMGCallAdapterFactory())
                 when {
                     debugURL != null -> baseUrl(debugURL!!)
                     else -> baseUrl(baseURL)
@@ -98,7 +115,8 @@ class EWalletClient {
                 client(client)
             }.build()
 
-            eWalletClient.eWalletAPI = retrofit.create(EWalletAPI::class.java)
+            /* Create EWalletAPI client */
+            eWalletClient.eWalletAPI = eWalletClient.retrofit.create(EWalletAPI::class.java)
             return eWalletClient
         }
 

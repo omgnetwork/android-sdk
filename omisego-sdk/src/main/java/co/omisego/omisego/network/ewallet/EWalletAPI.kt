@@ -11,20 +11,20 @@ import co.omisego.omisego.constant.Endpoints.GET_CURRENT_USER
 import co.omisego.omisego.constant.Endpoints.GET_SETTINGS
 import co.omisego.omisego.constant.Endpoints.LIST_BALANCE
 import co.omisego.omisego.constant.Endpoints.LOGOUT
-import com.google.gson.JsonElement
-import retrofit2.Call
+import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
+import co.omisego.omisego.model.*
 import retrofit2.http.POST
 
 interface EWalletAPI {
     @POST(GET_CURRENT_USER)
-    fun getCurrentUser(): Call<JsonElement>
+    fun getCurrentUser(): OMGCall<OMGResponse<User>>
 
     @POST(LOGOUT)
-    fun logout(): Call<JsonElement>
+    fun logout(): OMGCall<OMGResponse<Logout>>
 
     @POST(LIST_BALANCE)
-    fun listBalance(): Call<JsonElement>
+    fun listBalance(): OMGCall<OMGResponse<BalanceList>>
 
     @POST(GET_SETTINGS)
-    fun getSettings(): Call<JsonElement>
+    fun getSettings(): OMGCall<OMGResponse<Setting>>
 }
