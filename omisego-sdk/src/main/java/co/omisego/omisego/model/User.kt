@@ -19,4 +19,4 @@ package co.omisego.omisego.model
 data class User(val id: String,
                 val providerUserId: String,
                 val username: String,
-                val metaData: HashMap<String, Any>?)
+                val metaData: HashMap<String, Any> = hashMapOf())
