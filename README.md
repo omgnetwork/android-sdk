@@ -97,7 +97,7 @@ omgAPIClient.getCurrentUser().enqueue(object: Callback<OMGResponse<User>>{
 ### Get the addresses of the current user
 
 ```kotlin
-omgAPIClient.listBalance().enqueue(object: Callback<OMGResponse<BalanceList>>{
+omgAPIClient.listBalances().enqueue(object: Callback<OMGResponse<BalanceList>>{
     override fun fail(response: OMGResponse<APIError>) {
         
     }

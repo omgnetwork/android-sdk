@@ -103,7 +103,7 @@ class EWalletClientTest {
             setResponseCode(200)
         })
 
-        val actualResponse = eWalletClient.eWalletAPI.listBalance().execute().body()!!
+        val actualResponse = eWalletClient.eWalletAPI.listBalances().execute().body()!!
         val expectedResponse = buildResponse<BalanceList>(listBalanceFile.readText())
         actualResponse shouldEqual expectedResponse
     }
@@ -179,7 +179,7 @@ class EWalletClientTest {
             setResponseCode(200)
         })
 
-        eWalletClient.eWalletAPI.listBalance().execute()
+        eWalletClient.eWalletAPI.listBalances().execute()
         val request = mockWebServer.takeRequest()
         request.path shouldEqual "/api/${Endpoints.LIST_BALANCE}"
     }

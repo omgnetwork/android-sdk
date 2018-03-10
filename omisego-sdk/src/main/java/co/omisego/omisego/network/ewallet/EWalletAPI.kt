@@ -23,7 +23,7 @@ interface EWalletAPI {
     fun logout(): OMGCall<OMGResponse<Logout>>
 
     @POST(LIST_BALANCE)
-    fun listBalance(): OMGCall<OMGResponse<BalanceList>>
+    fun listBalances(): OMGCall<OMGResponse<BalanceList>>
 
     @POST(GET_SETTINGS)
     fun getSettings(): OMGCall<OMGResponse<Setting>>

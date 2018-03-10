@@ -75,7 +75,7 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      *
      * @param callback A callback to receive the response from server.
      */
-    fun listBalances() = eWalletClient.eWalletAPI.listBalance()
+    fun listBalances() = eWalletClient.eWalletAPI.listBalances()
 
     /**
      * Set new [authenticationToken].
