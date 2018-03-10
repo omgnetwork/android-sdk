@@ -23,7 +23,7 @@ import co.omisego.omisego.network.ewallet.EWalletClient
  * <code>
  * val eWalletClient = EWalletClient.Builder {
  *      authenticationToken = YOUR_TOKEN
- *      baseURL = YOUR_BASE_URL
+ *      baseUrl = YOUR_BASE_URL
  * }.build()
  *
  * val omgAPIClient = OMGAPIClient(eWalletClient)

@@ -18,7 +18,6 @@ import co.omisego.omisego.model.User
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.utils.OMGEncryptionHelper
 import com.google.gson.FieldNamingPolicy
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
@@ -72,7 +71,7 @@ class OMGAPIClientTest {
 
 
         eWalletClient = EWalletClient.Builder {
-            debugURL = mockUrl
+            debugUrl = mockUrl
             authenticationToken = auth
             debug = false
         }.build()

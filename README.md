@@ -83,28 +83,28 @@ Where:
 ### Get the current user
 
 ```kotlin
-omgAPIClient.getCurrentUser(object : Callback<User> {
-     override fun success(response: OMGResponse<User>) {
-         // Do something with the user
-     }
+omgAPIClient.getCurrentUser().enqueue(object: Callback<OMGResponse<User>>{
+    override fun fail(response: OMGResponse<APIError>) {
+        
+    }
 
-     override fun fail(response: OMGResponse<ApiError>) {
-         // Handle the error
-     }
+    override fun success(response: OMGResponse<User>) {
+        
+    }
 })
 ```
 
 ### Get the addresses of the current user
 
 ```kotlin
-omgAPIClient.listBalances(object : Callback<BalanceList> {
-     override fun success(response: OMGResponse<BalanceList>) {
-         // Do something with the address
-     }
+omgAPIClient.listBalance().enqueue(object: Callback<OMGResponse<BalanceList>>{
+    override fun fail(response: OMGResponse<APIError>) {
+        
+    }
 
-     override fun fail(response: OMGResponse<ApiError>) {
-         // Handle the error
-     }
+    override fun success(response: OMGResponse<BalanceList>) {
+        
+    }
 })
 ```
 
@@ -113,14 +113,14 @@ omgAPIClient.listBalances(object : Callback<BalanceList> {
 ### Get the provider settings
 
 ```kotlin
-omgAPIClient.getSettings(object : Callback<Setting> {
-     override fun success(response: OMGResponse<Setting>) {
-         // Do something with the setting
-     }
+omgAPIClient.getSettings().enqueue(object: Callback<OMGResponse<Setting>>{
+    override fun fail(response: OMGResponse<APIError>) {
+        
+    }
 
-     override fun fail(response: OMGResponse<ApiError>) {
-         // Handle the error
-     }
+    override fun success(response: OMGResponse<Setting>) {
+        
+    }
 })
 ```
 

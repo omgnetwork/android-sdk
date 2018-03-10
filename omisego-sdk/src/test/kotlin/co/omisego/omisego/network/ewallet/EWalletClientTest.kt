@@ -18,7 +18,6 @@ import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.utils.OMGEncryptionHelper
 import com.google.gson.FieldNamingPolicy
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockResponse
@@ -62,7 +61,7 @@ class EWalletClientTest {
         )
 
         eWalletClient = EWalletClient.Builder {
-            debugURL = mockUrl
+            debugUrl = mockUrl
             authenticationToken = auth
             debug = false
         }.build()
@@ -126,7 +125,7 @@ class EWalletClientTest {
         expectedEx.expectMessage(Exceptions.emptyAuthenticationToken.message)
 
         EWalletClient.Builder {
-            debugURL = mockUrl
+            debugUrl = mockUrl
             debug = false
         }.build()
     }

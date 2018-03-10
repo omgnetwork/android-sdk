@@ -28,7 +28,7 @@ import retrofit2.Retrofit
  * <code>
  * val eWalletClient = EWalletClient.Builder {
  *      authenticationToken = YOUR_TOKEN
- *      baseURL = YOUR_BASE_URL
+ *      baseUrl = YOUR_BASE_URL
  * }.build()
  *
  * </code>
@@ -41,7 +41,7 @@ class EWalletClient {
 
     /**
      * Build a new [EWalletClient].
-     * Set [authenticationToken] and [baseURL] are required before calling [Builder.build].
+     * Set [authenticationToken] and [baseUrl] are required before calling [Builder.build].
      * Set [debug] true for printing a log
      *
      * @receiver A [Builder]'s methods.
@@ -60,9 +60,9 @@ class EWalletClient {
             }
 
         /**
-         * Set the URL of the OmiseGO Wallet API [baseURL].
+         * Set the URL of the OmiseGO Wallet API [baseUrl].
          */
-        var baseURL: String = ""
+        var baseUrl: String = ""
             set(value) {
                 if (value.isEmpty()) throw Exceptions.emptyBaseURL
                 field = value
@@ -72,16 +72,16 @@ class EWalletClient {
         /**
          * For testing purpose
          */
-        internal var debugURL: HttpUrl? = null
+        internal var debugUrl: HttpUrl? = null
 
         /**
          * Create the [EWalletClient] instance using the configured values.
-         * Note: Set [Builder.authenticationToken] and [Builder.baseURL] are required before calling this.
+         * Note: Set [Builder.authenticationToken] and [Builder.baseUrl] are required before calling this.
          */
         fun build(): EWalletClient {
             when {
                 authenticationToken.isEmpty() -> throw Exceptions.emptyAuthenticationToken
-                baseURL.isEmpty() && debugURL == null -> throw Exceptions.emptyBaseURL
+                baseUrl.isEmpty() && debugUrl == null -> throw Exceptions.emptyBaseURL
             }
 
             /* Initialize the header by authenticationToken */
@@ -112,8 +112,8 @@ class EWalletClient {
                 addConverterFactory(OMGConverterFactory.create(gson))
                 addCallAdapterFactory(OMGCallAdapterFactory.create(gson))
                 when {
-                    debugURL != null -> baseUrl(debugURL!!)
-                    else -> baseUrl(baseURL)
+                    debugUrl != null -> baseUrl(debugUrl!!)
+                    else -> baseUrl(this@Builder.baseUrl)
                 }
                 client(client)
             }.build()
