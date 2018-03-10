@@ -17,7 +17,9 @@ import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.utils.OMGEncryptionHelper
+import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -211,7 +213,10 @@ class EWalletClientTest {
         val json = JSONObject(responseText)
         val success = json.getBoolean("success")
         val dataText = json.getJSONObject("data").toString()
-        val data = Gson().fromJson<T>(dataText, T::class.java)
+        val gson = GsonBuilder()
+                .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create()
+        val data = gson.fromJson<T>(dataText, T::class.java)
         return OMGResponse(Versions.EWALLET_API, success, data)
     }
 }

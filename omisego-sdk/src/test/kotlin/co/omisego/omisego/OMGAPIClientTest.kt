@@ -11,12 +11,15 @@ package co.omisego.omisego
 import co.omisego.omisego.constant.ErrorCode
 import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.custom.Callback
-import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
-import co.omisego.omisego.model.*
-import co.omisego.omisego.network.ewallet.EWalletAPI
+import co.omisego.omisego.model.BalanceList
+import co.omisego.omisego.model.OMGResponse
+import co.omisego.omisego.model.Setting
+import co.omisego.omisego.model.User
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.utils.OMGEncryptionHelper
+import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
 import com.nhaarman.mockito_kotlin.times
@@ -29,10 +32,7 @@ import org.json.JSONObject
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
-import retrofit2.mock.MockRetrofit
-import retrofit2.mock.NetworkBehavior
 import java.io.File
-import java.util.concurrent.Executors
 
 class OMGAPIClientTest {
     private val secretFileName: String = "secret.json" // Replace your secret file here
@@ -48,6 +48,11 @@ class OMGAPIClientTest {
     }
     private val errorFile: File by lazy {
         File(javaClass.classLoader.getResource("fail.client-invalid_auth_scheme.json").path)
+    }
+    private val gson by lazy {
+        GsonBuilder()
+            .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .create()
     }
     private lateinit var eWalletClient: EWalletClient
     private lateinit var mockWebServer: MockWebServer
@@ -77,7 +82,7 @@ class OMGAPIClientTest {
 
     @Test
     fun `OMGAPIClient should call list_balance and success`() {
-        val element = Gson().fromJson(listBalanceFile.readText(), JsonElement::class.java)
+        val element = gson.fromJson(listBalanceFile.readText(), JsonElement::class.java)
         val result = Response.success(element)
         mockWebServer.enqueue(MockResponse().apply {
             setBody(listBalanceFile.readText())
@@ -87,7 +92,7 @@ class OMGAPIClientTest {
         val callback: Callback<OMGResponse<BalanceList>> = mock()
         omgAPIClient.listBalances().enqueue(callback)
 
-        val expected = Gson().fromJson<OMGResponse<BalanceList>>(result.body(), object : TypeToken<OMGResponse<BalanceList>>() {}.type)
+        val expected = gson.fromJson<OMGResponse<BalanceList>>(result.body(), object : TypeToken<OMGResponse<BalanceList>>() {}.type)
 
         Thread.sleep(100)
 
@@ -96,7 +101,10 @@ class OMGAPIClientTest {
 
     @Test
     fun `OMGAPIClient should call get_current_user and success`() {
-        val element = Gson().fromJson(userFile.readText(), JsonElement::class.java)
+        val gson = GsonBuilder()
+                .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create()
+        val element = gson.fromJson(userFile.readText(), JsonElement::class.java)
         val result = Response.success(element)
         mockWebServer.enqueue(MockResponse().apply {
             setBody(userFile.readText())
@@ -106,7 +114,7 @@ class OMGAPIClientTest {
         val callback: Callback<OMGResponse<User>> = mock()
         omgAPIClient.getCurrentUser().enqueue(callback)
 
-        val expected = Gson().fromJson<OMGResponse<User>>(result.body(), object : TypeToken<OMGResponse<User>>() {}.type)
+        val expected = gson.fromJson<OMGResponse<User>>(result.body(), object : TypeToken<OMGResponse<User>>() {}.type)
 
         Thread.sleep(100)
 
@@ -115,7 +123,7 @@ class OMGAPIClientTest {
 
     @Test
     fun `OMGAPIClient should call get_setting and success`() {
-        val element = Gson().fromJson(getSettingFile.readText(), JsonElement::class.java)
+        val element = gson.fromJson(getSettingFile.readText(), JsonElement::class.java)
         val result = Response.success(element)
         mockWebServer.enqueue(MockResponse().apply {
             setBody(getSettingFile.readText())
@@ -125,7 +133,7 @@ class OMGAPIClientTest {
         val callback: Callback<OMGResponse<Setting>> = mock()
         omgAPIClient.getSettings().enqueue(callback)
 
-        val expected = Gson().fromJson<OMGResponse<Setting>>(result.body(), object : TypeToken<OMGResponse<Setting>>() {}.type)
+        val expected = gson.fromJson<OMGResponse<Setting>>(result.body(), object : TypeToken<OMGResponse<Setting>>() {}.type)
 
         Thread.sleep(100)
 
@@ -134,7 +142,7 @@ class OMGAPIClientTest {
 
     @Test
     fun `OMGAPIClient should resolve APIError from the EWalletAPI gracefully`() {
-        val element = Gson().fromJson(errorFile.readText(), JsonElement::class.java)
+        val element = gson.fromJson(errorFile.readText(), JsonElement::class.java)
         mockWebServer.enqueue(MockResponse().apply {
             setBody(errorFile.readText())
             setResponseCode(200)
@@ -144,7 +152,7 @@ class OMGAPIClientTest {
         omgAPIClient.getCurrentUser().enqueue(callback)
 
         val data = element.asJsonObject.get("data")
-        val apiError = APIError(ErrorCode.from(data.asJsonObject.get("code").asString), data.asJsonObject.get("description").asString)
+        val apiError = co.omisego.omisego.model.APIError(ErrorCode.from(data.asJsonObject.get("code").asString), data.asJsonObject.get("description").asString)
         val expected = OMGResponse(Versions.EWALLET_API, false, apiError)
 
         Thread.sleep(100)
@@ -161,7 +169,7 @@ class OMGAPIClientTest {
         val callback: Callback<OMGResponse<User>> = mock()
         omgAPIClient.getCurrentUser().enqueue(callback)
 
-        val apiError = APIError(ErrorCode.SERVER_INTERNAL_SERVER_ERROR, "The EWallet API was 500 Internal Server Error")
+        val apiError = co.omisego.omisego.model.APIError(ErrorCode.SERVER_INTERNAL_SERVER_ERROR, "The EWallet API was 500 Internal Server Error")
         val expected = OMGResponse(Versions.EWALLET_API, false, apiError)
 
         Thread.sleep(100)

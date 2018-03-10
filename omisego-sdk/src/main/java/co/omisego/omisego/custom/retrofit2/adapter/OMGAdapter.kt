@@ -8,6 +8,7 @@ package co.omisego.omisego.custom.retrofit2.adapter
  */
 
 import co.omisego.omisego.model.OMGResponse
+import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapter
 import com.google.gson.TypeAdapter
 import retrofit2.Call
 import retrofit2.CallAdapter

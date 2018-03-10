@@ -7,8 +7,6 @@ package co.omisego.omisego.model
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import com.google.gson.annotations.SerializedName
-
 /**
  * Represents the current user
  *
@@ -19,6 +17,6 @@ import com.google.gson.annotations.SerializedName
  *
  */
 data class User(val id: String,
-                @SerializedName("provider_user_id") val providerUserId: String,
+                val providerUserId: String,
                 val username: String,
-                @SerializedName("meta_data") val metaData: HashMap<String, Any>?)
+                val metaData: HashMap<String, Any>?)

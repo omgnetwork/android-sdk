@@ -29,7 +29,7 @@ import java.lang.reflect.Type
 internal class OMGConverterFactory(private val gson: Gson) : Converter.Factory() {
 
     companion object {
-        fun create(gson: Gson = Gson()): OMGConverterFactory {
+        fun create(gson: Gson): OMGConverterFactory {
             return OMGConverterFactory(gson)
         }
     }

@@ -4,7 +4,8 @@ import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
 import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
 import co.omisego.omisego.network.InterceptorProvider
-import com.google.gson.Gson
+import com.google.gson.FieldNamingPolicy
+import com.google.gson.GsonBuilder
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -102,7 +103,9 @@ class EWalletClient {
             }.build()
 
             /* Use a simple gson for now */
-            val gson = Gson()
+            val gson = GsonBuilder()
+                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                    .create()
 
             /* Create retrofit with OMGConverter and OMGCallAdapter */
             eWalletClient.retrofit = Retrofit.Builder().apply {
