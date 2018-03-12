@@ -15,6 +15,7 @@ import co.omisego.omisego.model.BalanceList
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
+import co.omisego.omisego.model.APIError
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.utils.OMGEncryptionHelper
 import com.google.gson.FieldNamingPolicy
@@ -151,7 +152,7 @@ class OMGAPIClientTest {
         omgAPIClient.getCurrentUser().enqueue(callback)
 
         val data = element.asJsonObject.get("data")
-        val apiError = co.omisego.omisego.model.APIError(ErrorCode.from(data.asJsonObject.get("code").asString), data.asJsonObject.get("description").asString)
+        val apiError = APIError(ErrorCode.from(data.asJsonObject.get("code").asString), data.asJsonObject.get("description").asString)
         val expected = OMGResponse(Versions.EWALLET_API, false, apiError)
 
         Thread.sleep(100)
@@ -168,7 +169,7 @@ class OMGAPIClientTest {
         val callback: Callback<OMGResponse<User>> = mock()
         omgAPIClient.getCurrentUser().enqueue(callback)
 
-        val apiError = co.omisego.omisego.model.APIError(ErrorCode.SERVER_INTERNAL_SERVER_ERROR, "The EWallet API was 500 Internal Server Error")
+        val apiError = APIError(ErrorCode.SERVER_INTERNAL_SERVER_ERROR, "The EWallet API was 500 Internal Server Error")
         val expected = OMGResponse(Versions.EWALLET_API, false, apiError)
 
         Thread.sleep(100)
