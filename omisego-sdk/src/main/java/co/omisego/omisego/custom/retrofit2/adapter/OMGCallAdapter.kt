@@ -13,7 +13,10 @@ import retrofit2.Call
 import retrofit2.CallAdapter
 import java.lang.reflect.Type
 
-internal class OMGCallAdapter<R> (private val responseType: Type, private val adapter: TypeAdapter<R>) : CallAdapter<OMGResponse<R>, OMGCall<OMGResponse<R>>> {
+internal class OMGCallAdapter<R>(
+        private val responseType: Type,
+        private val adapter: TypeAdapter<R>
+) : CallAdapter<OMGResponse<R>, OMGCall<OMGResponse<R>>> {
     override fun adapt(call: Call<OMGResponse<R>>): OMGCall<OMGResponse<R>> {
         return OMGCaller(call)
     }
