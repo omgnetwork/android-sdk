@@ -41,6 +41,9 @@ import co.omisego.omisego.network.ewallet.EWalletClient
  *
  */
 class OMGAPIClient(private val eWalletClient: EWalletClient) {
+    private val eWalletAPI
+        get() = eWalletClient.eWalletAPI
+
     /**
      * Asynchronously send the request to transform the [User] corresponding to the provided authentication token.
      * if *success* the [callback] will be invoked with the [User] parameter,
@@ -48,7 +51,7 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      *
      * @param callback A callback to receive the response from server.
      */
-    fun getCurrentUser() = eWalletClient.eWalletAPI.getCurrentUser()
+    fun getCurrentUser() = eWalletAPI.getCurrentUser()
 
     /**
      * Asynchronously send the request to transform the global settings.
@@ -57,7 +60,7 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      *
      * @param callback A callback to receive the response from server.
      */
-    fun getSettings() = eWalletClient.eWalletAPI.getSettings()
+    fun getSettings() = eWalletAPI.getSettings()
 
     /**
      * Asynchronously send the request to expire a user's authentication_token.
@@ -66,7 +69,7 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      *
      * @param callback A callback to receive the response from server.
      */
-    fun logout() = eWalletClient.eWalletAPI.logout()
+    fun logout() = eWalletAPI.logout()
 
     /**
      * Asynchronously send the request to transform the balances of a user corresponding to the provided authentication token.
@@ -75,14 +78,14 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      *
      * @param callback A callback to receive the response from server.
      */
-    fun listBalances() = eWalletClient.eWalletAPI.listBalances()
+    fun listBalances() = eWalletAPI.listBalances()
 
     /**
      * Set new [authenticationToken].
      *
      * @param authenticationToken An authentication token to replace the old value.
      */
-    fun setAuthenticationToken(authenticationToken: String) {
+    fun setAuthenticationTokenHeader(authenticationToken: String) {
         eWalletClient.header.setHeader(authenticationToken)
     }
 }
