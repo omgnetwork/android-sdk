@@ -83,7 +83,7 @@ Where:
 ### Get the current user
 
 ```kotlin
-omgAPIClient.getCurrentUser().enqueue(object: Callback<OMGResponse<User>>{
+omgAPIClient.getCurrentUser().enqueue(object: Callback<User>{
     override fun fail(response: OMGResponse<APIError>) {
         
     }
@@ -97,7 +97,7 @@ omgAPIClient.getCurrentUser().enqueue(object: Callback<OMGResponse<User>>{
 ### Get the addresses of the current user
 
 ```kotlin
-omgAPIClient.listBalances().enqueue(object: Callback<OMGResponse<BalanceList>>{
+omgAPIClient.listBalances().enqueue(object: Callback<BalanceList>{
     override fun fail(response: OMGResponse<APIError>) {
         
     }
@@ -113,7 +113,7 @@ omgAPIClient.listBalances().enqueue(object: Callback<OMGResponse<BalanceList>>{
 ### Get the provider settings
 
 ```kotlin
-omgAPIClient.getSettings().enqueue(object: Callback<OMGResponse<Setting>>{
+omgAPIClient.getSettings().enqueue(object: Callback<Setting>{
     override fun fail(response: OMGResponse<APIError>) {
         
     }

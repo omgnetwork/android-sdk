@@ -14,14 +14,14 @@ import co.omisego.omisego.model.OMGResponse
  * A callback that represents whether an API request was successful or returned an error.
  *
  */
-interface Callback<in T> {
+interface OMGCallback<in T> {
     /**
      * The request and post processing operations were successful resulting in the serialization
      * of the provided associated data
      *
      * @param response The serialization of the provided associated data
      */
-    fun success(response: T)
+    fun success(response: OMGResponse<T>)
 
     /**
      * The request encountered an error resulting in a failure

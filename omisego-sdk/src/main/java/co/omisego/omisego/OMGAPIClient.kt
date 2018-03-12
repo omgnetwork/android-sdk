@@ -16,7 +16,7 @@ import co.omisego.omisego.network.ewallet.EWalletClient
 /**
  * The class OMGAPIClient represents an object that knows how to interact with OmiseGO API.
  *
- * Create instances using [OMGAPIClient.Builder] and pass your implementation of [Callback<T>] interface
+ * Create instances using [OMGAPIClient.Builder] and pass your implementation of [OMGCallback<T>] interface
  * to generate an implementation
  *
  * For example,
@@ -28,7 +28,7 @@ import co.omisego.omisego.network.ewallet.EWalletClient
  *
  * val omgAPIClient = OMGAPIClient(eWalletClient)
  *
- * omgApiClient.listBalances().enqueue(object : Callback<OMGResponse<BalanceList>> {
+ * omgApiClient.listBalances().enqueue(object : OMGCallback<BalanceList> {
  *      override fun success(response: OMGResponse<BalanceList>) {
  *          // Handle success
  *      }

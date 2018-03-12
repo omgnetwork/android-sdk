@@ -17,14 +17,14 @@ import retrofit2.http.POST
 
 interface EWalletAPI {
     @POST(GET_CURRENT_USER)
-    fun getCurrentUser(): OMGCall<OMGResponse<User>>
+    fun getCurrentUser(): OMGCall<User>
 
     @POST(LOGOUT)
-    fun logout(): OMGCall<OMGResponse<Logout>>
+    fun logout(): OMGCall<Logout>
 
     @POST(LIST_BALANCE)
-    fun listBalances(): OMGCall<OMGResponse<BalanceList>>
+    fun listBalances(): OMGCall<BalanceList>
 
     @POST(GET_SETTINGS)
-    fun getSettings(): OMGCall<OMGResponse<Setting>>
+    fun getSettings(): OMGCall<Setting>
 }

@@ -34,7 +34,6 @@ enum class ErrorCode constructor(private val code: String) {
     override fun toString(): String = this.code
 
     companion object {
-
         /**
          * Convert an error code string to [ErrorCode]
          *

@@ -7,17 +7,15 @@ package co.omisego.omisego.custom.retrofit2.converter
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.ErrorCode
-import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.exception.OMGAPIErrorException
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 import com.google.gson.Gson
-import com.google.gson.JsonElement
 import com.google.gson.TypeAdapter
 import com.google.gson.reflect.TypeToken
 import okhttp3.ResponseBody
 import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.Converter
 import retrofit2.Retrofit
 import java.io.ByteArrayInputStream
@@ -39,27 +37,34 @@ internal class OMGConverterFactory(private val gson: Gson) : Converter.Factory()
         return OMGConverter(gson, adapter)
     }
 
-    internal class OMGConverter<T>(private val gson: Gson, private val adapter: TypeAdapter<T>) : Converter<ResponseBody, T> {
+    internal class OMGConverter<T>(private val gson: Gson, private val adapter: TypeAdapter<T>) : Converter<ResponseBody, OMGResponse<T>> {
         @Throws(IOException::class)
-        override fun convert(responseBody: ResponseBody): T {
+        override fun convert(responseBody: ResponseBody): OMGResponse<T> {
             try {
-                val responseString = responseBody.string()
-                val reader = InputStreamReader(ByteArrayInputStream(responseString.toByteArray()))
-                val rawResponse = gson.fromJson(responseString, JsonElement::class.java)
-                val success = rawResponse.asJsonObject.get("success").asBoolean
-                if (success) {
-                    /* Parse success response */
-                    val jsonReader = gson.newJsonReader(reader)
-                    return adapter.read(jsonReader)
-                } else {
-                    /* Parse APIError response */
-                    val root = rawResponse.asJsonObject
-                    val data = root?.getAsJsonObject("data")
-                    val version = root?.get("version")?.asString ?: Versions.EWALLET_API
-                    val errorCode = data?.get("code")?.asString ?: "sdk:unknown_error"
-                    val description = data?.get("description")?.asString ?: "unknown error"
-                    val apiError = APIError(ErrorCode.from(errorCode), description)
-                    throw OMGAPIErrorException(OMGResponse(version, false, apiError))
+                /* Initialize JSONObject from plain response string */
+                val response = JSONObject(responseBody.string())
+
+                /* Get the data object */
+                val data = response.getJSONObject("data")
+
+                /* Get the success flag */
+                val success = response.getBoolean("success")
+
+                /* Get the version */
+                val version = response.getString("version")
+
+                /* Initialize reader for gson */
+                val reader = InputStreamReader(ByteArrayInputStream(data.toString().toByteArray()))
+
+                when (success) {
+                    true -> {
+                        val model = adapter.read(gson.newJsonReader(reader))
+                        return OMGResponse(version, success, model)
+                    }
+                    false -> {
+                        val error = gson.fromJson<APIError>(reader, APIError::class.java)
+                        throw OMGAPIErrorException(OMGResponse(version, success, error))
+                    }
                 }
             } catch (e: JSONException) {
                 throw IOException("Failed to parse JSON", e)

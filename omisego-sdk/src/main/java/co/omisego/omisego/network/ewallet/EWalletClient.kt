@@ -1,6 +1,8 @@
 package co.omisego.omisego.network.ewallet
 
+import co.omisego.omisego.constant.ErrorCode
 import co.omisego.omisego.constant.Exceptions
+import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
 import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
 import co.omisego.omisego.network.InterceptorProvider
@@ -21,7 +23,7 @@ import retrofit2.Retrofit
 /**
  * The class EWalletClient represents an object that knows how to interact with OmiseGO API.
  *
- * Create instances using [EWalletClient.Builder] and pass your implementation of [Callback<T>] interface
+ * Create instances using [EWalletClient.Builder] and pass your implementation of [OMGCallback<T>] interface
  * to generate an implementation
  *
  * For example,
@@ -104,6 +106,7 @@ class EWalletClient {
 
             /* Use a simple gson for now */
             val gson = GsonBuilder()
+                    .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
                     .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                     .create()
 

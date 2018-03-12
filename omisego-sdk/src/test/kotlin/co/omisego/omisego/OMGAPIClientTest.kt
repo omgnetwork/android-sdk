@@ -9,7 +9,7 @@ package co.omisego.omisego
 
 import co.omisego.omisego.constant.ErrorCode
 import co.omisego.omisego.constant.Versions
-import co.omisego.omisego.custom.Callback
+import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.model.BalanceList
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
@@ -88,7 +88,7 @@ class OMGAPIClientTest {
             setResponseCode(200)
         })
 
-        val callback: Callback<OMGResponse<BalanceList>> = mock()
+        val callback: OMGCallback<BalanceList> = mock()
         omgAPIClient.listBalances().enqueue(callback)
 
         val expected = gson.fromJson<OMGResponse<BalanceList>>(result.body(), object : TypeToken<OMGResponse<BalanceList>>() {}.type)
@@ -110,7 +110,7 @@ class OMGAPIClientTest {
             setResponseCode(200)
         })
 
-        val callback: Callback<OMGResponse<User>> = mock()
+        val callback: OMGCallback<User> = mock()
         omgAPIClient.getCurrentUser().enqueue(callback)
 
         val expected = gson.fromJson<OMGResponse<User>>(result.body(), object : TypeToken<OMGResponse<User>>() {}.type)
@@ -129,7 +129,7 @@ class OMGAPIClientTest {
             setResponseCode(200)
         })
 
-        val callback: Callback<OMGResponse<Setting>> = mock()
+        val callback: OMGCallback<Setting> = mock()
         omgAPIClient.getSettings().enqueue(callback)
 
         val expected = gson.fromJson<OMGResponse<Setting>>(result.body(), object : TypeToken<OMGResponse<Setting>>() {}.type)
@@ -147,7 +147,7 @@ class OMGAPIClientTest {
             setResponseCode(200)
         })
 
-        val callback: Callback<OMGResponse<User>> = mock()
+        val callback: OMGCallback<User> = mock()
         omgAPIClient.getCurrentUser().enqueue(callback)
 
         val data = element.asJsonObject.get("data")
@@ -165,7 +165,7 @@ class OMGAPIClientTest {
             setResponseCode(500)
         })
 
-        val callback: Callback<OMGResponse<User>> = mock()
+        val callback: OMGCallback<User> = mock()
         omgAPIClient.getCurrentUser().enqueue(callback)
 
         val apiError = APIError(ErrorCode.SERVER_INTERNAL_SERVER_ERROR, "The EWallet API was 500 Internal Server Error")

@@ -7,12 +7,12 @@ package co.omisego.omisego.custom.retrofit2.adapter
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.custom.Callback
+import co.omisego.omisego.custom.OMGCallback
 import retrofit2.Response
 
 interface OMGCall<T> {
     fun cancel()
     fun clone(): OMGCall<T>
     fun execute(): Response<T>
-    fun enqueue(callback: Callback<T>)
+    fun enqueue(callback: OMGCallback<T>)
 }
