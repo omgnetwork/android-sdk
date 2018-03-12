@@ -107,7 +107,7 @@ class EWalletClient {
                     .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                     .create()
 
-            /* Create retrofit with OMGConverter and OMGCallAdapter */
+            /* Create retrofit with OMGConverter and OMGCaller */
             eWalletClient.retrofit = Retrofit.Builder().apply {
                 addConverterFactory(OMGConverterFactory.create(gson))
                 addCallAdapterFactory(OMGCallAdapterFactory.create(gson))

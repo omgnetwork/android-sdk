@@ -29,6 +29,6 @@ internal class OMGCallAdapterFactory(private val gson: Gson) : CallAdapter.Facto
         }
         val responseType = getParameterUpperBound(0, returnType as ParameterizedType)
         val adapter = gson.getAdapter(TypeToken.get(responseType))
-        return OMGAdapter(responseType, adapter)
+        return OMGCallAdapter(responseType, adapter)
     }
 }
