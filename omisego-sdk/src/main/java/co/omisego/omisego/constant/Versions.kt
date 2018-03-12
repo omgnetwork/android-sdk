@@ -1,6 +1,6 @@
 package co.omisego.omisego.constant
 
-/**
+/*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 6/3/2018 AD.

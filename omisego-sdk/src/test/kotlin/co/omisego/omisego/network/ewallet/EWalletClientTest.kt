@@ -1,6 +1,6 @@
 package co.omisego.omisego.network.ewallet
 
-/**
+/*
  * OmiseGO
  *
  *

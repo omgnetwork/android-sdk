@@ -1,6 +1,6 @@
 package co.omisego.omisego.network.ewallet
 
-/**
+/*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.

@@ -11,7 +11,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
-/**
+/*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 11/10/2017 AD.

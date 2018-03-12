@@ -1,6 +1,6 @@
 package co.omisego.omisego.model
 
-/**
+/*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 11/13/2017 AD.

@@ -1,6 +1,6 @@
 package co.omisego.omisego.custom.retrofit2.adapter
 
-/**
+/*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 8/3/2018 AD.

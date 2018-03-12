@@ -1,6 +1,6 @@
 package co.omisego.omisego.exception
 
-/**
+/*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 11/20/2017 AD.

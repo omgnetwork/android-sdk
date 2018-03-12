@@ -1,6 +1,6 @@
 package co.omisego.omisego.exception
 
-/**
+/*
  * OmiseGO
  *
  *
@@ -11,16 +11,16 @@ package co.omisego.omisego.exception
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
 
-class OmiseGOServerExceptionTest {
+class OMGServerExceptionTest {
     @Test
     fun `When response code is 404 the message should be 404 - Endpoint not found`() {
-        val omgException = OmiseGOServerException(404)
+        val omgException = OMGServerException(404)
         omgException.message shouldEqual  "404 - Endpoint not found"
     }
 
     @Test
     fun `When response code is 500 the message should be 500 - Internal server error`() {
-        val omgException = OmiseGOServerException(500)
+        val omgException = OMGServerException(500)
         omgException.message shouldEqual  "500 - Internal server error"
     }
 }

@@ -1,6 +1,6 @@
 package co.omisego.omisego.extension
 
-/**
+/*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 6/12/2017 AD.

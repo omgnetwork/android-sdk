@@ -1,6 +1,6 @@
 package co.omisego.omisego.annotation
 
-/**
+/*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 9/3/2018 AD.
