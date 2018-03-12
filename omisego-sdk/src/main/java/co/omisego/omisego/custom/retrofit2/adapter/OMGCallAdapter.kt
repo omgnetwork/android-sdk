@@ -18,7 +18,5 @@ internal class OMGCallAdapter<R> (private val responseType: Type, private val ad
         return OMGCaller(call)
     }
 
-    override fun responseType(): Type {
-        return responseType
-    }
+    override fun responseType() = responseType
 }
