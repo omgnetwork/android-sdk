@@ -1,5 +1,12 @@
 package co.omisego.omisego.custom.retrofit2.adapter
 
+/*
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 13/3/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import co.omisego.omisego.constant.ErrorCode
 import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.custom.OMGCallback
@@ -10,13 +17,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.net.HttpURLConnection
-
-/**
- * OmiseGO
- *
- * Created by Phuchit Sirimongkolsathien on 13/3/2018 AD.
- * Copyright © 2017-2018 OmiseGO. All rights reserved.
- */
 
 internal class OMGCallbackWrapper<T>(private val callback: OMGCallback<T>) : Callback<OMGResponse<T>> {
     override fun onFailure(call: Call<OMGResponse<T>>, t: Throwable) {
