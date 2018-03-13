@@ -14,11 +14,11 @@ import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-internal class OMGCallAdapterFactory(private val gson: Gson) : CallAdapter.Factory() {
+internal class OMGCallAdapterFactory() : CallAdapter.Factory() {
 
     companion object {
-        fun create(gson: Gson): OMGCallAdapterFactory {
-            return OMGCallAdapterFactory(gson)
+        fun create(): OMGCallAdapterFactory {
+            return OMGCallAdapterFactory()
         }
     }
 
