@@ -12,6 +12,7 @@ import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
 import co.omisego.omisego.exception.OMGAPIErrorException
+import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.*
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.utils.OMGEncryptionHelper
@@ -35,20 +36,15 @@ import retrofit2.Response
 import java.io.File
 
 class OMGAPIClientTest {
+    @Rule
+    @JvmField
+    val expectedEx = ExpectedException.none()!!
     private val secretFileName: String = "secret.json" // Replace your secret file here
     private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
-    private val userFile: File by lazy {
-        File(javaClass.classLoader.getResource("user.me-post.json").path)
-    }
-    private val listBalanceFile: File by lazy {
-        File(javaClass.classLoader.getResource("me.list_balances-post.json").path)
-    }
-    private val getSettingFile: File by lazy {
-        File(javaClass.classLoader.getResource("me.get_settings-post.json").path)
-    }
-    private val errorFile: File by lazy {
-        File(javaClass.classLoader.getResource("fail.client-invalid_auth_scheme.json").path)
-    }
+    private val userFile: File by ResourceFile("user.me-post.json")
+    private val listBalanceFile: File by ResourceFile("me.list_balances-post.json")
+    private val getSettingFile: File by ResourceFile("me.get_settings-post.json")
+    private val errorFile: File by ResourceFile("fail.client-invalid_auth_scheme.json")
     private val gson by lazy {
         GsonBuilder()
                 .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
@@ -59,9 +55,6 @@ class OMGAPIClientTest {
     private lateinit var mockWebServer: MockWebServer
     private lateinit var mockUrl: HttpUrl
     private lateinit var omgAPIClient: OMGAPIClient
-    @Rule
-    @JvmField
-    val expectedEx = ExpectedException.none()!!
 
     @Before
     fun setup() {
@@ -70,10 +63,7 @@ class OMGAPIClientTest {
                 secret.getString("auth_token")
         )
 
-        mockWebServer = MockWebServer()
-        mockWebServer.start()
-        mockUrl = mockWebServer.url("/api/")
-
+        initMockWebServer()
 
         eWalletClient = EWalletClient.Builder {
             debugUrl = mockUrl
@@ -88,10 +78,7 @@ class OMGAPIClientTest {
     fun `OMGAPIClient should call list_balance and success`() {
         val element = gson.fromJson(listBalanceFile.readText(), JsonElement::class.java)
         val result = Response.success(element)
-        mockWebServer.enqueue(MockResponse().apply {
-            setBody(listBalanceFile.readText())
-            setResponseCode(200)
-        })
+        listBalanceFile.mockEnqueueWithHttpCode(200)
 
         val callback: OMGCallback<BalanceList> = mock()
         omgAPIClient.listBalances().enqueue(callback)
@@ -105,15 +92,9 @@ class OMGAPIClientTest {
 
     @Test
     fun `OMGAPIClient should call get_current_user and success`() {
-        val gson = GsonBuilder()
-                .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create()
         val element = gson.fromJson(userFile.readText(), JsonElement::class.java)
         val result = Response.success(element)
-        mockWebServer.enqueue(MockResponse().apply {
-            setBody(userFile.readText())
-            setResponseCode(200)
-        })
+        userFile.mockEnqueueWithHttpCode(200)
 
         val callback: OMGCallback<User> = mock()
         omgAPIClient.getCurrentUser().enqueue(callback)
@@ -129,10 +110,7 @@ class OMGAPIClientTest {
     fun `OMGAPIClient should call get_setting and success`() {
         val element = gson.fromJson(getSettingFile.readText(), JsonElement::class.java)
         val result = Response.success(element)
-        mockWebServer.enqueue(MockResponse().apply {
-            setBody(getSettingFile.readText())
-            setResponseCode(200)
-        })
+        getSettingFile.mockEnqueueWithHttpCode(200)
 
         val callback: OMGCallback<Setting> = mock()
         omgAPIClient.getSettings().enqueue(callback)
@@ -147,10 +125,7 @@ class OMGAPIClientTest {
     @Test
     fun `OMGAPIClient should resolve APIError from the EWalletAPI gracefully`() {
         val element = gson.fromJson(errorFile.readText(), JsonElement::class.java)
-        mockWebServer.enqueue(MockResponse().apply {
-            setBody(errorFile.readText())
-            setResponseCode(200)
-        })
+        errorFile.mockEnqueueWithHttpCode(200)
 
         val callback: OMGCallback<User> = mock()
         omgAPIClient.getCurrentUser().enqueue(callback)
@@ -168,10 +143,7 @@ class OMGAPIClientTest {
         val expected = gson.fromJson<OMGResponse<User>>(userFile.readText(),
                 object : TypeToken<OMGResponse<User>>() {}.type)
 
-        mockWebServer.enqueue(MockResponse().apply {
-            setBody(userFile.readText())
-            setResponseCode(200)
-        })
+        userFile.mockEnqueueWithHttpCode(200)
 
         val response = omgAPIClient.getCurrentUser().execute()
         response.body() shouldEqual expected
@@ -184,20 +156,30 @@ class OMGAPIClientTest {
                 "The provided authentication scheme is not supported")
         expectedEx.expectMessage(OMGResponse(Versions.EWALLET_API, false, apiError).toString())
 
-        mockWebServer.enqueue(MockResponse().apply {
-            setBody(errorFile.readText())
-            setResponseCode(200)
-        })
+        errorFile.mockEnqueueWithHttpCode(200)
 
         omgAPIClient.getCurrentUser().execute()
     }
 
     @Test
+    fun `OMGAPIClient should be cloned and can be called to get_current_user successfully`() {
+        val element = gson.fromJson(userFile.readText(), JsonElement::class.java)
+        val result = Response.success(element)
+        userFile.mockEnqueueWithHttpCode(200)
+
+        val callback: OMGCallback<User> = mock()
+        omgAPIClient.getCurrentUser().clone().enqueue(callback)
+
+        val expected = gson.fromJson<OMGResponse<User>>(result.body(), object : TypeToken<OMGResponse<User>>() {}.type)
+
+        Thread.sleep(100)
+
+        verify(callback, times(1)).success(expected)
+    }
+
+    @Test
     fun `OMGAPIClient should delegate an error caused by API 500 to APIError successfully`() {
-        mockWebServer.enqueue(MockResponse().apply {
-            setBody(errorFile.readText())
-            setResponseCode(500)
-        })
+        errorFile.mockEnqueueWithHttpCode(500)
 
         val callback: OMGCallback<User> = mock()
         omgAPIClient.getCurrentUser().enqueue(callback)
@@ -218,5 +200,18 @@ class OMGAPIClientTest {
         } catch (e: IllegalStateException) {
             throw IllegalStateException("Please create the file $filename. See the file secret.example.json for the reference.")
         }
+    }
+
+    private fun initMockWebServer() {
+        mockWebServer = MockWebServer()
+        mockWebServer.start()
+        mockUrl = mockWebServer.url("/api/")
+    }
+
+    private fun File.mockEnqueueWithHttpCode(responseCode: Int) {
+        mockWebServer.enqueue(MockResponse().apply {
+            setBody(this@mockEnqueueWithHttpCode.readText())
+            setResponseCode(responseCode)
+        })
     }
 }
