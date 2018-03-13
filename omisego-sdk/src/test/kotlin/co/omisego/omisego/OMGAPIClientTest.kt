@@ -10,11 +10,9 @@ package co.omisego.omisego
 import co.omisego.omisego.constant.ErrorCode
 import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.custom.OMGCallback
-import co.omisego.omisego.model.BalanceList
-import co.omisego.omisego.model.OMGResponse
-import co.omisego.omisego.model.Setting
-import co.omisego.omisego.model.User
-import co.omisego.omisego.model.APIError
+import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
+import co.omisego.omisego.exception.OMGAPIErrorException
+import co.omisego.omisego.model.*
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.utils.OMGEncryptionHelper
 import com.google.gson.FieldNamingPolicy
@@ -27,9 +25,12 @@ import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.mock
+import org.amshove.kluent.shouldEqual
 import org.json.JSONObject
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 import retrofit2.Response
 import java.io.File
 
@@ -50,13 +51,17 @@ class OMGAPIClientTest {
     }
     private val gson by lazy {
         GsonBuilder()
-            .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create()
+                .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
+                .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create()
     }
     private lateinit var eWalletClient: EWalletClient
     private lateinit var mockWebServer: MockWebServer
     private lateinit var mockUrl: HttpUrl
     private lateinit var omgAPIClient: OMGAPIClient
+    @Rule
+    @JvmField
+    val expectedEx = ExpectedException.none()!!
 
     @Before
     fun setup() {
@@ -156,6 +161,35 @@ class OMGAPIClientTest {
 
         Thread.sleep(100)
         verify(callback, times(1)).fail(expected)
+    }
+
+    @Test
+    fun `OMGAPIClient should be executed when API return success true correctly`() {
+        val expected = gson.fromJson<OMGResponse<User>>(userFile.readText(),
+                object : TypeToken<OMGResponse<User>>() {}.type)
+
+        mockWebServer.enqueue(MockResponse().apply {
+            setBody(userFile.readText())
+            setResponseCode(200)
+        })
+
+        val response = omgAPIClient.getCurrentUser().execute()
+        response.body() shouldEqual expected
+    }
+
+    @Test
+    fun `OMGAPIClient should be executed when API return success false correctly`() {
+        expectedEx.expect(OMGAPIErrorException::class.java)
+        val apiError = APIError(ErrorCode.CLIENT_INVALID_AUTH_SCHEME,
+                "The provided authentication scheme is not supported")
+        expectedEx.expectMessage(OMGResponse(Versions.EWALLET_API, false, apiError).toString())
+
+        mockWebServer.enqueue(MockResponse().apply {
+            setBody(errorFile.readText())
+            setResponseCode(200)
+        })
+
+        omgAPIClient.getCurrentUser().execute()
     }
 
     @Test

@@ -26,7 +26,9 @@ internal class OMGCaller<T>(private val call: Call<OMGResponse<T>>) : OMGCall<T>
         call.enqueue(object : Callback<OMGResponse<T>> {
             override fun onFailure(call: Call<OMGResponse<T>>, t: Throwable) {
                 when (t) {
-                    is OMGAPIErrorException -> callback.fail(t.response)
+                    is OMGAPIErrorException -> {
+                        callback.fail(t.response)
+                    }
                     else -> {
                         val apiError = APIError(ErrorCode.SDK_NETWORK_ERROR, t.localizedMessage)
                         callback.fail(OMGResponse(Versions.EWALLET_API, false, apiError))
