@@ -14,16 +14,17 @@ import co.omisego.omisego.exception.OMGAPIErrorException
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 import java.net.HttpURLConnection
 
-internal class OMGCaller<T>(private val call: Call<T>) : OMGCall<T> {
+internal class OMGCaller<T>(private val call: Call<OMGResponse<T>>) : OMGCall<T> {
     override fun cancel() = call.cancel()
     override fun clone() = OMGCaller(call.clone())
-    override fun execute(): Response<T> = call.execute()
+    override fun execute(): Response<OMGResponse<T>> = call.execute()
     override fun enqueue(callback: OMGCallback<T>) {
-        call.enqueue(object : retrofit2.Callback<T> {
-            override fun onFailure(call: Call<T>, t: Throwable) {
+        call.enqueue(object : Callback<OMGResponse<T>> {
+            override fun onFailure(call: Call<OMGResponse<T>>, t: Throwable) {
                 when (t) {
                     is OMGAPIErrorException -> callback.fail(t.response)
                     else -> {
@@ -33,19 +34,13 @@ internal class OMGCaller<T>(private val call: Call<T>) : OMGCall<T> {
                 }
             }
 
-            override fun onResponse(call: Call<T>, response: Response<T>) {
-                val body = try {
-                    response.body() as OMGResponse<T>?
-                } catch (e: ClassCastException) {
-                    val apiError = APIError(ErrorCode.SDK_PARSE_ERROR, e.message!!)
-                    callback.fail(OMGResponse(Versions.EWALLET_API, false, apiError))
-                    return
-                }
-
+            override fun onResponse(call: Call<OMGResponse<T>>, response: Response<OMGResponse<T>>) {
+                val body = response.body()
                 if (response.isSuccessful && body != null) return callback.success(body)
                 val apiError = when {
                     response.code() == HttpURLConnection.HTTP_INTERNAL_ERROR -> {
-                        APIError(ErrorCode.SERVER_INTERNAL_SERVER_ERROR, "The EWallet API was 500 Internal Server Error")
+                        APIError(ErrorCode.SERVER_INTERNAL_SERVER_ERROR,
+                                "The EWallet API was 500 Internal Server Error")
                     }
                     body == null -> {
                         APIError(ErrorCode.SDK_PARSE_ERROR, "The response body was null")

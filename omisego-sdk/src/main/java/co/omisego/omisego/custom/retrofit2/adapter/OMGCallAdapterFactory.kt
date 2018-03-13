@@ -23,12 +23,13 @@ internal class OMGCallAdapterFactory(private val gson: Gson) : CallAdapter.Facto
     }
 
     override fun get(returnType: Type, annotations: Array<out Annotation>?, retrofit: Retrofit): CallAdapter<*, *>? {
-        when {
+        return when {
             getRawType(returnType) != OMGCall::class.java -> return null
-            returnType is ParameterizedType -> IllegalStateException("OMGCall must have a generic type")
+            returnType !is ParameterizedType -> throw IllegalStateException("OMGCall must have a generic type")
+            else -> {
+                val responseType = getParameterUpperBound(0, returnType)
+                OMGCallAdapter(TypeToken.get(responseType))
+            }
         }
-        val responseType = getParameterUpperBound(0, returnType as ParameterizedType)
-        val adapter = gson.getAdapter(TypeToken.get(responseType))
-        return OMGCallAdapter(responseType, adapter)
     }
 }

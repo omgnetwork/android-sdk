@@ -8,11 +8,12 @@ package co.omisego.omisego.custom.retrofit2.adapter
  */
 
 import co.omisego.omisego.custom.OMGCallback
+import co.omisego.omisego.model.OMGResponse
 import retrofit2.Response
 
 interface OMGCall<T> {
     fun cancel()
     fun clone(): OMGCall<T>
-    fun execute(): Response<T>
+    fun execute(): Response<OMGResponse<T>>
     fun enqueue(callback: OMGCallback<T>)
 }

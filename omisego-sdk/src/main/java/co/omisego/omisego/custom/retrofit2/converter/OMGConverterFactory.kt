@@ -37,33 +37,26 @@ internal class OMGConverterFactory(private val gson: Gson) : Converter.Factory()
         return OMGConverter(gson, adapter)
     }
 
-    internal class OMGConverter<T>(private val gson: Gson, private val adapter: TypeAdapter<T>) : Converter<ResponseBody, OMGResponse<T>> {
+    internal class OMGConverter<T>(private val gson: Gson, private val adapter: TypeAdapter<T>) : Converter<ResponseBody, T> {
         @Throws(IOException::class)
-        override fun convert(responseBody: ResponseBody): OMGResponse<T> {
+        override fun convert(responseBody: ResponseBody): T {
             try {
                 /* Initialize JSONObject from plain response string */
                 val response = JSONObject(responseBody.string())
 
-                /* Get the data object */
-                val data = response.getJSONObject("data")
-
                 /* Get the success flag */
                 val success = response.getBoolean("success")
 
-                /* Get the version */
-                val version = response.getString("version")
+                /* Init the Gson's reader */
+                val inputStream = ByteArrayInputStream(response.toString().toByteArray())
+                val reader = InputStreamReader(inputStream)
 
-                /* Initialize reader for gson */
-                val reader = InputStreamReader(ByteArrayInputStream(data.toString().toByteArray()))
-
-                when (success) {
-                    true -> {
-                        val model = adapter.read(gson.newJsonReader(reader))
-                        return OMGResponse(version, success, model)
-                    }
-                    false -> {
-                        val error = gson.fromJson<APIError>(reader, APIError::class.java)
-                        throw OMGAPIErrorException(OMGResponse(version, success, error))
+                return when {
+                    success -> adapter.read(gson.newJsonReader(reader))
+                    else -> {
+                        val errorToken = object : TypeToken<OMGResponse<APIError>>() {}.type
+                        val error = gson.fromJson<OMGResponse<APIError>>(reader, errorToken)
+                        throw OMGAPIErrorException(error)
                     }
                 }
             } catch (e: JSONException) {
