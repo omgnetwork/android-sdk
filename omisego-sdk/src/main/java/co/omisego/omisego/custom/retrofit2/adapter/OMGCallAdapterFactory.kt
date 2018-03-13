@@ -7,14 +7,13 @@ package co.omisego.omisego.custom.retrofit2.adapter
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-internal class OMGCallAdapterFactory() : CallAdapter.Factory() {
+internal class OMGCallAdapterFactory : CallAdapter.Factory() {
 
     companion object {
         fun create(): OMGCallAdapterFactory {
