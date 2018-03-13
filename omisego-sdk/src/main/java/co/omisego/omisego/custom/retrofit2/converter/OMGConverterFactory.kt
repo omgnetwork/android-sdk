@@ -41,7 +41,7 @@ internal class OMGConverterFactory(private val gson: Gson) : Converter.Factory()
         @Throws(IOException::class)
         override fun convert(responseBody: ResponseBody): T {
             try {
-                /* Initialize JSONObject from plain response responseRaw */
+                /* Initialize JSONObject from the plain response string */
                 val responseRaw = responseBody.string()
 
                 /* Create response JSONObject to check the success flag */
