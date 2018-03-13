@@ -59,10 +59,10 @@ Where:
 ### Retrieving resources
 
 Once you have an initialized client, you can retrieve different resources.
-Each call takes a `Callback` interface that returns a `OMGResponse` object:
+Each call takes a `OMGCallback` interface that returns a `OMGResponse` object:
 
 ```kotlin
-interface Callback<in T> {
+interface OMGCallback<in T> {
     fun success(response: OMGResponse<T>)
     fun fail(response: OMGResponse<ApiError>)
 }
@@ -83,7 +83,7 @@ Where:
 ### Get the current user
 
 ```kotlin
-omgAPIClient.getCurrentUser().enqueue(object: Callback<User>{
+omgAPIClient.getCurrentUser().enqueue(object: OMGCallback<User>{
     override fun fail(response: OMGResponse<APIError>) {
         
     }
@@ -97,7 +97,7 @@ omgAPIClient.getCurrentUser().enqueue(object: Callback<User>{
 ### Get the addresses of the current user
 
 ```kotlin
-omgAPIClient.listBalances().enqueue(object: Callback<BalanceList>{
+omgAPIClient.listBalances().enqueue(object: OMGCallback<BalanceList>{
     override fun fail(response: OMGResponse<APIError>) {
         
     }
@@ -113,7 +113,7 @@ omgAPIClient.listBalances().enqueue(object: Callback<BalanceList>{
 ### Get the provider settings
 
 ```kotlin
-omgAPIClient.getSettings().enqueue(object: Callback<Setting>{
+omgAPIClient.getSettings().enqueue(object: OMGCallback<Setting>{
     override fun fail(response: OMGResponse<APIError>) {
         
     }
