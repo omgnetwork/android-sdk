@@ -41,21 +41,20 @@ internal class OMGConverterFactory(private val gson: Gson) : Converter.Factory()
         @Throws(IOException::class)
         override fun convert(responseBody: ResponseBody): T {
             try {
-                /* Initialize JSONObject from plain response string */
-                val response = JSONObject(responseBody.string())
+                /* Initialize JSONObject from plain response responseRaw */
+                val responseRaw = responseBody.string()
+
+                /* Create response JSONObject to check the success flag */
+                val response = JSONObject(responseRaw)
 
                 /* Get the success flag */
                 val success = response.getBoolean("success")
 
-                /* Init the Gson's reader */
-                val inputStream = ByteArrayInputStream(response.toString().toByteArray())
-                val reader = InputStreamReader(inputStream)
-
                 return when {
-                    success -> adapter.read(gson.newJsonReader(reader))
+                    success -> adapter.fromJson(responseRaw)
                     else -> {
                         val errorToken = object : TypeToken<OMGResponse<APIError>>() {}.type
-                        val error = gson.fromJson<OMGResponse<APIError>>(reader, errorToken)
+                        val error = gson.fromJson<OMGResponse<APIError>>(responseRaw, errorToken)
                         throw OMGAPIErrorException(error)
                     }
                 }
