@@ -7,7 +7,6 @@ package co.omisego.omisego
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-//import co.omisego.omisego.custom.CallbackManager
 import co.omisego.omisego.model.Address
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
