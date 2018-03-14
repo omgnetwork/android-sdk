@@ -120,7 +120,7 @@ class OMGCallbackWrapperTest {
     @Test
     fun `OMGCallbackWrapper delegates the unexpected error to the failed callback successfully`() {
         val mockResponse = mock<Response<OMGResponse<User>>>()
-        val omgResponse = OMGResponse(Versions.EWALLET_API, false, User("1234", "1234", "1234", mapOf()))
+        val omgResponse = OMGResponse(Versions.EWALLET_API, false, User("", "", "", mapOf()))
         whenever(mockResponse.body()).thenReturn(omgResponse)
         whenever(mockResponse.isSuccessful).thenReturn(false)
 
