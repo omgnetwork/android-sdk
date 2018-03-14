@@ -18,9 +18,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Converter
 import retrofit2.Retrofit
-import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.io.InputStreamReader
 import java.lang.reflect.Type
 
 
