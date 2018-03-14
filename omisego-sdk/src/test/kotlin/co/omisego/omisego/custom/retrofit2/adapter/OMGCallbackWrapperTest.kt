@@ -22,6 +22,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import okhttp3.ResponseBody
 import org.amshove.kluent.mock
@@ -68,6 +69,7 @@ class OMGCallbackWrapperTest {
         callback.onFailure(mockCall, throwable)
 
         verify(mockOMGCallback, times(1)).fail(expectedError)
+        verifyNoMoreInteractions(mockOMGCallback)
     }
 
     @Test
@@ -79,6 +81,7 @@ class OMGCallbackWrapperTest {
         callback.onFailure(mockCall, throwable)
 
         verify(mockOMGCallback, times(1)).fail(expectedError)
+        verifyNoMoreInteractions(mockOMGCallback)
     }
 
     @Test
@@ -88,6 +91,7 @@ class OMGCallbackWrapperTest {
         callback.onResponse(mockCall, userResult)
 
         verify(mockOMGCallback, times(1)).success(expectedUser)
+        verifyNoMoreInteractions(mockOMGCallback)
     }
 
 
@@ -101,6 +105,7 @@ class OMGCallbackWrapperTest {
         callback.onResponse(mockCall, errorResponse)
 
         verify(mockOMGCallback, times(1)).fail(expectedResponse)
+        verifyNoMoreInteractions(mockOMGCallback)
     }
 
     @Test
@@ -115,6 +120,7 @@ class OMGCallbackWrapperTest {
         callback.onResponse(mockCall, mockResponse)
 
         verify(mockOMGCallback, times(1)).fail(expectedResponse)
+        verifyNoMoreInteractions(mockOMGCallback)
     }
 
     @Test
@@ -131,5 +137,6 @@ class OMGCallbackWrapperTest {
         callback.onResponse(mockCall, mockResponse)
 
         verify(mockOMGCallback, times(1)).fail(expectedResponse)
+        verifyNoMoreInteractions(mockOMGCallback)
     }
 }
