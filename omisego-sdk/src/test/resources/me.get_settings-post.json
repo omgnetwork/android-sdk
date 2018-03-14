@@ -26,13 +26,6 @@
         "id": "BTC:7942f5f9-c08c-419f-b24e-b9f2d10f7128"
       },
       {
-        "symbol": "MNT",
-        "subunit_to_unit": 100,
-        "object": "minted_token",
-        "name": "Mint",
-        "id": "MNT:e8144a1b-1fd3-4714-b416-26c9b350d9dd"
-      },
-      {
         "symbol": "ETH",
         "subunit_to_unit": 1000000000000000000,
         "object": "minted_token",
