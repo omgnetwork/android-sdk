@@ -15,38 +15,31 @@ import javax.crypto.spec.SecretKeySpec
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-internal class KeyManagerPreference(private val context: Context) {
+internal class KeyManagerPreference(context: Context, private val rsaCipher: RSACipher) {
     companion object {
-        val ENCRYPTED_AES_KEY = "encrypted_aes_key"
+        const val ENCRYPTED_AES_KEY = "encrypted_aes_key"
     }
 
-    private val sharePref: SharedPreferences by lazy {
-        context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
+    private val sharePref: SharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),
+                                                                            Context.MODE_PRIVATE)
+
+    fun saveAESKeyIfAbsent() {
+        if (sharePref.contains(ENCRYPTED_AES_KEY)) return
+
+        val bytes = ByteArray(16)
+        SecureRandom().nextBytes(bytes)
+
+        val encryptedKey = rsaCipher.encrypt(bytes)
+        val encryptedKeyB64 = Base64.encodeToString(encryptedKey, Base64.NO_WRAP)
+
+        sharePref.edit().putString(ENCRYPTED_AES_KEY, encryptedKeyB64).apply()
     }
 
-    fun saveAESKey(keyManager: KeyManagerPreMarshmallow) {
-        val key = sharePref.getString(ENCRYPTED_AES_KEY, "")
-
-        if (key.isEmpty()) {
-            val bytes = ByteArray(16)
-            val secureRandom = SecureRandom()
-            secureRandom.nextBytes(bytes)
-
-            val encryptedKey = keyManager.rsaEncrypt(bytes)
-            val encryptedKeyB64 = Base64.encodeToString(encryptedKey, Base64.NO_WRAP)
-
-            sharePref.edit().putString(ENCRYPTED_AES_KEY, encryptedKeyB64).apply()
-        }
-    }
-
-    fun readSecretKey(keyManager: KeyManagerPreMarshmallow): SecretKeySpec? {
+    fun readSecretKey(): SecretKeySpec {
         val encryptedKeyB64 = sharePref.getString(ENCRYPTED_AES_KEY, null)
-
-        if (encryptedKeyB64 != null) {
-            val encryptedKey = Base64.decode(encryptedKeyB64, Base64.NO_WRAP)
-            val key = keyManager.rsaDecrypt(encryptedKey)
-            return SecretKeySpec(key, "AES")
-        }
-        return null
+                ?: throw IllegalStateException("Key does not exist")
+        val encryptedKey = Base64.decode(encryptedKeyB64, Base64.NO_WRAP)
+        val key = rsaCipher.decrypt(encryptedKey)
+        return SecretKeySpec(key, "AES")
     }
 }
