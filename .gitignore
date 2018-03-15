@@ -7,5 +7,5 @@
 /build
 /captures
 .externalNativeBuild
-/app/
+/app/**
 /androidsdk/src/test/resources/secret.json

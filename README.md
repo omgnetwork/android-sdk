@@ -39,11 +39,15 @@ Before using the SDK to retrieve a resource, you need to initialize the client (
 You should to this as soon as you obtain a valid authentication token corresponding to the current user from the Wallet API.
 
 ```kotlin
- val token = Base64.encode("$api_key:$authentication_token")
- val omgApiClient = OMGApiClient.Builder {
-      setAuthorizationToken(token)
-      setBaseURL(baseURL)
+ val token = EncryptionHelper.encryptBase64(apiKey, authToken)
+ 
+ val eWalletClient = EWalletClient.Builder {
+     baseURL = baseURL
+     authenticationToken = token
+     debug = true // Print request and response log
  }.build()
+ 
+ val omgAPIClient = OMGApiClient(eWalletClient)
 ```
 
 Where:
@@ -55,17 +59,17 @@ Where:
 ### Retrieving resources
 
 Once you have an initialized client, you can retrieve different resources.
-Each call takes a `Callback` interface that returns a `Response` object:
+Each call takes a `OMGCallback` interface that returns a `OMGResponse` object:
 
 ```kotlin
-interface Callback<in T> {
-    fun success(response: Response<T>)
-    fun fail(response: Response<ApiError>)
+interface OMGCallback<in T> {
+    fun success(response: OMGResponse<T>)
+    fun fail(response: OMGResponse<ApiError>)
 }
 ```
 
 ```kotlin
-data class Response<out T>(val version: String, val success: Boolean, val data: T)
+data class OMGResponse<out T>(val version: String, val success: Boolean, val data: T)
 
 data class ApiError(val code: ErrorCode, val description: String)
 ```
@@ -79,28 +83,28 @@ Where:
 ### Get the current user
 
 ```kotlin
-omgApiClient.getCurrentUser(object : Callback<User> {
-     override fun success(response: Response<User>) {
-         // Do something with the user
-     }
+omgAPIClient.getCurrentUser().enqueue(object: OMGCallback<User>{
+    override fun fail(response: OMGResponse<APIError>) {
+        
+    }
 
-     override fun fail(response: Response<ApiError>) {
-         // Handle the error
-     }
+    override fun success(response: OMGResponse<User>) {
+        
+    }
 })
 ```
 
 ### Get the addresses of the current user
 
 ```kotlin
-omgApiClient.listBalances(object : Callback<List<Address>> {
-     override fun success(response: Response<List<Address>>) {
-         // Do something with the address
-     }
+omgAPIClient.listBalances().enqueue(object: OMGCallback<BalanceList>{
+    override fun fail(response: OMGResponse<APIError>) {
+        
+    }
 
-     override fun fail(response: Response<ApiError>) {
-         // Handle the error
-     }
+    override fun success(response: OMGResponse<BalanceList>) {
+        
+    }
 })
 ```
 
@@ -109,14 +113,14 @@ omgApiClient.listBalances(object : Callback<List<Address>> {
 ### Get the provider settings
 
 ```kotlin
-omgApiClient.getSettings(object : Callback<Setting> {
-     override fun success(response: Response<Setting>) {
-         // Do something with the setting
-     }
+omgAPIClient.getSettings().enqueue(object: OMGCallback<Setting>{
+    override fun fail(response: OMGResponse<APIError>) {
+        
+    }
 
-     override fun fail(response: Response<ApiError>) {
-         // Handle the error
-     }
+    override fun success(response: OMGResponse<Setting>) {
+        
+    }
 })
 ```
 

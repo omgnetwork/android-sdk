@@ -3,14 +3,13 @@ package co.omisego.omisego.utils
 /*
  * OmiseGO
  *
- *
- * Created by Phuchit Sirimongkolsathien on 6/3/2018 AD.
+ * Created by Phuchit Sirimongkolsathien on 1/12/2017 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import java.util.*
+import android.util.Base64
 
-object OMGEncryptionHelper {
+object EncryptionHelper {
     /**
      * Encrypt the string with base64
      *
@@ -23,6 +22,6 @@ object OMGEncryptionHelper {
      */
     fun encryptBase64(vararg secrets: String): String {
         val encrypted: String = secrets.joinToString(":")
-        return String(Base64.getEncoder().encode(encrypted.toByteArray()))
+        return String(Base64.encode(encrypted.toByteArray(), Base64.NO_WRAP))
     }
 }
