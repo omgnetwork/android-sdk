@@ -28,6 +28,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.ExpectedException
 import java.io.File
+import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import kotlin.test.Test
 
@@ -54,7 +55,7 @@ class EWalletClientTest {
         eWalletClient = EWalletClient.Builder {
             debugUrl = mockUrl
             authenticationToken = auth
-            callbackExecutor = Executors.newSingleThreadExecutor()
+            callbackExecutor = Executor { it.run() }
             debug = false
         }.build()
     }
@@ -98,7 +99,7 @@ class EWalletClientTest {
 
         EWalletClient.Builder {
             authenticationToken = secret.getString("auth_token")
-            callbackExecutor = Executors.newSingleThreadExecutor()
+            callbackExecutor = Executor { it.run() }
             debug = false
         }.build()
     }
@@ -110,7 +111,7 @@ class EWalletClientTest {
 
         EWalletClient.Builder {
             debugUrl = mockUrl
-            callbackExecutor = Executors.newSingleThreadExecutor()
+            callbackExecutor = Executor { it.run() }
             debug = false
         }.build()
     }

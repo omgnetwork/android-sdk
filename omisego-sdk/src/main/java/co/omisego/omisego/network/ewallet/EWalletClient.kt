@@ -126,7 +126,7 @@ class EWalletClient {
             eWalletClient.retrofit = Retrofit.Builder().apply {
                 addConverterFactory(OMGConverterFactory.create(gson))
                 addCallAdapterFactory(OMGCallAdapterFactory.create())
-                callbackExecutor(callbackExecutor!!)
+                callbackExecutor(callbackExecutor)
                 when {
                     debugUrl != null -> baseUrl(debugUrl!!)
                     else -> baseUrl(this@Builder.baseUrl)
