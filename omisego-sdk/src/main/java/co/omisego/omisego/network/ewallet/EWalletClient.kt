@@ -1,10 +1,13 @@
 package co.omisego.omisego.network.ewallet
 
+import android.support.annotation.MainThread
 import co.omisego.omisego.constant.ErrorCode
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
 import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
+import co.omisego.omisego.custom.retrofit2.executor.ExecutorProvider
+import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.network.InterceptorProvider
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
@@ -12,6 +15,7 @@ import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import java.util.concurrent.Executor
 
 /*
  * OmiseGO
@@ -70,6 +74,10 @@ class EWalletClient {
                 field = value
             }
 
+        /**
+         * Set the callback executor (default UI thread)
+         */
+        var callbackExecutor: Executor? = null
 
         /**
          * For testing purpose
@@ -91,6 +99,10 @@ class EWalletClient {
 
             /* Initialize the EWalletClient and delegate the header from the Builder to EWalletClient */
             val eWalletClient = EWalletClient().apply { header = omgHeader }
+
+            /* Initialize the callback executor */
+            if(callbackExecutor == null)
+                callbackExecutor = MainThreadExecutor()
 
             /* Initialize the OKHttpClient with header interceptor*/
             val client: OkHttpClient = OkHttpClient.Builder().apply {
@@ -114,6 +126,7 @@ class EWalletClient {
             eWalletClient.retrofit = Retrofit.Builder().apply {
                 addConverterFactory(OMGConverterFactory.create(gson))
                 addCallAdapterFactory(OMGCallAdapterFactory.create())
+                callbackExecutor(callbackExecutor!!)
                 when {
                     debugUrl != null -> baseUrl(debugUrl!!)
                     else -> baseUrl(this@Builder.baseUrl)

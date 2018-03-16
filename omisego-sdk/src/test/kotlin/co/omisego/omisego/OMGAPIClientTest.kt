@@ -34,6 +34,7 @@ import org.junit.Test
 import org.junit.rules.ExpectedException
 import retrofit2.Response
 import java.io.File
+import java.util.concurrent.Executors
 
 class OMGAPIClientTest {
     @Rule
@@ -68,6 +69,7 @@ class OMGAPIClientTest {
         eWalletClient = EWalletClient.Builder {
             debugUrl = mockUrl
             authenticationToken = auth
+            callbackExecutor = Executors.newSingleThreadExecutor()
             debug = false
         }.build()
 

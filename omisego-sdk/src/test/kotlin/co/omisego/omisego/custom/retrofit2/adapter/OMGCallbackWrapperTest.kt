@@ -23,16 +23,20 @@ import com.google.gson.reflect.TypeToken
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
-import com.nhaarman.mockito_kotlin.whenever
+import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.amshove.kluent.mock
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.Call
 import retrofit2.Response
 import java.io.File
 import java.io.IOException
+import java.util.concurrent.Executor
 
+@RunWith(MockitoJUnitRunner::class)
 class OMGCallbackWrapperTest {
     private val userFile: File by ResourceFile("user.me-post.json")
     private val errorFile: File by ResourceFile("fail.client-invalid_auth_scheme.json")
@@ -53,7 +57,8 @@ class OMGCallbackWrapperTest {
     fun setup() {
         mockCall = mock()
         mockOMGCallback = mock()
-        callback = OMGCallbackWrapper(mockOMGCallback)
+        val executor = Executor { it.run() }
+        callback = OMGCallbackWrapper(mockOMGCallback, executor)
         sampleUser = gson.fromJson<OMGResponse<User>>(userFile.readText(),
                 object : TypeToken<OMGResponse<User>>() {}.type).data
         sampleError = gson.fromJson<OMGResponse<APIError>>(errorFile.readText(),
@@ -109,32 +114,30 @@ class OMGCallbackWrapperTest {
     }
 
     @Test
-    fun `OMGCallbackWrapper delegates the parsed error to the failed callback successfully`() {
-        val mockResponse = mock<Response<OMGResponse<User>>>()
-        whenever(mockResponse.body()).thenReturn(null)
+    fun `OMGCallbackWrapper delegates the unexpected error to the failed callback successfully`() {
+        val response: Response<OMGResponse<User>> = Response.success(null)
 
         val expectedResponse = OMGResponse(Versions.EWALLET_API, false,
-                APIError(ErrorCode.SDK_PARSE_ERROR,
-                        "The response body was null"))
+                APIError(ErrorCode.SDK_UNEXPECTED_ERROR,
+                        "Unexpected Error"))
 
-        callback.onResponse(mockCall, mockResponse)
+        callback.onResponse(mockCall, response)
 
         verify(mockOMGCallback, times(1)).fail(expectedResponse)
         verifyNoMoreInteractions(mockOMGCallback)
     }
 
     @Test
-    fun `OMGCallbackWrapper delegates the unexpected error to the failed callback successfully`() {
-        val mockResponse = mock<Response<OMGResponse<User>>>()
-        val omgResponse = OMGResponse(Versions.EWALLET_API, false, User("", "", "", mapOf()))
-        whenever(mockResponse.body()).thenReturn(omgResponse)
-        whenever(mockResponse.isSuccessful).thenReturn(false)
+    fun `OMGCallbackWrapper delegates the server unknown error to the failed callback successfully`() {
+        val json = MediaType.parse("application/json")
+        val responseText = "A bug is never just a mistake. It represents something bigger."
+        val body = ResponseBody.create(json, responseText)
+        val response: Response<OMGResponse<User>> = Response.error(400, body)
 
         val expectedResponse = OMGResponse(Versions.EWALLET_API, false,
-                APIError(ErrorCode.SDK_UNEXPECTED_ERROR,
-                        "Unexpected Error"))
+                APIError(ErrorCode.SERVER_UNKNOWN_ERROR, responseText))
 
-        callback.onResponse(mockCall, mockResponse)
+        callback.onResponse(mockCall, response)
 
         verify(mockOMGCallback, times(1)).fail(expectedResponse)
         verifyNoMoreInteractions(mockOMGCallback)

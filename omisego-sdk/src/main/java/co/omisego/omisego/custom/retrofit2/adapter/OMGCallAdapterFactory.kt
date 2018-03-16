@@ -27,7 +27,7 @@ internal class OMGCallAdapterFactory : CallAdapter.Factory() {
             returnType !is ParameterizedType -> throw IllegalStateException("OMGCall must have a generic type")
             else -> {
                 val responseType = getParameterUpperBound(0, returnType)
-                OMGCallAdapter(TypeToken.get(responseType))
+                OMGCallAdapter(TypeToken.get(responseType), retrofit.callbackExecutor())
             }
         }
     }

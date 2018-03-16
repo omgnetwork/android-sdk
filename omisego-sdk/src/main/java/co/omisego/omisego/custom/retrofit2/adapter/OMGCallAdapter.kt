@@ -13,12 +13,14 @@ import retrofit2.Call
 import retrofit2.CallAdapter
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import java.util.concurrent.Executor
 
 internal class OMGCallAdapter<R>(
-        private val responseType: TypeToken<R>
+        private val responseType: TypeToken<R>,
+        private val callbackExecutor: Executor?
 ) : CallAdapter<OMGResponse<R>, OMGCall<R>> {
 
-    override fun adapt(call: Call<OMGResponse<R>>): OMGCall<R> = OMGCaller(call)
+    override fun adapt(call: Call<OMGResponse<R>>): OMGCall<R> = OMGCaller(call, callbackExecutor)
 
     override fun responseType(): Type = OMGResponseType(responseType.type)
 
