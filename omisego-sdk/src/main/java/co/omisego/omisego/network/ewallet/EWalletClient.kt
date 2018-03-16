@@ -1,12 +1,10 @@
 package co.omisego.omisego.network.ewallet
 
-import android.support.annotation.MainThread
 import co.omisego.omisego.constant.ErrorCode
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
 import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
-import co.omisego.omisego.custom.retrofit2.executor.ExecutorProvider
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.network.InterceptorProvider
 import com.google.gson.FieldNamingPolicy
