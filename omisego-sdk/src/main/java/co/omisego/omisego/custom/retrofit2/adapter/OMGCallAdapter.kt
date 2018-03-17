@@ -17,7 +17,7 @@ import java.util.concurrent.Executor
 
 internal class OMGCallAdapter<R>(
         private val responseType: TypeToken<R>,
-        private val callbackExecutor: Executor?
+        private val callbackExecutor: Executor
 ) : CallAdapter<OMGResponse<R>, OMGCall<R>> {
 
     override fun adapt(call: Call<OMGResponse<R>>): OMGCall<R> = OMGCaller(call, callbackExecutor)

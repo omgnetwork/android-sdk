@@ -13,7 +13,7 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.concurrent.Executor
 
-internal class OMGCaller<T>(private val call: Call<OMGResponse<T>>, private val callbackExecutor: Executor?) : OMGCall<T> {
+internal class OMGCaller<T>(private val call: Call<OMGResponse<T>>, private val callbackExecutor: Executor) : OMGCall<T> {
     override fun cancel() = call.cancel()
     override fun clone() = OMGCaller(call.clone(), callbackExecutor)
     override fun execute(): Response<OMGResponse<T>> = call.execute()

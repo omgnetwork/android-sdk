@@ -19,15 +19,15 @@ import retrofit2.Response
 import java.net.HttpURLConnection
 import java.util.concurrent.Executor
 
-internal class OMGCallbackWrapper<T>(private val callback: OMGCallback<T>, private val callbackExecutor: Executor?) : Callback<OMGResponse<T>> {
+internal class OMGCallbackWrapper<T>(private val callback: OMGCallback<T>, private val callbackExecutor: Executor) : Callback<OMGResponse<T>> {
     override fun onFailure(call: Call<OMGResponse<T>>, t: Throwable) {
         when (t) {
             is OMGAPIErrorException -> {
-                callbackExecutor?.execute { callback.fail(t.response) }
+                callbackExecutor.execute { callback.fail(t.response) }
             }
             else -> {
                 val apiError = APIError(ErrorCode.SDK_NETWORK_ERROR, t.localizedMessage)
-                callbackExecutor?.execute {
+                callbackExecutor.execute {
                     callback.fail(OMGResponse(Versions.EWALLET_API, false, apiError))
                 }
             }
@@ -38,7 +38,7 @@ internal class OMGCallbackWrapper<T>(private val callback: OMGCallback<T>, priva
         val body = response.body()
         val errorBody = response.errorBody()
         if (response.isSuccessful && body != null) {
-            callbackExecutor?.execute {
+            callbackExecutor.execute {
                 callback.success(body)
             }
             return
@@ -56,7 +56,7 @@ internal class OMGCallbackWrapper<T>(private val callback: OMGCallback<T>, priva
                 APIError(ErrorCode.SDK_UNEXPECTED_ERROR, "Unexpected Error")
             }
         }
-        callbackExecutor?.execute {
+        callbackExecutor.execute {
             callback.fail(OMGResponse(Versions.EWALLET_API, false, apiError))
         }
     }
