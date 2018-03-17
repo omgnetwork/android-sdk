@@ -98,10 +98,6 @@ class EWalletClient {
             /* Initialize the EWalletClient and delegate the header from the Builder to EWalletClient */
             val eWalletClient = EWalletClient().apply { header = omgHeader }
 
-            /* Initialize the callback executor */
-            if(callbackExecutor == null)
-                callbackExecutor = MainThreadExecutor()
-
             /* Initialize the OKHttpClient with header interceptor*/
             val client: OkHttpClient = OkHttpClient.Builder().apply {
                 addInterceptor(omgHeader)
@@ -124,7 +120,7 @@ class EWalletClient {
             eWalletClient.retrofit = Retrofit.Builder().apply {
                 addConverterFactory(OMGConverterFactory.create(gson))
                 addCallAdapterFactory(OMGCallAdapterFactory.create())
-                callbackExecutor(callbackExecutor)
+                callbackExecutor(callbackExecutor ?: MainThreadExecutor())
                 when {
                     debugUrl != null -> baseUrl(debugUrl!!)
                     else -> baseUrl(this@Builder.baseUrl)
