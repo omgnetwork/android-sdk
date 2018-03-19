@@ -27,6 +27,7 @@ import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldEqualTo
 import org.json.JSONObject
 import org.junit.Before
 import org.junit.Rule
@@ -34,6 +35,8 @@ import org.junit.Test
 import org.junit.rules.ExpectedException
 import retrofit2.Response
 import java.io.File
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 class OMGAPIClientTest {
     @Rule
@@ -68,6 +71,7 @@ class OMGAPIClientTest {
         eWalletClient = EWalletClient.Builder {
             debugUrl = mockUrl
             authenticationToken = auth
+            callbackExecutor = Executor { it.run() }
             debug = false
         }.build()
 

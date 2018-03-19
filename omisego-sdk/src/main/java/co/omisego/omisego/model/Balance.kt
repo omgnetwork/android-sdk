@@ -7,7 +7,6 @@ package co.omisego.omisego.model
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -27,7 +26,7 @@ data class Balance(val amount: BigDecimal, val mintedToken: MintedToken) {
      * @return The formatted balance amount with thousand separator
      */
     fun displayAmount(precision: Int = 2): String {
-        return "%,.${precision}f".format(amount.divide(mintedToken.subUnitToUnit, precision, RoundingMode.FLOOR))
+        return "%,.${precision}f".format(amount.divide(mintedToken.subunitToUnit, precision, RoundingMode.FLOOR))
     }
 
     /**
@@ -42,7 +41,7 @@ data class Balance(val amount: BigDecimal, val mintedToken: MintedToken) {
             val newAmount = this.amount.plus(augend.amount)
             return Balance(newAmount, this.mintedToken.copy())
         }
-        throw UnsupportedOperationException("Balances are not compatible. Make sure MintedTokens have the same symbol and subUnitToUnit.")
+        throw UnsupportedOperationException("Balances are not compatible. Make sure MintedTokens have the same symbol and subunitToUnit.")
     }
 
     /**
@@ -57,6 +56,6 @@ data class Balance(val amount: BigDecimal, val mintedToken: MintedToken) {
             val newAmount = this.amount.subtract(subtrahend.amount)
             return Balance(newAmount, this.mintedToken.copy())
         }
-        throw UnsupportedOperationException("Balances are not compatible. Make sure MintedTokens have the same symbol and subUnitToUnit.")
+        throw UnsupportedOperationException("Balances are not compatible. Make sure MintedTokens have the same symbol and subunitToUnit.")
     }
 }

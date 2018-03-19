@@ -7,6 +7,7 @@ package co.omisego.omisego.custom.retrofit2.adapter
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import com.google.gson.reflect.TypeToken
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
@@ -27,7 +28,8 @@ internal class OMGCallAdapterFactory : CallAdapter.Factory() {
             returnType !is ParameterizedType -> throw IllegalStateException("OMGCall must have a generic type")
             else -> {
                 val responseType = getParameterUpperBound(0, returnType)
-                OMGCallAdapter(TypeToken.get(responseType))
+                OMGCallAdapter(TypeToken.get(responseType),
+                        retrofit.callbackExecutor() ?: MainThreadExecutor())
             }
         }
     }

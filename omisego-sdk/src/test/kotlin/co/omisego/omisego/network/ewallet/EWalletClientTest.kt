@@ -20,7 +20,6 @@ import co.omisego.omisego.utils.OMGEncryptionHelper
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import okhttp3.HttpUrl
-import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.shouldEqual
 import org.json.JSONObject
@@ -28,12 +27,11 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.ExpectedException
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 import java.io.File
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 import kotlin.test.Test
 
-@RunWith(MockitoJUnitRunner::class)
 class EWalletClientTest {
     @Rule
     @JvmField
@@ -57,6 +55,7 @@ class EWalletClientTest {
         eWalletClient = EWalletClient.Builder {
             debugUrl = mockUrl
             authenticationToken = auth
+            callbackExecutor = Executor { it.run() }
             debug = false
         }.build()
     }
@@ -100,6 +99,7 @@ class EWalletClientTest {
 
         EWalletClient.Builder {
             authenticationToken = secret.getString("auth_token")
+            callbackExecutor = Executor { it.run() }
             debug = false
         }.build()
     }
@@ -111,6 +111,7 @@ class EWalletClientTest {
 
         EWalletClient.Builder {
             debugUrl = mockUrl
+            callbackExecutor = Executor { it.run() }
             debug = false
         }.build()
     }

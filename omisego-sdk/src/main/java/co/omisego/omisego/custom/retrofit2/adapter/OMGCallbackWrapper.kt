@@ -17,35 +17,47 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.net.HttpURLConnection
+import java.util.concurrent.Executor
 
-internal class OMGCallbackWrapper<T>(private val callback: OMGCallback<T>) : Callback<OMGResponse<T>> {
+internal class OMGCallbackWrapper<T>(private val callback: OMGCallback<T>, private val callbackExecutor: Executor) : Callback<OMGResponse<T>> {
     override fun onFailure(call: Call<OMGResponse<T>>, t: Throwable) {
         when (t) {
             is OMGAPIErrorException -> {
-                callback.fail(t.response)
+                callbackExecutor.execute { callback.fail(t.response) }
             }
             else -> {
                 val apiError = APIError(ErrorCode.SDK_NETWORK_ERROR, t.localizedMessage)
-                callback.fail(OMGResponse(Versions.EWALLET_API, false, apiError))
+                callbackExecutor.execute {
+                    callback.fail(OMGResponse(Versions.EWALLET_API, false, apiError))
+                }
             }
         }
     }
 
     override fun onResponse(call: Call<OMGResponse<T>>, response: Response<OMGResponse<T>>) {
         val body = response.body()
-        if (response.isSuccessful && body != null) return callback.success(body)
+        val errorBody = response.errorBody()
+        if (response.isSuccessful && body != null) {
+            callbackExecutor.execute {
+                callback.success(body)
+            }
+            return
+        }
+
         val apiError = when {
             response.code() == HttpURLConnection.HTTP_INTERNAL_ERROR -> {
                 APIError(ErrorCode.SERVER_INTERNAL_SERVER_ERROR,
                         "The EWallet API was 500 Internal Server Error")
             }
-            body == null -> {
-                APIError(ErrorCode.SDK_PARSE_ERROR, "The response body was null")
+            errorBody != null -> {
+                APIError(ErrorCode.SERVER_UNKNOWN_ERROR, errorBody.string())
             }
             else -> {
                 APIError(ErrorCode.SDK_UNEXPECTED_ERROR, "Unexpected Error")
             }
         }
-        callback.fail(OMGResponse(Versions.EWALLET_API, false, apiError))
+        callbackExecutor.execute {
+            callback.fail(OMGResponse(Versions.EWALLET_API, false, apiError))
+        }
     }
 }
