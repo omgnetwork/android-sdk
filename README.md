@@ -158,7 +158,7 @@ Where
     > `import co.omisego.omisego.model.pagination.SortDirection.*`
     
 * `searchTerm` *(nullable)* is a term to search for all of the searchable fields. 
-      Conflict with `searchTerms`, only use one of theme. The available values are:
+      Conflict with `searchTerms`, only use one of them. The available values are:
     
     `ID`, `STATUS`, `FROM`, `TO`, `CREATED_AT`, `UPDATED_AT`
       
@@ -168,7 +168,7 @@ Where
     For example:
     
     ```kotlin
-    mapOf(FROM: "some_address", ID: "some_id")
+    mapOf(FROM to "some_address", ID to "some_id")
     ```
 
 * `address` *(nullable)* is an optional address that belongs to the current user (primary address by default)
