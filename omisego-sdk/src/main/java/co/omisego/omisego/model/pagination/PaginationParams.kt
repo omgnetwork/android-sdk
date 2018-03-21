@@ -25,7 +25,9 @@ sealed class Paginable {
             ID("id"),
             STATUS("status"),
             FROM("from"),
-            TO("to");
+            TO("to"),
+            CREATED_AT("created_at"),
+            UPDATED_AT("updated_at");
 
             override fun toString(): String = value
         }
@@ -37,7 +39,7 @@ sealed class Paginable {
             STATUS("status"),
             FROM("from"),
             TO("to"),
-            CREATE_AT("create_at"),
+            CREATED_AT("created_at"),
             UPDATED_AT("updated_at");
 
             override fun toString(): String = value
