@@ -1,7 +1,14 @@
 package co.omisego.omisego.network.ewallet
 
-import co.omisego.omisego.constant.ErrorCode
+/*
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 11/10/2017 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import co.omisego.omisego.constant.Exceptions
+import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
 import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
@@ -14,13 +21,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.Executor
-
-/*
- * OmiseGO
- *
- * Created by Phuchit Sirimongkolsathien on 11/10/2017 AD.
- * Copyright © 2017-2018 OmiseGO. All rights reserved.
- */
 
 /**
  * The class EWalletClient represents an object that knows how to interact with OmiseGO API.

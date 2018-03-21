@@ -10,9 +10,17 @@ package co.omisego.omisego.network.ewallet
 import co.omisego.omisego.constant.Endpoints.GET_CURRENT_USER
 import co.omisego.omisego.constant.Endpoints.GET_SETTINGS
 import co.omisego.omisego.constant.Endpoints.LIST_BALANCE
+import co.omisego.omisego.constant.Endpoints.LIST_TRANSACTIONS
 import co.omisego.omisego.constant.Endpoints.LOGOUT
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
-import co.omisego.omisego.model.*
+import co.omisego.omisego.model.BalanceList
+import co.omisego.omisego.model.Logout
+import co.omisego.omisego.model.Setting
+import co.omisego.omisego.model.User
+import co.omisego.omisego.model.pagination.PaginationList
+import co.omisego.omisego.model.transaction.Transaction
+import co.omisego.omisego.model.transaction.TransactionListParams
+import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface EWalletAPI {
@@ -27,4 +35,7 @@ interface EWalletAPI {
 
     @POST(GET_SETTINGS)
     fun getSettings(): OMGCall<Setting>
+
+    @POST(LIST_TRANSACTIONS)
+    fun listTransactions(@Body request: TransactionListParams): OMGCall<PaginationList<Transaction>>
 }

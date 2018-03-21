@@ -8,6 +8,7 @@ package co.omisego.omisego.constant
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.constant.enums.ErrorCode
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotEqual

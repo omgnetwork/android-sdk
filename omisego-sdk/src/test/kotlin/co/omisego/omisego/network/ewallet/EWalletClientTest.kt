@@ -17,10 +17,13 @@ import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.utils.OMGEncryptionHelper
+import co.omisego.omisego.model.transaction.TransactionListParams
+import co.omisego.omisego.testUtils.GsonProvider
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
+import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
 import org.json.JSONObject
 import org.junit.After
@@ -39,6 +42,7 @@ class EWalletClientTest {
     private val secretFileName: String = "secret.json" // Replace your secret file here
     private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
     private val userFile: File by ResourceFile("user.me-post.json")
+    private val listTransactionsFile: File by ResourceFile("me.list_transactions-post.json")
     private val listBalanceFile: File by ResourceFile("me.list_balances-post.json")
     private val getSettingFile: File by ResourceFile("me.get_settings-post.json")
     private var mockWebServer: MockWebServer = MockWebServer()
@@ -159,6 +163,17 @@ class EWalletClientTest {
     }
 
     @Test
+    fun `EWalletClient request to list_transactions with the correct path`() {
+        listTransactionsFile.mockEnqueueWithHttpCode(mockWebServer)
+
+        val listTransactionParams: TransactionListParams = mock()
+
+        eWalletClient.eWalletAPI.listTransactions(listTransactionParams).execute()
+        val request = mockWebServer.takeRequest()
+        request.path shouldEqual "/api/${Endpoints.LIST_TRANSACTIONS}"
+    }
+
+    @Test
     fun `EWalletClient request to logout with the correct path`() {
         userFile.mockEnqueueWithHttpCode(mockWebServer)
 
@@ -183,10 +198,7 @@ class EWalletClientTest {
         val json = JSONObject(responseText)
         val success = json.getBoolean("success")
         val dataText = json.getJSONObject("data").toString()
-        val gson = GsonBuilder()
-                .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
-                .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create()
+        val gson = GsonProvider.provide()
         val data = gson.fromJson<T>(dataText, T::class.java)
         return OMGResponse(Versions.EWALLET_API, success, data)
     }

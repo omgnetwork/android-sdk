@@ -7,18 +7,19 @@ package co.omisego.omisego
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.ErrorCode
 import co.omisego.omisego.constant.Versions
+import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.custom.OMGCallback
-import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
 import co.omisego.omisego.exception.OMGAPIErrorException
 import co.omisego.omisego.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.*
+import co.omisego.omisego.model.pagination.Pagination
+import co.omisego.omisego.model.pagination.PaginationList
+import co.omisego.omisego.model.transaction.Transaction
 import co.omisego.omisego.network.ewallet.EWalletClient
+import co.omisego.omisego.testUtils.GsonProvider
 import co.omisego.omisego.utils.OMGEncryptionHelper
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
 import com.nhaarman.mockito_kotlin.times
@@ -27,7 +28,6 @@ import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
-import org.amshove.kluent.shouldEqualTo
 import org.json.JSONObject
 import org.junit.Before
 import org.junit.Rule
@@ -36,7 +36,6 @@ import org.junit.rules.ExpectedException
 import retrofit2.Response
 import java.io.File
 import java.util.concurrent.Executor
-import java.util.concurrent.Executors
 
 class OMGAPIClientTest {
     @Rule
@@ -46,14 +45,10 @@ class OMGAPIClientTest {
     private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
     private val userFile: File by ResourceFile("user.me-post.json")
     private val listBalanceFile: File by ResourceFile("me.list_balances-post.json")
+    private val listTransactionsFile: File by ResourceFile("me.list_transactions-post.json")
     private val getSettingFile: File by ResourceFile("me.get_settings-post.json")
     private val errorFile: File by ResourceFile("fail.client-invalid_auth_scheme.json")
-    private val gson by lazy {
-        GsonBuilder()
-                .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
-                .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create()
-    }
+    private val gson by lazy { GsonProvider.provide() }
     private lateinit var eWalletClient: EWalletClient
     private lateinit var mockWebServer: MockWebServer
     private lateinit var mockUrl: HttpUrl
@@ -79,7 +74,7 @@ class OMGAPIClientTest {
     }
 
     @Test
-    fun `OMGAPIClient should call list_balance and success`() {
+    fun `OMGAPIClient call list_balance and success callback should be invoked successfully`() {
         val element = gson.fromJson(listBalanceFile.readText(), JsonElement::class.java)
         val result = Response.success(element)
         listBalanceFile.mockEnqueueWithHttpCode(mockWebServer)
@@ -88,6 +83,32 @@ class OMGAPIClientTest {
         omgAPIClient.listBalances().enqueue(callback)
 
         val expected = gson.fromJson<OMGResponse<BalanceList>>(result.body(), object : TypeToken<OMGResponse<BalanceList>>() {}.type)
+
+        Thread.sleep(100)
+
+        verify(callback, times(1)).success(expected)
+    }
+
+    @Test
+    fun `OMGAPIClient call list_transactions and success callback should be invoked successfully`() {
+        val element = gson.fromJson(listTransactionsFile.readText(), JsonElement::class.java)
+        val result = Response.success(element)
+        listTransactionsFile.mockEnqueueWithHttpCode(mockWebServer)
+
+        val callback: OMGCallback<PaginationList<Transaction>> = mock()
+        omgAPIClient.listTransactions(mock()).enqueue(callback)
+
+        val data = result.body()!!.asJsonObject.getAsJsonObject("data").getAsJsonArray("data")
+        val transactionList = gson.fromJson<List<Transaction>>(data, object : TypeToken<List<Transaction>>() {}.type)
+
+        val expected = OMGResponse(
+                Versions.EWALLET_API,
+                true,
+                PaginationList(
+                        transactionList,
+                        Pagination(10, true, true, 1)
+                )
+        )
 
         Thread.sleep(100)
 

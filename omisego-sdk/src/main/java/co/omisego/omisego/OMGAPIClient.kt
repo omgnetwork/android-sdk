@@ -10,6 +10,7 @@ package co.omisego.omisego
 import co.omisego.omisego.model.Address
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
+import co.omisego.omisego.model.transaction.TransactionListParams
 import co.omisego.omisego.network.ewallet.EWalletClient
 
 /**
@@ -78,6 +79,14 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      * @param callback A callback to receive the response from server.
      */
     fun listBalances() = eWalletAPI.listBalances()
+
+
+    /**
+     * Get a paginated list of transaction for the current user
+     *
+     */
+    fun listTransactions(request: TransactionListParams) =
+            eWalletAPI.listTransactions(request)
 
     /**
      * Set new [authenticationToken].

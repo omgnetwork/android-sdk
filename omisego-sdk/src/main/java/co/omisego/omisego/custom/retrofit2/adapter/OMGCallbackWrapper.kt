@@ -7,7 +7,7 @@ package co.omisego.omisego.custom.retrofit2.adapter
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.ErrorCode
+import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.exception.OMGAPIErrorException
