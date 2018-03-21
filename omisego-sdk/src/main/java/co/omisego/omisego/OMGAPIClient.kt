@@ -84,6 +84,7 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
     /**
      * Get a paginated list of transaction for the current user
      *
+     * @param request A structure used to query a list of transactions for the current user
      */
     fun listTransactions(request: TransactionListParams) =
             eWalletAPI.listTransactions(request)
