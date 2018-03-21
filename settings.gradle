@@ -1,1 +1,1 @@
-include ':omisego-sdk', ':app'
+include ':omisego-sdk'
