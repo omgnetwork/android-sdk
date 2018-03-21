@@ -12,7 +12,7 @@ import com.google.gson.*
 import java.lang.reflect.Type
 
 @Suppress("UNCHECKED_CAST")
-class OMGEnumAdapter<T> : JsonDeserializer<T>, JsonSerializer<T> where T : OMGEnum, T : Enum<T> {
+internal class OMGEnumAdapter<T> : JsonDeserializer<T>, JsonSerializer<T> where T : OMGEnum, T : Enum<T> {
     private var values: Map<String, T>? = null
 
     override fun deserialize(json: JsonElement, type: Type, context: JsonDeserializationContext): T? {
