@@ -124,6 +124,81 @@ omgAPIClient.getSettings().enqueue(object: OMGCallback<Setting>{
 })
 ```
 
+### Get the current user's transactions
+This returns a paginated filtered list of transactions.
+
+In order to get this list you will need to create a `TransactionListParams` object:
+
+```kotlin
+val request = TransactionListParams(
+    page = 1,
+    perPage = 10,
+    sortBy = Paginable.Transaction.SortableFields.CREATE_AT,
+    sortDirection = SortDirection.ASCENDING,
+    searchTerm = null,
+    searchTerms = null,
+    address = null
+)
+```
+
+Where
+
+* `page` is the page you wist to receive
+* `perPage` is the number of results per page
+* `sortBy` is the sorting field. The available values are:
+
+    `ID`, `STATUS`, `FROM`, `TO`, `CREATED_AT`, `UPDATED_AT`
+    
+    > `import co.omisego.omisego.model.pagination.Paginable.Transaction.SortableFields.*`
+    
+* `sortDirection` is the sorting direction. The available values are:
+    
+    `ASCENDING`, `DESCENDING`
+    
+    > `import co.omisego.omisego.model.pagination.SortDirection.*`
+    
+* `searchTerm` *(nullable)* is a term to search for all of the searchable fields. 
+      Conflict with `searchTerms`, only use one of theme. The available values are:
+    
+    `ID`, `STATUS`, `FROM`, `TO`, `CREATED_AT`, `UPDATED_AT`
+      
+    > `import co.omisego.omisego.model.pagination.Paginable.Transaction.SearchableFields.*`
+    
+* `searchTerms` *(nullable)* is a key-value map of fields to search with the available fields (same as `searchTerm`)
+    For example:
+    
+    ```kotlin
+    mapOf(FROM: "some_address", ID: "some_id")
+    ```
+
+* `address` *(nullable)* is an optional address that belongs to the current user (primary address by default)
+
+Then you can call:
+
+```kotlin
+omgAPIClient.listTransactions(request).enqueue(object: OMGCallback<PaginationList<Transaction>>{
+    override fun fail(response: OMGResponse<APIError>) {
+        //TODO: Handle the error
+    }
+
+    override fun success(response: OMGResponse<PaginationList<Transaction>>) {
+        //TODO: Do something with the paginated list of transactions
+    }
+})
+```
+   
+There is `PaginationList<Transaction>` inside the `response.data` which contains `data: List<Transaction>` and `pagination: Pagination`
+
+Where:
+* `data` is an array of transactions
+* `pagination` is a `Pagination` object
+    
+    Where:
+    * `perPage` is the number of results per page.
+    * `currentPage` is the retrieved page.
+    * `isFirstPage` is a bool indicating if the page received is the first page
+    * `isLastPage` is a bool indicating if the page received is the last page
+    
 ## Test
 In order to run the live tests (bound to a working server) you need to fill the corresponding in the file `src/test/resources/secret.json`. 
 > Note : You can see the reference in the file `secret.example.json`
