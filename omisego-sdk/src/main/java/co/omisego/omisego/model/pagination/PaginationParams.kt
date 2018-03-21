@@ -19,7 +19,10 @@ enum class SortDirection constructor(override val value: String) : OMGEnum {
 
 sealed class Paginable {
     open class Transaction : Paginable() {
-        // Represents transaction's searchable fields
+
+        /**
+         * Represents transaction's searchable fields
+         */
         @JsonAdapter(OMGEnumAdapter::class)
         enum class SearchableFields constructor(override val value: String) : OMGEnum {
             ID("id"),
@@ -32,7 +35,9 @@ sealed class Paginable {
             override fun toString(): String = value
         }
 
-        // Represents transaction's sortable fields.
+        /**
+         * Represents transaction's sortable fields.
+         */
         @JsonAdapter(OMGEnumAdapter::class)
         enum class SortableFields constructor(override val value: String) : OMGEnum {
             ID("id"),
@@ -45,7 +50,9 @@ sealed class Paginable {
             override fun toString(): String = value
         }
 
-        // Represents transaction statuses.
+        /**
+         * Represents transaction statuses.
+         */
         @JsonAdapter(OMGEnumAdapter::class)
         enum class TransactionStatus constructor(override val value: String) : OMGEnum {
             PENDING("pending"),
