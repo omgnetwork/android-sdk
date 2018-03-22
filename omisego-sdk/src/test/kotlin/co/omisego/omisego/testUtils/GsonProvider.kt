@@ -13,7 +13,7 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
-object GsonProvider {
+internal object GsonProvider {
     fun provide(): Gson {
         return GsonBuilder()
                 .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())

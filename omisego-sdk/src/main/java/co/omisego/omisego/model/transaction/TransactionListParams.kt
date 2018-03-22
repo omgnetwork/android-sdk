@@ -10,7 +10,9 @@ package co.omisego.omisego.model.transaction
 import co.omisego.omisego.model.pagination.Paginable
 import co.omisego.omisego.model.pagination.SortDirection
 
-/* Represent a structure used to query a list of transactions */
+/**
+ *  Represent a structure used to query a list of transactions
+ */
 data class TransactionListParams(
         /**
          * A page number
@@ -29,7 +31,7 @@ data class TransactionListParams(
          * - [Paginable.Transaction.SortableFields.ID]
          * - [Paginable.Transaction.SortableFields.STATUS]
          * - [Paginable.Transaction.SortableFields.FROM]
-         * - [Paginable.Transaction.SortableFields.CREATE_AT]
+         * - [Paginable.Transaction.SortableFields.CREATED_AT]
          * - [Paginable.Transaction.SortableFields.UPDATED_AT]
          */
         val sortBy: Paginable.Transaction.SortableFields,
