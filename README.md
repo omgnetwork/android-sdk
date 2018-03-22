@@ -130,13 +130,12 @@ This returns a paginated filtered list of transactions.
 In order to get this list you will need to create a `TransactionListParams` object:
 
 ```kotlin
-val request = TransactionListParams(
+val request = TransactionListParams.create(
     page = 1,
     perPage = 10,
     sortBy = Paginable.Transaction.SortableFields.CREATE_AT,
     sortDirection = SortDirection.ASCENDING,
-    searchTerm = null,
-    searchTerms = null,
+    searchTerm = "confirmed", // or searchTerms = mapOf(STATUS to "completed")
     address = null
 )
 ```
