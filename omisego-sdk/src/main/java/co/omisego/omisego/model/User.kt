@@ -16,7 +16,9 @@ package co.omisego.omisego.model
  * @param metaData Any additional metadata that need to be stored as a [HashMap]
  *
  */
-data class User(val id: String,
-                val providerUserId: String,
-                val username: String,
-                val metaData: Map<String, Any>)
+data class User(
+    val id: String,
+    val providerUserId: String,
+    val username: String,
+    val metaData: Map<String, Any>
+)

@@ -8,7 +8,11 @@ package co.omisego.omisego.network.ewallet
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.*
+import co.omisego.omisego.constant.Endpoints
+import co.omisego.omisego.constant.ErrorCode
+import co.omisego.omisego.constant.Exceptions
+import co.omisego.omisego.constant.HTTPHeaders
+import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
 import co.omisego.omisego.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
@@ -32,7 +36,6 @@ import org.junit.Rule
 import org.junit.rules.ExpectedException
 import java.io.File
 import java.util.concurrent.Executor
-import java.util.concurrent.Executors
 import kotlin.test.Test
 
 class EWalletClientTest {

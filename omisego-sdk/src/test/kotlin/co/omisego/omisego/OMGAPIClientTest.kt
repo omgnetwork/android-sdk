@@ -13,10 +13,13 @@ import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.exception.OMGAPIErrorException
 import co.omisego.omisego.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
-import co.omisego.omisego.model.*
+import co.omisego.omisego.model.APIError
+import co.omisego.omisego.model.BalanceList
+import co.omisego.omisego.model.OMGResponse
+import co.omisego.omisego.model.Setting
+import co.omisego.omisego.model.User
 import co.omisego.omisego.model.pagination.Pagination
 import co.omisego.omisego.model.pagination.PaginationList
-import co.omisego.omisego.model.transaction.Transaction
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.testUtils.GsonProvider
 import co.omisego.omisego.utils.OMGEncryptionHelper
@@ -57,8 +60,8 @@ class OMGAPIClientTest {
     @Before
     fun setup() {
         val auth = OMGEncryptionHelper.encryptBase64(
-                secret.getString("api_key"),
-                secret.getString("auth_token")
+            secret.getString("api_key"),
+            secret.getString("auth_token")
         )
 
         initMockWebServer()
@@ -166,7 +169,7 @@ class OMGAPIClientTest {
     @Test
     fun `OMGAPIClient should be executed when API return success true correctly`() {
         val expected = gson.fromJson<OMGResponse<User>>(userFile.readText(),
-                object : TypeToken<OMGResponse<User>>() {}.type)
+            object : TypeToken<OMGResponse<User>>() {}.type)
 
         userFile.mockEnqueueWithHttpCode(mockWebServer)
 
@@ -178,7 +181,7 @@ class OMGAPIClientTest {
     fun `OMGAPIClient should be executed when API return success false correctly`() {
         expectedEx.expect(OMGAPIErrorException::class.java)
         val apiError = APIError(ErrorCode.CLIENT_INVALID_AUTH_SCHEME,
-                "The provided authentication scheme is not supported")
+            "The provided authentication scheme is not supported")
         expectedEx.expectMessage(OMGResponse(Versions.EWALLET_API, false, apiError).toString())
 
         errorFile.mockEnqueueWithHttpCode(mockWebServer)

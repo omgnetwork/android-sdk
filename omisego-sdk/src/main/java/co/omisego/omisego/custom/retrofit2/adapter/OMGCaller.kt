@@ -19,5 +19,4 @@ internal class OMGCaller<T>(private val call: Call<OMGResponse<T>>, private val 
     override fun execute(): Response<OMGResponse<T>> = call.execute()
     override fun enqueue(callback: OMGCallback<T>) =
             call.enqueue(OMGCallbackWrapper(callback, callbackExecutor))
-
 }

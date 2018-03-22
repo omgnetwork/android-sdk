@@ -99,7 +99,4 @@ class BalanceTest {
 
         balance1 + balance2
     }
-
 }
-
-
