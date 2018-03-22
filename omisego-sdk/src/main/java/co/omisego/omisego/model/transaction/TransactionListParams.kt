@@ -18,12 +18,12 @@ data class TransactionListParams internal constructor(
         /**
          * A page number
          */
-        var page: Int = 1,
+        val page: Int = 1,
 
         /**
          * A number of results per page.
          */
-        var perPage: Int = 10,
+        val perPage: Int = 10,
 
         /**
          * The sorting field
@@ -35,7 +35,7 @@ data class TransactionListParams internal constructor(
          * - [Paginable.Transaction.SortableFields.CREATED_AT]
          * - [Paginable.Transaction.SortableFields.UPDATED_AT]
          */
-        var sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
+        val sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
 
         /**
          * The desired sort direction
@@ -44,7 +44,7 @@ data class TransactionListParams internal constructor(
          * - [SortDirection.ASCENDING]
          * - [SortDirection.DESCENDING]
          */
-        var sortDirection: SortDirection = SortDirection.DESCENDING,
+        val sortDirection: SortDirection = SortDirection.DESCENDING,
 
         /**
          * A term to search for in all of the searchable fields.
@@ -52,19 +52,19 @@ data class TransactionListParams internal constructor(
          *
          * Note: Conflict with searchTerms, only use one of them.
          */
-        var searchTerm: String? = null,
+        val searchTerm: String? = null,
 
         /**
          * A key-value map to search with the available fields
          * See more at [Paginable.Transaction.SearchableFields]
          *
          */
-        var searchTerms: Map<Paginable.Transaction.SearchableFields, Any>? = null,
+        val searchTerms: Map<Paginable.Transaction.SearchableFields, Any>? = null,
 
         /**
          * An optional address that belongs to the current user (primary address by default)
          */
-        var address: String? = null
+        val address: String? = null
 ) {
     companion object {
         fun create(
@@ -74,14 +74,14 @@ data class TransactionListParams internal constructor(
                 sortDirection: SortDirection = SortDirection.DESCENDING,
                 searchTerm: String? = null,
                 address: String? = null
-        ) = TransactionListParams().apply {
-            this.page = page
-            this.perPage = perPage
-            this.sortBy = sortBy
-            this.sortDirection = sortDirection
-            this.searchTerm = searchTerm
-            this.address = address
-        }
+        ) = TransactionListParams(
+                page = page,
+                perPage = perPage,
+                sortBy = sortBy,
+                sortDirection = sortDirection,
+                searchTerm = searchTerm,
+                address = address
+        )
 
         fun create(
                 page: Int = 1,
@@ -90,14 +90,14 @@ data class TransactionListParams internal constructor(
                 sortDirection: SortDirection = SortDirection.DESCENDING,
                 searchTerms: Map<Paginable.Transaction.SearchableFields, Any>? = null,
                 address: String? = null
-        ) = TransactionListParams().apply {
-            this.page = page
-            this.perPage = perPage
-            this.sortBy = sortBy
-            this.sortDirection = sortDirection
-            this.searchTerms = searchTerms
-            this.address = address
-        }
+        ) = TransactionListParams(
+                page = page,
+                perPage = perPage,
+                sortBy = sortBy,
+                sortDirection = sortDirection,
+                searchTerms = searchTerms,
+                address = address
+        )
     }
 }
 
