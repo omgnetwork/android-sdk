@@ -7,6 +7,7 @@ package co.omisego.omisego
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.constant.ErrorCode
 import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.custom.OMGCallback
