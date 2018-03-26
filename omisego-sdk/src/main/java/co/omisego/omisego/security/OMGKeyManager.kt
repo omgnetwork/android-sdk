@@ -79,6 +79,7 @@ class OMGKeyManager private constructor(private var keyManager: KeyManager) {
             if (keyAlias.isBlank()) throw IllegalStateException("keyAlias not set")
 
             val keyStore = KeyStore.getInstance(KeyManager.ANDROID_KEY_STORE)
+            keyStore.load(null)
             val keyHolder = KeyHolder(keyStore, keyAlias)
 
             keyManager =
