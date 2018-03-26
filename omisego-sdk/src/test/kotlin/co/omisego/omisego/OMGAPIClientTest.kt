@@ -169,8 +169,10 @@ class OMGAPIClientTest {
 
     @Test
     fun `OMGAPIClient should be executed when API return success true correctly`() {
-        val expected = gson.fromJson<OMGResponse<User>>(userFile.readText(),
-            object : TypeToken<OMGResponse<User>>() {}.type)
+        val expected = gson.fromJson<OMGResponse<User>>(
+            userFile.readText(),
+            object : TypeToken<OMGResponse<User>>() {}.type
+        )
 
         userFile.mockEnqueueWithHttpCode(mockWebServer)
 
@@ -181,8 +183,10 @@ class OMGAPIClientTest {
     @Test
     fun `OMGAPIClient should be executed when API return success false correctly`() {
         expectedEx.expect(OMGAPIErrorException::class.java)
-        val apiError = APIError(ErrorCode.CLIENT_INVALID_AUTH_SCHEME,
-            "The provided authentication scheme is not supported")
+        val apiError = APIError(
+            ErrorCode.CLIENT_INVALID_AUTH_SCHEME,
+            "The provided authentication scheme is not supported"
+        )
         expectedEx.expectMessage(OMGResponse(Versions.EWALLET_API, false, apiError).toString())
 
         errorFile.mockEnqueueWithHttpCode(mockWebServer)
