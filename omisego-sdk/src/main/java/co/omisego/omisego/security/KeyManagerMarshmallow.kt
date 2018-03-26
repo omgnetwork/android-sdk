@@ -23,13 +23,11 @@ internal class KeyManagerMarshmallow(
     keyHolder: KeyHolder,
     iv: String = String(ByteArray(12))
 ) : KeyManager(keyHolder) {
-
-    private val cipher by lazy { Cipher.getInstance(AES_MODE) }
-
+    
     override val encryptCipher: Cipher
-        get() = cipher.also { initCipher(it, Cipher.ENCRYPT_MODE) }
+        get() = Cipher.getInstance(AES_MODE).also { initCipher(it, Cipher.ENCRYPT_MODE) }
     override val decryptCipher: Cipher
-        get() = cipher.also { initCipher(it, Cipher.DECRYPT_MODE) }
+        get() = Cipher.getInstance(AES_MODE).also { initCipher(it, Cipher.DECRYPT_MODE) }
 
     private val secretKey: Key
         get() = keyStore.getKey(keyAlias, null)

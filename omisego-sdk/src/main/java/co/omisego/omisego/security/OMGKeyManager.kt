@@ -66,7 +66,6 @@ class OMGKeyManager private constructor(private var keyManager: KeyManager) {
                 field = value
             }
 
-
         init {
             init()
         }
