@@ -1,4 +1,4 @@
-package co.omisego.omisego.constant
+package co.omisego.omisego.constant.enums
 
 /*
  * OmiseGO

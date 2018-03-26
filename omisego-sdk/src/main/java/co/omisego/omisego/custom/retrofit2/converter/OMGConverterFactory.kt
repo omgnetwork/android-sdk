@@ -13,6 +13,8 @@ import co.omisego.omisego.model.OMGResponse
 import com.google.gson.Gson
 import com.google.gson.TypeAdapter
 import com.google.gson.reflect.TypeToken
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import org.json.JSONException
 import org.json.JSONObject
@@ -32,10 +34,15 @@ internal class OMGConverterFactory(private val gson: Gson) : Converter.Factory()
 
     override fun responseBodyConverter(type: Type, annotations: Array<Annotation>, retrofit: Retrofit): Converter<ResponseBody, *> {
         val adapter = gson.getAdapter(TypeToken.get(type))
-        return OMGConverter(gson, adapter)
+        return OMGResponseConverter(gson, adapter)
     }
 
-    internal class OMGConverter<T>(private val gson: Gson, private val adapter: TypeAdapter<T>) : Converter<ResponseBody, T> {
+    override fun requestBodyConverter(type: Type?, parameterAnnotations: Array<out Annotation>?, methodAnnotations: Array<out Annotation>?, retrofit: Retrofit?): Converter<*, RequestBody> {
+        val adapter = gson.getAdapter(TypeToken.get(type))
+        return OMGRequestConverter(gson, adapter)
+    }
+
+    internal class OMGResponseConverter<T>(private val gson: Gson, private val adapter: TypeAdapter<T>) : Converter<ResponseBody, T> {
         @Throws(IOException::class)
         override fun convert(responseBody: ResponseBody): T {
             try {
@@ -60,5 +67,9 @@ internal class OMGConverterFactory(private val gson: Gson) : Converter.Factory()
                 throw IOException("Failed to parse JSON", e)
             }
         }
+    }
+
+    internal class OMGRequestConverter<T>(private val gson: Gson, private val adapter: TypeAdapter<T>) : Converter<T, RequestBody> {
+        override fun convert(value: T): RequestBody = RequestBody.create(MediaType.parse("application/json"), gson.toJson(value))
     }
 }

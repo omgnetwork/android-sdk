@@ -7,7 +7,7 @@ package co.omisego.omisego.model
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.ErrorCode
+import co.omisego.omisego.constant.enums.ErrorCode
 
 /**
  * Represents an error caused by the SDK or the OmiseGO API.

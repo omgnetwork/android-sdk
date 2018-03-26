@@ -7,7 +7,7 @@ package co.omisego.omisego.custom.gson
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.ErrorCode
+import co.omisego.omisego.constant.enums.ErrorCode
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
