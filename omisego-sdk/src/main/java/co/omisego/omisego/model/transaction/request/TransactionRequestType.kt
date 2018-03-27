@@ -11,8 +11,13 @@ import co.omisego.omisego.constant.enums.OMGEnum
 import co.omisego.omisego.custom.gson.OMGEnumAdapter
 import com.google.gson.annotations.JsonAdapter
 
+/**
+ * The different types of request that can be generated
+ */
 @JsonAdapter(OMGEnumAdapter::class)
 enum class TransactionRequestType constructor(override val value: String) : OMGEnum {
+
+    /* The initiator wants to receive a specified token */
     RECEIVE("receive");
 
     override fun toString(): String = value
