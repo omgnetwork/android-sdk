@@ -94,7 +94,7 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      *
      * @param request The [TransactionRequestCreateParams] object describing the transaction request to be made.
      */
-    fun generateTransactionRequest(request: TransactionRequestCreateParams) =
+    fun createTransactionRequest(request: TransactionRequestCreateParams) =
         eWalletAPI.createTransactionRequest(request)
 
     /**
