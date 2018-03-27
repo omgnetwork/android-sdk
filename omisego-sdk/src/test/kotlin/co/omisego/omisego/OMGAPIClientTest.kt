@@ -129,7 +129,7 @@ class OMGAPIClientTest {
 
         val callback: OMGCallback<TransactionRequest> = mock()
 
-        omgAPIClient.createTransactionRequest(mock()).enqueue(callback)
+        omgAPIClient.generateTransactionRequest(mock()).enqueue(callback)
 
         val data = result.body()!!.asJsonObject.getAsJsonObject("data")
         val transactionRequest = gson.fromJson<TransactionRequest>(data, object : TypeToken<TransactionRequest>() {}.type)

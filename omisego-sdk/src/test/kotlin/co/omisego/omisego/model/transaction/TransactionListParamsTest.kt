@@ -10,7 +10,7 @@ package co.omisego.omisego.model.transaction
 import co.omisego.omisego.model.pagination.Paginable.Transaction.SearchableFields
 import co.omisego.omisego.model.pagination.Paginable.Transaction.SortableFields
 import co.omisego.omisego.model.pagination.SortDirection
-import co.omisego.omisego.model.transaction.list.ListTransactionParams
+import co.omisego.omisego.model.transaction.list.TransactionListParams
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -28,8 +28,8 @@ class ListTransactionParamsTest {
     }
 
     @Test
-    fun `ListTransactionParams should be added successfully`() {
-        val transactionListParams = ListTransactionParams(1,
+    fun `TransactionListParams should be added successfully`() {
+        val transactionListParams = TransactionListParams(1,
             10,
             SortableFields.FROM,
             SortDirection.ASCENDING,

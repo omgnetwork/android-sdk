@@ -18,7 +18,7 @@ import co.omisego.omisego.model.BalanceList
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
-import co.omisego.omisego.model.transaction.list.ListTransactionParams
+import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.testUtils.GsonProvider
 import co.omisego.omisego.utils.OMGEncryptionHelper
 import okhttp3.HttpUrl
@@ -165,7 +165,7 @@ class EWalletClientTest {
     fun `EWalletClient request to list_transactions with the correct path`() {
         listTransactionsFile.mockEnqueueWithHttpCode(mockWebServer)
 
-        val listTransactionParams: ListTransactionParams = mock()
+        val listTransactionParams: TransactionListParams = mock()
 
         eWalletClient.eWalletAPI.listTransactions(listTransactionParams).execute()
         val request = mockWebServer.takeRequest()
