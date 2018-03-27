@@ -31,7 +31,8 @@ internal class KeyManagerMarshmallow(
 
     private val secretKey: Key
         get() = keyStore.getKey(keyAlias, null)
-    private val gcmParameterSpec: GCMParameterSpec = GCMParameterSpec(128, iv.toByteArray())
+
+    private val gcmParameterSpec = GCMParameterSpec(128, iv.toByteArray())
 
     companion object {
         const val AES_MODE = "AES/GCM/NoPadding"
