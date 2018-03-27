@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.transaction
+package co.omisego.omisego.model.transaction.list
 
 /*
  * OmiseGO
@@ -75,12 +75,12 @@ data class TransactionListParams internal constructor(
                 searchTerm: String? = null,
                 address: String? = null
         ) = TransactionListParams(
-                page = page,
-                perPage = perPage,
-                sortBy = sortBy,
-                sortDirection = sortDirection,
-                searchTerm = searchTerm,
-                address = address
+            page = page,
+            perPage = perPage,
+            sortBy = sortBy,
+            sortDirection = sortDirection,
+            searchTerm = searchTerm,
+            address = address
         )
 
         fun create(
@@ -91,12 +91,12 @@ data class TransactionListParams internal constructor(
                 searchTerms: Map<Paginable.Transaction.SearchableFields, Any>? = null,
                 address: String? = null
         ) = TransactionListParams(
-                page = page,
-                perPage = perPage,
-                sortBy = sortBy,
-                sortDirection = sortDirection,
-                searchTerms = searchTerms,
-                address = address
+            page = page,
+            perPage = perPage,
+            sortBy = sortBy,
+            sortDirection = sortDirection,
+            searchTerms = searchTerms,
+            address = address
         )
     }
 }

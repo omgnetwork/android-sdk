@@ -65,6 +65,10 @@ tasks.withType(Javadoc) {
 dependencies {
     // Core dependencies
     api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    // Used for the QRCode generator and the QRCode scanner.
+    // It is an android port version of Google's ZXing library.
+    api 'com.journeyapps:zxing-android-embedded:3.2.0'
     implementation 'com.android.support:support-annotations:27.1.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'

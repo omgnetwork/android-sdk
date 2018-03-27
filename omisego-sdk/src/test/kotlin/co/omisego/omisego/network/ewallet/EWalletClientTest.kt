@@ -9,22 +9,18 @@ package co.omisego.omisego.network.ewallet
  */
 
 import co.omisego.omisego.constant.Endpoints
-import co.omisego.omisego.constant.ErrorCode
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.HTTPHeaders
 import co.omisego.omisego.constant.Versions
-import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
 import co.omisego.omisego.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.BalanceList
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
-import co.omisego.omisego.utils.OMGEncryptionHelper
-import co.omisego.omisego.model.transaction.TransactionListParams
+import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.testUtils.GsonProvider
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.GsonBuilder
+import co.omisego.omisego.utils.OMGEncryptionHelper
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.mock
@@ -55,8 +51,8 @@ class EWalletClientTest {
     @Before
     fun setUp() {
         val auth = OMGEncryptionHelper.encryptBase64(
-                secret.getString("api_key"),
-                secret.getString("auth_token")
+            secret.getString("api_key"),
+            secret.getString("auth_token")
         )
 
         eWalletClient = EWalletClient.Builder {
@@ -127,8 +123,8 @@ class EWalletClientTest {
     fun `EWalletClient should be set the header correctly`() {
         userFile.mockEnqueueWithHttpCode(mockWebServer)
         val expectedAuth = "OMGClient ${OMGEncryptionHelper.encryptBase64(
-                secret.getString("api_key"),
-                secret.getString("auth_token")
+            secret.getString("api_key"),
+            secret.getString("auth_token")
         )}"
 
         eWalletClient.eWalletAPI.getCurrentUser().execute()

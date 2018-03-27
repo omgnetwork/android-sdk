@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.transaction
+package co.omisego.omisego.model.transaction.list
 
 /*
  * OmiseGO
@@ -9,7 +9,7 @@ package co.omisego.omisego.model.transaction
 
 import co.omisego.omisego.model.MintedToken
 import co.omisego.omisego.model.pagination.Paginable
-import java.util.*
+import java.util.Date
 
 data class TransactionExchange(val rate: Double)
 

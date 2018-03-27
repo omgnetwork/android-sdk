@@ -10,7 +10,8 @@ package co.omisego.omisego
 import co.omisego.omisego.model.Address
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
-import co.omisego.omisego.model.transaction.TransactionListParams
+import co.omisego.omisego.model.transaction.list.TransactionListParams
+import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
 import co.omisego.omisego.network.ewallet.EWalletClient
 
 /**
@@ -80,14 +81,21 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      */
     fun listBalances() = eWalletAPI.listBalances()
 
-
     /**
      * Get a paginated list of transaction for the current user
      *
      * @param request A structure used to query a list of transactions for the current user
      */
     fun listTransactions(request: TransactionListParams) =
-            eWalletAPI.listTransactions(request)
+        eWalletAPI.listTransactions(request)
+
+    /**
+     * Generate a transaction request from the given TransactionRequestParams object
+     *
+     * @param request The [TransactionRequestCreateParams] object describing the transaction request to be made.
+     */
+    fun generateTransactionRequest(request: TransactionRequestCreateParams) =
+        eWalletAPI.createTransactionRequest(request)
 
     /**
      * Set new [authenticationToken].
