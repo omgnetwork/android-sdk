@@ -202,7 +202,7 @@ Where:
     * `isLastPage` is a bool indicating if the page received is the last page
 
 ## QR Codes
-This SDK offers the possibility to generate request Typically these actions should be done through the generation and scan of QR codes.
+This SDK offers the possibility to generate and consume transaction requests. Typically these actions should be done through the generation and scan of QR codes.
 
 ### Generation
 To generate a new transaction request you can call:
