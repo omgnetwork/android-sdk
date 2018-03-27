@@ -13,6 +13,9 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
     - [Get the current user](#get-the-current-user)
     - [Get the addresses of the current user](#get-the-addresses-of-the-current-user)
     - [Get the provider settings](#get-the-provider-settings)
+    - [Get the current user's transactions](#get-the-current-users-transactions)
+  - [QR codes](#qr-codes)
+    - [Generation](#generation)
 - [Test](#test)
 - [Contributing](#contributing)
 - [License](#license)
@@ -56,7 +59,7 @@ Where:
 `baseURL` is the URL of the OmiseGO Wallet API.
 > You can find more info on how to retrieve this token in the OmiseGO server SDK documentations.
 
-### Retrieving resources
+## Retrieving resources
 
 Once you have an initialized client, you can retrieve different resources.
 Each call takes a `OMGCallback` interface that returns a `OMGResponse` object:
@@ -156,21 +159,21 @@ Where
     
     > `import co.omisego.omisego.model.pagination.SortDirection.*`
     
-* `searchTerm` *(nullable)* is a term to search for all of the searchable fields. 
+* `searchTerm` *(optional)* is a term to search for all of the searchable fields. 
       Conflict with `searchTerms`, only use one of them. The available values are:
     
     `ID`, `STATUS`, `FROM`, `TO`, `CREATED_AT`, `UPDATED_AT`
       
     > `import co.omisego.omisego.model.pagination.Paginable.Transaction.SearchableFields.*`
     
-* `searchTerms` *(nullable)* is a key-value map of fields to search with the available fields (same as `searchTerm`)
+* `searchTerms` *(optional)* is a key-value map of fields to search with the available fields (same as `searchTerm`)
     For example:
     
     ```kotlin
     mapOf(FROM to "some_address", ID to "some_id")
     ```
 
-* `address` *(nullable)* is an optional address that belongs to the current user (primary address by default)
+* `address` *(optional)* is an optional address that belongs to the current user (primary address by default)
 
 Then you can call:
 
@@ -197,8 +200,44 @@ Where:
     * `currentPage` is the retrieved page.
     * `isFirstPage` is a bool indicating if the page received is the first page
     * `isLastPage` is a bool indicating if the page received is the last page
-    
-    
+
+## QR Codes
+This SDK offers the possibility to generate request Typically these actions should be done through the generation and scan of QR codes.
+
+### Generation
+To generate a new transaction request you can call:
+
+```kotlin
+val request = TransactionRequestCreateParams(
+    type = TransactionRequestType.RECEIVE,
+    tokenId = "a_token_id",
+    amount = 10.24
+    address = "receiver_address"
+    correlationId = "correlation_id"
+)
+
+omgAPIClient.generateTransactionRequest(request).enqueue(object : OMGCallback<TransactionRequest> {
+    override fun success(response: OMGResponse<TransactionRequest>) {
+        //TODO: Do something with the transaction request (get the QR code representation for example)
+        val qrBitmap = response.data.generateQRCode(512)) // Generate the QR bitmap
+    }
+
+    override fun fail(response: OMGResponse<APIError>) {
+        //TODO: Handle the error
+    }
+})
+```
+
+Where:
+* `request` is a `TransactionRequestCreateParams` data class constructed using:
+    * `type`: The QR code type, only supports `TransactionRequestType.RECEIVE` for now.
+    * `tokenId`: The id of the desired token.
+    * `amount`: (optional) The amount of token to receive. This amount can be either inputted when generating or consuming a transaction request.
+    * `address`: (optional) The address specifying where the transaction should be sent to. If not specified, the current user's primary address will be used.
+    * `correlationId`: (optional) An id that can uniquely identify a transaction. Typically an order id from a provider.
+
+A `TransactionRequest` object is passed to the success callback, you can get its QR code representation using `transactionRequest.generateQRCode(size)`.
+
 # Run Kotlin Lint
 Simply run `./gradlew ktlintCheck` under project root directory.
 

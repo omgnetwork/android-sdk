@@ -21,7 +21,7 @@ data class TransactionRequestCreateParams(
 
     /* The amount of token to receive
        This amount can be either inputted when generating or consuming a transaction request. */
-    val amount: Int? = null,
+    val amount: Double? = null,
 
     /* The address specifying where the transaction should be sent to.
        If not specified, the current user's primary address will be used. */
