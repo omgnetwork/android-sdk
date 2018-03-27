@@ -13,20 +13,30 @@ package co.omisego.omisego.model.transaction.request
  */
 data class TransactionRequestCreateParams(
 
-    /* The type of transaction to be generated */
+    /**
+     * The type of transaction to be generated
+     */
     val type: TransactionRequestType = TransactionRequestType.RECEIVE,
 
-    /* The id of the desired token */
+    /**
+     * The id of the desired token
+     */
     val tokenId: String,
 
-    /* The amount of token to receive
-       This amount can be either inputted when generating or consuming a transaction request. */
+    /**
+     * The amount of token to receive
+     * This amount can be either inputted when generating or consuming a transaction request.
+     */
     val amount: Double? = null,
 
-    /* The address specifying where the transaction should be sent to.
-       If not specified, the current user's primary address will be used. */
+    /**
+     * The address specifying where the transaction should be sent to.
+     * If not specified, the current user's primary address will be used.
+     */
     val address: String? = null,
 
-    /* An id that can uniquely identify a transaction. Typically an order id from a provider. */
+    /**
+     * An id that can uniquely identify a transaction. Typically an order id from a provider.
+     */
     val correlationId: String? = null
 )
