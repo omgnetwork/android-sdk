@@ -13,6 +13,7 @@ import co.omisego.omisego.qrcode.QRGenerator
 
 /**
  * Represents a transaction request
+ * 
  */
 data class TransactionRequest(
     val id: String,
@@ -21,5 +22,12 @@ data class TransactionRequest(
     val amount: Double?,
     val address: String?
 ) {
+
+    /**
+     * Generates an QR bitmap containing the encoded transaction request id
+     *
+     * @param size the desired image size
+     * @return An QR image if the transaction request was successfully encoded
+     */
     fun generateQRCode(size: Int = QRGenerator.DEFAULT_SIZE): Bitmap = QRGenerator().generate(id, size)
 }
