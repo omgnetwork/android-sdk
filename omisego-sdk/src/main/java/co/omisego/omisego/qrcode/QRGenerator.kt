@@ -33,9 +33,6 @@ class QRGenerator(
      * @throws WriterException which may occur when encoding a QRCode
      * @return A QRCode bitmap
      */
-    fun generate(payload: String, size: Int = DEFAULT_SIZE) = try {
+    fun generate(payload: String, size: Int = DEFAULT_SIZE) =
         encoder.createBitmap(writer.encode(payload, BarcodeFormat.QR_CODE, size, size))
-    } catch (e: WriterException) {
-        throw e
-    }
 }
