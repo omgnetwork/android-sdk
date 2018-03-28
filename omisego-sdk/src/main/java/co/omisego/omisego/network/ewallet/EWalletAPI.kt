@@ -19,10 +19,10 @@ import co.omisego.omisego.model.Logout
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.pagination.PaginationList
-import co.omisego.omisego.model.transaction.list.Transaction
 import co.omisego.omisego.model.transaction.list.TransactionListParams
+import co.omisego.omisego.model.transaction.list.Transaction
 import co.omisego.omisego.model.transaction.request.TransactionRequest
-import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
+import co.omisego.omisego.model.transaction.request.TransactionRequestParams
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -43,5 +43,5 @@ interface EWalletAPI {
     fun listTransactions(@Body request: TransactionListParams): OMGCall<PaginationList<Transaction>>
 
     @POST(CREATE_TRANSACTION_REQUEST)
-    fun createTransactionRequest(@Body request: TransactionRequestCreateParams): OMGCall<TransactionRequest>
+    fun createTransactionRequest(@Body request: TransactionRequestParams): OMGCall<TransactionRequest>
 }

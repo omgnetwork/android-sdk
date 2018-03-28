@@ -229,7 +229,7 @@ omgAPIClient.createTransactionRequest(request).enqueue(object : OMGCallback<Tran
 ```
 
 Where:
-* `request` is a `TransactionRequestCreateParams` data class constructed using:
+* `request` is a `TransactionRequestParams` data class constructed using:
     * `type`: The QR code type, only supports `TransactionRequestType.RECEIVE` for now.
     * `tokenId`: The id of the desired token.
     * `amount`: (optional) The amount of token to receive. This amount can be either inputted when generating or consuming a transaction request.

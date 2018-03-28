@@ -18,7 +18,7 @@ import org.amshove.kluent.shouldEqual
 import org.junit.Before
 import kotlin.test.Test
 
-class ListTransactionParamsTest {
+class TransactionListParamsTest {
     private lateinit var gson: Gson
     @Before
     fun setUp() {
@@ -28,7 +28,7 @@ class ListTransactionParamsTest {
     }
 
     @Test
-    fun `TransactionListParams should be added successfully`() {
+    fun `ListTransactionParams should be added successfully`() {
         val transactionListParams = TransactionListParams(1,
             10,
             SortableFields.FROM,

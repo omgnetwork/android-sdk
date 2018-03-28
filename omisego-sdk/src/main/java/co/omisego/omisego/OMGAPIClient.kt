@@ -11,7 +11,7 @@ import co.omisego.omisego.model.Address
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.transaction.list.TransactionListParams
-import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
+import co.omisego.omisego.model.transaction.request.TransactionRequestParams
 import co.omisego.omisego.network.ewallet.EWalletClient
 
 /**
@@ -92,9 +92,9 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
     /**
      * Generate a transaction request from the given [TransactionRequestParams] object
      *
-     * @param request The [TransactionRequestCreateParams] object describing the transaction request to be made.
+     * @param request The [TransactionRequestParams] object describing the transaction request to be made.
      */
-    fun createTransactionRequest(request: TransactionRequestCreateParams) =
+    fun createTransactionRequest(request: TransactionRequestParams) =
         eWalletAPI.createTransactionRequest(request)
 
     /**
