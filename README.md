@@ -130,10 +130,10 @@ omgAPIClient.getSettings().enqueue(object: OMGCallback<Setting>{
 ### Get the current user's transactions
 This returns a paginated filtered list of transactions.
 
-In order to get this list you will need to create a `TransactionListParams` object:
+In order to get this list you will need to create a `ListTransactionParams` object:
 
 ```kotlin
-val request = TransactionListParams.create(
+val request = ListTransactionParams.create(
     page = 1,
     perPage = 10,
     sortBy = Paginable.Transaction.SortableFields.CREATE_AT,
@@ -208,7 +208,7 @@ This SDK offers the possibility to generate and consume transaction requests. Ty
 To generate a new transaction request you can call:
 
 ```kotlin
-val request = TransactionRequestCreateParams(
+val request = TransactionRequestParams(
     type = TransactionRequestType.RECEIVE,
     tokenId = "a_token_id",
     amount = 10.24
@@ -229,7 +229,7 @@ omgAPIClient.createTransactionRequest(request).enqueue(object : OMGCallback<Tran
 ```
 
 Where:
-* `request` is a `TransactionRequestCreateParams` data class constructed using:
+* `request` is a `TransactionRequestParams` data class constructed using:
     * `type`: The QR code type, only supports `TransactionRequestType.RECEIVE` for now.
     * `tokenId`: The id of the desired token.
     * `amount`: (optional) The amount of token to receive. This amount can be either inputted when generating or consuming a transaction request.

@@ -11,7 +11,7 @@ package co.omisego.omisego.model.transaction.request
  * Represents a structure used to generate a transaction request
  *
  */
-data class TransactionRequestCreateParams(
+data class TransactionRequestParams(
 
     /**
      * The type of transaction to be generated
