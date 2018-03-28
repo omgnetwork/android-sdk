@@ -19,6 +19,7 @@ data class TransactionRequest(
     val id: String,
     val type: TransactionRequestType,
     val mintedToken: MintedToken,
+    val status: String,
     val amount: Double?,
     val address: String?
 ) {
