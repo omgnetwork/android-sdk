@@ -1,5 +1,12 @@
 package co.omisego.omisego.qrcode
 
+/*
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 28/3/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.MultiFormatReader
 import com.google.zxing.RGBLuminanceSource
@@ -10,13 +17,6 @@ import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-
-/*
- * OmiseGO
- *
- * Created by Phuchit Sirimongkolsathien on 28/3/2018 AD.
- * Copyright © 2017-2018 OmiseGO. All rights reserved.
- */
 
 @RunWith(RobolectricTestRunner::class)
 class QRGeneratorTest {
