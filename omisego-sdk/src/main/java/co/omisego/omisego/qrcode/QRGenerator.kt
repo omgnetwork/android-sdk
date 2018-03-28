@@ -7,6 +7,8 @@ package co.omisego.omisego.qrcode
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import android.graphics.Bitmap
+import co.omisego.omisego.model.transaction.request.TransactionRequest
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
@@ -36,3 +38,11 @@ class QRGenerator(
     fun generate(payload: String, size: Int = DEFAULT_SIZE) =
         encoder.createBitmap(writer.encode(payload, BarcodeFormat.QR_CODE, size, size))
 }
+
+/**
+ * Generates an QR bitmap containing the encoded transaction request id
+ *
+ * @param size the desired image size
+ * @return An QR image if the transaction request was successfully encoded
+ */
+fun TransactionRequest.generateQRCode(size: Int = QRGenerator.DEFAULT_SIZE): Bitmap = QRGenerator().generate(id, size)
