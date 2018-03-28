@@ -10,7 +10,6 @@ import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.spec.GCMParameterSpec
 
-
 /**
  * OmiseGO
  *
@@ -21,21 +20,19 @@ import javax.crypto.spec.GCMParameterSpec
 // IV or Initialization Vector used in encryption and decryption. It must be the same value and contain 12 characters.
 @RequiresApi(Build.VERSION_CODES.M)
 internal class KeyManagerMarshmallow(
-        keyHolder: KeyHolder,
-        private val iv: String = String(ByteArray(12))
+    keyHolder: KeyHolder,
+    iv: String = String(ByteArray(12))
 ) : KeyManager(keyHolder) {
-
-    override val encryptCipher: Cipher by lazy {
-        Cipher.getInstance(AES_MODE).also { initCipher(it, Cipher.ENCRYPT_MODE) }
-    }
-    override val decryptCipher: Cipher by lazy {
-        Cipher.getInstance(AES_MODE).also { initCipher(it, Cipher.DECRYPT_MODE) }
-    }
+    
+    override val encryptCipher: Cipher
+        get() = Cipher.getInstance(AES_MODE).also { initCipher(it, Cipher.ENCRYPT_MODE) }
+    override val decryptCipher: Cipher
+        get() = Cipher.getInstance(AES_MODE).also { initCipher(it, Cipher.DECRYPT_MODE) }
 
     private val secretKey: Key
         get() = keyStore.getKey(keyAlias, null)
-    private val gcmParameterSpec: GCMParameterSpec
-        get() = GCMParameterSpec(128, iv.toByteArray())
+
+    private val gcmParameterSpec = GCMParameterSpec(128, iv.toByteArray())
 
     companion object {
         const val AES_MODE = "AES/GCM/NoPadding"
@@ -43,15 +40,16 @@ internal class KeyManagerMarshmallow(
 
     // Generate key function for Android version 6.0 Marshmallow or above
     override fun generateKey(context: Context) {
-        val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES,
-                                                    ANDROID_KEY_STORE)
+        val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
 
-        val spec = KeyGenParameterSpec.Builder(keyAlias,
-                                               KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
-                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                .setRandomizedEncryptionRequired(false)
-                .build()
+        val spec = KeyGenParameterSpec.Builder(
+            keyAlias,
+            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+        )
+            .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+            .setRandomizedEncryptionRequired(false)
+            .build()
 
         keyGenerator.init(spec)
         keyGenerator.generateKey()

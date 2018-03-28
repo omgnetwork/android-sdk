@@ -66,7 +66,6 @@ class OMGKeyManager private constructor(private var keyManager: KeyManager) {
                 field = value
             }
 
-
         init {
             init()
         }
@@ -78,7 +77,7 @@ class OMGKeyManager private constructor(private var keyManager: KeyManager) {
         fun build(context: Context): OMGKeyManager {
             if (keyAlias.isBlank()) throw IllegalStateException("keyAlias not set")
 
-            val keyStore = KeyStore.getInstance(KeyManager.ANDROID_KEY_STORE)
+            val keyStore = KeyStore.getInstance(KeyManager.ANDROID_KEY_STORE).apply { load(null) }
             val keyHolder = KeyHolder(keyStore, keyAlias)
 
             keyManager =
