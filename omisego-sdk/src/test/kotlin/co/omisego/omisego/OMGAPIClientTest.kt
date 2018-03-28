@@ -21,6 +21,7 @@ import co.omisego.omisego.model.User
 import co.omisego.omisego.model.pagination.Pagination
 import co.omisego.omisego.model.pagination.PaginationList
 import co.omisego.omisego.model.transaction.list.Transaction
+import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.testUtils.GsonProvider
 import co.omisego.omisego.utils.OMGEncryptionHelper
@@ -50,6 +51,7 @@ class OMGAPIClientTest {
     private val userFile: File by ResourceFile("user.me-post.json")
     private val listBalanceFile: File by ResourceFile("me.list_balances-post.json")
     private val listTransactionsFile: File by ResourceFile("me.list_transactions-post.json")
+    private val createTransactionRequestFile: File by ResourceFile("me.create_transaction_request-post.json")
     private val getSettingFile: File by ResourceFile("me.get_settings-post.json")
     private val errorFile: File by ResourceFile("fail.client-invalid_auth_scheme.json")
     private val gson by lazy { GsonProvider.provide() }
@@ -120,6 +122,28 @@ class OMGAPIClientTest {
     }
 
     @Test
+    fun `OMGAPIClient should call create_transaction_request successfully`() {
+        val element = gson.fromJson(createTransactionRequestFile.readText(), JsonElement::class.java)
+        val result = Response.success(element)
+        createTransactionRequestFile.mockEnqueueWithHttpCode(mockWebServer)
+
+        val callback: OMGCallback<TransactionRequest> = mock()
+
+        omgAPIClient.createTransactionRequest(mock()).enqueue(callback)
+
+        val data = result.body()!!.asJsonObject.getAsJsonObject("data")
+        val transactionRequest = gson.fromJson<TransactionRequest>(data, object : TypeToken<TransactionRequest>() {}.type)
+
+        val expected = OMGResponse(
+            Versions.EWALLET_API,
+            true,
+            transactionRequest
+        )
+
+        verify(callback, times(1)).success(expected)
+    }
+
+    @Test
     fun `OMGAPIClient should call get_current_user and success`() {
         val element = gson.fromJson(userFile.readText(), JsonElement::class.java)
         val result = Response.success(element)
@@ -173,7 +197,6 @@ class OMGAPIClientTest {
             userFile.readText(),
             object : TypeToken<OMGResponse<User>>() {}.type
         )
-
         userFile.mockEnqueueWithHttpCode(mockWebServer)
 
         val response = omgAPIClient.getCurrentUser().execute()
