@@ -216,7 +216,7 @@ val request = TransactionRequestCreateParams(
     correlationId = "correlation_id"
 )
 
-omgAPIClient.generateTransactionRequest(request).enqueue(object : OMGCallback<TransactionRequest> {
+omgAPIClient.createTransactionRequest(request).enqueue(object : OMGCallback<TransactionRequest> {
     override fun success(response: OMGResponse<TransactionRequest>) {
         //TODO: Do something with the transaction request (get the QR code representation for example)
         val qrBitmap = response.data.generateQRCode(512)) // Generate the QR bitmap
