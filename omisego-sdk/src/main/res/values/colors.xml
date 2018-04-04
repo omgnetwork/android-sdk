@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="omg_scanner_ui_mask">#60000000</color>
+    <color name="omg_scanner_ui_border">#1a53f0</color>
+    <color name="omg_scanner_ui_border_loading">#f44336</color>
+</resources>

@@ -8,11 +8,11 @@ package co.omisego.omisego.qrcode
  */
 
 import android.graphics.Bitmap
+import co.omisego.omisego.custom.zxing.BarcodeEncoder
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
-import com.journeyapps.barcodescanner.BarcodeEncoder
 
 /**
  * For creating a QRCode bitmap
