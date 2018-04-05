@@ -1,7 +1,9 @@
 package co.omisego.omisego.custom.zxing.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
+import android.graphics.Rect
 import android.hardware.Camera
 import android.os.Handler
 import android.util.AttributeSet
@@ -37,6 +39,7 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
     private var mCameraWrapper: CameraWrapper? = null
     private var mCameraHandlerThread: CameraHandlerThread? = null
     private var mPreview: CameraPreview? = null
+    private var mFramingRectInPreview: Rect? = null
     private var mLoadingView: View? = null
     private var mIsLoading: Boolean = false
     private var mScanCallback: OMGQRScannerContract.Callback? = null
@@ -56,6 +59,7 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
     /* Constructor */
 
     constructor(context: Context) : super(context)
+    @SuppressLint("ResourceAsColor")
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         val a = context.theme.obtainStyledAttributes(
                 attrs,
@@ -148,11 +152,17 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
         /* Check if the camera is in portrait or not */
         val portrait = DisplayUtils.getScreenOrientation(context) == ORIENTATION_PORTRAIT
 
+        val mutableSize = when (portrait) {
+            true -> size.height to size.width
+            else -> size.width to size.height
+        }
+
         /* Rotate the data to correct the orientation */
-        val newData = mOMGScannerPresenter.adjustRotation(data, portrait, size.width, size.height, mPreview?.mDisplayOrientation)
+        val newData = mOMGScannerPresenter.adjustRotation(data, portrait, size.width to size.height, mPreview?.mDisplayOrientation)
 
         /* Prepare the bitmap for decoding by exclude the superfluous pixels (pixels outside the frame)*/
-        val source = extractPixelsInFraming(newData, size.width, size.height) ?: return
+        val source = extractPixelsInFraming(newData, mutableSize.first, mutableSize.second)
+                ?: return
 
         /* Use the original source to decode */
         var rawResult = mMultiFormatReader.decodeFirstOtherwiseNull(
@@ -189,23 +199,24 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
         }
 
         /* Get the QR code frame */
-        val rect = mOMGScannerPresenter
-                .getFramingRectInPreview(
-                        mOMGScannerUI.width,
-                        mOMGScannerUI.height,
-                        mOMGScannerUI.mFramingRect,
-                        width,
-                        height) ?: return null
+        if (mFramingRectInPreview == null) {
+            mFramingRectInPreview = mOMGScannerPresenter.getFramingRectInPreview(
+                    mOMGScannerUI.width,
+                    mOMGScannerUI.height,
+                    mOMGScannerUI.mFramingRect,
+                    width,
+                    height)
+        }
 
         return try {
             PlanarYUVLuminanceSource(
                     data,
                     width,
                     height,
-                    rect.left,
-                    rect.top,
-                    rect.width(),
-                    rect.height(),
+                    mFramingRectInPreview!!.left,
+                    mFramingRectInPreview!!.top,
+                    mFramingRectInPreview!!.width(),
+                    mFramingRectInPreview!!.height(),
                     false
             )
         } catch (e: Exception) {

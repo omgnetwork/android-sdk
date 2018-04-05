@@ -33,5 +33,5 @@ class RotationManager : OMGQRScannerContract.Presenter.Rotation {
         return mData
     }
 
-    override fun getRotationCount(orientation: Int?) = orientation ?: 90 / 90
+    override fun getRotationCount(orientation: Int?) = (orientation ?: 90) / 90
 }

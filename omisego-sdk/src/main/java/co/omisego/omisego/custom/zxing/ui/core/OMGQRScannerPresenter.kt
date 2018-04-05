@@ -13,19 +13,14 @@ class OMGQRScannerPresenter(
         private val rotationManager: OMGQRScannerContract.Presenter.Rotation = RotationManager()
 ) : OMGQRScannerContract.Presenter {
 
-    override fun adjustRotation(data: ByteArray, portrait: Boolean, width: Int, height: Int, orientation: Int?): ByteArray {
+    override fun adjustRotation(data: ByteArray, portrait: Boolean, size: Pair<Int, Int>, orientation: Int?): ByteArray {
         return when (portrait) {
             true -> {
                 /* We need to rotate the data if the orientation is a portrait */
                 val rotationCount = rotationManager.getRotationCount(orientation)
 
-                val mutableSize = when (rotationCount) {
-                    1, 3 -> height to width
-                    else -> width to height
-                }
-
                 /* Return the rotated image data */
-                rotationManager.rotate(data, mutableSize.first, mutableSize.second, rotationCount)
+                rotationManager.rotate(data, size.first, size.second, rotationCount)
             }
             else -> {
                 /* We don't need to rotate the image data here, so the original is returned */

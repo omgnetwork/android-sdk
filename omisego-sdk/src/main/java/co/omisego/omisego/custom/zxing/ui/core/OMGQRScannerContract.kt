@@ -30,8 +30,7 @@ interface OMGQRScannerContract {
 
         fun adjustRotation(data: ByteArray,
                            portrait: Boolean,
-                           width: Int,
-                           height: Int,
+                           size: Pair<Int, Int>,
                            orientation: Int?): ByteArray
 
         interface Rotation {
