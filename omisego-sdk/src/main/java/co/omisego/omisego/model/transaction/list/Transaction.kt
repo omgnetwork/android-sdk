@@ -9,13 +9,14 @@ package co.omisego.omisego.model.transaction.list
 
 import co.omisego.omisego.model.MintedToken
 import co.omisego.omisego.model.pagination.Paginable
-import java.util.*
+import java.math.BigDecimal
+import java.util.Date
 
 data class TransactionExchange(val rate: Double)
 
 data class TransactionSource(
         val address: String,
-        val amount: Int,
+        val amount: BigDecimal,
         val mintedToken: MintedToken
 )
 

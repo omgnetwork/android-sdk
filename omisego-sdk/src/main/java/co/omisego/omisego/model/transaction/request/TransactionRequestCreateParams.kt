@@ -1,5 +1,7 @@
 package co.omisego.omisego.model.transaction.request
 
+import java.math.BigDecimal
+
 /*
  * OmiseGO
  *
@@ -27,7 +29,7 @@ data class TransactionRequestParams(
      * The amount of token to receive
      * This amount can be either inputted when generating or consuming a transaction request.
      */
-    val amount: Int? = null,
+    val amount: BigDecimal? = null,
 
     /**
      * The address specifying where the transaction should be sent to.
