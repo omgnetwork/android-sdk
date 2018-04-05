@@ -12,7 +12,8 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName versionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.facebook.testing.screenshot.sample.ScreenshotTestRunner"
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -24,6 +25,13 @@ android {
 
     sourceSets {
         test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
     }
 }
 
@@ -62,6 +70,12 @@ tasks.withType(Javadoc) {
     enabled = false
 }
 
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
+
 dependencies {
     // Core dependencies
     api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -85,6 +99,8 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:3.4.2'
     testImplementation 'com.squareup.okhttp3:mockwebserver:3.9.1'
     testImplementation 'com.squareup.retrofit2:retrofit-mock:2.3.0'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
 }
 
 repositories {
