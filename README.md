@@ -211,8 +211,8 @@ To generate a new transaction request you can call:
 val request = TransactionRequestParams(
     type = TransactionRequestType.RECEIVE,
     tokenId = "a_token_id",
-    amount = 10.24
-    address = "receiver_address"
+    amount = 10_240, /* If the token has subUnitToUnit = 1,000, it means this request want to receive 10.24 OMG */
+    address = "receiver_address",
     correlationId = "correlation_id"
 )
 
