@@ -15,7 +15,6 @@ import co.omisego.omisego.exception.OMGAPIErrorException
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.User
-import co.omisego.omisego.testUtils.GsonProvider
 import co.omisego.omisego.testUtils.ResourceFile
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
@@ -25,19 +24,16 @@ import com.nhaarman.mockito_kotlin.whenever
 import okhttp3.ResponseBody
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.withMessage
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.ExpectedException
 import retrofit2.Converter
 import retrofit2.Response
 import java.io.File
 import java.io.IOException
 
 class OMGResponseConverterFactoryTest {
-    @Rule
-    @JvmField
-    val expectedEx = ExpectedException.none()!!
     private val userFile: File by ResourceFile("user.me-post.json")
     private val errorFile: File by ResourceFile("fail.client-invalid_auth_scheme.json")
     private lateinit var gson: Gson
@@ -80,19 +76,16 @@ class OMGResponseConverterFactoryTest {
         whenever(mockResponseBody.string()).thenReturn(errorFile.readText())
 
         val expectedResponse = OMGResponse(Versions.EWALLET_API, false, sampleError)
-        expectedEx.expect(OMGAPIErrorException::class.java)
-        expectedEx.expectMessage(expectedResponse.toString())
 
-        omgConverter.convert(mockResponseBody)
+        val errorFun = { omgConverter.convert(mockResponseBody) }
+        errorFun shouldThrow OMGAPIErrorException::class withMessage expectedResponse.toString()
     }
 
     @Test
     fun `OMGConverterFactory should throw IOException when receives illegal json format`() {
         whenever(mockResponseBody.string()).thenReturn("Bonjour le monde?")
 
-        expectedEx.expect(IOException::class.java)
-        expectedEx.expectMessage("Failed to parse JSON")
-
-        omgConverter.convert(mockResponseBody)
+        val errorFun = { omgConverter.convert(mockResponseBody) }
+        errorFun shouldThrow IOException::class withMessage "Failed to parse JSON"
     }
 }

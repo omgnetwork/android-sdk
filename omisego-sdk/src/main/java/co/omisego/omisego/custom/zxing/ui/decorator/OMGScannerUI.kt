@@ -3,7 +3,6 @@ package co.omisego.omisego.custom.zxing.ui.decorator
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.*
-import android.support.annotation.ColorRes
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
@@ -22,13 +21,10 @@ import co.omisego.omisego.custom.camera.utils.DisplayUtils
  * Represents the UI of then QR code scanner
  */
 class OMGScannerUI : View {
-    /* Define color for draw the border */
-    var mBorderColor = ContextCompat.getColor(context, R.color.omg_scanner_ui_border)
-
     /* Painter for the corner border */
     private val mBorderPaint by lazy {
         Paint().apply {
-            color = mBorderColor
+            color = borderColor
             isAntiAlias = true
             pathEffect = CornerPathEffect(16f)
             strokeWidth = resources.getInteger(R.integer.omg_scanner_border_width).toFloat()
@@ -45,9 +41,15 @@ class OMGScannerUI : View {
     }
 
     /* Length for the each line of the cornet depends on device DPI value */
-    private val mBorderLineLength by lazy {
-        resources.getInteger(R.integer.omg_scanner_border_length)
-    }
+    var borderLineLength: Int = resources.getInteger(R.integer.omg_scanner_border_length)
+
+    /* Define color for draw the border */
+    var borderColor = ContextCompat.getColor(context, R.color.omg_scanner_ui_border)
+        set(value) {
+            field = ContextCompat.getColor(context, value)
+            mBorderPaint.color = field
+            setupUI()
+        }
 
     /* Rectangle for the QR code frame */
     var mFramingRect: Rect? = null
@@ -63,12 +65,6 @@ class OMGScannerUI : View {
     fun setupUI() {
         updateFramingRect()
         invalidate()
-    }
-
-    fun setBorderColor(@ColorRes color: Int) {
-        mBorderColor = ContextCompat.getColor(context, color)
-        mBorderPaint.color = mBorderColor
-        setupUI()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -105,27 +101,27 @@ class OMGScannerUI : View {
         Path().run {
             with(framingRect) {
                 /* Top-left corner */
-                moveTo(left, top + mBorderLineLength)
+                moveTo(left, top + borderLineLength)
                 lineTo(left, top)
-                lineTo(left + mBorderLineLength, top)
+                lineTo(left + borderLineLength, top)
                 canvas.drawPath(this@run, mBorderPaint)
 
                 /* Top-right corner */
-                moveTo(right, top + mBorderLineLength)
+                moveTo(right, top + borderLineLength)
                 lineTo(right, top)
-                lineTo(right - mBorderLineLength, top)
+                lineTo(right - borderLineLength, top)
                 canvas.drawPath(this@run, mBorderPaint)
 
                 /* Bottom-left corner */
-                moveTo(left, bottom - mBorderLineLength)
+                moveTo(left, bottom - borderLineLength)
                 lineTo(left, bottom)
-                lineTo(left + mBorderLineLength, bottom)
+                lineTo(left + borderLineLength, bottom)
                 canvas.drawPath(this@run, mBorderPaint)
 
                 /* Bottom-right corner */
-                moveTo(right - mBorderLineLength, bottom)
+                moveTo(right - borderLineLength, bottom)
                 lineTo(right, bottom)
-                lineTo(right, bottom - mBorderLineLength)
+                lineTo(right, bottom - borderLineLength)
                 canvas.drawPath(this@run, mBorderPaint)
             }
         }

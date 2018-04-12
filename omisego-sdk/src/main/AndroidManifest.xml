@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application>
-        <activity android:name=".qrcode.QRScannerActivity"></activity>
+        <activity android:name=".qrcode.QRScannerActivity" />
     </application>
 
 </manifest>

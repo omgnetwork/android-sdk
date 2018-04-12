@@ -13,11 +13,7 @@ import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.exception.OMGAPIErrorException
 import co.omisego.omisego.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
-import co.omisego.omisego.model.APIError
-import co.omisego.omisego.model.BalanceList
-import co.omisego.omisego.model.OMGResponse
-import co.omisego.omisego.model.Setting
-import co.omisego.omisego.model.User
+import co.omisego.omisego.model.*
 import co.omisego.omisego.model.pagination.Pagination
 import co.omisego.omisego.model.pagination.PaginationList
 import co.omisego.omisego.model.transaction.list.Transaction
@@ -33,19 +29,16 @@ import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.withMessage
 import org.json.JSONObject
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.ExpectedException
 import retrofit2.Response
 import java.io.File
 import java.util.concurrent.Executor
 
 class OMGAPIClientTest {
-    @Rule
-    @JvmField
-    val expectedEx = ExpectedException.none()!!
     private val secretFileName: String = "secret.json" // Replace your secret file here
     private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
     private val userFile: File by ResourceFile("user.me-post.json")
@@ -63,8 +56,8 @@ class OMGAPIClientTest {
     @Before
     fun setup() {
         val auth = OMGEncryptionHelper.encryptBase64(
-            secret.getString("api_key"),
-            secret.getString("auth_token")
+                secret.getString("api_key"),
+                secret.getString("auth_token")
         )
 
         initMockWebServer()
@@ -108,12 +101,12 @@ class OMGAPIClientTest {
         val transactionList = gson.fromJson<List<Transaction>>(data, object : TypeToken<List<Transaction>>() {}.type)
 
         val expected = OMGResponse(
-            Versions.EWALLET_API,
-            true,
-            PaginationList(
-                transactionList,
-                Pagination(10, true, true, 1)
-            )
+                Versions.EWALLET_API,
+                true,
+                PaginationList(
+                        transactionList,
+                        Pagination(10, true, true, 1)
+                )
         )
 
         Thread.sleep(100)
@@ -135,9 +128,9 @@ class OMGAPIClientTest {
         val transactionRequest = gson.fromJson<TransactionRequest>(data, object : TypeToken<TransactionRequest>() {}.type)
 
         val expected = OMGResponse(
-            Versions.EWALLET_API,
-            true,
-            transactionRequest
+                Versions.EWALLET_API,
+                true,
+                transactionRequest
         )
 
         Thread.sleep(100)
@@ -195,10 +188,16 @@ class OMGAPIClientTest {
 
     @Test
     fun `OMGAPIClient should be executed when API return success true correctly`() {
+<<<<<<< HEAD
         val expected = gson.fromJson<OMGResponse<User>>(
             userFile.readText(),
             object : TypeToken<OMGResponse<User>>() {}.type
         )
+=======
+        val expected = gson.fromJson<OMGResponse<User>>(userFile.readText(),
+                object : TypeToken<OMGResponse<User>>() {}.type)
+
+>>>>>>> Add more test
         userFile.mockEnqueueWithHttpCode(mockWebServer)
 
         val response = omgAPIClient.getCurrentUser().execute()
@@ -207,16 +206,23 @@ class OMGAPIClientTest {
 
     @Test
     fun `OMGAPIClient should be executed when API return success false correctly`() {
+<<<<<<< HEAD
         expectedEx.expect(OMGAPIErrorException::class.java)
         val apiError = APIError(
             ErrorCode.CLIENT_INVALID_AUTH_SCHEME,
             "The provided authentication scheme is not supported"
         )
         expectedEx.expectMessage(OMGResponse(Versions.EWALLET_API, false, apiError).toString())
+=======
+        val apiError = APIError(ErrorCode.CLIENT_INVALID_AUTH_SCHEME,
+                "The provided authentication scheme is not supported")
+>>>>>>> Add more test
 
         errorFile.mockEnqueueWithHttpCode(mockWebServer)
 
-        omgAPIClient.getCurrentUser().execute()
+        val errorFun = { omgAPIClient.getCurrentUser().execute() }
+        errorFun shouldThrow OMGAPIErrorException::class withMessage
+                OMGResponse(Versions.EWALLET_API, false, apiError).toString()
     }
 
     @Test
