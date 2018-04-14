@@ -1,6 +1,5 @@
 package co.omisego.omisego.qrcode
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.graphics.BitmapFactory
@@ -45,10 +44,11 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
     private var mCameraHandlerThread: CameraHandlerThread? = null
     private var mPreview: CameraPreview? = null
     private var mLoadingView: View? = null
-    private var mIsLoading: Boolean = false
     private var mScanCallback: OMGQRScannerContract.Callback? = null
     private var mLuminanceSourceGenerator: LuminanceSourceGenerator? = null
     private var mOMGScannerPresenter: OMGQRScannerContract.Presenter = OMGQRScannerPresenter()
+    private lateinit var mHandler: Handler
+    private lateinit var mRunnable: Runnable
     private val mOMGScannerUI by lazy {
         OMGScannerUI(context).apply { borderColor = this@OMGQRScannerView.mBorderColor }
     }
@@ -58,6 +58,22 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
         }
         MultiFormatReader().apply { setHints(hints) }
     }
+    private var mIsLoading: Boolean = false
+        set(value) {
+            when (value) {
+                true -> {
+                    mLoadingView?.visibility = View.VISIBLE
+                    mOMGScannerUI.hintText = OMGScannerUI.HINT_TEXT_LOADING
+                    mOMGScannerUI.borderColor = mBorderColorLoading
+                }
+                else -> {
+                    mLoadingView?.visibility = View.GONE
+                    mOMGScannerUI.hintText = OMGScannerUI.HINT_TEXT_DEFAULT
+                    mOMGScannerUI.borderColor = mBorderColor
+                }
+            }
+            field = value
+        }
 
     /**
      * Set the border of the QRCode frame
@@ -86,10 +102,10 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
     /* Represents the image data within the QRCode frame */
     private lateinit var debugImageView: ImageView
 
-    /* Constructor */
     constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
+            super(context, attrs, defStyleAttr)
 
-    @SuppressLint("ResourceAsColor")
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         val a = context.theme.obtainStyledAttributes(
                 attrs,
@@ -106,9 +122,6 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
         }
     }
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
-            super(context, attrs, defStyleAttr)
-
     companion object {
         private const val TAG = "OMGQRScannerView"
     }
@@ -117,6 +130,12 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
         mCameraWrapper = cameraWrapper
         mOMGScannerUI.setupUI()
         setupLayout(mCameraWrapper)
+
+        this.setOnClickListener {
+            // Reset loading when tap on any view
+            mIsLoading = false
+            mHandler.removeCallbacks(mRunnable)
+        }
     }
 
     private fun setupLayout(cameraWrapper: CameraWrapper?) {
@@ -245,15 +264,13 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
 
         rawResult?.text?.let {
             mIsLoading = true
-            mOMGScannerUI.borderColor = mBorderColorLoading
-            mLoadingView?.visibility = View.VISIBLE
-            Handler().postDelayed({
+            mHandler = Handler()
+            mRunnable = Runnable {
                 mIsLoading = false
                 Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                mOMGScannerUI.borderColor = mBorderColor
-                mLoadingView?.visibility = View.GONE
                 mScanCallback?.scannerDidDecode(this, it)
-            }, 2000)
+            }
+            mHandler.postDelayed(mRunnable, 2000)
         }
     }
 

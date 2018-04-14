@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.view.View
 import co.omisego.omisego.R
 import co.omisego.omisego.custom.camera.utils.DisplayUtils
+import co.omisego.omisego.extension.dp
 
 
 /*
@@ -27,7 +28,7 @@ class OMGScannerUI : View {
         Paint().apply {
             color = borderColor
             isAntiAlias = true
-            pathEffect = CornerPathEffect(16f)
+            pathEffect = CornerPathEffect(8f)
             strokeWidth = resources.getInteger(R.integer.omg_scanner_border_width).toFloat()
             style = Paint.Style.STROKE
             strokeJoin = Paint.Join.ROUND
@@ -41,8 +42,21 @@ class OMGScannerUI : View {
         }
     }
 
+    /* Painter for write the helping text */
+    private val mTextPaint by lazy {
+        Paint().apply {
+            color = ContextCompat.getColor(context, android.R.color.white)
+            isAntiAlias = true
+            textAlign = Paint.Align.CENTER
+            textSize = 15.dp
+        }
+    }
+
     /* Length for the each line of the cornet depends on device DPI value */
-    var borderLineLength: Int = resources.getInteger(R.integer.omg_scanner_border_length)
+    private var borderLineLength: Int = resources.getInteger(R.integer.omg_scanner_border_length)
+
+    /* Showing a hint below the QR border */
+    var hintText: String = HINT_TEXT_DEFAULT
 
     /* Define color for draw the border */
     @ColorInt
@@ -66,6 +80,9 @@ class OMGScannerUI : View {
     companion object {
         /* Define the ratio of the size of square to the screen */
         private const val DEFAULT_SQUARE_DIMENSION_RATIO = 0.35f
+
+        const val HINT_TEXT_DEFAULT = "Align QR code within the frame to scan"
+        const val HINT_TEXT_LOADING = "Tap any area to cancel"
     }
 
     fun setupUI() {
@@ -77,6 +94,7 @@ class OMGScannerUI : View {
         val framingRect = mFramingRect ?: return
         drawMask(canvas, framingRect)
         drawQRBorder(canvas, framingRect)
+        drawHelpingText(canvas, framingRect, hintText)
     }
 
     /**
@@ -131,6 +149,15 @@ class OMGScannerUI : View {
                 canvas.drawPath(this@run, mBorderPaint)
             }
         }
+    }
+
+    private fun drawHelpingText(canvas: Canvas, framingRect: Rect, text: String) {
+        canvas.drawText(
+                text,
+                framingRect.left.toFloat() + framingRect.width() / 2,
+                framingRect.bottom.toFloat() + 32.dp,
+                mTextPaint
+        )
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) = updateFramingRect()
