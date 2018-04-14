@@ -59,7 +59,7 @@ class OMGScannerUI : View {
 
     companion object {
         /* Define the ratio of the size of square to the screen */
-        private const val DEFAULT_SQUARE_DIMENSION_RATIO = 0.5f
+        private const val DEFAULT_SQUARE_DIMENSION_RATIO = 0.35f
     }
 
     fun setupUI() {

@@ -20,7 +20,6 @@ object CameraUtils {
                 defaultCameraId = i
                 Camera.getCameraInfo(i, cameraInfo)
                 if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                    Log.d("DefaultCamera", "$defaultCameraId")
                     return i
                 }
             }

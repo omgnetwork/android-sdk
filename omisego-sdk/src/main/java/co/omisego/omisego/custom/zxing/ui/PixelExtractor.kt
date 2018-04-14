@@ -11,7 +11,7 @@ import com.google.zxing.PlanarYUVLuminanceSource
  * Created by Phuchit Sirimongkolsathien on 12/4/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
-internal class PixelExtractor(private val omgScannerUI: OMGScannerUI, private val rect: Rect? = null) {
+internal class PixelExtractor(private val omgScannerUI: OMGScannerUI, val rect: Rect? = null) {
 
     companion object {
         const val TAG = "PixelExtractor"

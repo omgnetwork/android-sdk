@@ -15,7 +15,7 @@ class RotationManager : OMGQRScannerContract.Presenter.Rotation {
         var mHeight = height
 
         when (rotationCount) {
-            1, 3 -> {
+            in 1..3 -> {
                 for (i in 0 until rotationCount) {
                     val rotatedData = ByteArray(mData.size)
                     for (y in 0 until mHeight) {

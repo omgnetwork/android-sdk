@@ -14,28 +14,20 @@ class OMGQRScannerPresenter(
 ) : OMGQRScannerContract.Presenter {
 
     override fun adjustRotation(data: ByteArray, portrait: Boolean, size: Pair<Int, Int>, orientation: Int?): ByteArray {
-        return when (portrait) {
-            true -> {
-                /* We need to rotate the data if the orientation is a portrait */
-                val rotationCount = rotationManager.getRotationCount(orientation)
+        /* We need to rotate the data if the orientation is a portrait */
+        val rotationCount = rotationManager.getRotationCount(orientation)
 
-                /* Return the rotated image data */
-                rotationManager.rotate(data, size.first, size.second, rotationCount)
-            }
-            else -> {
-                /* We don't need to rotate the image data here, so the original is returned */
-                data
-            }
-        }
+        /* Return the rotated image data */
+        return rotationManager.rotate(data, size.first, size.second, rotationCount)
     }
 
     override fun getFramingRectInPreview(scannerWidth: Int,
                                          scannerHeight: Int,
-                                         scannerRect: Rect?,
+                                         framingRect: Rect?,
                                          previewWidth: Int,
                                          previewHeight: Int): Rect? {
 
-        val rect = Rect(scannerRect)
+        val rect = Rect(framingRect)
 
         /* Adjust the QR Preview width */
         if (previewWidth < scannerWidth) {
@@ -48,6 +40,7 @@ class OMGQRScannerPresenter(
             rect.top = rect.top * previewHeight / scannerHeight
             rect.bottom = rect.bottom * previewHeight / scannerHeight
         }
+
         return rect
     }
 }

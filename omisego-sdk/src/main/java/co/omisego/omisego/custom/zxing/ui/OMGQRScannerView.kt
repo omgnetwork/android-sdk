@@ -3,12 +3,16 @@ package co.omisego.omisego.custom.zxing.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
+import android.graphics.BitmapFactory
+import android.graphics.ImageFormat
+import android.graphics.YuvImage
 import android.hardware.Camera
 import android.os.Handler
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.Toast
 import co.omisego.omisego.R
 import co.omisego.omisego.custom.camera.CameraWrapper
@@ -21,6 +25,7 @@ import co.omisego.omisego.custom.zxing.ui.decorator.OMGScannerLoadingUI
 import co.omisego.omisego.custom.zxing.ui.decorator.OMGScannerUI
 import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
+import java.io.ByteArrayOutputStream
 import java.util.*
 
 
@@ -51,6 +56,14 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
     }
     private var omgScannerPresenter: OMGQRScannerContract.Presenter = OMGQRScannerPresenter()
     private var pixelExtractor: PixelExtractor? = null
+
+    // For debugging purpose
+
+    /* To debug the QRCode frame is streaming the image data from the camera correctly */
+    private val debugging = false
+
+    /* Represents the image data within the QRCode frame */
+    private lateinit var debugImageView: ImageView
 
     /* Constructor */
     constructor(context: Context) : super(context)
@@ -90,12 +103,16 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
         mPreview = CameraPreview(context, cameraWrapper, this)
         val mLoadingViewLayoutParams = FrameLayout.LayoutParams(100, 100, Gravity.CENTER)
         mLoadingView = OMGScannerLoadingUI(context)
+        debugImageView = ImageView(context).apply { this.layoutParams = FrameLayout.LayoutParams(200, 200) }
 
         /* Add camera preview surface UI */
         addView(mPreview)
 
         /* Add scanner UI */
         addView(mOMGScannerUI)
+
+        if (debugging)
+            addView(debugImageView)
 
         /* Add loading bar UI on top */
         addView(mLoadingView, mLoadingViewLayoutParams)
@@ -170,6 +187,14 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
                     mutableSize.second
             )
             pixelExtractor = PixelExtractor(mOMGScannerUI, rect)
+        }
+
+
+        if (debugging) {
+            val img = YuvImage(newData, ImageFormat.NV21, mutableSize.first, mutableSize.second, null)
+            val baos = ByteArrayOutputStream()
+            img.compressToJpeg(pixelExtractor?.rect, 50, baos)
+            debugImageView.setImageBitmap(BitmapFactory.decodeByteArray(baos.toByteArray(), 0, baos.toByteArray().size))
         }
 
         val source = pixelExtractor?.extractPixelsInFraming(
