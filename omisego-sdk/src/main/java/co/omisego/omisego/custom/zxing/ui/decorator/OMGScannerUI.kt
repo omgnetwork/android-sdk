@@ -3,6 +3,7 @@ package co.omisego.omisego.custom.zxing.ui.decorator
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.*
+import android.support.annotation.ColorInt
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
@@ -44,10 +45,15 @@ class OMGScannerUI : View {
     var borderLineLength: Int = resources.getInteger(R.integer.omg_scanner_border_length)
 
     /* Define color for draw the border */
-    var borderColor = ContextCompat.getColor(context, R.color.omg_scanner_ui_border)
+    @ColorInt
+    var borderColor = 0
+        get() = when (field) {
+            0 -> ContextCompat.getColor(context, R.color.omg_scanner_ui_border)
+            else -> field
+        }
         set(value) {
-            field = ContextCompat.getColor(context, value)
-            mBorderPaint.color = field
+            field = value
+            mBorderPaint.color = value
             setupUI()
         }
 

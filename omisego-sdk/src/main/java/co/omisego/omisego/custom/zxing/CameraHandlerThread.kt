@@ -4,7 +4,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import co.omisego.omisego.custom.camera.CameraWrapper
-import co.omisego.omisego.custom.zxing.ui.OMGQRScannerView
+import co.omisego.omisego.qrcode.OMGQRScannerView
 
 
 /*

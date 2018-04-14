@@ -21,26 +21,26 @@ class OMGQRScannerPresenter(
         return rotationManager.rotate(data, size.first, size.second, rotationCount)
     }
 
-    override fun getFramingRectInPreview(scannerWidth: Int,
-                                         scannerHeight: Int,
-                                         framingRect: Rect?,
-                                         previewWidth: Int,
-                                         previewHeight: Int): Rect? {
+    override fun adjustFrameInPreview(scannerWidth: Int,
+                                      scannerHeight: Int,
+                                      framingRect: Rect?,
+                                      previewWidth: Int,
+                                      previewHeight: Int): Rect? {
 
-        val rect = Rect(framingRect)
+        if (framingRect == null) return null
 
-        /* Adjust the QR Preview width */
-        if (previewWidth < scannerWidth) {
-            rect.left = rect.left * previewWidth / scannerWidth
-            rect.right = rect.right * previewWidth / scannerWidth
+        val ratio = when {
+            previewWidth / scannerWidth < previewHeight / scannerHeight ->
+                previewWidth.toFloat() / scannerWidth
+            else ->
+                previewHeight.toFloat() / scannerHeight
         }
 
-        /* Adjust the QR Preview height */
-        if (previewHeight < scannerHeight) {
-            rect.top = rect.top * previewHeight / scannerHeight
-            rect.bottom = rect.bottom * previewHeight / scannerHeight
-        }
-
-        return rect
+        return Rect(
+                (framingRect.left * ratio).toInt(),
+                (framingRect.top * ratio).toInt(),
+                (framingRect.right * ratio).toInt(),
+                (framingRect.bottom * ratio).toInt()
+        )
     }
 }

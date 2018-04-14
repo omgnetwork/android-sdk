@@ -1,6 +1,7 @@
 package co.omisego.omisego.custom.zxing.ui
 
 import android.graphics.Rect
+import co.omisego.omisego.custom.zxing.ui.core.LuminanceSourceGenerator
 import co.omisego.omisego.custom.zxing.ui.decorator.OMGScannerUI
 import com.google.zxing.PlanarYUVLuminanceSource
 import com.nhaarman.mockito_kotlin.whenever
@@ -15,16 +16,16 @@ import org.junit.Test
  * Created by Phuchit Sirimongkolsathien on 12/4/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
-class PixelExtractorTest {
+class LuminanceSourceGeneratorTest {
     private val mockOMGScannerUI: OMGScannerUI = mock()
     private val mRect: Rect? = mock()
-    private val mPixelExtractor: PixelExtractor = PixelExtractor(mockOMGScannerUI, mRect)
+    private val mLuminanceSourceGenerator: LuminanceSourceGenerator = LuminanceSourceGenerator(mockOMGScannerUI, mRect)
 
     @Test
     fun `PixelExtractor should return null if the scanner frame is null`() {
         whenever(mockOMGScannerUI.mFramingRect).thenReturn(null)
 
-        val result = mPixelExtractor.extractPixelsInFraming(byteArrayOf(0x00), 0, 0)
+        val result = mLuminanceSourceGenerator.extractPixelsInFraming(byteArrayOf(0x00), 0, 0)
 
         result shouldBe null
     }
@@ -35,7 +36,7 @@ class PixelExtractorTest {
         whenever(mockOMGScannerUI.width).thenReturn(0)
         whenever(mockOMGScannerUI.height).thenReturn(1)
 
-        val result = mPixelExtractor.extractPixelsInFraming(byteArrayOf(0x00), 0, 0)
+        val result = mLuminanceSourceGenerator.extractPixelsInFraming(byteArrayOf(0x00), 0, 0)
 
         result shouldBe null
     }
@@ -46,7 +47,7 @@ class PixelExtractorTest {
         whenever(mockOMGScannerUI.width).thenReturn(1)
         whenever(mockOMGScannerUI.height).thenReturn(0)
 
-        val result = mPixelExtractor.extractPixelsInFraming(byteArrayOf(0x00), 0, 0)
+        val result = mLuminanceSourceGenerator.extractPixelsInFraming(byteArrayOf(0x00), 0, 0)
 
         result shouldBe null
     }
@@ -57,7 +58,7 @@ class PixelExtractorTest {
         whenever(mockOMGScannerUI.width).thenReturn(1)
         whenever(mockOMGScannerUI.height).thenReturn(1)
 
-        val result = mPixelExtractor.extractPixelsInFraming(byteArrayOf(0x00), 0, 1)
+        val result = mLuminanceSourceGenerator.extractPixelsInFraming(byteArrayOf(0x00), 0, 1)
 
         result shouldBe null
     }
@@ -68,14 +69,14 @@ class PixelExtractorTest {
         whenever(mockOMGScannerUI.width).thenReturn(1)
         whenever(mockOMGScannerUI.height).thenReturn(1)
 
-        val result = mPixelExtractor.extractPixelsInFraming(byteArrayOf(0x00), 1, 0)
+        val result = mLuminanceSourceGenerator.extractPixelsInFraming(byteArrayOf(0x00), 1, 0)
 
         result shouldBe null
     }
 
     @Test
     fun `PixelExtractor should return null if the rect is null`() {
-        val pixelExtractor = PixelExtractor(mockOMGScannerUI, null)
+        val pixelExtractor = LuminanceSourceGenerator(mockOMGScannerUI, null)
         whenever(mockOMGScannerUI.mFramingRect).thenReturn(Rect(0, 0, 0, 0))
         whenever(mockOMGScannerUI.width).thenReturn(1)
         whenever(mockOMGScannerUI.height).thenReturn(1)
@@ -98,7 +99,7 @@ class PixelExtractorTest {
         whenever(mockOMGScannerUI.height).thenReturn(1584)
 
         val data = ByteArray(518400)
-        val pixelExtractor = PixelExtractor(mockOMGScannerUI, mockFrame)
+        val pixelExtractor = LuminanceSourceGenerator(mockOMGScannerUI, mockFrame)
         val result = pixelExtractor.extractPixelsInFraming(data, 480, 720)
 
         result.toString() shouldEqual PlanarYUVLuminanceSource(

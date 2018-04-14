@@ -9,7 +9,7 @@ import com.google.zxing.common.BitMatrix
  * Created by Phuchit Sirimongkolsathien on 1/4/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
-class BarcodeEncoder {
+class QREncoder {
     fun createBitmap(matrix: BitMatrix): Bitmap {
         val width = matrix.width
         val height = matrix.height

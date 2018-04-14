@@ -1,4 +1,4 @@
-package co.omisego.omisego.custom.zxing.ui
+package co.omisego.omisego.custom.zxing.ui.core
 
 import android.graphics.Rect
 import co.omisego.omisego.custom.zxing.ui.decorator.OMGScannerUI
@@ -11,12 +11,7 @@ import com.google.zxing.PlanarYUVLuminanceSource
  * Created by Phuchit Sirimongkolsathien on 12/4/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
-internal class PixelExtractor(private val omgScannerUI: OMGScannerUI, val rect: Rect? = null) {
-
-    companion object {
-        const val TAG = "PixelExtractor"
-    }
-
+internal class LuminanceSourceGenerator(private val omgScannerUI: OMGScannerUI, val rect: Rect? = null) {
     fun extractPixelsInFraming(data: ByteArray, width: Int, height: Int): PlanarYUVLuminanceSource? {
 
         /* Return now when something is incorrect */

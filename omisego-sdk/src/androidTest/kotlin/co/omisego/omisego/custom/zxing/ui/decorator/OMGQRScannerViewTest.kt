@@ -7,6 +7,7 @@ import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import co.omisego.omisego.R
+import co.omisego.omisego.qrcode.OMGQRScannerView
 import co.omisego.omisego.qrcode.QRScannerActivity
 import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.core.AllOf
@@ -27,7 +28,8 @@ class OMGQRScannerViewTest {
 
     @Before
     fun setup() {
-        activityTestRule.activity
+//        activityTestRule.activity
+        activityTestRule.activity.setTheme(R.style.Theme_AppCompat)
     }
 
     @Test
@@ -37,13 +39,11 @@ class OMGQRScannerViewTest {
 
         val scannerView = onView(
                 AllOf.allOf(
-                        instanceOf(co.omisego.omisego.custom.zxing.ui.OMGQRScannerView::class.java)
+                        instanceOf(OMGQRScannerView::class.java)
                 )
         )
 
         scannerView.check(matches(isDisplayed()))
         scannerView.check(matches(hasChildCount(3)))
-
-
     }
 }

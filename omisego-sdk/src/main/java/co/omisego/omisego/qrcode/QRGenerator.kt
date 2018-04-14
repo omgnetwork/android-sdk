@@ -8,7 +8,7 @@ package co.omisego.omisego.qrcode
  */
 
 import android.graphics.Bitmap
-import co.omisego.omisego.custom.zxing.BarcodeEncoder
+import co.omisego.omisego.custom.zxing.QREncoder
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -19,7 +19,7 @@ import com.google.zxing.WriterException
  */
 class QRGenerator(
     private val writer: MultiFormatWriter = MultiFormatWriter(),
-    private val encoder: BarcodeEncoder = BarcodeEncoder()
+    private val encoder: QREncoder = QREncoder()
 ) {
     companion object {
         /**

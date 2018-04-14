@@ -3,7 +3,7 @@ package co.omisego.omisego.custom.zxing.ui.decorator
 import android.widget.ProgressBar
 import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.ui.CameraPreview
-import co.omisego.omisego.custom.zxing.ui.OMGQRScannerView
+import co.omisego.omisego.qrcode.OMGQRScannerView
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqualTo
 import org.junit.Test

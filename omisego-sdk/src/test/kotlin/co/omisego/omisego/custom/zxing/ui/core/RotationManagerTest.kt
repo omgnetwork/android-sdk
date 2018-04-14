@@ -28,7 +28,7 @@ class RotationManagerTest {
     @Test
     fun `rotate 180 degrees should be returned the same`() {
         val result = rotationManager.rotate(byteArrayOf(0x00, 0x01, 0x02, 0x03), 2, 2, 2)
-        result shouldEqual byteArrayOf(0x00, 0x01, 0x02, 0x03)
+        result shouldEqual byteArrayOf(0x03, 0x02, 0x01, 0x00)
     }
 
     @Test
