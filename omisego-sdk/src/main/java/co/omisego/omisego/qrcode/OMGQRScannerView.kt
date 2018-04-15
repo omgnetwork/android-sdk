@@ -47,8 +47,9 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
     private var mScanCallback: OMGQRScannerContract.Callback? = null
     private var mLuminanceSourceGenerator: LuminanceSourceGenerator? = null
     private var mOMGScannerPresenter: OMGQRScannerContract.Presenter = OMGQRScannerPresenter()
-    private lateinit var mHandler: Handler
+    private var mHandler: Handler? = null
     private lateinit var mRunnable: Runnable
+    private var mPreviewSize: Camera.Size? = null
     private val mOMGScannerUI by lazy {
         OMGScannerUI(context).apply { borderColor = this@OMGQRScannerView.mBorderColor }
     }
@@ -96,7 +97,7 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
         }
 
     // For Debugging purpose
-    /* To debug the QRCode frame is streaming the image data from the camera correctly */
+/* To debug the QRCode frame is streaming the image data from the camera correctly */
     private val mDebugging = false
 
     /* Represents the image data within the QRCode frame */
@@ -134,7 +135,7 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
         this.setOnClickListener {
             // Reset loading when tap on any view
             mIsLoading = false
-            mHandler.removeCallbacks(mRunnable)
+            mHandler?.removeCallbacks(mRunnable)
         }
     }
 
@@ -206,26 +207,23 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
         /* Don't process anything if currently loading */
         if (mIsLoading) return
 
-        /* Try to get preview size */
-        val size = try {
-            camera.parameters.previewSize
-        } catch (ex: RuntimeException) {
-            return
+        if (mPreviewSize == null) {
+            mPreviewSize = camera.parameters.previewSize ?: return
         }
 
         /* Check if the camera is in portrait or not */
         val portrait = DisplayUtils.getScreenOrientation(context) == ORIENTATION_PORTRAIT
 
         val mutableSize = when (portrait) {
-            true -> size.height to size.width
-            else -> size.width to size.height
+            true -> mPreviewSize!!.height to mPreviewSize!!.width
+            else -> mPreviewSize!!.width to mPreviewSize!!.height
         }
 
         /* Rotate the data to correct the orientation */
         val newData = mOMGScannerPresenter.adjustRotation(
                 data,
                 portrait,
-                size.width to size.height,
+                mPreviewSize!!.width to mPreviewSize!!.height,
                 mPreview?.mDisplayOrientation ?: 1
         )
 
@@ -270,7 +268,7 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
                 Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                 mScanCallback?.scannerDidDecode(this, it)
             }
-            mHandler.postDelayed(mRunnable, 2000)
+            mHandler?.postDelayed(mRunnable, 2000)
         }
     }
 
