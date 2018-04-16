@@ -27,5 +27,4 @@ class UserTest {
         "2017-11-5" shouldEqual user.providerUserId
         "OmiseGO" shouldEqual user.username
     }
-
 }

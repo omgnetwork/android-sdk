@@ -23,7 +23,7 @@ internal class KeyManagerMarshmallow(
     keyHolder: KeyHolder,
     iv: String = String(ByteArray(12))
 ) : KeyManager(keyHolder) {
-    
+
     override val encryptCipher: Cipher
         get() = Cipher.getInstance(AES_MODE).also { initCipher(it, Cipher.ENCRYPT_MODE) }
     override val decryptCipher: Cipher
@@ -40,7 +40,10 @@ internal class KeyManagerMarshmallow(
 
     // Generate key function for Android version 6.0 Marshmallow or above
     override fun generateKey(context: Context) {
-        val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
+        val keyGenerator = KeyGenerator.getInstance(
+            KeyProperties.KEY_ALGORITHM_AES,
+            ANDROID_KEY_STORE
+        )
 
         val spec = KeyGenParameterSpec.Builder(
             keyAlias,

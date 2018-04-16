@@ -8,17 +8,27 @@ package co.omisego.omisego.custom.gson
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.constant.Versions
-import co.omisego.omisego.testUtils.ResourceFile
+import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.testUtils.GsonProvider
+import co.omisego.omisego.testUtils.ResourceFile
 import com.google.gson.reflect.TypeToken
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
 
+/*
+ * OmiseGO
+ *
+ *
+ * Created by Phuchit Sirimongkolsathien on 13/3/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
+
 class ErrorCodeDeserializerTest {
+
     private val errorFile by ResourceFile("fail.client-invalid_auth_scheme.json")
 
     @Test

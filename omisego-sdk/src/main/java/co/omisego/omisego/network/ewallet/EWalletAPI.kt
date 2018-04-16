@@ -17,8 +17,6 @@ import co.omisego.omisego.model.BalanceList
 import co.omisego.omisego.model.Logout
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
-import co.omisego.omisego.model.pagination.PaginationList
-import co.omisego.omisego.model.transaction.Transaction
 import co.omisego.omisego.model.transaction.TransactionListParams
 import retrofit2.http.Body
 import retrofit2.http.POST

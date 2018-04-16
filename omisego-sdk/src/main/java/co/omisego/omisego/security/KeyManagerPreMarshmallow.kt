@@ -5,11 +5,10 @@ import android.security.KeyPairGeneratorSpec
 import android.util.Base64
 import java.math.BigInteger
 import java.security.KeyPairGenerator
-import java.util.*
+import java.util.Calendar
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 import javax.security.auth.x500.X500Principal
-
 
 /**
  * OmiseGO
@@ -19,8 +18,8 @@ import javax.security.auth.x500.X500Principal
  */
 
 internal class KeyManagerPreMarshmallow(
-        keyHolder: KeyHolder,
-        private val keyManagerPreference: KeyManagerPreference
+    keyHolder: KeyHolder,
+    private val keyManagerPreference: KeyManagerPreference
 ) : KeyManager(keyHolder) {
 
     override val encryptCipher: Cipher by lazy { Cipher.getInstance(AES_MODE) }

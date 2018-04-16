@@ -23,7 +23,6 @@ import retrofit2.Retrofit
 import java.io.IOException
 import java.lang.reflect.Type
 
-
 internal class OMGConverterFactory(private val gson: Gson) : Converter.Factory() {
 
     companion object {

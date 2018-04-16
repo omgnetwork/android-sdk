@@ -15,12 +15,12 @@ class OMGServerExceptionTest {
     @Test
     fun `When response code is 404 the message should be 404 - Endpoint not found`() {
         val omgException = OMGServerException(404)
-        omgException.message shouldEqual  "404 - Endpoint not found"
+        omgException.message shouldEqual "404 - Endpoint not found"
     }
 
     @Test
     fun `When response code is 500 the message should be 500 - Internal server error`() {
         val omgException = OMGServerException(500)
-        omgException.message shouldEqual  "500 - Internal server error"
+        omgException.message shouldEqual "500 - Internal server error"
     }
 }

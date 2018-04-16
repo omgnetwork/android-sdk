@@ -1,19 +1,18 @@
 package co.omisego.omisego.security
 
+/*
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 1/12/2017 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Base64
 import co.omisego.omisego.R
 import java.security.SecureRandom
 import javax.crypto.spec.SecretKeySpec
-
-
-/**
- * OmiseGO
- *
- * Created by Phuchit Sirimongkolsathien on 1/12/2017 AD.
- * Copyright © 2017-2018 OmiseGO. All rights reserved.
- */
 
 internal class KeyManagerPreference(context: Context, private val rsaCipher: RSACipher) {
     companion object {

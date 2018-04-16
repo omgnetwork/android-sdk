@@ -198,7 +198,11 @@ Where:
     * `isFirstPage` is a bool indicating if the page received is the first page
     * `isLastPage` is a bool indicating if the page received is the last page
     
-## Test
+    
+# Run Kotlin Lint
+Simply run `./gradlew ktlintCheck` under project root directory.
+
+# Test
 In order to run the live tests (bound to a working server) you need to fill the corresponding in the file `src/test/resources/secret.json`. 
 > Note : You can see the reference in the file `secret.example.json`
 

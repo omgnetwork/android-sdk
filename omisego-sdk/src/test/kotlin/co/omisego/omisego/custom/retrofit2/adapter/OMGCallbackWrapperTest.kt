@@ -92,7 +92,6 @@ class OMGCallbackWrapperTest {
         verifyNoMoreInteractions(mockOMGCallback)
     }
 
-
     @Test
     fun `OMGCallbackWrapper delegates the server 500 error to the failed callback successfully`() {
         val errorResponse = Response.error<OMGResponse<User>>(500, mock(ResponseBody::class))

@@ -8,7 +8,7 @@ package co.omisego.omisego.utils
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import java.util.*
+import java.util.Base64
 
 object OMGEncryptionHelper {
     /**
