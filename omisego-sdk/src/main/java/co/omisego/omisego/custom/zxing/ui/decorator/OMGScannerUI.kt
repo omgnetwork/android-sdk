@@ -2,7 +2,12 @@ package co.omisego.omisego.custom.zxing.ui.decorator
 
 import android.content.Context
 import android.content.res.Configuration
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.CornerPathEffect
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.Point
+import android.graphics.Rect
 import android.support.annotation.ColorInt
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
@@ -10,7 +15,6 @@ import android.view.View
 import co.omisego.omisego.R
 import co.omisego.omisego.custom.camera.utils.DisplayUtils
 import co.omisego.omisego.extension.dp
-
 
 /*
  * OmiseGO
@@ -22,7 +26,7 @@ import co.omisego.omisego.extension.dp
 /**
  * Represents the UI of then QR code scanner
  */
-class OMGScannerUI : View {
+class OMGScannerUI : View, ScannerUI {
     /* Painter for the corner border */
     private val mBorderPaint by lazy {
         Paint().apply {
@@ -56,11 +60,11 @@ class OMGScannerUI : View {
     private var borderLineLength: Int = resources.getInteger(R.integer.omg_scanner_border_length)
 
     /* Showing a hint below the QR border */
-    var hintText: String = HINT_TEXT_DEFAULT
+    override var hintText: String = HINT_TEXT_DEFAULT
 
     /* Define color for draw the border */
     @ColorInt
-    var borderColor = 0
+    override var borderColor = 0
         get() = when (field) {
             0 -> ContextCompat.getColor(context, R.color.omg_scanner_ui_border)
             else -> field
@@ -94,14 +98,14 @@ class OMGScannerUI : View {
         val framingRect = mFramingRect ?: return
         drawMask(canvas, framingRect)
         drawQRBorder(canvas, framingRect)
-        drawHelpingText(canvas, framingRect, hintText)
+        drawHintText(canvas, framingRect, hintText)
     }
 
     /**
      * Draw 4 rectangles black overlay mask to top, left, right, bottom.
      * Basically, draw mask around of the centered rectangle.
      */
-    private fun drawMask(canvas: Canvas, framingRect: Rect) {
+    override fun drawMask(canvas: Canvas, framingRect: Rect) {
         val width = canvas.width
         val height = canvas.height
 
@@ -121,7 +125,7 @@ class OMGScannerUI : View {
     /**
      * Draw the frame for the QR image
      */
-    private fun drawQRBorder(canvas: Canvas, framingRect: Rect) {
+    override fun drawQRBorder(canvas: Canvas, framingRect: Rect) {
         Path().run {
             with(framingRect) {
                 /* Top-left corner */
@@ -151,12 +155,12 @@ class OMGScannerUI : View {
         }
     }
 
-    private fun drawHelpingText(canvas: Canvas, framingRect: Rect, text: String) {
+    override fun drawHintText(canvas: Canvas, framingRect: Rect, hintText: String) {
         canvas.drawText(
-                text,
-                framingRect.left.toFloat() + framingRect.width() / 2,
-                framingRect.bottom.toFloat() + 32.dp,
-                mTextPaint
+            hintText,
+            framingRect.left.toFloat() + framingRect.width() / 2,
+            framingRect.bottom.toFloat() + 32.dp,
+            mTextPaint
         )
     }
 
@@ -183,16 +187,16 @@ class OMGScannerUI : View {
         val topOffset = (viewResolution.y - squareHeight) / 2
 
         mFramingRect = Rect(
-                leftOffset,
-                topOffset,
-                leftOffset + squareWidth,
-                topOffset + squareHeight
+            leftOffset,
+            topOffset,
+            leftOffset + squareWidth,
+            topOffset + squareHeight
         )
     }
 
     /* Private extension */
     private fun Canvas.drawRect(left: Int, top: Int, right: Int, bottom: Int, paint: Paint) =
-            this.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat(), paint)
+        this.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat(), paint)
 
     private fun Path.moveTo(x: Int, y: Int) = this.moveTo(x.toFloat(), y.toFloat())
     private fun Path.lineTo(x: Int, y: Int) = this.lineTo(x.toFloat(), y.toFloat())
