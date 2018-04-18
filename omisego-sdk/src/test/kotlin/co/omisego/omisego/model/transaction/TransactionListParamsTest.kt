@@ -10,6 +10,7 @@ package co.omisego.omisego.model.transaction
 import co.omisego.omisego.model.pagination.Paginable.Transaction.SearchableFields
 import co.omisego.omisego.model.pagination.Paginable.Transaction.SortableFields
 import co.omisego.omisego.model.pagination.SortDirection
+import co.omisego.omisego.model.transaction.list.ListTransactionParams
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -17,24 +18,24 @@ import org.amshove.kluent.shouldEqual
 import org.junit.Before
 import kotlin.test.Test
 
-class TransactionListParamsTest {
+class ListTransactionParamsTest {
     private lateinit var gson: Gson
     @Before
     fun setUp() {
         gson = GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create()
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .create()
     }
 
     @Test
-    fun `TransactionListParams should be added successfully`() {
-        val transactionListParams = TransactionListParams(1,
-                10,
-                SortableFields.FROM,
-                SortDirection.ASCENDING,
-                "test",
-                mapOf(SearchableFields.STATUS to "completed", SearchableFields.ID to "1234"),
-                "address:1234"
+    fun `ListTransactionParams should be added successfully`() {
+        val transactionListParams = ListTransactionParams(1,
+            10,
+            SortableFields.FROM,
+            SortDirection.ASCENDING,
+            "test",
+            mapOf(SearchableFields.STATUS to "completed", SearchableFields.ID to "1234"),
+            "address:1234"
         )
 
         val expected = """

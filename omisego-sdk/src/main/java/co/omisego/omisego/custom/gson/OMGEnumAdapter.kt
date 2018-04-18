@@ -8,16 +8,19 @@ package co.omisego.omisego.custom.gson
  */
 
 import co.omisego.omisego.constant.enums.OMGEnum
-import com.google.gson.*
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonSerializer
+import com.google.gson.JsonSerializationContext
+import com.google.gson.JsonPrimitive
 import java.lang.reflect.Type
 
 @Suppress("UNCHECKED_CAST")
-internal class OMGEnumAdapter<T> : JsonDeserializer<T>, JsonSerializer<T> where T : OMGEnum, T : Enum<T> {
-    private var values: Map<String, T>? = null
-
+internal class OMGEnumAdapter<T: OMGEnum> : JsonDeserializer<T>, JsonSerializer<T> {
     override fun deserialize(json: JsonElement, type: Type, context: JsonDeserializationContext): T? {
         val enumConstants = (type as Class<T>).enumConstants
-        return (values ?: enumConstants.associateBy { it.value }.also { values = it })[json.asString]
+        return enumConstants.firstOrNull { it.value == json.asString }
     }
 
     override fun serialize(src: T, type: Type, context: JsonSerializationContext): JsonElement {

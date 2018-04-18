@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.transaction
+package co.omisego.omisego.model.transaction.list
 
 /*
  * OmiseGO
@@ -14,7 +14,7 @@ import co.omisego.omisego.model.pagination.SortDirection
  *  Represent a structure used to query a list of transactions
  */
 
-data class TransactionListParams internal constructor(
+data class ListTransactionParams internal constructor(
         /**
          * A page number
          */
@@ -74,13 +74,13 @@ data class TransactionListParams internal constructor(
                 sortDirection: SortDirection = SortDirection.DESCENDING,
                 searchTerm: String? = null,
                 address: String? = null
-        ) = TransactionListParams(
-                page = page,
-                perPage = perPage,
-                sortBy = sortBy,
-                sortDirection = sortDirection,
-                searchTerm = searchTerm,
-                address = address
+        ) = ListTransactionParams(
+            page = page,
+            perPage = perPage,
+            sortBy = sortBy,
+            sortDirection = sortDirection,
+            searchTerm = searchTerm,
+            address = address
         )
 
         fun create(
@@ -90,13 +90,13 @@ data class TransactionListParams internal constructor(
                 sortDirection: SortDirection = SortDirection.DESCENDING,
                 searchTerms: Map<Paginable.Transaction.SearchableFields, Any>? = null,
                 address: String? = null
-        ) = TransactionListParams(
-                page = page,
-                perPage = perPage,
-                sortBy = sortBy,
-                sortDirection = sortDirection,
-                searchTerms = searchTerms,
-                address = address
+        ) = ListTransactionParams(
+            page = page,
+            perPage = perPage,
+            sortBy = sortBy,
+            sortDirection = sortDirection,
+            searchTerms = searchTerms,
+            address = address
         )
     }
 }

@@ -113,6 +113,7 @@ class EWalletClient {
             /* Use a simple gson for now */
             val gson = GsonBuilder()
                     .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
+                    .serializeNulls()
                     .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                     .create()
 
