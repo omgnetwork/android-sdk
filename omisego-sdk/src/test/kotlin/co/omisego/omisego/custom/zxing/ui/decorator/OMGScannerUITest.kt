@@ -24,7 +24,7 @@ class OMGScannerUITest {
 
     @Test
     fun `OMGScanner should set the border color correctly`() {
-        mOMGScannerUI.borderColor = R.color.omg_scanner_ui_border
+        mOMGScannerUI.borderColor = ContextCompat.getColor(RuntimeEnvironment.application, R.color.omg_scanner_ui_border)
         mOMGScannerUI.borderColor shouldEqualTo ContextCompat.getColor(RuntimeEnvironment.application, R.color.omg_scanner_ui_border)
     }
 }
