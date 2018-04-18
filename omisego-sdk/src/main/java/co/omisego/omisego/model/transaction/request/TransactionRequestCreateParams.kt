@@ -13,7 +13,7 @@ import java.math.BigDecimal
  * Represents a structure used to generate a transaction request
  *
  */
-data class TransactionRequestParams(
+data class TransactionRequestCreateParams(
 
     /**
      * The type of transaction to be generated

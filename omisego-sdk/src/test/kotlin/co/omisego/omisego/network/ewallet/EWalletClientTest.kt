@@ -18,11 +18,7 @@ import co.omisego.omisego.model.BalanceList
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
-<<<<<<< HEAD
 import co.omisego.omisego.model.transaction.list.TransactionListParams
-=======
-import co.omisego.omisego.model.transaction.list.ListTransactionParams
->>>>>>> Add more test
 import co.omisego.omisego.testUtils.GsonProvider
 import co.omisego.omisego.utils.OMGEncryptionHelper
 import okhttp3.HttpUrl

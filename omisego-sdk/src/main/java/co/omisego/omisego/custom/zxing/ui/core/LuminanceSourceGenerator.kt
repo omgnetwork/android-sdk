@@ -11,7 +11,7 @@ import com.google.zxing.PlanarYUVLuminanceSource
  * Created by Phuchit Sirimongkolsathien on 12/4/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
-internal class LuminanceSourceGenerator(private val omgScannerUI: OMGScannerUI, val rect: Rect? = null) {
+class LuminanceSourceGenerator(private val omgScannerUI: OMGScannerUI, val rect: Rect? = null) {
     fun extractPixelsInFraming(data: ByteArray, width: Int, height: Int): PlanarYUVLuminanceSource? {
 
         /* Return now when something is incorrect */

@@ -1,12 +1,7 @@
 package co.omisego.omisego.qrcode
 
 import android.content.Context
-import android.content.res.Configuration.ORIENTATION_PORTRAIT
-import android.graphics.BitmapFactory
-import android.graphics.ImageFormat
-import android.graphics.YuvImage
 import android.hardware.Camera
-import android.os.Handler
 import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
 import android.support.v4.content.ContextCompat
@@ -16,21 +11,12 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.Toast
 import co.omisego.omisego.R
 import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.ui.CameraPreview
 import co.omisego.omisego.custom.camera.utils.DisplayUtils
 import co.omisego.omisego.custom.zxing.CameraHandlerThread
-import co.omisego.omisego.custom.zxing.ui.core.LuminanceSourceGenerator
-import co.omisego.omisego.custom.zxing.ui.core.OMGQRScannerContract
-import co.omisego.omisego.custom.zxing.ui.core.OMGQRScannerPresenter
 import co.omisego.omisego.custom.zxing.ui.decorator.OMGScannerUI
-import com.google.zxing.*
-import com.google.zxing.common.HybridBinarizer
-import java.io.ByteArrayOutputStream
-import java.util.*
-
 
 /*
  * OmiseGO
@@ -39,42 +25,10 @@ import java.util.*
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 @Suppress("DEPRECATION")
-class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContract.View {
+class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
     private var mCameraWrapper: CameraWrapper? = null
     private var mCameraHandlerThread: CameraHandlerThread? = null
-    private var mPreview: CameraPreview? = null
     private var mLoadingView: View? = null
-    private var mScanCallback: OMGQRScannerContract.Callback? = null
-    private var mLuminanceSourceGenerator: LuminanceSourceGenerator? = null
-    private var mOMGScannerPresenter: OMGQRScannerContract.Presenter = OMGQRScannerPresenter()
-    private var mHandler: Handler? = null
-    private lateinit var mRunnable: Runnable
-    private var mPreviewSize: Camera.Size? = null
-    private val mOMGScannerUI by lazy {
-        OMGScannerUI(context).apply { borderColor = this@OMGQRScannerView.mBorderColor }
-    }
-    private val mMultiFormatReader: MultiFormatReader by lazy {
-        val hints = EnumMap<DecodeHintType, Any>(DecodeHintType::class.java).apply {
-            set(DecodeHintType.POSSIBLE_FORMATS, listOf(BarcodeFormat.QR_CODE))
-        }
-        MultiFormatReader().apply { setHints(hints) }
-    }
-    private var mIsLoading: Boolean = false
-        set(value) {
-            when (value) {
-                true -> {
-                    mLoadingView?.visibility = View.VISIBLE
-                    mOMGScannerUI.hintText = OMGScannerUI.HINT_TEXT_LOADING
-                    mOMGScannerUI.borderColor = mBorderColorLoading
-                }
-                else -> {
-                    mLoadingView?.visibility = View.GONE
-                    mOMGScannerUI.hintText = OMGScannerUI.HINT_TEXT_DEFAULT
-                    mOMGScannerUI.borderColor = mBorderColor
-                }
-            }
-            field = value
-        }
 
     /**
      * Set the border of the QRCode frame
@@ -96,28 +50,53 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
             else -> field
         }
 
+    override var cameraPreview: CameraPreview? = null
+    private var mOMGScannerPresenter: OMGQRScannerContract.Presenter? = null
+    override val omgScannerUI by lazy {
+        OMGScannerUI(context).apply { borderColor = this@OMGQRScannerView.mBorderColor }
+    }
+    override var orientation: Int = 0
+        get() = DisplayUtils.getScreenOrientation(context)
+
+    override var isLoading: Boolean = false
+        set(value) {
+            when (value) {
+                true -> {
+                    mLoadingView?.visibility = View.VISIBLE
+                    omgScannerUI.hintText = OMGScannerUI.HINT_TEXT_LOADING
+                    omgScannerUI.borderColor = mBorderColorLoading
+                }
+                else -> {
+                    mLoadingView?.visibility = View.GONE
+                    omgScannerUI.hintText = OMGScannerUI.HINT_TEXT_DEFAULT
+                    omgScannerUI.borderColor = mBorderColor
+                }
+            }
+            field = value
+        }
+
     // For Debugging purpose
-/* To debug the QRCode frame is streaming the image data from the camera correctly */
-    private val mDebugging = false
+    /* To debug the QRCode frame is streaming the image data from the camera correctly */
+    override var debugging = false
 
     /* Represents the image data within the QRCode frame */
-    private lateinit var debugImageView: ImageView
+    override var debugImageView: ImageView? = null
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
-            super(context, attrs, defStyleAttr)
+        super(context, attrs, defStyleAttr)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         val a = context.theme.obtainStyledAttributes(
-                attrs,
-                R.styleable.OMGQRScannerView,
-                0, 0)
+            attrs,
+            R.styleable.OMGQRScannerView,
+            0, 0)
 
         try {
             mBorderColor = a.getColor(R.styleable.OMGQRScannerView_borderColor,
-                    resources.getColor(R.color.omg_scanner_ui_border))
+                resources.getColor(R.color.omg_scanner_ui_border))
             mBorderColorLoading = a.getColor(R.styleable.OMGQRScannerView_borderColorLoading,
-                    resources.getColor(R.color.omg_scanner_ui_border_loading))
+                resources.getColor(R.color.omg_scanner_ui_border_loading))
         } finally {
             a.recycle()
         }
@@ -129,32 +108,33 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
 
     fun setupCameraPreview(cameraWrapper: CameraWrapper) {
         mCameraWrapper = cameraWrapper
-        mOMGScannerUI.setupUI()
+        omgScannerUI.setupUI()
         setupLayout(mCameraWrapper)
 
         this.setOnClickListener {
             // Reset loading when tap on any view
-            mIsLoading = false
-            mHandler?.removeCallbacks(mRunnable)
+            isLoading = false
+            mOMGScannerPresenter?.stopVerifyQR()
         }
     }
 
     private fun setupLayout(cameraWrapper: CameraWrapper?) {
         removeAllViews()
-        mPreview = CameraPreview(context, cameraWrapper, this)
+        cameraPreview = CameraPreview(context, cameraWrapper, this)
 
         /* Prepare the loading view for display decoding the QR image */
         mLoadingView = ProgressBar(context).apply { visibility = View.GONE }
-        debugImageView = ImageView(context).apply { this.layoutParams = FrameLayout.LayoutParams(200, 200) }
 
         /* Add camera preview surface UI */
-        addView(mPreview)
+        addView(cameraPreview)
 
         /* Add scanner UI */
-        addView(mOMGScannerUI)
+        addView(omgScannerUI)
 
-        if (mDebugging)
+        if (debugging) {
+            debugImageView = ImageView(context).apply { this.layoutParams = FrameLayout.LayoutParams(200, 200) }
             addView(debugImageView)
+        }
 
         /* Add loading bar UI on top with size 100x100 px */
         addView(mLoadingView, FrameLayout.LayoutParams(100, 100, Gravity.CENTER))
@@ -169,23 +149,14 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
         mCameraHandlerThread?.startCamera()
     }
 
-
     /**
      * Stop the camera to stream the image preview
      */
     override fun stopCamera() {
-        mPreview?.stopCameraPreview()
+        cameraPreview?.stopCameraPreview()
         mCameraWrapper?.camera?.release()
         mCameraHandlerThread?.quit()
         mCameraHandlerThread = null
-    }
-
-    /**
-     * Set the QRCode callback
-     * See [OMGQRScannerContract.Callback]
-     */
-    override fun setScanQRListener(callback: OMGQRScannerContract.Callback) {
-        mScanCallback = callback
     }
 
     override fun setLoadingView(view: View) {
@@ -200,88 +171,11 @@ class OMGQRScannerView : FrameLayout, Camera.PreviewCallback, OMGQRScannerContra
         mBorderColor = ContextCompat.getColor(context, color)
     }
 
-    /**
-     * Decode the text from the QR code bitmap.
-     */
-    override fun onPreviewFrame(data: ByteArray, camera: Camera) {
-        /* Don't process anything if currently loading */
-        if (mIsLoading) return
-
-        if (mPreviewSize == null) {
-            mPreviewSize = camera.parameters.previewSize ?: return
-        }
-
-        /* Check if the camera is in portrait or not */
-        val portrait = DisplayUtils.getScreenOrientation(context) == ORIENTATION_PORTRAIT
-
-        val mutableSize = when (portrait) {
-            true -> mPreviewSize!!.height to mPreviewSize!!.width
-            else -> mPreviewSize!!.width to mPreviewSize!!.height
-        }
-
-        /* Rotate the data to correct the orientation */
-        val newData = mOMGScannerPresenter.adjustRotation(
-                data,
-                portrait,
-                mPreviewSize!!.width to mPreviewSize!!.height,
-                mPreview?.mDisplayOrientation ?: 1
-        )
-
-        /* Prepare the bitmap for decoding by exclude the superfluous pixels (pixels outside the frame)*/
-        if (mLuminanceSourceGenerator == null) {
-            val rect = mOMGScannerPresenter.adjustFrameInPreview(
-                    mOMGScannerUI.width,
-                    mOMGScannerUI.height,
-                    mOMGScannerUI.mFramingRect,
-                    mutableSize.first,
-                    mutableSize.second
-            )
-            mLuminanceSourceGenerator = LuminanceSourceGenerator(mOMGScannerUI, rect)
-        }
-
-        if (mDebugging) {
-            val img = YuvImage(newData, ImageFormat.NV21, mutableSize.first, mutableSize.second, null)
-            val baos = ByteArrayOutputStream()
-            img.compressToJpeg(mLuminanceSourceGenerator?.rect, 50, baos)
-            debugImageView.setImageBitmap(BitmapFactory.decodeByteArray(baos.toByteArray(), 0, baos.toByteArray().size))
-        }
-
-        val source = mLuminanceSourceGenerator?.extractPixelsInFraming(
-                newData, mutableSize.first, mutableSize.second
-        ) ?: return
-
-        /* Use the original source to decode */
-        var rawResult = mMultiFormatReader.decodeFirstOtherwiseNull(
-                BinaryBitmap(HybridBinarizer(source))
-        )
-
-        /* Original source doesn't work, let's try to invert black and white pixels */
-        rawResult = rawResult ?: mMultiFormatReader.decodeFirstOtherwiseNull(
-                BinaryBitmap(HybridBinarizer(source.invert()))
-        )
-
-        rawResult?.text?.let {
-            mIsLoading = true
-            mHandler = Handler()
-            mRunnable = Runnable {
-                mIsLoading = false
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                mScanCallback?.scannerDidDecode(this, it)
-            }
-            mHandler?.postDelayed(mRunnable, 2000)
-        }
+    override fun setQRScannerPresenter(presenter: OMGQRScannerContract.Presenter) {
+        mOMGScannerPresenter = presenter
     }
 
-    /**
-     * Trying to decode first, if some exception was arise, then return null.
-     */
-    private fun MultiFormatReader.decodeFirstOtherwiseNull(bitmap: BinaryBitmap): Result? {
-        return try {
-            this.decodeWithState(bitmap)
-        } catch (ex: Exception) {
-            null
-        } finally {
-            this.reset()
-        }
+    override fun onPreviewFrame(data: ByteArray, camera: Camera) {
+        mOMGScannerPresenter?.onPreviewFrame(data, camera)
     }
 }

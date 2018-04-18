@@ -6,7 +6,11 @@ import android.graphics.Point
 import android.hardware.Camera
 import android.util.AttributeSet
 import android.util.Log
-import android.view.*
+import android.view.Surface
+import android.view.SurfaceHolder
+import android.view.SurfaceView
+import android.view.View
+import android.view.WindowManager
 import co.omisego.omisego.custom.camera.AutoFocusManager
 import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.utils.DisplayUtils
@@ -19,7 +23,7 @@ import java.lang.Exception
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 @Suppress("DEPRECATION")
-internal class CameraPreview : SurfaceView, SurfaceHolder.Callback {
+class CameraPreview : SurfaceView, SurfaceHolder.Callback {
     private var mPreviewCallback: Camera.PreviewCallback? = null
     private var mSurfaceCreated = false
     private var mPreviewing: Boolean = true

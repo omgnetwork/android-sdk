@@ -1,5 +1,6 @@
 package co.omisego.omisego.custom.zxing.ui.core
 
+import co.omisego.omisego.qrcode.OMGQRScannerContract
 
 /*
  * OmiseGO
