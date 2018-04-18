@@ -140,6 +140,8 @@ class OMGAPIClientTest {
             transactionRequest
         )
 
+        Thread.sleep(100)
+
         verify(callback, times(1)).success(expected)
     }
 
