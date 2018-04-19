@@ -1,4 +1,4 @@
-package co.omisego.omisego.qrcode.scanner.core
+package co.omisego.omisego.qrcode.generator
 
 /*
  * OmiseGO
