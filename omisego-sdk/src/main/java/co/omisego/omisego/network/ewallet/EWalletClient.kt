@@ -55,7 +55,7 @@ class EWalletClient {
 
         /**
          * Set the API [authenticationToken].
-         * The [authenticationToken] should be "OMG Base64(api_key:authentication_token)"
+         * The [authenticationToken] should be "Base64(api_key:authentication_token)" (without "OMGClient")
          */
         var authenticationToken: String = ""
             set(value) {

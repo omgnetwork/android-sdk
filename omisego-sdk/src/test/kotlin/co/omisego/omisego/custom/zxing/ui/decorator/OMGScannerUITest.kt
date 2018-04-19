@@ -5,6 +5,7 @@ import android.graphics.Rect
 import android.support.v4.content.ContextCompat
 import co.omisego.omisego.BuildConfig
 import co.omisego.omisego.R
+import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify

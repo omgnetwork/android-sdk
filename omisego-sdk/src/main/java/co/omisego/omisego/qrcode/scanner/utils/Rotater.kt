@@ -1,6 +1,4 @@
-package co.omisego.omisego.custom.zxing.ui.core
-
-import co.omisego.omisego.qrcode.OMGQRScannerContract
+package co.omisego.omisego.qrcode.scanner.utils
 
 /*
  * OmiseGO
@@ -8,13 +6,24 @@ import co.omisego.omisego.qrcode.OMGQRScannerContract
  * Created by Phuchit Sirimongkolsathien on 4/4/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
-class RotationManager : OMGQRScannerContract.Presenter.Rotation {
-    /* Rotate the bitmap data until we get the correct orientation */
-    override fun rotate(data: ByteArray, width: Int, height: Int, rotationCount: Int): ByteArray {
-        return when (rotationCount) {
-            1 -> rotateCW(data, width, height)
-            2 -> rotate180(data, width, height)
-            3 -> rotateCCW(data, width, height)
+
+import android.hardware.Camera
+import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract
+
+class Rotater : OMGQRScannerContract.Presenter.Rotation {
+    /**
+     * Rotate the image data depends on the device orientation
+     *
+     * @param data Raw image data from the camera that receiving from [Camera.PreviewCallback.onPreviewFrame]
+     * @param width Width of the image
+     * @param height Height of the image
+     * @param orientation The orientation of the image
+     */
+    override fun rotate(data: ByteArray, width: Int, height: Int, orientation: Int?): ByteArray {
+        return when (orientation ?: 0) {
+            90 -> rotateCW(data, width, height)
+            180 -> rotate180(data, width, height)
+            270 -> rotateCCW(data, width, height)
             else -> data
         }
     }
@@ -79,6 +88,4 @@ class RotationManager : OMGQRScannerContract.Presenter.Rotation {
         }
         return yuv
     }
-
-    override fun getRotationCount(orientation: Int?) = (orientation ?: 90) / 90
 }

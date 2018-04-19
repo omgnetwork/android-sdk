@@ -7,7 +7,7 @@ import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import co.omisego.omisego.R
-import co.omisego.omisego.qrcode.OMGQRScannerView
+import co.omisego.omisego.qrcode.scanner.OMGQRScannerView
 import co.omisego.omisego.qrcode.QRScannerActivity
 import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.core.AllOf

@@ -1,4 +1,4 @@
-package co.omisego.omisego.qrcode
+package co.omisego.omisego.qrcode.generator
 
 /*
  * OmiseGO
@@ -8,7 +8,6 @@ package co.omisego.omisego.qrcode
  */
 
 import android.graphics.Bitmap
-import co.omisego.omisego.custom.zxing.QREncoder
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter

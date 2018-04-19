@@ -27,8 +27,8 @@ class CameraPreview : SurfaceView, SurfaceHolder.Callback {
     private var mPreviewCallback: Camera.PreviewCallback? = null
     private var mSurfaceCreated = false
     private var mPreviewing: Boolean = true
-    private lateinit var mFocusManager: AutoFocusManager
     private var mCameraWrapper: CameraWrapper? = null
+    private lateinit var mFocusManager: AutoFocusManager
     private var mSafeFocus: Boolean = false
         get() = mSurfaceCreated && mPreviewing
     val mDisplayOrientation: Int
@@ -126,7 +126,7 @@ class CameraPreview : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
-    fun showCameraPreview() {
+    private fun showCameraPreview() {
         try {
             holder.addCallback(this@CameraPreview)
             mPreviewing = true

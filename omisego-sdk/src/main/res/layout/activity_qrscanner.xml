@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <co.omisego.omisego.qrcode.OMGQRScannerView
+        <co.omisego.omisego.qrcode.scanner.OMGQRScannerView
             android:id="@+id/scannerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -1,12 +1,19 @@
 package co.omisego.omisego.custom.zxing.ui.core
 
+/*
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 12/4/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import android.content.res.Configuration
 import android.graphics.Rect
 import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.custom.camera.utils.CameraUtils
 import co.omisego.omisego.model.transaction.request.TransactionRequestParams
-import co.omisego.omisego.qrcode.OMGQRScannerContract
-import co.omisego.omisego.qrcode.OMGQRScannerPresenter
+import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract
+import co.omisego.omisego.qrcode.scanner.OMGQRScannerPresenter
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.Reader
 import com.google.zxing.Result
@@ -22,14 +29,6 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/*
- * OmiseGO
- *
- * Created by Phuchit Sirimongkolsathien on 12/4/2018 AD.
- * Copyright © 2017-2018 OmiseGO. All rights reserved.
- */
-
-
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [21])
 class OMGQRScannerPresenterTest {
@@ -41,23 +40,23 @@ class OMGQRScannerPresenterTest {
 
     @Test
     fun `OMGQRScanner should be adjusted the image rotation data correctly`() {
-        val result0 = omgQRScannerPresenter.adjustRotation(sampleByteArray, false, 2 to 2, 0)
+        val result0 = omgQRScannerPresenter.adjustRotation(sampleByteArray, 2 to 2, 0)
         result0 shouldEqual byteArrayOf(0x00, 0x01, 0x02, 0x03)
 
-        val result90 = omgQRScannerPresenter.adjustRotation(sampleByteArray, true, 2 to 2, 90)
+        val result90 = omgQRScannerPresenter.adjustRotation(sampleByteArray, 2 to 2, 90)
         result90 shouldEqual byteArrayOf(0x02, 0x00, 0x03, 0x01)
 
-        val result180 = omgQRScannerPresenter.adjustRotation(sampleByteArray, false, 2 to 2, 180)
+        val result180 = omgQRScannerPresenter.adjustRotation(sampleByteArray, 2 to 2, 180)
         result180 shouldEqual byteArrayOf(0x03, 0x02, 0x01, 0x00)
 
-        val result270 = omgQRScannerPresenter.adjustRotation(sampleByteArray, true, 2 to 2, 270)
+        val result270 = omgQRScannerPresenter.adjustRotation(sampleByteArray, 2 to 2, 270)
         result270 shouldEqual byteArrayOf(0x01, 0x03, 0x00, 0x02)
     }
 
     @Test
     fun `OMGQRScanner should be adjusted frame to fit in the preview size correctly`() {
         /* A square rectangle with size 256px at the (100,100) */
-        val framingRect = Rect(100, 100, 356, 356)
+        val qrFrame = Rect(100, 100, 356, 356)
 
         /* The dimension of the raw image. let's say 1600x1200 px */
         val scannerSize = 1600 to 1200
@@ -67,11 +66,9 @@ class OMGQRScannerPresenterTest {
 
         /* Retrieve the adjusted frame */
         val rect = omgQRScannerPresenter.adjustFrameInPreview(
-            scannerSize.first,
-            scannerSize.second,
-            framingRect,
-            previewSize.first,
-            previewSize.second
+            scannerSize.first to scannerSize.second,
+            previewSize.first to previewSize.second,
+            qrFrame
         )
 
         /**

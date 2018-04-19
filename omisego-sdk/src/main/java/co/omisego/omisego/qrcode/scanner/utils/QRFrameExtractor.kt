@@ -1,9 +1,4 @@
-package co.omisego.omisego.custom.zxing.ui.core
-
-import android.graphics.Rect
-import co.omisego.omisego.custom.zxing.ui.decorator.OMGScannerUI
-import com.google.zxing.PlanarYUVLuminanceSource
-
+package co.omisego.omisego.qrcode.scanner.utils
 
 /*
  * OmiseGO
@@ -11,8 +6,13 @@ import com.google.zxing.PlanarYUVLuminanceSource
  * Created by Phuchit Sirimongkolsathien on 12/4/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
-class LuminanceSourceGenerator(private val omgScannerUI: OMGScannerUI, val rect: Rect? = null) {
-    fun extractPixelsInFraming(data: ByteArray, width: Int, height: Int): PlanarYUVLuminanceSource? {
+
+import android.graphics.Rect
+import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI
+import com.google.zxing.PlanarYUVLuminanceSource
+
+class QRFrameExtractor(private val omgScannerUI: OMGScannerUI, val rect: Rect? = null) {
+    fun extractPixelsInQRFrame(data: ByteArray, width: Int, height: Int): PlanarYUVLuminanceSource? {
 
         /* Return now when something is incorrect */
         with(omgScannerUI) {

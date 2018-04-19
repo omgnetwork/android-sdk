@@ -1,4 +1,11 @@
-package co.omisego.omisego.custom.zxing.ui.decorator
+package co.omisego.omisego.qrcode.scanner.ui
+
+/*
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 3/4/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
 
 import android.content.Context
 import android.content.res.Configuration
@@ -15,13 +22,6 @@ import android.view.View
 import co.omisego.omisego.R
 import co.omisego.omisego.custom.camera.utils.DisplayUtils
 import co.omisego.omisego.extension.dp
-
-/*
- * OmiseGO
- *
- * Created by Phuchit Sirimongkolsathien on 3/4/2018 AD.
- * Copyright © 2017-2018 OmiseGO. All rights reserved.
- */
 
 /**
  * Represents the UI of then QR code scanner
@@ -95,39 +95,39 @@ class OMGScannerUI : View, ScannerUI {
     }
 
     override fun onDraw(canvas: Canvas) {
-        val framingRect = mFramingRect ?: return
-        drawMask(canvas, framingRect)
-        drawQRBorder(canvas, framingRect)
-        drawHintText(canvas, framingRect, hintText)
+        val qrFrame = mFramingRect ?: return
+        drawMask(canvas, qrFrame)
+        drawQRBorder(canvas, qrFrame)
+        drawHintText(canvas, qrFrame, hintText)
     }
 
     /**
      * Draw 4 rectangles black overlay mask to top, left, right, bottom.
      * Basically, draw mask around of the centered rectangle.
      */
-    override fun drawMask(canvas: Canvas, framingRect: Rect) {
+    override fun drawMask(canvas: Canvas, qrFrame: Rect) {
         val width = canvas.width
         val height = canvas.height
 
         /* Top */
-        canvas.drawRect(0, 0, width, framingRect.top, mMaskPaint)
+        canvas.drawRect(0, 0, width, qrFrame.top, mMaskPaint)
 
         /* Left */
-        canvas.drawRect(0, framingRect.top, framingRect.left, framingRect.bottom + 1, mMaskPaint)
+        canvas.drawRect(0, qrFrame.top, qrFrame.left, qrFrame.bottom + 1, mMaskPaint)
 
         /* Right */
-        canvas.drawRect(framingRect.right + 1, framingRect.top, width, framingRect.bottom + 1, mMaskPaint)
+        canvas.drawRect(qrFrame.right + 1, qrFrame.top, width, qrFrame.bottom + 1, mMaskPaint)
 
         /* Bottom */
-        canvas.drawRect(0, framingRect.bottom + 1, width, height, mMaskPaint)
+        canvas.drawRect(0, qrFrame.bottom + 1, width, height, mMaskPaint)
     }
 
     /**
      * Draw the frame for the QR image
      */
-    override fun drawQRBorder(canvas: Canvas, framingRect: Rect) {
+    override fun drawQRBorder(canvas: Canvas, qrFrame: Rect) {
         Path().run {
-            with(framingRect) {
+            with(qrFrame) {
                 /* Top-left corner */
                 moveTo(left, top + borderLineLength)
                 lineTo(left, top)
@@ -155,11 +155,11 @@ class OMGScannerUI : View, ScannerUI {
         }
     }
 
-    override fun drawHintText(canvas: Canvas, framingRect: Rect, hintText: String) {
+    override fun drawHintText(canvas: Canvas, qrFrame: Rect, hintText: String) {
         canvas.drawText(
             hintText,
-            framingRect.left.toFloat() + framingRect.width() / 2,
-            framingRect.bottom.toFloat() + 32.dp,
+            qrFrame.left.toFloat() + qrFrame.width() / 2,
+            qrFrame.bottom.toFloat() + 32.dp,
             mTextPaint
         )
     }

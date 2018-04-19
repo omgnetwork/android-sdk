@@ -1,7 +1,4 @@
-package co.omisego.omisego.custom.zxing
-
-import android.graphics.Bitmap
-import com.google.zxing.common.BitMatrix
+package co.omisego.omisego.qrcode.scanner.core
 
 /*
  * OmiseGO
@@ -9,6 +6,10 @@ import com.google.zxing.common.BitMatrix
  * Created by Phuchit Sirimongkolsathien on 1/4/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import android.graphics.Bitmap
+import com.google.zxing.common.BitMatrix
+
 class QREncoder {
     fun createBitmap(matrix: BitMatrix): Bitmap {
         val width = matrix.width

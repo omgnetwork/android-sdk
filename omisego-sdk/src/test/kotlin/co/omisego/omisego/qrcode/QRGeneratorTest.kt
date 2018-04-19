@@ -7,6 +7,7 @@ package co.omisego.omisego.qrcode
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.qrcode.generator.QRGenerator
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.MultiFormatReader
 import com.google.zxing.RGBLuminanceSource
