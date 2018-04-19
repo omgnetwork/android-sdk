@@ -16,14 +16,14 @@ import android.hardware.Camera
 import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
-import co.omisego.omisego.qrcode.scanner.utils.QRFrameExtractor
-import co.omisego.omisego.qrcode.scanner.utils.Rotater
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.model.transaction.request.TransactionRequestParams
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract.Callback
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract.Presenter.Rotation
+import co.omisego.omisego.qrcode.scanner.utils.QRFrameExtractor
+import co.omisego.omisego.qrcode.scanner.utils.Rotater
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.DecodeHintType

@@ -9,8 +9,10 @@ package co.omisego.omisego.qrcode.scanner
 
 import android.graphics.Rect
 import android.hardware.Camera
+import android.os.HandlerThread
 import android.widget.ImageView
 import co.omisego.omisego.OMGAPIClient
+import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.ui.CameraPreview
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
@@ -40,6 +42,21 @@ interface OMGQRScannerContract {
          * Set the color of QR frame border when validating the QR code with the backend side
          */
         var borderColorLoading: Int
+
+        /**
+         * Set the [HandlerThread] responsible for control the thread for [onPreviewFrame]
+         */
+        var cameraHandlerThread: OMGQRScannerView.CameraHandlerThread?
+
+        /**
+         * A view that handle the preview image that streaming from the camera
+         */
+        var cameraPreview: CameraPreview?
+
+        /**
+         * A wrapper for [Camera] and the cameraId [Int]
+         */
+        var cameraWrapper: CameraWrapper?
 
         /**
          * A debugging flag to see how the QR code processor actually see the preview image from the camera.
@@ -72,11 +89,6 @@ interface OMGQRScannerContract {
          * A [View] for drawing the QR code frame, mask, and the hint text
          */
         val omgScannerUI: OMGScannerUI
-
-        /**
-         * A view that handle the preview image that streaming from the camera
-         */
-        val cameraPreview: CameraPreview
 
         /**
          * An orientation of the device

@@ -13,6 +13,8 @@ import android.hardware.Camera
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
+import android.os.Parcel
+import android.os.Parcelable
 import android.support.annotation.ColorInt
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
@@ -29,20 +31,13 @@ import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI
 
 @Suppress("DEPRECATION")
 class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
-    private var mCameraWrapper: CameraWrapper? = null
-    private var mCameraHandlerThread: CameraHandlerThread? = null
-
     /* Read only zone */
 
-    /**
-     * A view that handle the preview image that streaming from the camera
-     */
-    override lateinit var cameraPreview: CameraPreview
     /**
      * A [View] for drawing the QR code frame, mask, and the hint text
      */
     override val omgScannerUI by lazy {
-        OMGScannerUI(context).apply { borderColor = borderColor }
+        OMGScannerUI(context).apply { borderColor = this@OMGQRScannerView.borderColor }
     }
 
     /**
@@ -86,6 +81,21 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
                 value
             }
         }
+
+    /**
+     * Set the [HandlerThread] responsible for control the thread for [onPreviewFrame]
+     */
+    override var cameraHandlerThread: CameraHandlerThread? = null
+
+    /**
+     * A wrapper for [Camera] and the cameraId [Int]
+     */
+    override var cameraWrapper: CameraWrapper? = null
+
+    /**
+     * A view that handle the preview image that streaming from the camera
+     */
+    override var cameraPreview: CameraPreview? = null
 
     /**
      * A debugging flag to see how the QR code processor actually see the preview image from the camera.
@@ -151,8 +161,8 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
         private const val TAG = "OMGQRScannerView"
     }
 
-    private fun setupCameraPreview(cameraWrapper: CameraWrapper) {
-        mCameraWrapper = cameraWrapper
+    internal fun setupCameraPreview(cameraWrapper: CameraWrapper) {
+        this.cameraWrapper = cameraWrapper
         omgScannerUI.setupUI()
         setupLayout()
 
@@ -167,10 +177,10 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
         removeAllViews()
 
         /* Prepare the loading view for display decoding the QR image */
+        cameraPreview = CameraPreview(context, cameraWrapper, this)
         loadingView = ProgressBar(context).apply { visibility = View.GONE }
 
         /* Add camera preview surface UI */
-        cameraPreview = CameraPreview(context, mCameraWrapper, this)
         addView(cameraPreview)
 
         /* Add scanner UI */
@@ -189,23 +199,41 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
      * Start stream the camera preview
      */
     override fun startCamera() {
-        if (mCameraHandlerThread == null)
-            mCameraHandlerThread = CameraHandlerThread(this)
-        mCameraHandlerThread?.startCamera()
+        if (cameraHandlerThread == null)
+            cameraHandlerThread = CameraHandlerThread(this)
+        cameraHandlerThread?.startCamera()
     }
 
     /**
      * Stop the camera to stream the image preview
      */
     override fun stopCamera() {
-        cameraPreview.stopCameraPreview()
-        mCameraWrapper?.camera?.release()
-        mCameraHandlerThread?.quit()
-        mCameraHandlerThread = null
+        cameraPreview?.stopCameraPreview()
+        cameraWrapper?.camera?.release()
+        cameraHandlerThread?.quit()
+        cameraHandlerThread = null
     }
 
     override fun onPreviewFrame(data: ByteArray, camera: Camera) {
         omgScannerPresenter?.onPreviewFrame(data, camera)
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()
+        return SavedState(superState).apply {
+            mBorderColor = borderColor
+            mBorderColorLoading = borderColorLoading
+        }
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable) {
+        if (state !is SavedState) {
+            super.onRestoreInstanceState(state)
+            return
+        }
+        super.onRestoreInstanceState(state.superState)
+        borderColor = state.mBorderColor
+        borderColorLoading = state.mBorderColorLoading
     }
 
     /* Inner class zone */
@@ -225,6 +253,33 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
             localHandler.post {
                 val mainHandler = Handler(Looper.getMainLooper())
                 mainHandler.post { scannerView.setupCameraPreview(CameraWrapper.newInstance()) }
+            }
+        }
+    }
+
+    private inner class SavedState : BaseSavedState {
+        var mBorderColor: Int = 0
+        var mBorderColorLoading: Int = 0
+
+        constructor(superState: Parcelable) : super(superState)
+        constructor(parcel: Parcel) : super(parcel) {
+            mBorderColor = parcel.readInt()
+            mBorderColorLoading = parcel.readInt()
+        }
+
+        override fun writeToParcel(out: Parcel?, flags: Int) {
+            super.writeToParcel(out, flags)
+            out?.writeInt(mBorderColor)
+            out?.writeInt(mBorderColorLoading)
+        }
+
+        val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
+            override fun createFromParcel(parcel: Parcel): SavedState {
+                return SavedState(parcel)
+            }
+
+            override fun newArray(size: Int): Array<SavedState?> {
+                return arrayOfNulls(size)
             }
         }
     }

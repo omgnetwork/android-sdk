@@ -1,19 +1,19 @@
 package co.omisego.omisego.testUtils
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.drawable.Drawable
-import android.support.annotation.Px
-import java.nio.ByteBuffer
-
-
 /*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 12/4/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
-fun Drawable.toByteArray(
+
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
+import android.support.annotation.Px
+import java.nio.ByteBuffer
+
+internal fun Drawable.toByteArray(
         @Px width: Int = intrinsicWidth,
         @Px height: Int = intrinsicHeight,
         config: Bitmap.Config? = null
