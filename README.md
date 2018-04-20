@@ -251,7 +251,9 @@ val bitmap = txRequest.generateQRCode(512) // Create a 512x512 QR code
 #### Scan a QR code
 You can then use the `OMGQRScannerView` to scan the generated QR code.
 
-![QR Scanner](docs/images/qr_scanner_loading.png)
+<p align="center">
+  <img src="docs/images/qr_scanner.png">
+</p>
 
 **First**, you need to add `OMGQRScannerView` to your xml.
 
