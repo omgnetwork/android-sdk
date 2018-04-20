@@ -1,5 +1,12 @@
 package co.omisego.omisego.custom.camera.utils
 
+/*
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 3/4/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import android.hardware.Camera
 import android.util.Log
 

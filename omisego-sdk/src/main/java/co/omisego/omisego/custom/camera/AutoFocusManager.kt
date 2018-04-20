@@ -2,16 +2,17 @@
 
 package co.omisego.omisego.custom.camera
 
-import android.hardware.Camera
-import android.os.Handler
-import java.lang.RuntimeException
-
 /*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 2/4/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import android.hardware.Camera
+import android.os.Handler
+import java.lang.RuntimeException
+
 internal class AutoFocusManager(private val camera: Camera?, val safe: () -> Boolean) {
     private val mAutoFocusHandler: Handler by lazy { Handler() }
     private var autoFocusCB: Camera.AutoFocusCallback = Camera.AutoFocusCallback { success, camera -> scheduleAutoFocus() }

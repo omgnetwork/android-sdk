@@ -1,5 +1,12 @@
 package co.omisego.omisego.custom.camera.ui
 
+/*
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 1/4/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Point
@@ -16,12 +23,6 @@ import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.utils.DisplayUtils
 import java.lang.Exception
 
-/*
- * OmiseGO
- *
- * Created by Phuchit Sirimongkolsathien on 1/4/2018 AD.
- * Copyright © 2017-2018 OmiseGO. All rights reserved.
- */
 @Suppress("DEPRECATION")
 class CameraPreview : SurfaceView, SurfaceHolder.Callback {
     private var mPreviewCallback: Camera.PreviewCallback? = null

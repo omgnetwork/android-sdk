@@ -29,10 +29,11 @@ import co.omisego.omisego.custom.camera.ui.CameraPreview
 import co.omisego.omisego.custom.camera.utils.DisplayUtils
 import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI
 
+/**
+ * [OMGQRScannerView] is responsible for scanning the QRCode with customizable border color and loading view
+ */
 @Suppress("DEPRECATION")
 class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
-    /* Read only zone */
-
     /**
      * A [View] for drawing the QR code frame, mask, and the hint text
      */
