@@ -57,7 +57,7 @@ class OMGQRScannerPresenterTest {
 
         val eWalletClient = EWalletClient.Builder {
             debugUrl = mockUrl
-            authenticationToken = "NGNuNjBWUk9jck8zWGRIenFJSUFWVDViazhXZ0p1ejZIcno5LVpUWUlzczpueGVzRWVud3AtcktlWm0xVzBkQ05xeU1LMEYzaDVXbnpxUW9UZ0Q1WXg0"
+            authenticationToken = "test"
             callbackExecutor = Executor { it.run() }
             debug = false
         }.build()

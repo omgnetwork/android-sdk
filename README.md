@@ -30,7 +30,7 @@ To use the OmiseGO SDK in your android project, simply add the following line in
  
 ```groovy
 dependencies {
-    implementation 'co.omisego:omisego-sdk:0.9.1'
+    implementation 'co.omisego:omisego-sdk:0.9.3'
 }
 ```
 
@@ -219,7 +219,8 @@ val request = TransactionRequestParams(
 omgAPIClient.createTransactionRequest(request).enqueue(object : OMGCallback<TransactionRequest> {
     override fun success(response: OMGResponse<TransactionRequest>) {
         //TODO: Do something with the transaction request (get the QR code representation for example)
-        val qrBitmap = response.data.generateQRCode(512)) // Generate the QR bitmap
+        val qrBitmap = response.data.generateQRCode(512)) // Generate the QR bitmap with size 512x512 px
+        imageViewQRCode.setImageBitmap(qrBitmap)
     }
 
     override fun fail(response: OMGResponse<APIError>) {
@@ -237,6 +238,134 @@ Where:
     * `correlationId`: (optional) An id that can uniquely identify a transaction. Typically an order id from a provider.
 
 A `TransactionRequest` object is passed to the success callback, you can get its QR code representation using `transactionRequest.generateQRCode(size)`.
+
+
+#### Generate QR Code Bitmap representation of a transaction request
+Once a `TransactionRequest` is created, you can get its QR code representation using `generateQRCode(size)`.
+This method takes an optional `size` param that can be used to define the expected size of the generated QR bitmap.
+
+```kotlin
+val bitmap = txRequest.generateQRCode(512) // Create a 512x512 QR code 
+```
+
+#### Scan a QR code
+You can then use the `OMGQRScannerView` to scan the generated QR code.
+
+![QR Scanner](docs/images/qr_scanner_loading.png)
+
+**First**, you need to add `OMGQRScannerView` to your xml.
+
+> Note: You can customize the border color of the QR code frame of the scanner like the following 
+
+**activity_qr_scanner.xml**
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <co.omisego.omisego.qrcode.scanner.OMGQRScannerView
+        android:id="@+id/scannerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:borderColor="@color/qrBorderColor"
+        app:borderColorLoading="@color/qrBorderColorLoading" />
+        
+</FrameLayout>
+```
+
+**Then**, you need to initialize `OMGQRVerifier`, `OMGQRScannerPresenter` and `OMGQRScannerView` class in your activity
+
+> Note: You need to handle the camera permission first
+
+```kotlin
+class QRScannerActivity : AppCompatActivity(), OMGQRScannerContract.Callback {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_qrscanner)
+       
+       val omgAPIClient = your_omg_api_client
+       
+        val verifier = OMGQRVerifier(omgAPIClient)
+        val presenter = OMGQRScannerPresenter(scannerView, verifier).apply {
+            setScanQRListener(this@QRScannerActivity)
+        }
+        
+        scannerView.omgScannerPresenter = presenter
+        scannerView.startCamera()
+    }
+
+    override fun scannerDidCancel(view: OMGQRScannerContract.View) {
+
+    }
+
+    override fun scannerDidDecode(view: OMGQRScannerContract.View, payload: OMGResponse<TransactionRequest>) {
+
+    }
+
+    override fun scannerDidFailToDecode(view: OMGQRScannerContract.View, exception: OMGResponse<APIError>) {
+    
+    }
+
+    override fun onPause() {
+        super.onPause()
+        scannerView.stopCamera()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        scannerView.startCamera()
+    }
+}
+```
+
+As you can see, the `OMGQRScannerContract.Callback` offers the following interface:
+
+```kotlin
+/**
+ * Called when the user tap on the screen. The request to the backend will be cancelled.
+ *
+ * @param view The QR scanner view
+ */
+fun scannerDidCancel(view: OMGQRScannerContract.View)
+
+/**
+ * Called when a QR code was successfully decoded to a TransactionRequest object
+ *
+ * @param view The QR scanner view
+ * @param transactionRequest The transaction request decoded by the scanner
+ */
+fun scannerDidDecode(view: OMGQRScannerContract.View, transactionRequest: OMGResponse<TransactionRequest>)
+
+/**
+ * Called when a QR code has been scanned but the scanner was not able to decode it as a TransactionRequest
+ *
+ * @param view The QR scanner view
+ * @param exception The error returned by the scanner
+ */
+fun scannerDidFailToDecode(view: OMGQRScannerContract.View, exception: OMGResponse<APIError>)
+```
+
+When the scanner successfully decodes a `TransactionRequest` it will call its delegate method `scannerDidDecode(view: OMGQRScannerContract.View, transactionRequest: TransactionRequest)`.
+
+
+**Finally**, add the following lines to your `AndroidManifest.xml`
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.your.package">
+    
+    <!-- Add this 3 lines -->
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    
+    <application>
+        <!-- Your activities -->
+    </application>
+</manifest>
+```
 
 # Run Kotlin Lint
 Simply run `./gradlew ktlintCheck` under project root directory.

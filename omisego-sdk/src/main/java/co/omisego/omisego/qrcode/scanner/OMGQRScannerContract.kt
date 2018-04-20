@@ -199,9 +199,9 @@ interface OMGQRScannerContract {
          * Called when a QR code was successfully decoded to a TransactionRequest object
          *
          * @param view The QR scanner view
-         * @param payload The transaction request decoded by the scanner
+         * @param transactionRequest The transaction request decoded by the scanner
          */
-        fun scannerDidDecode(view: OMGQRScannerContract.View, payload: OMGResponse<TransactionRequest>)
+        fun scannerDidDecode(view: OMGQRScannerContract.View, transactionRequest: OMGResponse<TransactionRequest>)
 
         /**
          * Called when a QR code has been scanned but the scanner was not able to decode it as a TransactionRequest

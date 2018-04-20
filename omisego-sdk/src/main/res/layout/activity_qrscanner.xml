@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/cameraPreview"
+    <co.omisego.omisego.qrcode.scanner.OMGQRScannerView
+        android:id="@+id/scannerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"/>
 
-        <co.omisego.omisego.qrcode.scanner.OMGQRScannerView
-            android:id="@+id/scannerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:borderColor="@android:color/holo_orange_dark"
-            app:borderColorLoading="@android:color/black"/>
-
-    </FrameLayout>
-
-</LinearLayout>
+</FrameLayout>
