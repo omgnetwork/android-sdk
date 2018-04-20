@@ -11,6 +11,13 @@ import android.graphics.Bitmap
 import com.google.zxing.common.BitMatrix
 
 class QREncoder {
+
+    /**
+     * Generate a [Bitmap] from [BitMatrix]
+     *
+     * @param matrix A matrix containing the QR code data
+     * @return A bitmap represents the QR code
+     */
     fun createBitmap(matrix: BitMatrix): Bitmap {
         val width = matrix.width
         val height = matrix.height
@@ -28,7 +35,7 @@ class QREncoder {
     }
 
     companion object {
-        private const val WHITE = -0x1
-        private const val BLACK = -0x1000000
+        const val WHITE = -0x1
+        const val BLACK = -0x1000000
     }
 }
