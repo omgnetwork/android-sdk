@@ -69,12 +69,6 @@ tasks.withType(Javadoc) {
     enabled = false
 }
 
-kotlin {
-    experimental {
-        coroutines 'enable'
-    }
-}
-
 dependencies {
     // Core dependencies
     api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
