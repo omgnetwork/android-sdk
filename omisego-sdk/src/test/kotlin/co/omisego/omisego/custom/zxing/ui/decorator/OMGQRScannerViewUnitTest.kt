@@ -73,7 +73,7 @@ class OMGQRScannerViewUnitTest {
         mOMGQRScannerView.cameraPreview = mock()
         mOMGQRScannerView.stopCamera()
 
-        verify(mOMGQRScannerView.cameraPreview, times(1)).stopCameraPreview()
+        verify(mOMGQRScannerView.cameraPreview, times(1))?.stopCameraPreview()
         verify(mOMGQRScannerView.cameraWrapper?.camera, times(1))?.release()
         mOMGQRScannerView.cameraHandlerThread shouldBe null
     }

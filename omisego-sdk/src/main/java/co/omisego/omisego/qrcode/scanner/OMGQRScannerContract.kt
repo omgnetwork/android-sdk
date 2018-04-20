@@ -11,9 +11,10 @@ import android.graphics.Rect
 import android.hardware.Camera
 import android.os.HandlerThread
 import android.widget.ImageView
-import co.omisego.omisego.OMGAPIClient
+import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.ui.CameraPreview
+import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.transaction.request.TransactionRequest
@@ -128,17 +129,46 @@ interface OMGQRScannerContract {
         fun onPreviewFrame(data: ByteArray, camera: Camera)
 
         /**
-         * Set the [OMGAPIClient] and the [Callback] for request to the [EwalletAPI] when validating the QR code and get the result back respectively.
+         * Set the [Callback] for retrieve the QR validation result
          *
-         * @param client the [OMGAPIClient] for requesting to the omg backend when validate the QR
-         * @param callback the callback for get the result from the QR code data
+         * @param callback the callback for retrieve the result
          */
-        fun setScanQRListener(client: OMGAPIClient, callback: Callback)
+        fun setScanQRListener(callback: Callback)
 
         /**
          * Cancel loading that verifying the QR code with the backend
          */
         fun cancelLoading()
+
+        interface QRVerifier {
+            /**
+             * The [OMGCall<TransactionRequest>] that will be assigned when call [requestTransaction], then will use later for cancel the request.
+             */
+            var callable: OMGCall<TransactionRequest>?
+
+            /**
+             * The callback that will be used to get the result from the QR code verification API
+             */
+            var callback: OMGCallback<TransactionRequest>?
+
+            /**
+             * Make request to the EWallet API to verify if the QR code has a valid transaction id
+             *
+             * @param txId The transaction id which is created by EWallet backend
+             * @param fail A lambda that will be invoked when the verification pass
+             * @param success A lambda that will be invoked when the verification fail
+             */
+            fun requestTransaction(
+                txId: String,
+                fail: (response: OMGResponse<APIError>) -> Unit,
+                success: (response: OMGResponse<TransactionRequest>) -> Unit
+            )
+
+            /**
+             * Cancel the request to the EWallet API
+             */
+            fun cancelRequest()
+        }
 
         interface Rotation {
             /**
@@ -157,13 +187,21 @@ interface OMGQRScannerContract {
      * The callback that will receive events from the OMGQRScannerView
      */
     interface Callback {
+
+        /**
+         * Called when the user tap on the screen. The request to the backend will be cancelled.
+         *
+         * @param view The QR scanner view
+         */
+        fun scannerDidCancel(view: OMGQRScannerContract.View)
+
         /**
          * Called when a QR code was successfully decoded to a TransactionRequest object
          *
          * @param view The QR scanner view
          * @param payload The transaction request decoded by the scanner
          */
-        fun scannerDidDecode(view: View, payload: OMGResponse<TransactionRequest>)
+        fun scannerDidDecode(view: OMGQRScannerContract.View, payload: OMGResponse<TransactionRequest>)
 
         /**
          * Called when a QR code has been scanned but the scanner was not able to decode it as a TransactionRequest
@@ -171,6 +209,6 @@ interface OMGQRScannerContract {
          * @param view The QR scanner view
          * @param exception The error returned by the scanner
          */
-        fun scannerDidFailToDecode(view: View, exception: OMGResponse<APIError>)
+        fun scannerDidFailToDecode(view: OMGQRScannerContract.View, exception: OMGResponse<APIError>)
     }
 }

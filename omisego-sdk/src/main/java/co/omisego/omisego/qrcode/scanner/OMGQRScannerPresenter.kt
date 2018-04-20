@@ -13,13 +13,6 @@ import android.graphics.ImageFormat
 import android.graphics.Rect
 import android.graphics.YuvImage
 import android.hardware.Camera
-import co.omisego.omisego.OMGAPIClient
-import co.omisego.omisego.custom.OMGCallback
-import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
-import co.omisego.omisego.model.APIError
-import co.omisego.omisego.model.OMGResponse
-import co.omisego.omisego.model.transaction.request.TransactionRequest
-import co.omisego.omisego.model.transaction.request.TransactionRequestParams
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract.Callback
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract.Presenter.Rotation
 import co.omisego.omisego.qrcode.scanner.utils.QRFrameExtractor
@@ -36,8 +29,9 @@ import java.util.EnumMap
 
 class OMGQRScannerPresenter(
     private val omgQRScannerView: OMGQRScannerContract.View,
-    private val rotationManager: OMGQRScannerContract.Presenter.Rotation = Rotater(),
-    private val multiFormatReader: Reader = MultiFormatReader().apply {
+    private val omgQRVerifier: OMGQRScannerContract.Presenter.QRVerifier,
+    private val rotater: OMGQRScannerContract.Presenter.Rotation = Rotater(),
+    private val qrReader: Reader = MultiFormatReader().apply {
         setHints(
             EnumMap<DecodeHintType, Any>(DecodeHintType::class.java).apply {
                 set(DecodeHintType.POSSIBLE_FORMATS, listOf(BarcodeFormat.QR_CODE))
@@ -45,10 +39,7 @@ class OMGQRScannerPresenter(
         )
     }
 ) : OMGQRScannerContract.Presenter {
-
-    private var mCallableOMGTx: OMGCall<TransactionRequest>? = null
     private var mQRFrameExtractor: QRFrameExtractor? = null
-    private var mOMGAPIClient: OMGAPIClient? = null
     private var mPreviewSize: Camera.Size? = null
     private var mScanCallback: OMGQRScannerContract.Callback? = null
 
@@ -62,7 +53,7 @@ class OMGQRScannerPresenter(
      */
     override fun adjustRotation(data: ByteArray, size: Pair<Int, Int>, orientation: Int?): ByteArray {
         /* Return the rotated image data */
-        return rotationManager.rotate(data, size.first, size.second, orientation)
+        return rotater.rotate(data, size.first, size.second, orientation)
     }
 
     /**
@@ -148,49 +139,42 @@ class OMGQRScannerPresenter(
         ) ?: return
 
         /* Use the original source to decode */
-        var rawResult = multiFormatReader.decodeFirstOtherwiseNull(
+        var rawResult = qrReader.decodeFirstOtherwiseNull(
             BinaryBitmap(HybridBinarizer(source))
         )
 
         /* Original source doesn't work, let's try to invert black and white pixels */
-        rawResult = rawResult ?: multiFormatReader.decodeFirstOtherwiseNull(
+        rawResult = rawResult ?: qrReader.decodeFirstOtherwiseNull(
             BinaryBitmap(HybridBinarizer(source.invert()))
         )
 
-        rawResult?.text?.let {
+        rawResult?.text?.let { txId ->
             omgQRScannerView.isLoading = true
-            mCallableOMGTx = mOMGAPIClient?.retrieveTransactionRequest(TransactionRequestParams(it))
-
-            mCallableOMGTx?.enqueue(object : OMGCallback<TransactionRequest> {
-                override fun success(response: OMGResponse<TransactionRequest>) {
-                    mScanCallback?.scannerDidDecode(omgQRScannerView, response)
-                    omgQRScannerView.isLoading = false
-                }
-
-                override fun fail(response: OMGResponse<APIError>) {
-                    mScanCallback?.scannerDidFailToDecode(omgQRScannerView, response)
-                    omgQRScannerView.isLoading = false
-                }
-            })
+            omgQRVerifier.requestTransaction(txId, { errorResponse ->
+                mScanCallback?.scannerDidFailToDecode(omgQRScannerView, errorResponse)
+                omgQRScannerView.isLoading = false
+            }) { successResponse ->
+                mScanCallback?.scannerDidDecode(omgQRScannerView, successResponse)
+                omgQRScannerView.isLoading = false
+            }
         }
     }
 
     /**
-     * Set the [OMGAPIClient] and the [Callback] for request to the [EwalletAPI] when validating the QR code and get the result back respectively.
+     * Set the [Callback] for retrieve the QR validation result
      *
-     * @param client the [OMGAPIClient] for requesting to the omg backend when validate the QR
-     * @param callback the callback for get the result from the QR code data
+     * @param callback the callback for retrieve the result
      */
-    override fun setScanQRListener(client: OMGAPIClient, callback: OMGQRScannerContract.Callback) {
+    override fun setScanQRListener(callback: OMGQRScannerContract.Callback) {
         mScanCallback = callback
-        mOMGAPIClient = client
     }
 
     /**
      * Cancel loading that verifying the QR code with the backend
      */
     override fun cancelLoading() {
-        mCallableOMGTx?.cancel()
+        omgQRVerifier.cancelRequest()
+        mScanCallback?.scannerDidCancel(omgQRScannerView)
     }
 
     /**

@@ -11,32 +11,63 @@ import android.content.res.Configuration
 import android.graphics.Rect
 import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.custom.camera.utils.CameraUtils
-import co.omisego.omisego.model.transaction.request.TransactionRequestParams
+import co.omisego.omisego.extension.mockEnqueueWithHttpCode
+import co.omisego.omisego.helpers.delegation.ResourceFile
+import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerPresenter
+import co.omisego.omisego.qrcode.scanner.OMGQRVerifier
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.Reader
 import com.google.zxing.Result
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
+import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.any
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.io.File
+import java.util.concurrent.Executor
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [21])
+@Config(sdk = [23])
 class OMGQRScannerPresenterTest {
+    private val retrieveTransactionRequestFile: File by ResourceFile("me.create_transaction_request-post.json")
     private val omgQRScannerView: OMGQRScannerContract.View = mock()
-    private val omgAPIClient: OMGAPIClient = mock()
     private val multiFormatReader: Reader = mock()
-    private val omgQRScannerPresenter: OMGQRScannerPresenter = OMGQRScannerPresenter(omgQRScannerView, multiFormatReader = multiFormatReader)
     private val sampleByteArray = byteArrayOf(0x00, 0x01, 0x02, 0x03)
+    private lateinit var omgQRScannerPresenter: OMGQRScannerPresenter
+    private lateinit var mockWebServer: MockWebServer
+    private lateinit var omgAPIClient: OMGAPIClient
+    private lateinit var omgQRVerifier: OMGQRVerifier
+
+    @Before
+    fun setup() {
+        mockWebServer = MockWebServer()
+        mockWebServer.start()
+        val mockUrl = mockWebServer.url("/api/")
+
+        val eWalletClient = EWalletClient.Builder {
+            debugUrl = mockUrl
+            authenticationToken = "NGNuNjBWUk9jck8zWGRIenFJSUFWVDViazhXZ0p1ejZIcno5LVpUWUlzczpueGVzRWVud3AtcktlWm0xVzBkQ05xeU1LMEYzaDVXbnpxUW9UZ0Q1WXg0"
+            callbackExecutor = Executor { it.run() }
+            debug = false
+        }.build()
+
+        omgAPIClient = OMGAPIClient(eWalletClient)
+        omgQRVerifier = OMGQRVerifier(omgAPIClient).apply {
+            callback = mock()
+        }
+        omgQRScannerPresenter = OMGQRScannerPresenter(omgQRScannerView, omgQRVerifier, qrReader = multiFormatReader)
+    }
 
     @Test
     fun `OMGQRScanner should be adjusted the image rotation data correctly`() {
@@ -82,7 +113,7 @@ class OMGQRScannerPresenterTest {
     fun `OMGQRScannerPresenter should not processed the preview frame if the scanner view is still loading`() {
         val scanQRCallback = mock<OMGQRScannerContract.Callback>()
         whenever(omgQRScannerView.isLoading).thenReturn(true)
-        omgQRScannerPresenter.setScanQRListener(omgAPIClient, scanQRCallback)
+        omgQRScannerPresenter.setScanQRListener(scanQRCallback)
 
         omgQRScannerPresenter.onPreviewFrame(byteArrayOf(),
             CameraUtils.cameraInstance!!.apply {
@@ -94,8 +125,9 @@ class OMGQRScannerPresenterTest {
     }
 
     @Test
-    fun `OMGQRScannerPresenter should be invoked the callback scannerDidDecode successfully`() {
-        val scanQRCallback = mock<OMGQRScannerContract.Callback>()
+    fun `OMGQRScannerPresenter should be invoked the callback scannerDidDecode when the QR image format is correct`() {
+        val mockScanQRCallback = mock<OMGQRScannerContract.Callback>()
+        retrieveTransactionRequestFile.mockEnqueueWithHttpCode(mockWebServer)
         whenever(omgQRScannerView.isLoading).thenReturn(false)
         whenever(omgQRScannerView.debugging).thenReturn(false)
         whenever(omgQRScannerView.orientation).thenReturn(Configuration.ORIENTATION_PORTRAIT)
@@ -111,8 +143,7 @@ class OMGQRScannerPresenterTest {
             Result("OMG", ByteArray(518400), arrayOf(), BarcodeFormat.QR_CODE)
         )
 
-        omgQRScannerPresenter.setScanQRListener(omgAPIClient, scanQRCallback)
-
+        omgQRScannerPresenter.setScanQRListener(mockScanQRCallback)
         omgQRScannerPresenter.onPreviewFrame(
             ByteArray(518400),
             CameraUtils.cameraInstance!!.apply {
@@ -120,7 +151,20 @@ class OMGQRScannerPresenterTest {
             }
         )
 
+        Thread.sleep(100)
+
         verify(omgQRScannerView, times(1)).isLoading = true
-        verify(omgAPIClient, times(1)).retrieveTransactionRequest(TransactionRequestParams("OMG"))
+        verify(omgQRVerifier.callback, times(1))?.success(any())
+    }
+
+    @Test
+    fun `OMGQRScannerPresenter should delegate callback correctly when the user tap to cancel loading`() {
+        val mockScanQRCallback = mock<OMGQRScannerContract.Callback>()
+
+        omgQRScannerPresenter.setScanQRListener(mockScanQRCallback)
+        omgQRScannerPresenter.cancelLoading()
+
+        verify(mockScanQRCallback, times(1)).scannerDidCancel(omgQRScannerView)
+        verifyNoMoreInteractions(mockScanQRCallback)
     }
 }
