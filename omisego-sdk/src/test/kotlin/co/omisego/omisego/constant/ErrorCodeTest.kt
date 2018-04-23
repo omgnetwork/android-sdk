@@ -43,6 +43,7 @@ class ErrorCodeTest {
                 "sdk:network_error" -> ErrorCode.SDK_NETWORK_ERROR
                 "sdk:parse_error" -> ErrorCode.SDK_PARSE_ERROR
                 "sdk:unknown_error" -> ErrorCode.SDK_UNEXPECTED_ERROR
+                "transaction_request:transaction_request_not_found" -> ErrorCode.TRANSACTION_REQUEST_NOT_FOUND
                 else -> ErrorCode.SDK_UNEXPECTED_ERROR
             }
             actual shouldEqual expected

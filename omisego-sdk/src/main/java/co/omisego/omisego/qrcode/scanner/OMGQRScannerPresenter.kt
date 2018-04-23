@@ -13,16 +13,25 @@ import android.graphics.ImageFormat
 import android.graphics.Rect
 import android.graphics.YuvImage
 import android.hardware.Camera
+import co.omisego.omisego.constant.Versions
+import co.omisego.omisego.constant.enums.ErrorCode
+import co.omisego.omisego.model.APIError
+import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract.Callback
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract.Presenter.Rotation
 import co.omisego.omisego.qrcode.scanner.utils.QRFrameExtractor
 import co.omisego.omisego.qrcode.scanner.utils.Rotater
-import com.google.zxing.*
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.DecodeHintType
+import com.google.zxing.MultiFormatReader
+import com.google.zxing.Reader
+import com.google.zxing.Result
 import com.google.zxing.common.HybridBinarizer
 import java.io.ByteArrayOutputStream
-import java.util.*
+import java.util.EnumMap
 
-class OMGQRScannerPresenter(
+internal class OMGQRScannerPresenter(
     private val omgQRScannerView: OMGQRScannerContract.View,
     private val omgQRVerifier: OMGQRScannerContract.Presenter.QRVerifier,
     private val rotater: OMGQRScannerContract.Presenter.Rotation = Rotater(),
@@ -37,6 +46,19 @@ class OMGQRScannerPresenter(
     private var mQRFrameExtractor: QRFrameExtractor? = null
     private var mPreviewSize: Camera.Size? = null
     private var mScanCallback: OMGQRScannerContract.Callback? = null
+    private val errorTxNotFound: OMGResponse<APIError> by lazy {
+        OMGResponse(
+            Versions.EWALLET_API,
+            false,
+            APIError(
+                ErrorCode.TRANSACTION_REQUEST_NOT_FOUND,
+                "There is no transaction request corresponding to the provided address"
+            )
+        )
+    }
+
+    /* Keep the QR payload that being sent to the server to prevent spamming */
+    override val qrPayloadCache: MutableList<String> = mutableListOf()
 
     /**
      * Rotate the image based on the orientation of the raw image data
@@ -144,12 +166,35 @@ class OMGQRScannerPresenter(
         )
 
         rawResult?.text?.let { txId ->
+
+            /* Return immediately if we've already processed this [txId] and it failed with [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] */
+            if (hasTransactionAlreadyFailed(txId)) {
+                mScanCallback?.scannerDidFailToDecode(omgQRScannerView, errorTxNotFound)
+                return@let
+            }
+
+            /* Show loading */
             omgQRScannerView.isLoading = true
+
+            /* Verify transactionId with the eWallet backend */
             omgQRVerifier.requestTransaction(txId, { errorResponse ->
+
+                /* Cache txId if error with [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] code */
+                if (errorResponse.data.code == ErrorCode.TRANSACTION_REQUEST_NOT_FOUND) {
+                    qrPayloadCache.add(txId)
+                }
+
+                /* Delegate a fail callback */
                 mScanCallback?.scannerDidFailToDecode(omgQRScannerView, errorResponse)
+
+                /* Hide loading */
                 omgQRScannerView.isLoading = false
             }) { successResponse ->
+
+                /* Delegate a success callback */
                 mScanCallback?.scannerDidDecode(omgQRScannerView, successResponse)
+
+                /* Hide loading */
                 omgQRScannerView.isLoading = false
             }
         }
@@ -171,6 +216,14 @@ class OMGQRScannerPresenter(
         omgQRVerifier.cancelRequest()
         mScanCallback?.scannerDidCancel(omgQRScannerView)
     }
+
+    /**
+     * Verify if the given [txId] has already failed with code [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] yet
+     *
+     * @param txId The transaction id which is created by EWallet backend
+     * @return true if the given [txId] has already failed with code [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND], otherwise false.
+     */
+    override fun hasTransactionAlreadyFailed(txId: String) = qrPayloadCache.contains(txId)
 
     /**
      * Trying to decode first, if some exception arise, then return null.

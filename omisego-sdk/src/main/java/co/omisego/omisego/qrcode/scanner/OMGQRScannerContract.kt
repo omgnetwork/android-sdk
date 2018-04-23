@@ -12,6 +12,7 @@ import android.hardware.Camera
 import android.os.HandlerThread
 import android.widget.ImageView
 import co.omisego.omisego.OMGAPIClient
+import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.ui.CameraPreview
@@ -98,6 +99,11 @@ interface OMGQRScannerContract {
 
     interface Presenter {
         /**
+         * Keep failed QR payload that being sent to the server to prevent spamming
+         */
+        val qrPayloadCache: MutableList<String>
+
+        /**
          * Resize the frame to fit in the preview frame correctly
          *
          * @param cameraPreviewSize The width and height of the camera preview size
@@ -138,6 +144,14 @@ interface OMGQRScannerContract {
          * Cancel loading that verifying the QR code with the backend
          */
         fun cancelLoading()
+
+        /**
+         * Verify if the given [txId] has already failed with code [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] yet
+         *
+         * @param txId The transaction id which is created by EWallet backend
+         * @return true if the given [txId] has already failed with code [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND], otherwise false.
+         */
+        fun hasTransactionAlreadyFailed(txId: String): Boolean
 
         interface QRVerifier {
             /**
