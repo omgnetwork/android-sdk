@@ -16,7 +16,7 @@ import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.model.transaction.request.TransactionRequestParams
 
 @Suppress("OVERRIDE_BY_INLINE")
-class OMGQRVerifier(
+internal class OMGQRVerifier(
     val omgAPIClient: OMGAPIClient
 ) : OMGQRScannerContract.Presenter.QRVerifier {
 

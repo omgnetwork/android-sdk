@@ -151,7 +151,7 @@ class OMGQRScannerPresenterTest {
             }
         )
 
-        Thread.sleep(100)
+        Thread.sleep(150)
 
         verify(omgQRScannerView, times(1)).isLoading = true
         verify(omgQRVerifier.callback, times(1))?.success(any())
