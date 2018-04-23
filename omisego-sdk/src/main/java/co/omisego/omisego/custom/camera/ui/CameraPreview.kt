@@ -32,7 +32,7 @@ class CameraPreview : SurfaceView, SurfaceHolder.Callback {
     private lateinit var mFocusManager: AutoFocusManager
     private var mSafeFocus: Boolean = false
         get() = mSurfaceCreated && mPreviewing
-    val mDisplayOrientation: Int
+    val displayOrientation: Int
         get() {
             return when (mCameraWrapper) {
                 null -> 0
@@ -134,7 +134,7 @@ class CameraPreview : SurfaceView, SurfaceHolder.Callback {
             setupCameraParameters()
             mCameraWrapper?.camera?.let {
                 it.setPreviewDisplay(holder)
-                it.setDisplayOrientation(mDisplayOrientation)
+                it.setDisplayOrientation(displayOrientation)
                 it.setPreviewCallback(mPreviewCallback)
                 it.startPreview()
             }
@@ -161,7 +161,7 @@ class CameraPreview : SurfaceView, SurfaceHolder.Callback {
     }
 
     private fun adjustViewSize(cameraSize: Camera.Size) {
-        val previewSize = convertSizeToLandscapeOrientation(Point(width, height))
+        val previewSize = convertSizeByOrientation(Point(width, height))
         val cameraRatio = cameraSize.width.toFloat() / cameraSize.height
         val screenRatio = previewSize.x.toFloat() / previewSize.y
 
@@ -172,8 +172,8 @@ class CameraPreview : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
-    private fun convertSizeToLandscapeOrientation(size: Point): Point {
-        return if (mDisplayOrientation % 180 == 0) {
+    private fun convertSizeByOrientation(size: Point): Point {
+        return if (displayOrientation % 180 == 0) {
             size
         } else {
             Point(size.y, size.x)
@@ -182,8 +182,8 @@ class CameraPreview : SurfaceView, SurfaceHolder.Callback {
 
     private fun setViewSize(width: Int, height: Int) {
         val layoutParams = layoutParams
-        var tmpWidth = if (mDisplayOrientation % 180 == 0) width else height
-        var tmpHeight = if (mDisplayOrientation % 180 == 0) height else width
+        var tmpWidth = if (displayOrientation % 180 == 0) width else height
+        var tmpHeight = if (displayOrientation % 180 == 0) height else width
 
         val parentWidth = (parent as View).width
         val parentHeight = (parent as View).height

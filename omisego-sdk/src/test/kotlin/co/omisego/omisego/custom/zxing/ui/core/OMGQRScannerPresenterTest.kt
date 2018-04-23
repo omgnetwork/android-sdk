@@ -132,7 +132,7 @@ class OMGQRScannerPresenterTest {
         whenever(omgQRScannerView.debugging).thenReturn(false)
         whenever(omgQRScannerView.orientation).thenReturn(Configuration.ORIENTATION_PORTRAIT)
         whenever(omgQRScannerView.cameraPreview).thenReturn(mock())
-        whenever(omgQRScannerView.cameraPreview?.mDisplayOrientation).thenReturn(1)
+        whenever(omgQRScannerView.cameraPreview?.displayOrientation).thenReturn(1)
         whenever(omgQRScannerView.omgScannerUI).thenReturn(mock())
         whenever(omgQRScannerView.omgScannerUI.width).thenReturn(1920)
         whenever(omgQRScannerView.omgScannerUI.height).thenReturn(1080)

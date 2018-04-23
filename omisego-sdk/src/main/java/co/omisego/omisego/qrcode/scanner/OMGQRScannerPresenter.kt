@@ -17,15 +17,10 @@ import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract.Callback
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract.Presenter.Rotation
 import co.omisego.omisego.qrcode.scanner.utils.QRFrameExtractor
 import co.omisego.omisego.qrcode.scanner.utils.Rotater
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.BinaryBitmap
-import com.google.zxing.DecodeHintType
-import com.google.zxing.MultiFormatReader
-import com.google.zxing.Reader
-import com.google.zxing.Result
+import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
 import java.io.ByteArrayOutputStream
-import java.util.EnumMap
+import java.util.*
 
 class OMGQRScannerPresenter(
     private val omgQRScannerView: OMGQRScannerContract.View,
@@ -113,7 +108,7 @@ class OMGQRScannerPresenter(
         val newData = adjustRotation(
             data,
             mPreviewSize!!.width to mPreviewSize!!.height,
-            omgQRScannerView.cameraPreview?.mDisplayOrientation ?: 1
+            omgQRScannerView.cameraPreview?.displayOrientation ?: 1
         )
 
         /* Prepare the bitmap for decoding by exclude the superfluous pixels (pixels outside the frame)*/

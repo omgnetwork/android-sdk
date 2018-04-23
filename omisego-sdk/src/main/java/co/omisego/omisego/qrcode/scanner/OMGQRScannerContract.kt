@@ -11,6 +11,7 @@ import android.graphics.Rect
 import android.hardware.Camera
 import android.os.HandlerThread
 import android.widget.ImageView
+import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.ui.CameraPreview
@@ -24,13 +25,16 @@ interface OMGQRScannerContract {
     interface View : Camera.PreviewCallback {
         /**
          * Start stream the camera preview
+         *
+         * @param client The [OMGAPIClient] that used for verify the QR code with the eWallet backend
          */
-        fun startCamera()
+        fun startCamera(client: OMGAPIClient)
 
         /**
          * Stop the camera to stream the image preview
          */
         fun stopCamera()
+
 
         /* Read write zone */
 
@@ -73,11 +77,6 @@ interface OMGQRScannerContract {
          * Set a loading view for display when validating the QR code with the backend side
          */
         var loadingView: android.view.View?
-
-        /**
-         * Set the [OMGQRScannerContract.Presenter] class to handle the logic when  (Optional)
-         */
-        var omgScannerPresenter: Presenter?
 
         /**
          * A flag to indicate that the QR code is currently processing or not
@@ -159,9 +158,9 @@ interface OMGQRScannerContract {
              * @param success A lambda that will be invoked when the verification fail
              */
             fun requestTransaction(
-                txId: String,
-                fail: (response: OMGResponse<APIError>) -> Unit,
-                success: (response: OMGResponse<TransactionRequest>) -> Unit
+                    txId: String,
+                    fail: (response: OMGResponse<APIError>) -> Unit,
+                    success: (response: OMGResponse<TransactionRequest>) -> Unit
             )
 
             /**

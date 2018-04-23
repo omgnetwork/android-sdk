@@ -61,7 +61,7 @@ class OMGQRScannerViewUnitTest {
     @Test
     fun `OMGQRScannerView should be able to start camera properly`() {
         mOMGQRScannerView.cameraHandlerThread = mock()
-        mOMGQRScannerView.startCamera()
+        mOMGQRScannerView.startCamera(mock())
 
         verify(mOMGQRScannerView.cameraHandlerThread, times(1))?.startCamera()
     }

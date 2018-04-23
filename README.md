@@ -283,19 +283,14 @@ You can then use the `OMGQRScannerView` to scan the generated QR code.
 
 ```kotlin
 class QRScannerActivity : AppCompatActivity(), OMGQRScannerContract.Callback {
+    private lateinit var omgAPIClient: OMGAPIClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_qrscanner)
-       
-       val omgAPIClient = your_omg_api_client
-       
-        val verifier = OMGQRVerifier(omgAPIClient)
-        val presenter = OMGQRScannerPresenter(scannerView, verifier).apply {
-            setScanQRListener(this@QRScannerActivity)
-        }
         
-        scannerView.omgScannerPresenter = presenter
-        scannerView.startCamera()
+        omgAPIClient = your_omg_api_client
+        scannerView.startCamera(omgAPIClient)
     }
 
     override fun scannerDidCancel(view: OMGQRScannerContract.View) {
@@ -317,7 +312,7 @@ class QRScannerActivity : AppCompatActivity(), OMGQRScannerContract.Callback {
 
     override fun onResume() {
         super.onResume()
-        scannerView.startCamera()
+        scannerView.startCamera(omgAPIClient)
     }
 }
 ```

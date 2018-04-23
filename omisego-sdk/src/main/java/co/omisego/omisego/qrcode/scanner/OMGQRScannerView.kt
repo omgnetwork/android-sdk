@@ -10,11 +10,7 @@ package co.omisego.omisego.qrcode.scanner
 import android.content.Context
 import android.content.res.Resources
 import android.hardware.Camera
-import android.os.Handler
-import android.os.HandlerThread
-import android.os.Looper
-import android.os.Parcel
-import android.os.Parcelable
+import android.os.*
 import android.support.annotation.ColorInt
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
@@ -23,6 +19,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
+import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.R
 import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.ui.CameraPreview
@@ -116,7 +113,7 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
     /**
      * The [OMGQRScannerContract.Presenter] class to handle main logic
      */
-    override var omgScannerPresenter: OMGQRScannerContract.Presenter? = null
+    internal var omgScannerPresenter: OMGQRScannerContract.Presenter? = null
 
     /**
      * A flag to indicate that the QR code is currently processing or not
@@ -140,19 +137,19 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
-        super(context, attrs, defStyleAttr)
+            super(context, attrs, defStyleAttr)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         val a = context.theme.obtainStyledAttributes(
-            attrs,
-            R.styleable.OMGQRScannerView,
-            0, 0)
+                attrs,
+                R.styleable.OMGQRScannerView,
+                0, 0)
 
         try {
             borderColor = a.getColor(R.styleable.OMGQRScannerView_borderColor,
-                resources.getColor(R.color.omg_scanner_ui_border))
+                    resources.getColor(R.color.omg_scanner_ui_border))
             borderColorLoading = a.getColor(R.styleable.OMGQRScannerView_borderColorLoading,
-                resources.getColor(R.color.omg_scanner_ui_border_loading))
+                    resources.getColor(R.color.omg_scanner_ui_border_loading))
         } finally {
             a.recycle()
         }
@@ -199,10 +196,11 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
     /**
      * Start stream the camera preview
      */
-    override fun startCamera() {
+    override fun startCamera(client: OMGAPIClient) {
         if (cameraHandlerThread == null)
             cameraHandlerThread = CameraHandlerThread(this)
         cameraHandlerThread?.startCamera()
+        omgScannerPresenter = OMGQRScannerPresenter(this, OMGQRVerifier(client))
     }
 
     /**
@@ -213,6 +211,7 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
         cameraWrapper?.camera?.release()
         cameraHandlerThread?.quit()
         cameraHandlerThread = null
+        omgScannerPresenter = null
     }
 
     override fun onPreviewFrame(data: ByteArray, camera: Camera) {
