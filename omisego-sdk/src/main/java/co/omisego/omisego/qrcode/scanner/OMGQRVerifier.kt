@@ -18,7 +18,7 @@ import co.omisego.omisego.model.transaction.request.TransactionRequestParams
 @Suppress("OVERRIDE_BY_INLINE")
 internal class OMGQRVerifier(
     val omgAPIClient: OMGAPIClient
-) : OMGQRScannerContract.Presenter.QRVerifier {
+) : OMGQRScannerContract.Logic.QRVerifier {
 
     /**
      * The [OMGCall<TransactionRequest>] that will be assigned when call [requestTransaction], then will use later for cancel the request.

@@ -15,7 +15,7 @@ import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.custom.camera.CameraWrapper
-import co.omisego.omisego.custom.camera.ui.CameraPreview
+import co.omisego.omisego.custom.camera.ui.OMGCameraPreview
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
@@ -57,7 +57,7 @@ interface OMGQRScannerContract {
         /**
          * A view that handle the preview image that streaming from the camera
          */
-        var cameraPreview: CameraPreview?
+        var cameraPreview: OMGCameraPreview?
 
         /**
          * A wrapper for [Camera] and the cameraId [Int]
@@ -97,7 +97,7 @@ interface OMGQRScannerContract {
         val orientation: Int
     }
 
-    interface Presenter {
+    interface Logic {
         /**
          * Keep failed QR payload that being sent to the server to prevent spamming
          */

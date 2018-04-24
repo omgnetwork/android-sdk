@@ -15,7 +15,7 @@ import co.omisego.omisego.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract
-import co.omisego.omisego.qrcode.scanner.OMGQRScannerPresenter
+import co.omisego.omisego.qrcode.scanner.OMGQRScannerLogic
 import co.omisego.omisego.qrcode.scanner.OMGQRVerifier
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.Reader
@@ -39,12 +39,12 @@ import java.util.concurrent.Executor
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class OMGQRScannerPresenterTest {
+class OMGQRScannerLogicTest {
     private val retrieveTransactionRequestFile: File by ResourceFile("me.create_transaction_request-post.json")
     private val omgQRScannerView: OMGQRScannerContract.View = mock()
     private val multiFormatReader: Reader = mock()
     private val sampleByteArray = byteArrayOf(0x00, 0x01, 0x02, 0x03)
-    private lateinit var omgQRScannerPresenter: OMGQRScannerPresenter
+    private lateinit var omgQRScannerPresenter: OMGQRScannerLogic
     private lateinit var mockWebServer: MockWebServer
     private lateinit var omgAPIClient: OMGAPIClient
     private lateinit var omgQRVerifier: OMGQRVerifier
@@ -66,7 +66,7 @@ class OMGQRScannerPresenterTest {
         omgQRVerifier = OMGQRVerifier(omgAPIClient).apply {
             callback = mock()
         }
-        omgQRScannerPresenter = OMGQRScannerPresenter(omgQRScannerView, omgQRVerifier, qrReader = multiFormatReader)
+        omgQRScannerPresenter = OMGQRScannerLogic(omgQRScannerView, omgQRVerifier, qrReader = multiFormatReader)
     }
 
     @Test

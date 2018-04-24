@@ -12,7 +12,7 @@ import android.view.View
 import android.widget.ProgressBar
 import co.omisego.omisego.R
 import co.omisego.omisego.custom.camera.CameraWrapper
-import co.omisego.omisego.custom.camera.ui.CameraPreview
+import co.omisego.omisego.custom.camera.ui.CameraPreviewContract
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerView
 import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI
 import com.nhaarman.mockito_kotlin.times
@@ -43,7 +43,7 @@ class OMGQRScannerViewUnitTest {
     @Test
     fun `OMGQRScannerView should have the correct child element`() {
         mOMGQRScannerView.childCount shouldEqualTo 3
-        mOMGQRScannerView.getChildAt(0) shouldBeInstanceOf CameraPreview::class
+        mOMGQRScannerView.getChildAt(0) shouldBeInstanceOf CameraPreviewContract.View::class
         mOMGQRScannerView.getChildAt(1) shouldBeInstanceOf OMGScannerUI::class
         mOMGQRScannerView.getChildAt(2) shouldBeInstanceOf ProgressBar::class
     }
@@ -51,7 +51,7 @@ class OMGQRScannerViewUnitTest {
     @Test
     fun `OMGQRScannerView should have the proper initial state`() {
         mOMGQRScannerView.debugImageView shouldBe null
-        mOMGQRScannerView.omgScannerPresenter shouldBe null
+        mOMGQRScannerView.omgScannerLogic shouldBe null
         mOMGQRScannerView.isLoading shouldEqualTo false
         mOMGQRScannerView.loadingView?.visibility!! shouldEqualTo View.GONE
         mOMGQRScannerView.borderColor shouldEqualTo ContextCompat.getColor(RuntimeEnvironment.application, R.color.omg_scanner_ui_border)
