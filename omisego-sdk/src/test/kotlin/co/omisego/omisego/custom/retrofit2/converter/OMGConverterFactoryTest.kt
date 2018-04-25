@@ -9,16 +9,13 @@ package co.omisego.omisego.custom.retrofit2.converter
  */
 
 import co.omisego.omisego.constant.Versions
-import co.omisego.omisego.constant.enums.ErrorCode
-import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
 import co.omisego.omisego.exception.OMGAPIErrorException
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.User
-import com.google.gson.FieldNamingPolicy
+import co.omisego.omisego.testUtils.GsonProvider
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import okhttp3.MediaType
 import okhttp3.ResponseBody
@@ -46,10 +43,7 @@ class OMGConverterFactoryTest {
 
     @Before
     fun setup() {
-        gson = GsonBuilder()
-                .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create()
+        gson = GsonProvider.provide()
         val userType = object : TypeToken<OMGResponse<User>>() {}.type
         val errorType = object : TypeToken<OMGResponse<APIError>>() {}.type
         val retrofit = Retrofit.Builder().baseUrl("http://localhost:8080/").build()

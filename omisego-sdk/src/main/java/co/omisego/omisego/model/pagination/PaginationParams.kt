@@ -8,10 +8,7 @@ package co.omisego.omisego.model.pagination
  */
 
 import co.omisego.omisego.constant.enums.OMGEnum
-import co.omisego.omisego.custom.gson.OMGEnumAdapter
-import com.google.gson.annotations.JsonAdapter
 
-@JsonAdapter(OMGEnumAdapter::class)
 enum class SortDirection constructor(override val value: String) : OMGEnum {
     ASCENDING("asc"),
     DESCENDING("desc");
@@ -23,7 +20,6 @@ sealed class Paginable {
         /**
          * Represents transaction's searchable fields
          */
-        @JsonAdapter(OMGEnumAdapter::class)
         enum class SearchableFields constructor(override val value: String) : OMGEnum {
             ID("id"),
             STATUS("status"),
@@ -38,7 +34,6 @@ sealed class Paginable {
         /**
          * Represents transaction's sortable fields.
          */
-        @JsonAdapter(OMGEnumAdapter::class)
         enum class SortableFields constructor(override val value: String) : OMGEnum {
             ID("id"),
             STATUS("status"),
@@ -53,7 +48,6 @@ sealed class Paginable {
         /**
          * Represents transaction statuses.
          */
-        @JsonAdapter(OMGEnumAdapter::class)
         enum class TransactionStatus constructor(override val value: String) : OMGEnum {
             PENDING("pending"),
             CONFIRMED("confirmed"),

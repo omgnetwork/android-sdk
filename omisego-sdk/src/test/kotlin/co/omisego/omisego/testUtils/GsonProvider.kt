@@ -8,7 +8,9 @@ package co.omisego.omisego.testUtils
  */
 
 import co.omisego.omisego.constant.enums.ErrorCode
+import co.omisego.omisego.constant.enums.OMGEnum
 import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
+import co.omisego.omisego.custom.gson.OMGEnumAdapter
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -16,8 +18,10 @@ import com.google.gson.GsonBuilder
 internal object GsonProvider {
     fun provide(): Gson {
         return GsonBuilder()
-                .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
-                .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create()
+            .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
+            .registerTypeHierarchyAdapter(OMGEnum::class.java, OMGEnumAdapter<OMGEnum>())
+            .serializeNulls()
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .create()
     }
 }
