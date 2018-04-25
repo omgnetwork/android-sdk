@@ -1,18 +1,18 @@
 package co.omisego.omisego.custom.camera.ui
 
-import android.graphics.Point
-import android.hardware.Camera
-import android.view.SurfaceHolder
-import android.view.ViewGroup
-import android.view.WindowManager
-import co.omisego.omisego.custom.camera.CameraWrapper
-
 /*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 23/4/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import android.graphics.Point
+import android.hardware.Camera
+import android.view.SurfaceHolder
+import android.view.ViewGroup
+import android.view.WindowManager
+import co.omisego.omisego.custom.camera.CameraWrapper
 
 interface CameraPreviewContract {
     interface View : SurfaceHolder.Callback {
