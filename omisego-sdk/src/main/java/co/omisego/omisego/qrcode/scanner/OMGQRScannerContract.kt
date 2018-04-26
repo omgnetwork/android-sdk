@@ -28,8 +28,9 @@ interface OMGQRScannerContract {
          * Start stream the camera preview
          *
          * @param client The [OMGAPIClient] that used for verify the QR code with the eWallet backend
+         * @param callback The [Callback] used for delegate the scan result
          */
-        fun startCamera(client: OMGAPIClient)
+        fun startCamera(client: OMGAPIClient, callback: Callback)
 
         /**
          * Stop the camera to stream the image preview

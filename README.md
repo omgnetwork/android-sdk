@@ -277,7 +277,7 @@ You can then use the `OMGQRScannerView` to scan the generated QR code.
 </FrameLayout>
 ```
 
-**Then**, you need to initialize `OMGQRVerifier`, `OMGQRScannerPresenter` and `OMGQRScannerView` class in your activity
+**Then**, you can call `scannerView.startCamera` passing your `OMGAPIClient` and `OMGQRScannerContract.Callback` respectively to start the camera.
 
 > Note: You need to handle the camera permission first
 
@@ -290,7 +290,7 @@ class QRScannerActivity : AppCompatActivity(), OMGQRScannerContract.Callback {
         setContentView(R.layout.activity_qrscanner)
         
         omgAPIClient = your_omg_api_client
-        scannerView.startCamera(omgAPIClient)
+        scannerView.startCamera(omgAPIClient, this)
     }
 
     override fun scannerDidCancel(view: OMGQRScannerContract.View) {
@@ -312,7 +312,7 @@ class QRScannerActivity : AppCompatActivity(), OMGQRScannerContract.Callback {
 
     override fun onResume() {
         super.onResume()
-        scannerView.startCamera(omgAPIClient)
+        scannerView.startCamera(omgAPIClient, this)
     }
 }
 ```

@@ -28,6 +28,7 @@ import co.omisego.omisego.R
 import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.ui.OMGCameraPreview
 import co.omisego.omisego.custom.camera.utils.DisplayUtils
+import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract.Callback
 import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI
 
 /**
@@ -199,12 +200,17 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
 
     /**
      * Start stream the camera preview
+     *
+     * @param client The [OMGAPIClient] that used for verify the QR code with the eWallet backend
+     * @param callback The [Callback] used for delegate the scan result
      */
-    override fun startCamera(client: OMGAPIClient) {
+    override fun startCamera(client: OMGAPIClient, callback: OMGQRScannerContract.Callback) {
         if (cameraHandlerThread == null)
             cameraHandlerThread = CameraHandlerThread(this)
         cameraHandlerThread?.startCamera()
-        omgScannerLogic = OMGQRScannerLogic(this, OMGQRVerifier(client))
+        omgScannerLogic = OMGQRScannerLogic(this, OMGQRVerifier(client)).apply {
+            setScanQRListener(callback)
+        }
     }
 
     /**
