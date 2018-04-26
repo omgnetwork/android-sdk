@@ -11,6 +11,7 @@ import co.omisego.omisego.constant.enums.OMGEnum
 import co.omisego.omisego.model.MintedToken
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
+import java.math.BigDecimal
 import java.util.Date
 
 /**
@@ -63,7 +64,7 @@ data class TransactionRequest(
      * The amount of minted token to use for the transaction (down to subunit to unit)
      * This amount needs to be either specified by the requester or the consumer
      */
-    val amount: Double?,
+    val amount: BigDecimal?,
 
     /**
      * The address from which to send or receive the minted tokens

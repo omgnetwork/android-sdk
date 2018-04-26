@@ -7,6 +7,7 @@ package co.omisego.omisego.model.transaction.consumption
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.extension.bd
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import com.nhaarman.mockito_kotlin.whenever
 import org.amshove.kluent.mock
@@ -32,9 +33,9 @@ class TransactionConsumptionParamsTest {
         val transactionRequest: TransactionRequest = mock()
 
         whenever(transactionRequest.id).thenReturn("omg-test1234")
-        whenever(transactionRequest.amount).thenReturn(1234.0)
+        whenever(transactionRequest.amount).thenReturn(1234.bd)
 
-        val tx = TransactionConsumptionParams.init(transactionRequest, amount = 1234.0)
+        val tx = TransactionConsumptionParams.init(transactionRequest, amount = 1234.bd)
         tx?.amount shouldBe null
     }
 
@@ -43,10 +44,10 @@ class TransactionConsumptionParamsTest {
         val transactionRequest: TransactionRequest = mock()
 
         whenever(transactionRequest.id).thenReturn("omg-test1234")
-        whenever(transactionRequest.amount).thenReturn(1234.0)
+        whenever(transactionRequest.amount).thenReturn(1234.bd)
 
-        val tx = TransactionConsumptionParams.init(transactionRequest, amount = 100.0)
-        tx?.amount shouldEqual 100.0
+        val tx = TransactionConsumptionParams.init(transactionRequest, amount = 100.bd)
+        tx?.amount shouldEqual 100.bd
     }
 
     @Test
@@ -54,7 +55,7 @@ class TransactionConsumptionParamsTest {
         val transactionRequest: TransactionRequest = mock()
 
         whenever(transactionRequest.id).thenReturn("omg-test1234")
-        whenever(transactionRequest.amount).thenReturn(1234.0)
+        whenever(transactionRequest.amount).thenReturn(1234.bd)
 
         val idempotencyTokenSet = mutableSetOf<String>()
 

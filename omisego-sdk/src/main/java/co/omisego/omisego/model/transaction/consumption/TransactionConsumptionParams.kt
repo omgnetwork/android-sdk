@@ -8,6 +8,7 @@ package co.omisego.omisego.model.transaction.consumption
  */
 
 import co.omisego.omisego.model.transaction.request.TransactionRequest
+import java.math.BigDecimal
 
 /**
  * Represents a structure used to consume a transaction request
@@ -21,7 +22,7 @@ data class TransactionConsumptionParams(
     /**
      * The amount of minted token to transfer (down to subunit to unit)
      */
-    val amount: Double? = null,
+    val amount: BigDecimal? = null,
 
     /**
      * The address to use for the consumption
@@ -76,7 +77,7 @@ data class TransactionConsumptionParams(
          */
         fun init(
             transactionRequest: TransactionRequest,
-            amount: Double? = null,
+            amount: BigDecimal? = null,
             metadata: Map<String, Any> = mapOf(),
             encryptedMetadata: Map<String, Any> = mapOf(),
             idempotencyToken: String = "${transactionRequest.id}-${System.nanoTime()}",
