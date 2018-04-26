@@ -18,26 +18,23 @@ import co.omisego.omisego.model.BalanceList
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
-import co.omisego.omisego.model.transaction.list.ListTransactionParams
+import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.testUtils.GsonProvider
 import co.omisego.omisego.utils.OMGEncryptionHelper
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.withMessage
 import org.json.JSONObject
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
-import org.junit.rules.ExpectedException
 import java.io.File
 import java.util.concurrent.Executor
 import kotlin.test.Test
 
 class EWalletClientTest {
-    @Rule
-    @JvmField
-    val expectedEx = ExpectedException.none()!!
     private val secretFileName: String = "secret.json" // Replace your secret file here
     private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
     private val userFile: File by ResourceFile("user.me-post.json")
@@ -97,26 +94,30 @@ class EWalletClientTest {
 
     @Test
     fun `Empty base_url should throw IllegalStateException`() {
-        expectedEx.expect(Exceptions.emptyBaseURL::class.java)
-        expectedEx.expectMessage(Exceptions.emptyBaseURL.message)
+        val errorFun = {
+            EWalletClient.Builder {
+                authenticationToken = secret.getString("auth_token")
+                callbackExecutor = Executor { it.run() }
+                debug = false
+            }.build()
+        }
 
-        EWalletClient.Builder {
-            authenticationToken = secret.getString("auth_token")
-            callbackExecutor = Executor { it.run() }
-            debug = false
-        }.build()
+        errorFun shouldThrow Exceptions.emptyBaseURL::class withMessage
+                Exceptions.emptyBaseURL.message!!
     }
 
     @Test
     fun `Empty auth_token should throw IllegalStateException`() {
-        expectedEx.expect(Exceptions.emptyAuthenticationToken::class.java)
-        expectedEx.expectMessage(Exceptions.emptyAuthenticationToken.message)
+        val errorFun = {
+            EWalletClient.Builder {
+                debugUrl = mockUrl
+                callbackExecutor = Executor { it.run() }
+                debug = false
+            }.build()
+        }
+        errorFun shouldThrow Exceptions.emptyAuthenticationToken::class withMessage
+                Exceptions.emptyAuthenticationToken.message!!
 
-        EWalletClient.Builder {
-            debugUrl = mockUrl
-            callbackExecutor = Executor { it.run() }
-            debug = false
-        }.build()
     }
 
     @Test
@@ -165,7 +166,7 @@ class EWalletClientTest {
     fun `EWalletClient request to list_transactions with the correct path`() {
         listTransactionsFile.mockEnqueueWithHttpCode(mockWebServer)
 
-        val listTransactionParams: ListTransactionParams = mock()
+        val listTransactionParams: TransactionListParams = mock()
 
         eWalletClient.eWalletAPI.listTransactions(listTransactionParams).execute()
         val request = mockWebServer.takeRequest()

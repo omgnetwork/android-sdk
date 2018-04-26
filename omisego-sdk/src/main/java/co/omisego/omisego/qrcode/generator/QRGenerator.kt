@@ -1,4 +1,4 @@
-package co.omisego.omisego.qrcode
+package co.omisego.omisego.qrcode.generator
 
 /*
  * OmiseGO
@@ -12,14 +12,13 @@ import co.omisego.omisego.model.transaction.request.TransactionRequest
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
-import com.journeyapps.barcodescanner.BarcodeEncoder
 
 /**
  * For creating a QRCode bitmap
  */
 class QRGenerator(
     private val writer: MultiFormatWriter = MultiFormatWriter(),
-    private val encoder: BarcodeEncoder = BarcodeEncoder()
+    private val encoder: QREncoder = QREncoder()
 ) {
     companion object {
         /**

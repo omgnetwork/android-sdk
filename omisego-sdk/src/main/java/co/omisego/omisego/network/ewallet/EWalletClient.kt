@@ -9,7 +9,9 @@ package co.omisego.omisego.network.ewallet
 
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.enums.ErrorCode
+import co.omisego.omisego.constant.enums.OMGEnum
 import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
+import co.omisego.omisego.custom.gson.OMGEnumAdapter
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
 import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
@@ -55,7 +57,7 @@ class EWalletClient {
 
         /**
          * Set the API [authenticationToken].
-         * The [authenticationToken] should be "OMG Base64(api_key:authentication_token)"
+         * The [authenticationToken] should be "Base64(api_key:authentication_token)" (without "OMGClient")
          */
         var authenticationToken: String = ""
             set(value) {
@@ -113,6 +115,7 @@ class EWalletClient {
             /* Use a simple gson for now */
             val gson = GsonBuilder()
                     .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
+                    .registerTypeHierarchyAdapter(OMGEnum::class.java, OMGEnumAdapter<OMGEnum>())
                     .serializeNulls()
                     .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                     .create()

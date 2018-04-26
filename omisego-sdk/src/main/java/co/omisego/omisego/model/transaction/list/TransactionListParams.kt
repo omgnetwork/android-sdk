@@ -14,7 +14,7 @@ import co.omisego.omisego.model.pagination.SortDirection
  *  Represent a structure used to query a list of transactions
  */
 
-data class ListTransactionParams internal constructor(
+data class TransactionListParams internal constructor(
         /**
          * A page number
          */
@@ -74,7 +74,7 @@ data class ListTransactionParams internal constructor(
                 sortDirection: SortDirection = SortDirection.DESCENDING,
                 searchTerm: String? = null,
                 address: String? = null
-        ) = ListTransactionParams(
+        ) = TransactionListParams(
             page = page,
             perPage = perPage,
             sortBy = sortBy,
@@ -90,7 +90,7 @@ data class ListTransactionParams internal constructor(
                 sortDirection: SortDirection = SortDirection.DESCENDING,
                 searchTerms: Map<Paginable.Transaction.SearchableFields, Any>? = null,
                 address: String? = null
-        ) = ListTransactionParams(
+        ) = TransactionListParams(
             page = page,
             perPage = perPage,
             sortBy = sortBy,

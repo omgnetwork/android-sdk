@@ -7,14 +7,15 @@ package co.omisego.omisego.qrcode
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.qrcode.generator.QRGenerator
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.MultiFormatReader
 import com.google.zxing.RGBLuminanceSource
 import com.google.zxing.common.HybridBinarizer
 import org.amshove.kluent.shouldEqualTo
-import org.junit.Rule
+import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.withMessage
 import org.junit.Test
-import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -22,9 +23,6 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [21])
 class QRGeneratorTest {
-    @Rule
-    @JvmField
-    val expectedEx = ExpectedException.none()!!
     private val qrGenerator by lazy { QRGenerator() }
     private val expectedSize: Int = 200
     private val expectedPayload = "Hello World"
@@ -39,10 +37,8 @@ class QRGeneratorTest {
 
     @Test
     fun `QRGenerator should throw IllegalArgumentException if the payload is empty`() {
-        expectedEx.expect(IllegalArgumentException::class.java)
-        expectedEx.expectMessage("Found empty contents")
-
-        qrGenerator.generate("", expectedSize)
+        val errorFun = { qrGenerator.generate("", expectedSize) }
+        errorFun shouldThrow IllegalArgumentException::class withMessage "Found empty contents"
     }
 
     @Test

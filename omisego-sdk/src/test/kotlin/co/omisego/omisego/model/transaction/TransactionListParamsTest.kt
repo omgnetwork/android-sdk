@@ -10,26 +10,23 @@ package co.omisego.omisego.model.transaction
 import co.omisego.omisego.model.pagination.Paginable.Transaction.SearchableFields
 import co.omisego.omisego.model.pagination.Paginable.Transaction.SortableFields
 import co.omisego.omisego.model.pagination.SortDirection
-import co.omisego.omisego.model.transaction.list.ListTransactionParams
-import com.google.gson.FieldNamingPolicy
+import co.omisego.omisego.model.transaction.list.TransactionListParams
+import co.omisego.omisego.testUtils.GsonProvider
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import org.amshove.kluent.shouldEqual
 import org.junit.Before
 import kotlin.test.Test
 
-class ListTransactionParamsTest {
+class TransactionListParamsTest {
     private lateinit var gson: Gson
     @Before
     fun setUp() {
-        gson = GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create()
+        gson = GsonProvider.provide()
     }
 
     @Test
     fun `ListTransactionParams should be added successfully`() {
-        val transactionListParams = ListTransactionParams(1,
+        val transactionListParams = TransactionListParams(1,
             10,
             SortableFields.FROM,
             SortDirection.ASCENDING,

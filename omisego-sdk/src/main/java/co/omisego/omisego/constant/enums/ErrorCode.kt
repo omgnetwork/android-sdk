@@ -17,6 +17,7 @@ enum class ErrorCode constructor(private val code: String) {
     CLIENT_ENDPOINT_NOT_FOUND("client:endpoint_not_found"),
     CLIENT_INVALID_API_KEY("client:invalid_api_key"),
     CLIENT_INVALID_AUTH_SCHEME("client:invalid_auth_scheme"),
+    TRANSACTION_REQUEST_NOT_FOUND("transaction_request:transaction_request_not_found"),
 
     // Error code from OmiseGO server API
     SERVER_INTERNAL_SERVER_ERROR("server:internal_server_error"),

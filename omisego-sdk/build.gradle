@@ -24,6 +24,13 @@ android {
 
     sourceSets {
         test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
     }
 }
 
@@ -67,12 +74,12 @@ dependencies {
     api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     // Used for the QRCode generator and the QRCode scanner.
-    // It is an android port version of Google's ZXing library.
-    api 'com.journeyapps:zxing-android-embedded:3.2.0'
-    implementation 'com.android.support:support-annotations:27.1.0'
+    api 'com.google.zxing:core:3.3.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support:support-v4:27.1.0'
 
     // Testing dependencies
     testImplementation 'org.json:json:20160810'
@@ -85,6 +92,9 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:3.4.2'
     testImplementation 'com.squareup.okhttp3:mockwebserver:3.9.1'
     testImplementation 'com.squareup.retrofit2:retrofit-mock:2.3.0'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
 }
 
 repositories {

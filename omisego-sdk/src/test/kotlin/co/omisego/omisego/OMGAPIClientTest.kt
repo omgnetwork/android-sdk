@@ -33,25 +33,23 @@ import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.withMessage
 import org.json.JSONObject
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.ExpectedException
 import retrofit2.Response
 import java.io.File
 import java.util.concurrent.Executor
 
 class OMGAPIClientTest {
-    @Rule
-    @JvmField
-    val expectedEx = ExpectedException.none()!!
     private val secretFileName: String = "secret.json" // Replace your secret file here
     private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
     private val userFile: File by ResourceFile("user.me-post.json")
     private val listBalanceFile: File by ResourceFile("me.list_balances-post.json")
     private val listTransactionsFile: File by ResourceFile("me.list_transactions-post.json")
     private val createTransactionRequestFile: File by ResourceFile("me.create_transaction_request-post.json")
+    private val retrieveTransactionRequestFile: File by ResourceFile("me.create_transaction_request-post.json")
     private val getSettingFile: File by ResourceFile("me.get_settings-post.json")
     private val errorFile: File by ResourceFile("fail.client-invalid_auth_scheme.json")
     private val gson by lazy { GsonProvider.provide() }
@@ -146,6 +144,30 @@ class OMGAPIClientTest {
     }
 
     @Test
+    fun `OMGAPIClient should call get_transaction_request successfully`() {
+        val element = gson.fromJson(retrieveTransactionRequestFile.readText(), JsonElement::class.java)
+        val result = Response.success(element)
+        retrieveTransactionRequestFile.mockEnqueueWithHttpCode(mockWebServer)
+
+        val callback: OMGCallback<TransactionRequest> = mock()
+
+        omgAPIClient.retrieveTransactionRequest(mock()).enqueue(callback)
+
+        val data = result.body()!!.asJsonObject.getAsJsonObject("data")
+        val transactionRequest = gson.fromJson<TransactionRequest>(data, object : TypeToken<TransactionRequest>() {}.type)
+
+        val expected = OMGResponse(
+            Versions.EWALLET_API,
+            true,
+            transactionRequest
+        )
+
+        Thread.sleep(100)
+
+        verify(callback, times(1)).success(expected)
+    }
+
+    @Test
     fun `OMGAPIClient should call get_current_user and success`() {
         val element = gson.fromJson(userFile.readText(), JsonElement::class.java)
         val result = Response.success(element)
@@ -207,16 +229,16 @@ class OMGAPIClientTest {
 
     @Test
     fun `OMGAPIClient should be executed when API return success false correctly`() {
-        expectedEx.expect(OMGAPIErrorException::class.java)
         val apiError = APIError(
             ErrorCode.CLIENT_INVALID_AUTH_SCHEME,
             "The provided authentication scheme is not supported"
         )
-        expectedEx.expectMessage(OMGResponse(Versions.EWALLET_API, false, apiError).toString())
 
         errorFile.mockEnqueueWithHttpCode(mockWebServer)
 
-        omgAPIClient.getCurrentUser().execute()
+        val errorFun = { omgAPIClient.getCurrentUser().execute() }
+        errorFun shouldThrow OMGAPIErrorException::class withMessage
+            OMGResponse(Versions.EWALLET_API, false, apiError).toString()
     }
 
     @Test
