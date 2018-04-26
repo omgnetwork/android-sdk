@@ -209,7 +209,7 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
             cameraHandlerThread = CameraHandlerThread(this)
         cameraHandlerThread?.startCamera()
         omgScannerLogic = OMGQRScannerLogic(this, OMGQRVerifier(client)).apply {
-            setScanQRListener(callback)
+            scanCallback = callback
         }
     }
 

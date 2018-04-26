@@ -113,7 +113,7 @@ class OMGQRScannerLogicTest {
     fun `OMGQRScannerPresenter should not processed the preview frame if the scanner view is still loading`() {
         val scanQRCallback = mock<OMGQRScannerContract.Callback>()
         whenever(omgQRScannerView.isLoading).thenReturn(true)
-        omgQRScannerPresenter.setScanQRListener(scanQRCallback)
+        omgQRScannerPresenter.scanCallback = scanQRCallback
 
         omgQRScannerPresenter.onPreviewFrame(byteArrayOf(),
             CameraUtils.cameraInstance!!.apply {
@@ -143,7 +143,7 @@ class OMGQRScannerLogicTest {
             Result("OMG", ByteArray(518400), arrayOf(), BarcodeFormat.QR_CODE)
         )
 
-        omgQRScannerPresenter.setScanQRListener(mockScanQRCallback)
+        omgQRScannerPresenter.scanCallback = mockScanQRCallback
         omgQRScannerPresenter.onPreviewFrame(
             ByteArray(518400),
             CameraUtils.cameraInstance!!.apply {
@@ -161,7 +161,7 @@ class OMGQRScannerLogicTest {
     fun `OMGQRScannerPresenter should delegate callback correctly when the user tap to cancel loading`() {
         val mockScanQRCallback = mock<OMGQRScannerContract.Callback>()
 
-        omgQRScannerPresenter.setScanQRListener(mockScanQRCallback)
+        omgQRScannerPresenter.scanCallback = mockScanQRCallback
         omgQRScannerPresenter.cancelLoading()
 
         verify(mockScanQRCallback, times(1)).scannerDidCancel(omgQRScannerView)

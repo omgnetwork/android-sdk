@@ -21,6 +21,7 @@ import org.amshove.kluent.mock
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqualTo
+import org.amshove.kluent.shouldNotBe
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -64,6 +65,7 @@ class OMGQRScannerViewUnitTest {
         mOMGQRScannerView.startCamera(mock(), mock())
 
         verify(mOMGQRScannerView.cameraHandlerThread, times(1))?.startCamera()
+        mOMGQRScannerView.omgScannerLogic?.scanCallback shouldNotBe null
     }
 
     @Test

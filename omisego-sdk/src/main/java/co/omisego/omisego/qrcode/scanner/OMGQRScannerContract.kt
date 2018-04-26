@@ -105,6 +105,11 @@ interface OMGQRScannerContract {
         val qrPayloadCache: MutableList<String>
 
         /**
+         * The [Callback] for retrieve the QR validation result
+         */
+        var scanCallback: Callback?
+
+        /**
          * Resize the frame to fit in the preview frame correctly
          *
          * @param cameraPreviewSize The width and height of the camera preview size
@@ -133,13 +138,6 @@ interface OMGQRScannerContract {
          * @param camera the Camera service object
          */
         fun onPreviewFrame(data: ByteArray, camera: Camera)
-
-        /**
-         * Set the [Callback] for retrieve the QR validation result
-         *
-         * @param callback the callback for retrieve the result
-         */
-        fun setScanQRListener(callback: Callback)
 
         /**
          * Cancel loading that verifying the QR code with the backend

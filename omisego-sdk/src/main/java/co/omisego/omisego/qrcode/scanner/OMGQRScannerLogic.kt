@@ -17,7 +17,6 @@ import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
-import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract.Callback
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract.Logic.Rotation
 import co.omisego.omisego.qrcode.scanner.utils.QRFrameExtractor
 import co.omisego.omisego.qrcode.scanner.utils.Rotater
@@ -45,7 +44,6 @@ internal class OMGQRScannerLogic(
 ) : OMGQRScannerContract.Logic {
     private var mQRFrameExtractor: QRFrameExtractor? = null
     private var mPreviewSize: Camera.Size? = null
-    private var mScanCallback: OMGQRScannerContract.Callback? = null
     private val errorTxNotFound: OMGResponse<APIError> by lazy {
         OMGResponse(
                 Versions.EWALLET_API,
@@ -56,6 +54,8 @@ internal class OMGQRScannerLogic(
                 )
         )
     }
+
+    override var scanCallback: OMGQRScannerContract.Callback? = null
 
     /* Keep the QR payload that being sent to the server to prevent spamming */
     override val qrPayloadCache: MutableList<String> = mutableListOf()
@@ -169,7 +169,7 @@ internal class OMGQRScannerLogic(
 
             /* Return immediately if we've already processed this [txId] and it failed with [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] */
             if (hasTransactionAlreadyFailed(txId)) {
-                mScanCallback?.scannerDidFailToDecode(omgQRScannerView, errorTxNotFound)
+                scanCallback?.scannerDidFailToDecode(omgQRScannerView, errorTxNotFound)
                 return@let
             }
 
@@ -185,14 +185,14 @@ internal class OMGQRScannerLogic(
                 }
 
                 /* Delegate a fail callback */
-                mScanCallback?.scannerDidFailToDecode(omgQRScannerView, errorResponse)
+                scanCallback?.scannerDidFailToDecode(omgQRScannerView, errorResponse)
 
                 /* Hide loading */
                 omgQRScannerView.isLoading = false
             }) { successResponse ->
 
                 /* Delegate a success callback */
-                mScanCallback?.scannerDidDecode(omgQRScannerView, successResponse)
+                scanCallback?.scannerDidDecode(omgQRScannerView, successResponse)
 
                 /* Hide loading */
                 omgQRScannerView.isLoading = false
@@ -201,20 +201,11 @@ internal class OMGQRScannerLogic(
     }
 
     /**
-     * Set the [Callback] for retrieve the QR validation result
-     *
-     * @param callback the callback for retrieve the result
-     */
-    override fun setScanQRListener(callback: OMGQRScannerContract.Callback) {
-        mScanCallback = callback
-    }
-
-    /**
      * Cancel loading that verifying the QR code with the backend
      */
     override fun cancelLoading() {
         omgQRVerifier.cancelRequest()
-        mScanCallback?.scannerDidCancel(omgQRScannerView)
+        scanCallback?.scannerDidCancel(omgQRScannerView)
     }
 
     /**
