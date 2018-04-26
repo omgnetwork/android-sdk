@@ -10,6 +10,7 @@ package co.omisego.omisego
 import co.omisego.omisego.model.Address
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
 import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
 import co.omisego.omisego.model.transaction.request.TransactionRequestParams
@@ -105,6 +106,15 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      */
     fun retrieveTransactionRequest(request: TransactionRequestParams) =
         eWalletAPI.retrieveTransactionRequest(request)
+
+    /**
+     * Consume a transaction request from the given TransactionConsumptionParams object
+     *
+     * @param request The TransactionConsumptionParams object describing the transaction request to be consumed.
+     */
+    fun consumeTransactionRequest(request: TransactionConsumptionParams) =
+        eWalletAPI.consumeTransactionRequest(request)
+
 
     /**
      * Set new [authenticationToken].
