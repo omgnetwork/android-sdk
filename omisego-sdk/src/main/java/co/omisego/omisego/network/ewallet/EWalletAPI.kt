@@ -7,7 +7,7 @@ package co.omisego.omisego.network.ewallet
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.Endpoints
+import co.omisego.omisego.constant.Endpoints.CONSUME_TRANSACTION_REQUEST
 import co.omisego.omisego.constant.Endpoints.CREATE_TRANSACTION_REQUEST
 import co.omisego.omisego.constant.Endpoints.GET_CURRENT_USER
 import co.omisego.omisego.constant.Endpoints.GET_SETTINGS
@@ -54,7 +54,7 @@ interface EWalletAPI {
     @POST(RETRIEVE_TRANSACTION_REQUEST)
     fun retrieveTransactionRequest(@Body request: TransactionRequestParams): OMGCall<TransactionRequest>
 
-    @POST(Endpoints.CONSUME_TRANSACTION_REQUEST)
+    @POST(CONSUME_TRANSACTION_REQUEST)
     fun consumeTransactionRequest(
         @Body request: TransactionConsumptionParams,
         @Header("Idempotency-Token") idempotencyToken: String = request.idempotencyToken
