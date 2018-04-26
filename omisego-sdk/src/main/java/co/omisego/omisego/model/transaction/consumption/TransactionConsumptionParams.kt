@@ -59,34 +59,35 @@ data class TransactionConsumptionParams(
 
         /**
          * Initialize the params used to consume a transaction request
-         * Returns nil if the amount is nil and was not specified in the transaction request
+         * Returns null if the amount is null and was not specified in the transaction request
          *
          * @param transactionRequest - The transaction request to consume
+         * @param amount - The amount of minted token to transfer (down to subunit to unit)
+         * @param metadata - Additional metadata for the consumption
+         * @param encryptedMetadata - Additional encrypted metadata embedded with the request
+         * @param idempotencyToken - The idempotency token to use for the consumption
          * @param address - The address to use for the consumption
          * @param tokenId - The id of the minted token to use for the request
          * In the case of a type "send", this will be the token that the consumer will receive
          * In the case of a type "receive" this will be the token that the consumer will send
-         * @param amount - The amount of minted token to transfer (down to subunit to unit)
-         * @param idempotencyToken - The idempotency token to use for the consumption
          * @param correlationId - An id that can uniquely identify a transaction. Typically an order id from a provider
-         * @param metadata - Additional metadata for the consumption
          *
          * @return A [TransactionConsumptionParams] to request to the API
          */
         fun init(
             transactionRequest: TransactionRequest,
-            address: String?,
-            tokenId: String?,
-            amount: Double?,
-            idempotencyToken: String,
-            correlationId: String?,
+            amount: Double? = null,
             metadata: Map<String, Any> = mapOf(),
-            encryptedMetadata: Map<String, Any> = mapOf()
+            encryptedMetadata: Map<String, Any> = mapOf(),
+            idempotencyToken: String = "${transactionRequest.id}-${System.currentTimeMillis()}",
+            address: String? = null,
+            tokenId: String? = null,
+            correlationId: String? = null
         ): TransactionConsumptionParams? {
-            if (transactionRequest.amount == null || amount == null) return null
+            if (transactionRequest.amount == null && amount == null) return null
             return TransactionConsumptionParams(
                 transactionRequest.id,
-                if (amount == transactionRequest.amount) amount else null,
+                if (amount == transactionRequest.amount) null else amount,
                 address,
                 tokenId,
                 idempotencyToken,
