@@ -21,39 +21,39 @@ data class TransactionConsumptionParams(
     /**
      * The amount of minted token to transfer (down to subunit to unit)
      */
-    val amount: Double?,
+    val amount: Double? = null,
 
     /**
      * The address to use for the consumption
      */
-    val address: String?,
+    val address: String? = null,
 
     /**
      * The id of the minted token to use for the request
      * In the case of a type "send", this will be the token that the consumer will receive
      * In the case of a type "receive" this will be the token that the consumer will send
      */
-    val mintedTokenId: String?,
+    val mintedTokenId: String? = null,
 
     /**
      * The idempotency token to use for the consumption
      */
-    val idempotencyToken: String,
+    val idempotencyToken: String = "${transactionRequestId}-${System.currentTimeMillis()}",
 
     /**
      *  An id that can uniquely identify a transaction. Typically an order id from a provider.
      */
-    val correlationId: String?,
+    val correlationId: String? = null,
 
     /**
      * Additional metadata for the consumption
      */
-    val metadata: Map<String, Any>,
+    val metadata: Map<String, Any> = mapOf(),
 
     /**
      * Additional encrypted metadata for the consumption
      */
-    val encryptedMetadata: Map<String, Any>
+    val encryptedMetadata: Map<String, Any> = mapOf()
 ) {
     companion object {
 
@@ -79,7 +79,7 @@ data class TransactionConsumptionParams(
             amount: Double? = null,
             metadata: Map<String, Any> = mapOf(),
             encryptedMetadata: Map<String, Any> = mapOf(),
-            idempotencyToken: String = "${transactionRequest.id}-${System.currentTimeMillis()}",
+            idempotencyToken: String = "${transactionRequest.id}-${System.nanoTime()}",
             address: String? = null,
             tokenId: String? = null,
             correlationId: String? = null
