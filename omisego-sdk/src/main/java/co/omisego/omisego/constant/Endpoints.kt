@@ -14,5 +14,6 @@ object Endpoints {
     const val LIST_TRANSACTIONS = "me.list_transactions"
     const val CREATE_TRANSACTION_REQUEST = "me.create_transaction_request"
     const val RETRIEVE_TRANSACTION_REQUEST = "me.get_transaction_request"
+    const val CONSUME_TRANSACTION_REQUEST = "me.consume_transaction_request"
     const val GET_SETTINGS = "me.get_settings"
 }
