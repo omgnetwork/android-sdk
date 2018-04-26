@@ -161,3 +161,9 @@ fun TransactionRequest.toTransactionConsumptionParams(
         metadata,
         encryptedMetadata
     )
+
+/**
+ * An extension function that converts the [TransactionRequest] to the [TransactionConsumptionParams] easily
+ */
+fun TransactionRequest.toTransactionConsumptionParams(): TransactionConsumptionParams? =
+    TransactionConsumptionParams.create(this)
