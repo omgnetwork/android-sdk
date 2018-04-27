@@ -13,12 +13,18 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
     - [Get the current user](#get-the-current-user)
     - [Get the addresses of the current user](#get-the-addresses-of-the-current-user)
     - [Get the provider settings](#get-the-provider-settings)
-    - [Get the current user's transactions](#get-the-current-users-transactions)
+    - [Get the current user's transactions](#get-the-current-user's-transactions)
+  - [Transferring tokens](#transferring-tokens)
+    - [Generate a transaction request](#generate-a-transaction-request)
+    - [Consume a transaction request](#consume-a-transaction-request)
   - [QR codes](#qr-codes)
-    - [Generation](#generation)
+    - [Generate a QR code](#generate-qr-code-bitmap-representation-of-a-transaction-request)
+    - [Scan a QR code](#scan-a-qr-code)
+- [Run Kotlin Lint](#run-kotlin-lint)
 - [Test](#test)
 - [Contributing](#contributing)
 - [License](#license)
+- [Sample Project](#sample-project)
 
 ## Requirements
 
@@ -455,10 +461,10 @@ You can then run the test under the `src/test` folder from the Android Studio or
 
 See [how you can help](.github/CONTRIBUTING.md).
 
-## License
+# License
 
 The OmiseGO Android SDK is released under the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
 
-## Sample Project
+# Sample Project
 
 You can check out the latest sample app from the following repo : [OMGShop](https://github.com/omisego/sample-android)
