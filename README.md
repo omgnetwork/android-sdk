@@ -210,7 +210,7 @@ Where:
 ## Transferring tokens
 In order to transfer tokens between 2 addresses, the SDK offers the possibility to generate and consume transaction requests. To make a transaction happen, a `TransactionRequest` needs to be created and consumed by a `TransactionConsumption`.
 
-### Generate a transaction request
+### Generation
 To generate a new transaction request you can call:
 
 ```kotlin
