@@ -151,4 +151,13 @@ fun TransactionRequest.toTransactionConsumptionParams(
     metadata: Map<String, Any> = mapOf(),
     encryptedMetadata: Map<String, Any> = mapOf()
 ): TransactionConsumptionParams? =
-    TransactionConsumptionParams.create(this)
+    TransactionConsumptionParams.create(
+        this,
+        amount,
+        address,
+        tokenId,
+        idempotencyToken,
+        correlationId,
+        metadata,
+        encryptedMetadata
+    )

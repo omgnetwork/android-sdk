@@ -13,7 +13,7 @@ import java.math.BigDecimal
 /**
  * Represents a structure used to consume a transaction request
  */
-data class TransactionConsumptionParams private constructor(
+data class TransactionConsumptionParams internal constructor(
     /**
      * The id of the transaction request to be consumed
      */
