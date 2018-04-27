@@ -2,7 +2,6 @@ package co.omisego.omisego.extension
 
 import android.content.res.Resources
 
-
 /*
  * OmiseGO
  *

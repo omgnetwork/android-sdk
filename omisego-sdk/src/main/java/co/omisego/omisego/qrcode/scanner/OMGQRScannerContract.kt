@@ -37,7 +37,6 @@ interface OMGQRScannerContract {
          */
         fun stopCamera()
 
-
         /* Read write zone */
 
         /**
@@ -171,9 +170,9 @@ interface OMGQRScannerContract {
              * @param success A lambda that will be invoked when the verification fail
              */
             fun requestTransaction(
-                    txId: String,
-                    fail: (response: OMGResponse<APIError>) -> Unit,
-                    success: (response: OMGResponse<TransactionRequest>) -> Unit
+                txId: String,
+                fail: (response: OMGResponse<APIError>) -> Unit,
+                success: (response: OMGResponse<TransactionRequest>) -> Unit
             )
 
             /**

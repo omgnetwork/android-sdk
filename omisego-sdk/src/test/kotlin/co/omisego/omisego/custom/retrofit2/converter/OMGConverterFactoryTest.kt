@@ -80,6 +80,5 @@ class OMGConverterFactoryTest {
 
         val errorFun = { omgConverter.convert(responseBody) }
         errorFun shouldThrow IOException::class withMessage "Failed to parse JSON"
-
     }
 }

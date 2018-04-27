@@ -208,7 +208,7 @@ class OMGCameraLogicTest {
     }
 
     @Test
-    fun `calculateLayoutParams should calculate correctly`(){
+    fun `calculateLayoutParams should calculate correctly`() {
         val dimen = 1056 to 1584
         val pDimen = 1080 to 1584
         val layoutParams = ViewGroup.LayoutParams(1080, 1620)

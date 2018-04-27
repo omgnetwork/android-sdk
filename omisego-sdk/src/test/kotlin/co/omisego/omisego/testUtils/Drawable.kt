@@ -14,9 +14,9 @@ import android.support.annotation.Px
 import java.nio.ByteBuffer
 
 internal fun Drawable.toByteArray(
-        @Px width: Int = intrinsicWidth,
-        @Px height: Int = intrinsicHeight,
-        config: Bitmap.Config? = null
+    @Px width: Int = intrinsicWidth,
+    @Px height: Int = intrinsicHeight,
+    config: Bitmap.Config? = null
 ): ByteArray {
     val bitmap = Bitmap.createBitmap(width, height, config ?: Bitmap.Config.ARGB_8888)
     setBounds(0, 0, width, height)

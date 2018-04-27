@@ -31,27 +31,27 @@ import java.io.ByteArrayOutputStream
 import java.util.EnumMap
 
 internal class OMGQRScannerLogic(
-        private val omgQRScannerView: OMGQRScannerContract.View,
-        private val omgQRVerifier: OMGQRScannerContract.Logic.QRVerifier,
-        private val rotater: OMGQRScannerContract.Logic.Rotation = Rotater(),
-        private val qrReader: Reader = MultiFormatReader().apply {
-            setHints(
-                    EnumMap<DecodeHintType, Any>(DecodeHintType::class.java).apply {
-                        set(DecodeHintType.POSSIBLE_FORMATS, listOf(BarcodeFormat.QR_CODE))
-                    }
-            )
-        }
+    private val omgQRScannerView: OMGQRScannerContract.View,
+    private val omgQRVerifier: OMGQRScannerContract.Logic.QRVerifier,
+    private val rotater: OMGQRScannerContract.Logic.Rotation = Rotater(),
+    private val qrReader: Reader = MultiFormatReader().apply {
+        setHints(
+            EnumMap<DecodeHintType, Any>(DecodeHintType::class.java).apply {
+                set(DecodeHintType.POSSIBLE_FORMATS, listOf(BarcodeFormat.QR_CODE))
+            }
+        )
+    }
 ) : OMGQRScannerContract.Logic {
     private var mQRFrameExtractor: QRFrameExtractor? = null
     private var mPreviewSize: Camera.Size? = null
     private val errorTxNotFound: OMGResponse<APIError> by lazy {
         OMGResponse(
-                Versions.EWALLET_API,
-                false,
-                APIError(
-                        ErrorCode.TRANSACTION_REQUEST_NOT_FOUND,
-                        "There is no transaction request corresponding to the provided address"
-                )
+            Versions.EWALLET_API,
+            false,
+            APIError(
+                ErrorCode.TRANSACTION_REQUEST_NOT_FOUND,
+                "There is no transaction request corresponding to the provided address"
+            )
         )
     }
 
@@ -96,10 +96,10 @@ internal class OMGQRScannerLogic(
         }
 
         return Rect(
-                (qrFrame.left * ratio).toInt(),
-                (qrFrame.top * ratio).toInt(),
-                (qrFrame.right * ratio).toInt(),
-                (qrFrame.bottom * ratio).toInt()
+            (qrFrame.left * ratio).toInt(),
+            (qrFrame.top * ratio).toInt(),
+            (qrFrame.right * ratio).toInt(),
+            (qrFrame.bottom * ratio).toInt()
         )
     }
 
@@ -128,17 +128,17 @@ internal class OMGQRScannerLogic(
 
         /* Rotate the data to correct the orientation */
         val newData = adjustRotation(
-                data,
-                mPreviewSize!!.width to mPreviewSize!!.height,
-                omgQRScannerView.cameraPreview?.displayOrientation ?: 1
+            data,
+            mPreviewSize!!.width to mPreviewSize!!.height,
+            omgQRScannerView.cameraPreview?.displayOrientation ?: 1
         )
 
         /* Prepare the bitmap for decoding by exclude the superfluous pixels (pixels outside the frame)*/
         if (mQRFrameExtractor == null) {
             val rect = adjustFrameInPreview(
-                    omgQRScannerView.omgScannerUI.width to omgQRScannerView.omgScannerUI.height,
-                    mutableSize.first to mutableSize.second,
-                    omgQRScannerView.omgScannerUI.mFramingRect
+                omgQRScannerView.omgScannerUI.width to omgQRScannerView.omgScannerUI.height,
+                mutableSize.first to mutableSize.second,
+                omgQRScannerView.omgScannerUI.mFramingRect
             )
             mQRFrameExtractor = QRFrameExtractor(omgQRScannerView.omgScannerUI, rect)
         }
@@ -152,17 +152,17 @@ internal class OMGQRScannerLogic(
         }
 
         val source = mQRFrameExtractor?.extractPixelsInQRFrame(
-                newData, mutableSize.first, mutableSize.second
+            newData, mutableSize.first, mutableSize.second
         ) ?: return
 
         /* Use the original source to decode */
         var rawResult = qrReader.decodeFirstOtherwiseNull(
-                BinaryBitmap(HybridBinarizer(source))
+            BinaryBitmap(HybridBinarizer(source))
         )
 
         /* Original source doesn't work, let's try to invert black and white pixels */
         rawResult = rawResult ?: qrReader.decodeFirstOtherwiseNull(
-                BinaryBitmap(HybridBinarizer(source.invert()))
+            BinaryBitmap(HybridBinarizer(source.invert()))
         )
 
         rawResult?.text?.let { txId ->

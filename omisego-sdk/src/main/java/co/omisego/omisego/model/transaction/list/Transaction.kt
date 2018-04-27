@@ -15,18 +15,18 @@ import java.util.Date
 data class TransactionExchange(val rate: Double)
 
 data class TransactionSource(
-        val address: String,
-        val amount: BigDecimal,
-        val mintedToken: MintedToken
+    val address: String,
+    val amount: BigDecimal,
+    val mintedToken: MintedToken
 )
 
 data class Transaction(
-        val id: String,
-        val status: TransactionStatus,
-        val from: TransactionSource,
-        val to: TransactionSource,
-        val exchange: TransactionExchange,
-        val metadata: Map<String, Any>,
-        val createdAt: Date,
-        val updatedAt: Date
+    val id: String,
+    val status: TransactionStatus,
+    val from: TransactionSource,
+    val to: TransactionSource,
+    val exchange: TransactionExchange,
+    val metadata: Map<String, Any>,
+    val createdAt: Date,
+    val updatedAt: Date
 ) : Paginable.Transaction()

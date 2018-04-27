@@ -4,7 +4,6 @@ import co.omisego.omisego.qrcode.scanner.utils.Rotater
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
 
-
 /*
  * OmiseGO
  *

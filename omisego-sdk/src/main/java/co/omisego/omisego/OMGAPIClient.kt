@@ -115,7 +115,6 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
     fun consumeTransactionRequest(request: TransactionConsumptionParams) =
         eWalletAPI.consumeTransactionRequest(request)
 
-
     /**
      * Set new [authenticationToken].
      *

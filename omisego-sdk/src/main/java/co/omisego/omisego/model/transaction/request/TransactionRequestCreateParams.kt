@@ -82,7 +82,6 @@ data class TransactionRequestCreateParams(
     val expirationDate: Date? = null
 ) {
 
-
     init {
         require(allowAmountOverride || amount != null) {
             "allowAmountOverride "

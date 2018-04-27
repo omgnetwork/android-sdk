@@ -117,7 +117,6 @@ class EWalletClientTest {
         }
         errorFun shouldThrow Exceptions.emptyAuthenticationToken::class withMessage
                 Exceptions.emptyAuthenticationToken.message!!
-
     }
 
     @Test
