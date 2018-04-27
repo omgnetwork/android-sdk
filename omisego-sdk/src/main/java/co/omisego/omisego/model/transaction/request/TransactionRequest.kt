@@ -112,7 +112,7 @@ data class TransactionRequest(
     val expirationReason: String?,
 
     /**
-     * The amount of time in milisecond during which a consumption is valid
+     * The amount of time in millisecond during which a consumption is valid
      */
     val consumptionLifetime: Int?,
 
@@ -131,4 +131,4 @@ data class TransactionRequest(
  * An extension function that converts the [TransactionRequest] to the [TransactionConsumptionParams] easily
  */
 fun TransactionRequest.toTransactionConsumptionParams(): TransactionConsumptionParams? =
-    TransactionConsumptionParams.init(this)
+    TransactionConsumptionParams(this)

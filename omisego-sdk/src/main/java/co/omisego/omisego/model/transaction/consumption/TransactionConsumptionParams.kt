@@ -15,14 +15,14 @@ import java.math.BigDecimal
  */
 data class TransactionConsumptionParams(
     /**
-     * The id of the transaction request to be consumed
+     * The transaction request to be consumed
      */
-    val transactionRequestId: String,
+    private val transactionRequest: TransactionRequest,
 
     /**
      * The amount of minted token to transfer (down to subunit to unit)
      */
-    val amount: BigDecimal? = null,
+    var amount: BigDecimal? = null,
 
     /**
      * The address to use for the consumption
@@ -34,12 +34,12 @@ data class TransactionConsumptionParams(
      * In the case of a type "send", this will be the token that the consumer will receive
      * In the case of a type "receive" this will be the token that the consumer will send
      */
-    val mintedTokenId: String? = null,
+    val tokenId: String? = null,
 
     /**
      * The idempotency token to use for the consumption
      */
-    val idempotencyToken: String = "${transactionRequestId}-${System.currentTimeMillis()}",
+    val idempotencyToken: String = "${transactionRequest.id}-${System.nanoTime()}",
 
     /**
      *  An id that can uniquely identify a transaction. Typically an order id from a provider.
@@ -56,46 +56,16 @@ data class TransactionConsumptionParams(
      */
     val encryptedMetadata: Map<String, Any> = mapOf()
 ) {
-    companion object {
 
-        /**
-         * Initialize the params used to consume a transaction request
-         * Returns null if the amount is null and was not specified in the transaction request
-         *
-         * @param transactionRequest - The transaction request to consume
-         * @param amount - The amount of minted token to transfer (down to subunit to unit)
-         * @param metadata - Additional metadata for the consumption
-         * @param encryptedMetadata - Additional encrypted metadata embedded with the request
-         * @param idempotencyToken - The idempotency token to use for the consumption
-         * @param address - The address to use for the consumption
-         * @param tokenId - The id of the minted token to use for the request
-         * In the case of a type "send", this will be the token that the consumer will receive
-         * In the case of a type "receive" this will be the token that the consumer will send
-         * @param correlationId - An id that can uniquely identify a transaction. Typically an order id from a provider
-         *
-         * @return A [TransactionConsumptionParams] to request to the API
-         */
-        fun init(
-            transactionRequest: TransactionRequest,
-            amount: BigDecimal? = null,
-            metadata: Map<String, Any> = mapOf(),
-            encryptedMetadata: Map<String, Any> = mapOf(),
-            idempotencyToken: String = "${transactionRequest.id}-${System.nanoTime()}",
-            address: String? = null,
-            tokenId: String? = null,
-            correlationId: String? = null
-        ): TransactionConsumptionParams? {
-            if (transactionRequest.amount == null && amount == null) return null
-            return TransactionConsumptionParams(
-                transactionRequest.id,
-                if (amount == transactionRequest.amount) null else amount,
-                address,
-                tokenId,
-                idempotencyToken,
-                correlationId,
-                metadata,
-                encryptedMetadata
-            )
+    /**
+     * Initialize the params used to consume a transaction request
+     * Returns null if the amount is null and was not specified in the transaction request
+     */
+    init {
+        require(transactionRequest.amount != null || amount != null) {
+            "The transactionRequest amount or the amount of minted token to transfer should be provided"
         }
+
+        amount = if (transactionRequest.amount == amount) null else amount
     }
 }

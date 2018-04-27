@@ -16,7 +16,7 @@ class TransactionRequestCreateParamsTest {
 
     @Test
     fun `TransactionRequestCreateParams should return null if allowAmountOverride is false and the amount is null`() {
-        val req = TransactionRequestCreateParams.init(TransactionRequestType.RECEIVE, "1234", null)
+        val req = TransactionRequestCreateParams.init(TransactionRequestType.RECEIVE, "1234", null, allowAmountOverride = false)
 
         req shouldBe null
     }

@@ -81,14 +81,22 @@ data class TransactionRequestCreateParams(
      */
     val expirationDate: Date? = null
 ) {
+
+
+    init {
+        require(allowAmountOverride || amount != null) {
+            "allowAmountOverride "
+        }
+    }
+
     companion object {
         fun init(
             type: TransactionRequestType,
             tokenId: String,
             amount: BigDecimal? = null,
             address: String? = null,
-            requireConfirmation: Boolean = true,
-            allowAmountOverride: Boolean = false,
+            requireConfirmation: Boolean = false,
+            allowAmountOverride: Boolean = true,
             correlationId: String? = null,
             maxConsumptions: Int? = null,
             consumptionLifetime: Int? = null,

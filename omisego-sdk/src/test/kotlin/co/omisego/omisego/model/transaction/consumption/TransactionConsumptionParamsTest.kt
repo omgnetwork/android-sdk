@@ -13,45 +13,49 @@ import com.nhaarman.mockito_kotlin.whenever
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.withMessage
 import org.junit.Test
 
 class TransactionConsumptionParamsTest {
 
     @Test
-    fun `TransactionConsumptionParams init should be return null if the transactionRequest amount is null`() {
+    fun `TransactionConsumptionParams should be return null if the transactionRequest amount is null`() {
         val transactionRequest: TransactionRequest = mock()
 
         whenever(transactionRequest.id).thenReturn("omg-test1234")
         whenever(transactionRequest.amount).thenReturn(null)
 
-        val tx = TransactionConsumptionParams.init(transactionRequest)
-        tx shouldBe null
+        val result = { TransactionConsumptionParams(transactionRequest) }
+
+        result shouldThrow IllegalArgumentException::class withMessage
+            "The transactionRequest amount or the amount of minted token to transfer should be provided"
     }
 
     @Test
-    fun `TransactionConsumptionParams init should be use amount null if transactionRequest amount equals the amount`() {
+    fun `TransactionConsumptionParams should be use amount null if transactionRequest amount equals the amount`() {
         val transactionRequest: TransactionRequest = mock()
 
         whenever(transactionRequest.id).thenReturn("omg-test1234")
         whenever(transactionRequest.amount).thenReturn(1234.bd)
 
-        val tx = TransactionConsumptionParams.init(transactionRequest, amount = 1234.bd)
-        tx?.amount shouldBe null
+        val tx = TransactionConsumptionParams(transactionRequest, amount = 1234.bd)
+        tx.amount shouldBe null
     }
 
     @Test
-    fun `TransactionConsumptionParams init should use amount as the sending amount if transactionRequest amount and the sending amount are not the same`() {
+    fun `TransactionConsumptionParams should use amount as the sending amount if transactionRequest amount and the sending amount are not the same`() {
         val transactionRequest: TransactionRequest = mock()
 
         whenever(transactionRequest.id).thenReturn("omg-test1234")
         whenever(transactionRequest.amount).thenReturn(1234.bd)
 
-        val tx = TransactionConsumptionParams.init(transactionRequest, amount = 100.bd)
+        val tx = TransactionConsumptionParams(transactionRequest, amount = 100.bd)
         tx?.amount shouldEqual 100.bd
     }
 
     @Test
-    fun `TransactionConsumptionParams call init function multiple times should produce unique idempotencyToken`() {
+    fun `TransactionConsumptionParams call function multiple times should produce unique idempotencyToken`() {
         val transactionRequest: TransactionRequest = mock()
 
         whenever(transactionRequest.id).thenReturn("omg-test1234")
@@ -60,7 +64,7 @@ class TransactionConsumptionParamsTest {
         val idempotencyTokenSet = mutableSetOf<String>()
 
         for (i in 0 until 1000) {
-            idempotencyTokenSet.add(TransactionConsumptionParams.init(transactionRequest)?.idempotencyToken ?: "")
+            idempotencyTokenSet.add(TransactionConsumptionParams(transactionRequest).idempotencyToken)
         }
 
         idempotencyTokenSet.size shouldEqual 1000

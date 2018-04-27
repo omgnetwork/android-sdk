@@ -201,26 +201,33 @@ Where:
     * `isFirstPage` is a bool indicating if the page received is the first page
     * `isLastPage` is a bool indicating if the page received is the last page
 
-## QR Codes
-This SDK offers the possibility to generate and consume transaction requests. Typically these actions should be done through the generation and scan of QR codes.
+## Transferring tokens
+In order to transfer tokens between 2 addresses, the SDK offers the possibility to generate and consume transaction requests. To make a transaction happen, a `TransactionRequest` needs to be created and consumed by a `TransactionConsumption`.
 
-### Generation
+### Generate a transaction request
 To generate a new transaction request you can call:
 
 ```kotlin
-val request = TransactionRequestParams(
+val request = TransactionRequestCreateParams(
     type = TransactionRequestType.RECEIVE,
     tokenId = "a_token_id",
     amount = 10_240, /* If the token has subUnitToUnit = 1,000, it means this request want to receive 10.24 OMG */
     address = "receiver_address",
-    correlationId = "correlation_id"
+    correlationId = "correlation_id",
+    requireConfirmation = false,
+    maxConsumption = 10,
+    consumptionLifetime = 60000,
+    expirationDate = null,
+    allowAmountOverride = true,
+    metadata = mapof<String, Any>(),
+    encryptedMetadata = mapOf<String, Any>()
 )
+
+val omgAPIClient = YOUR_OMG_API_CLIENT
 
 omgAPIClient.createTransactionRequest(request).enqueue(object : OMGCallback<TransactionRequest> {
     override fun success(response: OMGResponse<TransactionRequest>) {
         //TODO: Do something with the transaction request (get the QR code representation for example)
-        val qrBitmap = response.data.generateQRCode(512)) // Generate the QR bitmap with size 512x512 px
-        imageViewQRCode.setImageBitmap(qrBitmap)
     }
 
     override fun fail(response: OMGResponse<APIError>) {
@@ -236,11 +243,66 @@ Where:
     * `amount`: (optional) The amount of token to receive. This amount can be either inputted when generating or consuming a transaction request.
     * `address`: (optional) The address specifying where the transaction should be sent to. If not specified, the current user's primary address will be used.
     * `correlationId`: (optional) An id that can uniquely identify a transaction. Typically an order id from a provider.
+    * `requireConfirmation`: A boolean indicating if the request needs a confirmation from the requester before being proceeded
+    * `maxConsumptions`: (optional) The maximum number of time that this request can be consumed
+    * `consumptionLifetime`: (optional) The amount of time in millisecond during which a consumption is valid
+    * `expirationDate`: (optional) The date when the request will expire and not be consumable anymore
+    * `allowAmountOverride`: (optional) Allow or not the consumer to override the amount specified in the request. This needs to be true if the amount is not specified
+    > Note that if amount is nil and allowAmountOverride is false the init will fail and return null.
+    * `metadata`: Additional metadata embedded with the request
+    * `encryptedMetadata`: Additional encrypted metadata embedded with the request
 
-A `TransactionRequest` object is passed to the success callback, you can get its QR code representation using `transactionRequest.generateQRCode(size)`.
+A `TransactionRequest` object is passed to the success callback, you can generate its QR code representation using `transactionRequest.generateQRCode(size)`.
 
+### Consume a transaction request
+The previously created `transactionRequest` can then be consumed:
 
-#### Generate QR Code Bitmap representation of a transaction request
+```kotlin
+/* Create transaction consumption with default parameters */
+val request = TransactionConsumptionParams(
+    transactionRequest
+)
+
+val request = TransactionConsumptionParams(
+    transactionRequest,
+    amount = 25_000.bd, // BigDecimal
+    address = "an address",
+    tokenId = "A token id",
+    idempotencyToken = "An idempotency token",
+    correlationId = "a correlation id",
+    metadata = mapOf(),
+    encryptedMetadata = mapOf()
+)
+
+omgAPIClient.consumeTransactionRequest(request).enqueue(object : OMGCallback<TransactionConsumption> {
+    override fun success(response: OMGResponse<TransactionConsumption>) {
+        // Handle success
+    }
+
+    override fun fail(response: OMGResponse<APIError>) {
+        // Handle error
+    }
+})
+```
+
+Where 
+* `request` is a `TransactionConsumptionParams` data class constructed using:
+    * `transactionRequest`: The transactionRequest obtained from the QR scanner.
+    * `address`: (optional) The address from which to take the funds. If not specified, the current user's primary address will be used.
+    * `tokenId`: (optional) The token id to use for the consumption.
+    * `amount`: (optional) The amount of token to send. This amount can be either inputted when generating or consuming a transaction request.
+    
+        > Note that if the amount was not specified in the transaction request it needs to be specified here, otherwise the init will fail and throw `IllegalArgumentException`.
+        
+    * `idempotencyToken`: The idempotency token used to ensure that the transaction will be executed one time only on the server. If the network call fails, you should reuse the same idempotencyToken when retrying the request.
+    * `correlationId`: (optional) An id that can uniquely identify a transaction. Typically an order id from a provider.
+    * `metadata`: A dictionary of additional data to be stored for this transaction consumption.
+    * `encryptedMetadata`: A dictionary of additional encrypted data to be stored for this transaction consumption.
+
+## QR Codes
+This SDK offers the possibility to generate and consume transaction requests. Typically these actions should be done through the generation and scan of QR codes.
+
+### Generate QR Code Bitmap representation of a transaction request
 Once a `TransactionRequest` is created, you can get its QR code representation using `generateQRCode(size)`.
 This method takes an optional `size` param that can be used to define the expected size of the generated QR bitmap.
 
@@ -248,7 +310,7 @@ This method takes an optional `size` param that can be used to define the expect
 val bitmap = txRequest.generateQRCode(512) // Create a 512x512 QR code 
 ```
 
-#### Scan a QR code
+### Scan a QR code
 You can then use the `OMGQRScannerView` to scan the generated QR code.
 
 <p align="center">
