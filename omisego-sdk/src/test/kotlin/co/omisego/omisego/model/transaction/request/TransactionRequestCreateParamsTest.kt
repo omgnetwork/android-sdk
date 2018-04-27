@@ -8,27 +8,59 @@ package co.omisego.omisego.model.transaction.request
  */
 
 import co.omisego.omisego.extension.bd
-import org.amshove.kluent.shouldBe
-import org.amshove.kluent.shouldNotBe
+import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.withMessage
 import org.junit.Test
 
 class TransactionRequestCreateParamsTest {
-
     @Test
-    fun `TransactionRequestCreateParams should return null if allowAmountOverride is false and the amount is null`() {
-        val req = TransactionRequestCreateParams.init(TransactionRequestType.RECEIVE, "1234", null, allowAmountOverride = false)
+    fun `TransactionRequestCreateParams should throws IllegalArgumentException if allowAmountOverride is false and the amount is null`() {
+        val exception = {
+            TransactionRequestCreateParams(
+                TransactionRequestType.RECEIVE,
+                "1234",
+                null,
+                allowAmountOverride = false
+            )
+        }
 
-        req shouldBe null
+        exception shouldThrow IllegalArgumentException::class withMessage
+            "The amount cannot be null if the allowAmountOverride is false"
     }
 
     @Test
-    fun `TransactionRequestCreateParams should be created successfully`() {
-        val req = TransactionRequestCreateParams.init(
+    fun `TransactionRequestCreateParams should be created successfully if using the default parameters`() {
+        TransactionRequestCreateParams(
+            tokenId = "OMG-1234-5678"
+        )
+    }
+
+    @Test
+    fun `TransactionRequestCreateParams should be created successfully if the allowAmountOverride is false and the amount is not null`() {
+        TransactionRequestCreateParams(
             TransactionRequestType.RECEIVE,
             "OMG-1234-5678",
             100.bd
         )
+    }
 
-        req shouldNotBe null
+    @Test
+    fun `TransactionRequestCreateParams should be able to created if allowAmountOverride is true and the amount is null`() {
+        TransactionRequestCreateParams(
+            TransactionRequestType.RECEIVE,
+            "1234",
+            null,
+            allowAmountOverride = true
+        )
+    }
+
+    @Test
+    fun `TransactionRequestCreateParams should be able to created if allowAmountOverride is true and the amount is not null`() {
+        TransactionRequestCreateParams(
+            TransactionRequestType.RECEIVE,
+            "1234",
+            100.bd,
+            allowAmountOverride = true
+        )
     }
 }

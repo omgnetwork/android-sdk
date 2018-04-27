@@ -49,7 +49,7 @@ data class TransactionRequestCreateParams(
      * Allow or not the consumer to override the amount specified in the request
      * This needs to be true if the amount is not specified
      */
-    val allowAmountOverride: Boolean = false,
+    val allowAmountOverride: Boolean = true,
 
     /**
      * Additional metadata embedded with the request
@@ -84,40 +84,7 @@ data class TransactionRequestCreateParams(
 
     init {
         require(allowAmountOverride || amount != null) {
-            "allowAmountOverride "
-        }
-    }
-
-    companion object {
-        fun init(
-            type: TransactionRequestType,
-            tokenId: String,
-            amount: BigDecimal? = null,
-            address: String? = null,
-            requireConfirmation: Boolean = false,
-            allowAmountOverride: Boolean = true,
-            correlationId: String? = null,
-            maxConsumptions: Int? = null,
-            consumptionLifetime: Int? = null,
-            expirationDate: Date? = null,
-            metadata: Map<String, Any> = mapOf(),
-            encryptedMetadata: Map<String, Any> = mapOf()
-        ): TransactionRequestCreateParams? {
-            if (!allowAmountOverride && amount == null) return null
-            return TransactionRequestCreateParams(
-                type,
-                tokenId,
-                amount,
-                address,
-                requireConfirmation,
-                allowAmountOverride,
-                metadata,
-                encryptedMetadata,
-                correlationId,
-                maxConsumptions,
-                consumptionLifetime,
-                expirationDate
-            )
+            "The amount cannot be null if the allowAmountOverride is false"
         }
     }
 }

@@ -26,7 +26,7 @@ class TransactionConsumptionParamsTest {
         whenever(transactionRequest.id).thenReturn("omg-test1234")
         whenever(transactionRequest.amount).thenReturn(null)
 
-        val result = { TransactionConsumptionParams(transactionRequest) }
+        val result = { TransactionConsumptionParams.create(transactionRequest) }
 
         result shouldThrow IllegalArgumentException::class withMessage
             "The transactionRequest amount or the amount of minted token to transfer should be provided"
@@ -39,7 +39,7 @@ class TransactionConsumptionParamsTest {
         whenever(transactionRequest.id).thenReturn("omg-test1234")
         whenever(transactionRequest.amount).thenReturn(1234.bd)
 
-        val tx = TransactionConsumptionParams(transactionRequest, amount = 1234.bd)
+        val tx = TransactionConsumptionParams.create(transactionRequest, amount = 1234.bd)
         tx.amount shouldBe null
     }
 
@@ -50,8 +50,8 @@ class TransactionConsumptionParamsTest {
         whenever(transactionRequest.id).thenReturn("omg-test1234")
         whenever(transactionRequest.amount).thenReturn(1234.bd)
 
-        val tx = TransactionConsumptionParams(transactionRequest, amount = 100.bd)
-        tx?.amount shouldEqual 100.bd
+        val tx = TransactionConsumptionParams.create(transactionRequest, amount = 100.bd)
+        tx.amount shouldEqual 100.bd
     }
 
     @Test
@@ -64,7 +64,7 @@ class TransactionConsumptionParamsTest {
         val idempotencyTokenSet = mutableSetOf<String>()
 
         for (i in 0 until 1000) {
-            idempotencyTokenSet.add(TransactionConsumptionParams(transactionRequest).idempotencyToken)
+            idempotencyTokenSet.add(TransactionConsumptionParams.create(transactionRequest).idempotencyToken)
         }
 
         idempotencyTokenSet.size shouldEqual 1000

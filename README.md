@@ -208,6 +208,13 @@ In order to transfer tokens between 2 addresses, the SDK offers the possibility 
 To generate a new transaction request you can call:
 
 ```kotlin
+/* Short version */
+val request = TransactionRequestCreateParams(
+    type = TransactionRequestType.RECEIVE,
+    tokenId = "a_token_id"
+)
+
+/* Full version */
 val request = TransactionRequestCreateParams(
     type = TransactionRequestType.RECEIVE,
     tokenId = "a_token_id",
@@ -258,12 +265,13 @@ A `TransactionRequest` object is passed to the success callback, you can generat
 The previously created `transactionRequest` can then be consumed:
 
 ```kotlin
-/* Create transaction consumption with default parameters */
-val request = TransactionConsumptionParams(
+/* Short version */
+val request = TransactionConsumptionParams.create(
     transactionRequest
 )
 
-val request = TransactionConsumptionParams(
+/* Full version */
+val request = TransactionConsumptionParams.create(
     transactionRequest,
     amount = 25_000.bd, // BigDecimal
     address = "an address",

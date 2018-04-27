@@ -129,6 +129,26 @@ data class TransactionRequest(
 
 /**
  * An extension function that converts the [TransactionRequest] to the [TransactionConsumptionParams] easily
+ *
+ * @param amount The amount of minted token to transfer (down to subunit to unit)
+ * @param address The address to use for the consumption
+ * @param tokenId The id of the minted token to use for the request
+ * In the case of a type "send", this will be the token that the consumer will receive
+ * In the case of a type "receive" this will be the token that the consumer will send
+ * @param idempotencyToken The idempotency token to use for the consumption
+ * @param correlationId An id that can uniquely identify a transaction. Typically an order id from a provider.
+ * @param metadata Additional metadata for the consumption
+ * @param encryptedMetadata Additional encrypted metadata for the consumption
+ *
+ * @return The [TransactionConsumptionParams] used for consume the a transaction request
  */
-fun TransactionRequest.toTransactionConsumptionParams(): TransactionConsumptionParams? =
-    TransactionConsumptionParams(this)
+fun TransactionRequest.toTransactionConsumptionParams(
+    amount: BigDecimal? = null,
+    address: String? = null,
+    tokenId: String? = null,
+    idempotencyToken: String = "${this.id}-${System.nanoTime()}",
+    correlationId: String? = null,
+    metadata: Map<String, Any> = mapOf(),
+    encryptedMetadata: Map<String, Any> = mapOf()
+): TransactionConsumptionParams? =
+    TransactionConsumptionParams.create(this)
