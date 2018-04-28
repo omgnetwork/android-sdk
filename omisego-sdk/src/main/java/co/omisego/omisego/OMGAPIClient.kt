@@ -19,8 +19,9 @@ import co.omisego.omisego.network.ewallet.EWalletClient
 /**
  * The class OMGAPIClient represents an object that knows how to interact with OmiseGO API.
  *
- * Create instances using [OMGAPIClient.Builder] and pass your implementation of [OMGCallback<T>] interface
- * to generate an implementation
+ * To initialize [OMGAPIClient], the following steps should be taken.
+ *
+ * 1. Create the [EWalletClient] instance using the [EWalletClient.Builder]
  *
  * For example,
  * <code>
@@ -28,7 +29,12 @@ import co.omisego.omisego.network.ewallet.EWalletClient
  *      authenticationToken = YOUR_TOKEN
  *      baseUrl = YOUR_BASE_URL
  * }.build()
+ * </code>
  *
+ * 2. Create an [OMGAPIClient] passing with [EWalletClient] as a parameter.
+ *
+ * For example,
+ * <code>
  * val omgAPIClient = OMGAPIClient(eWalletClient)
  *
  * omgApiClient.listBalances().enqueue(object : OMGCallback<BalanceList> {
@@ -42,6 +48,7 @@ import co.omisego.omisego.network.ewallet.EWalletClient
  * })
  * </code>
  *
+ * 3. You're done!
  */
 class OMGAPIClient(private val eWalletClient: EWalletClient) {
     private val eWalletAPI
@@ -49,42 +56,38 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
 
     /**
      * Asynchronously send the request to transform the [User] corresponding to the provided authentication token.
-     * if *success* the [callback] will be invoked with the [User] parameter,
-     * if *fail* [callback] will be invoked with the [co.omisego.omisego.models.ApiError] parameter.
-     *
-     * @param callback A callback to receive the response from server.
+     * if *success* the [OMGCallback<User>] will be invoked with the [User] parameter,
+     * if *fail* [OMGCallback<User>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
      */
     fun getCurrentUser() = eWalletAPI.getCurrentUser()
 
     /**
-     * Asynchronously send the request to transform the global settings.
-     * if *success* the [callback] will be invoked with [Setting] parameter,
-     * if *fail* [callback] will be invoked with the [co.omisego.omisego.models.ApiError] parameter.
+     * Asynchronously send the request to get the global settings of the provider.
+     * The global settings will contain a list of an available tokens to be used.
      *
-     * @param callback A callback to receive the response from server.
+     * if *success* the [OMGCallback<Setting>] callback will be invoked with [Setting] parameter,
+     * if *fail* [OMGCallback<Setting>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
      */
     fun getSettings() = eWalletAPI.getSettings()
 
     /**
      * Asynchronously send the request to expire a user's authentication_token.
-     * if *success* the [callback] will be invoked with the empty [String] parameter,
-     * if *fail* [callback] will be invoked with the [co.omisego.omisego.models.ApiError] parameter.
-     *
-     * @param callback A callback to receive the response from server.
+     * if *success* the [OMGCallback<String>] will be invoked with the empty [String] parameter,
+     * if *fail* [OMGCallback<String>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
      */
     fun logout() = eWalletAPI.logout()
 
     /**
-     * Asynchronously send the request to transform the balances of a user corresponding to the provided authentication token.
-     * if *success* the [callback] will be invoked with the list of [Address] parameter,
-     * if *fail* [callback] will be invoked with the [co.omisego.omisego.models.ApiError] parameter.
-     *
-     * @param callback A callback to receive the response from server.
+     * Asynchronously send the request to retrieve the balances of a user corresponding to the provided authentication token.
+     * if *success* the [OMGCallback<BalanceList>] will be invoked with the list of [Address] parameter,
+     * if *fail* [OMGCallback<BalanceList>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
      */
     fun listBalances() = eWalletAPI.listBalances()
 
     /**
-     * Get a paginated list of transaction for the current user
+     * Asynchronously get a paginated list of transactions of a user corresponding to the provided authentication token.
+     * if *success* the [OMGCallback<PaginationList<Transaction>>] will be invoked with the [PaginationList<Transaction>],
+     * if *fail* the [OMGCallback<PaginationList<Transaction>>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
      *
      * @param request A structure used to query a list of transactions for the current user
      */
@@ -92,7 +95,9 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
         eWalletAPI.listTransactions(request)
 
     /**
-     * Generate a transaction request from the given [TransactionRequestCreateParams] object
+     * Asynchronously create a transaction request from the given [TransactionRequestCreateParams] object
+     * if *success* the [OMGCallback<TransactionRequest>] will be invoked with the [co.omisego.omisego.model.transaction.request.TransactionRequest] parameter,
+     * if *fail* the [OMGCallback<TransactionRequest>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
      *
      * @param request The [TransactionRequestCreateParams] object describing the transaction request to be made.
      */
@@ -100,7 +105,9 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
         eWalletAPI.createTransactionRequest(request)
 
     /**
-     * Retrieve a transaction request from its id
+     * Asynchronously retrieve a transaction request from its id
+     * if *success* the [OMGCallback<TransactionRequest>] will be invoked with the [co.omisego.omisego.model.transaction.request.TransactionRequest] parameter,
+     * if *fail* the [OMGCallback<TransactionRequest>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
      *
      * @param request The id of the TransactionRequest to be retrieved
      */
@@ -108,7 +115,9 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
         eWalletAPI.retrieveTransactionRequest(request)
 
     /**
-     * Consume a transaction request from the given TransactionConsumptionParams object
+     * Asynchronously consume a transaction request from the given [TransactionConsumptionParams] object
+     * if *success* the [OMGCallback<TransactionConsumption>] will be invoked with the [co.omisego.omisego.model.transaction.consumption.TransactionConsumption] parameter,
+     * if *fail* the [OMGCallback<TransactionConsumption>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
      *
      * @param request The TransactionConsumptionParams object describing the transaction request to be consumed.
      */
