@@ -15,10 +15,10 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [0.9.1] - 2018-03-19
 ### Added
-- Get the current user
-- Get the addresses of the current user
-- Get the provider settings
-- Get the current user's transactions
+- Retrieves the current user
+- Retrieves the addresses of the current user
+- Retrieves the provider settings
+- Retrieves the current user's transactions
 - Logout the current user
 - OMGKeyManager - the helper class useful for encryption and decryption
 
