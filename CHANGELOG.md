@@ -24,4 +24,3 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 [Unreleased]: https://github.com/omisego/android-sdk/compare/v0.9.2...HEAD
 [0.9.2]: https://github.com/omisego/android-sdk/compare/v0.9.1...v0.9.2
-[0.9.1]: https://github.com/omisego/android-sdk/compare/v0.0.0...v0.9.1
