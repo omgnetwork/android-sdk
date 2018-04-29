@@ -17,6 +17,7 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
   - [Transferring tokens](#transferring-tokens)
     - [Generate a transaction request](#generate-a-transaction-request)
     - [Consume a transaction request](#consume-a-transaction-request)
+    - [Approve or Reject a transaction consumption](#approve-or-reject-a-transaction-consumption)
   - [QR codes](#qr-codes)
     - [Generate a QR code](#generate-qr-code-bitmap-representation-of-a-transaction-request)
     - [Scan a QR code](#scan-a-qr-code)
@@ -312,6 +313,37 @@ Where
     * `correlationId`: (optional) An id that can uniquely identify a transaction. Typically an order id from a provider.
     * `metadata`: A dictionary of additional data to be stored for this transaction consumption.
     * `encryptedMetadata`: A dictionary of additional encrypted data to be stored for this transaction consumption.
+
+### Approve or Reject a transaction consumption
+The `TransactionConsumption` object can be used for reject the transaction consumption by call `reject` function, 
+the function will then return the `OMGCall<TransactionConsumption>` to accordingly be used for request to the API.
+ 
+```kotlin
+    val approveRequest = transactionConsumption.approve(omgAPIClient)
+    val rejectRequest = transactionConsumption.reject(omgAPIClient)
+
+    // Approve a transaction consumption
+    approveRequest.enqueue(object: OMGCallback<TransactionConsumption>{
+        override fun success(response: OMGResponse<TransactionConsumption>) {
+            // Handle success
+        }
+    
+        override fun fail(response: OMGResponse<APIError>) {
+            // Handle error
+        }
+    })
+    
+    // Reject a transaction consumption
+    rejectRequest.enqueue(object: OMGCallback<TransactionConsumption>{
+        override fun success(response: OMGResponse<TransactionConsumption>) {
+            // Handle success
+        }
+    
+        override fun fail(response: OMGResponse<APIError>) {
+            // Handle error
+        }
+    })
+```
 
 ## QR Codes
 This SDK offers the possibility to generate and consume transaction requests. Typically these actions should be done through the generation and scan of QR codes.
