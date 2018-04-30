@@ -1,7 +1,6 @@
 package co.omisego.omisego.model.transaction.consumption
 
 import co.omisego.omisego.OMGAPIClient
-import co.omisego.omisego.model.transaction.consume.TransactionConsumptionAction
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.amshove.kluent.mock
@@ -46,12 +45,12 @@ class TransactionConsumptionTest {
     @Test
     fun `When approve is invoked, OMGAPIClient should invoke the approveTransactionConsumption function properly`() {
         mTransactionConsumption.approve(mOMGAPIClient)
-        verify(mOMGAPIClient, times(1)).approveTransactionConsumption(TransactionConsumptionAction("OMG-1234"))
+        verify(mOMGAPIClient, times(1)).approveTransactionConsumption(TransactionConsumptionActionParams("OMG-1234"))
     }
 
     @Test
     fun `When reject is invoked, OMGAPIClient should invoke the rejectTransactionConsumption function properly`() {
         mTransactionConsumption.reject(mOMGAPIClient)
-        verify(mOMGAPIClient, times(1)).rejectTransactionConsumption(TransactionConsumptionAction("OMG-1234"))
+        verify(mOMGAPIClient, times(1)).rejectTransactionConsumption(TransactionConsumptionActionParams("OMG-1234"))
     }
 }

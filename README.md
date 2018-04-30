@@ -315,34 +315,35 @@ Where
     * `encryptedMetadata`: A dictionary of additional encrypted data to be stored for this transaction consumption.
 
 ### Approve or Reject a transaction consumption
-The `TransactionConsumption` object can be used for reject the transaction consumption by call `reject` function, 
-the function will then return the `OMGCall<TransactionConsumption>` to accordingly be used for request to the API.
+The `TransactionConsumption` object can be used for `approve` or `reject` the transaction consumption. 
+Once you receive the `transactionConsumption` object, then you can call `approve` or `reject` function. 
+The function will then return the `OMGCall<TransactionConsumption>` object to be used for making the actual request to the API.
  
 ```kotlin
-    val approveRequest = transactionConsumption.approve(omgAPIClient)
-    val rejectRequest = transactionConsumption.reject(omgAPIClient)
+val approveRequest = transactionConsumption.approve(omgAPIClient)
+val rejectRequest = transactionConsumption.reject(omgAPIClient)
 
-    // Approve a transaction consumption
-    approveRequest.enqueue(object: OMGCallback<TransactionConsumption>{
-        override fun success(response: OMGResponse<TransactionConsumption>) {
-            // Handle success
-        }
-    
-        override fun fail(response: OMGResponse<APIError>) {
-            // Handle error
-        }
-    })
-    
-    // Reject a transaction consumption
-    rejectRequest.enqueue(object: OMGCallback<TransactionConsumption>{
-        override fun success(response: OMGResponse<TransactionConsumption>) {
-            // Handle success
-        }
-    
-        override fun fail(response: OMGResponse<APIError>) {
-            // Handle error
-        }
-    })
+// Approve a transaction consumption
+approveRequest.enqueue(object: OMGCallback<TransactionConsumption>{
+    override fun success(response: OMGResponse<TransactionConsumption>) {
+        // Handle success
+    }
+
+    override fun fail(response: OMGResponse<APIError>) {
+        // Handle error
+    }
+})
+
+// Reject a transaction consumption
+rejectRequest.enqueue(object: OMGCallback<TransactionConsumption>{
+    override fun success(response: OMGResponse<TransactionConsumption>) {
+        // Handle success
+    }
+
+    override fun fail(response: OMGResponse<APIError>) {
+        // Handle error
+    }
+})
 ```
 
 ## QR Codes

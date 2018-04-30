@@ -13,7 +13,6 @@ import co.omisego.omisego.constant.enums.OMGEnum
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
 import co.omisego.omisego.model.MintedToken
 import co.omisego.omisego.model.User
-import co.omisego.omisego.model.transaction.consume.TransactionConsumptionAction
 import co.omisego.omisego.model.transaction.list.Transaction
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import java.math.BigDecimal
@@ -157,7 +156,7 @@ data class TransactionConsumption(
  * @return The [OMGCall<TransactionConsumption>] object that you need to call enqueue method to actually make a approve request to the API
  */
 fun TransactionConsumption.approve(omgAPIClient: OMGAPIClient): OMGCall<TransactionConsumption> =
-    omgAPIClient.approveTransactionConsumption(TransactionConsumptionAction(this.id))
+    omgAPIClient.approveTransactionConsumption(TransactionConsumptionActionParams(this.id))
 
 /**
  * An extension function that used the id from `TransactionConsumption` object to reject the transaction
@@ -166,4 +165,4 @@ fun TransactionConsumption.approve(omgAPIClient: OMGAPIClient): OMGCall<Transact
  * @return The [OMGCall<TransactionConsumption>] object that you need to call enqueue method to actually make a reject request to the API
  */
 fun TransactionConsumption.reject(omgAPIClient: OMGAPIClient) =
-    omgAPIClient.rejectTransactionConsumption(TransactionConsumptionAction(this.id))
+    omgAPIClient.rejectTransactionConsumption(TransactionConsumptionActionParams(this.id))

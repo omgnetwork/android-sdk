@@ -24,7 +24,7 @@ import co.omisego.omisego.model.Logout
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.pagination.PaginationList
-import co.omisego.omisego.model.transaction.consume.TransactionConsumptionAction
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionActionParams
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
 import co.omisego.omisego.model.transaction.list.Transaction
@@ -66,11 +66,11 @@ interface EWalletAPI {
 
     @POST(APPROVE_TRANSACTION)
     fun approveTransactionConsumption(
-        @Body request: TransactionConsumptionAction
+        @Body request: TransactionConsumptionActionParams
     ): OMGCall<TransactionConsumption>
 
     @POST(REJECT_TRANSACTION)
     fun rejectTransactionConsumption(
-        @Body request: TransactionConsumptionAction
+        @Body request: TransactionConsumptionActionParams
     ): OMGCall<TransactionConsumption>
 }

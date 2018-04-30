@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.transaction.consume
+package co.omisego.omisego.model.transaction.consumption
 
 /*
  * OmiseGO
@@ -10,7 +10,7 @@ package co.omisego.omisego.model.transaction.consume
 /**
  * Approve or reject transaction request params
  */
-data class TransactionConsumptionAction(
+data class TransactionConsumptionActionParams(
     /**
      * An id of consumed transaction
      */
