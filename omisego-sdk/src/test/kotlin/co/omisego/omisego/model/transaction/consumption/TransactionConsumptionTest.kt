@@ -1,20 +1,19 @@
 package co.omisego.omisego.model.transaction.consumption
 
-import co.omisego.omisego.OMGAPIClient
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
-import org.amshove.kluent.mock
-import org.junit.Test
-
 /*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 29/4/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
-class TransactionConsumptionTest {
 
-    //    private val mEWalletAPI: EWalletAPI by lazy { mock() }
+import co.omisego.omisego.OMGAPIClient
+import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verify
+import org.amshove.kluent.mock
+import org.junit.Test
+
+class TransactionConsumptionTest {
     private val mOMGAPIClient: OMGAPIClient by lazy { mock<OMGAPIClient>() }
     private val mTransactionConsumption: TransactionConsumption by lazy {
         TransactionConsumption(
