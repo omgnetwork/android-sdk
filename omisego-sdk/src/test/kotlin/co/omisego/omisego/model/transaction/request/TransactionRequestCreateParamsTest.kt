@@ -14,7 +14,7 @@ import org.junit.Test
 
 class TransactionRequestCreateParamsTest {
     @Test
-    fun `TransactionRequestCreateParams should throws IllegalArgumentException if allowAmountOverride is false and the amount is null`() {
+    fun `TransactionRequestCreateParams should throw IllegalArgumentException if allowAmountOverride is false and the amount is null`() {
         val exception = {
             TransactionRequestCreateParams(
                 TransactionRequestType.RECEIVE,
@@ -45,7 +45,7 @@ class TransactionRequestCreateParamsTest {
     }
 
     @Test
-    fun `TransactionRequestCreateParams should be able to created if allowAmountOverride is true and the amount is null`() {
+    fun `TransactionRequestCreateParams should be able to be created if allowAmountOverride is true and the amount is null`() {
         TransactionRequestCreateParams(
             TransactionRequestType.RECEIVE,
             "1234",
@@ -55,7 +55,7 @@ class TransactionRequestCreateParamsTest {
     }
 
     @Test
-    fun `TransactionRequestCreateParams should be able to created if allowAmountOverride is true and the amount is not null`() {
+    fun `TransactionRequestCreateParams should be able to be created if allowAmountOverride is true and the amount is not null`() {
         TransactionRequestCreateParams(
             TransactionRequestType.RECEIVE,
             "1234",
