@@ -13,7 +13,7 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
     - [Get the current user](#get-the-current-user)
     - [Get the addresses of the current user](#get-the-addresses-of-the-current-user)
     - [Get the provider settings](#get-the-provider-settings)
-    - [Get the current user's transactions](#get-the-current-user's-transactions)
+    - [Get the current user's transactions](#get-the-current-users-transactions)
   - [Transferring tokens](#transferring-tokens)
     - [Generate a transaction request](#generate-a-transaction-request)
     - [Consume a transaction request](#consume-a-transaction-request)
