@@ -315,8 +315,8 @@ Where
     * `encryptedMetadata`: A dictionary of additional encrypted data to be stored for this transaction consumption.
 
 ### Approve or Reject a transaction consumption
-The `TransactionConsumption` object can be used for `approve` or `reject` the transaction consumption. 
-Once you receive the `transactionConsumption` object, then you can call `approve` or `reject` function. 
+The `TransactionConsumption` object can be used to `approve` or `reject` the transaction consumption. 
+Once you receive the `transactionConsumption` object, you can call `approve` or `reject` function. 
 The function will then return the `OMGCall<TransactionConsumption>` object to be used for making the actual request to the API.
  
 ```kotlin

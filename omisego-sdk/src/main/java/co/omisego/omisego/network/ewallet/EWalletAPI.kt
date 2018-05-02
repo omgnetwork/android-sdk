@@ -8,7 +8,6 @@ package co.omisego.omisego.network.ewallet
  */
 
 import co.omisego.omisego.constant.Endpoints.CONSUME_TRANSACTION_REQUEST
-import co.omisego.omisego.constant.Endpoints
 import co.omisego.omisego.constant.Endpoints.APPROVE_TRANSACTION
 import co.omisego.omisego.constant.Endpoints.CREATE_TRANSACTION_REQUEST
 import co.omisego.omisego.constant.Endpoints.GET_CURRENT_USER
