@@ -31,8 +31,8 @@ class Rotater : OMGQRScannerContract.Logic.Rotation {
     /**
      * Rotate an image by 90 degrees CW.
      *
-     * @param data        the image data, in with the first width * height bytes being the luminance data.
-     * @param imageWidth  the width of the image
+     * @param data the image data, in with the first width * height bytes being the luminance data.
+     * @param imageWidth the width of the image
      * @param imageHeight the height of the image
      * @return the rotated bytes
      */
@@ -51,8 +51,8 @@ class Rotater : OMGQRScannerContract.Logic.Rotation {
     /**
      * Rotate an image by 90 degrees CCW.
      *
-     * @param data        the image data, in with the first width * height bytes being the luminance data.
-     * @param imageWidth  the width of the image
+     * @param data the image data, in with the first width * height bytes being the luminance data.
+     * @param imageWidth the width of the image
      * @param imageHeight the height of the image
      * @return the rotated bytes
      */
@@ -72,8 +72,8 @@ class Rotater : OMGQRScannerContract.Logic.Rotation {
     /**
      * Rotate an image by 180 degrees.
      *
-     * @param data        the image data, in with the first width * height bytes being the luminance data.
-     * @param imageWidth  the width of the image
+     * @param data the image data, in with the first width * height bytes being the luminance data.
+     * @param imageWidth the width of the image
      * @param imageHeight the height of the image
      * @return the rotated bytes
      */

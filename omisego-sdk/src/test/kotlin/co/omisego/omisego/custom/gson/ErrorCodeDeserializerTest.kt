@@ -26,7 +26,6 @@ import org.junit.Test
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-
 class ErrorCodeDeserializerTest {
 
     private val errorFile by ResourceFile("fail.client-invalid_auth_scheme.json")

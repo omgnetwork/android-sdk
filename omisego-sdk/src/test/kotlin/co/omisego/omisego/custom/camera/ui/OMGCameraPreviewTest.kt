@@ -112,5 +112,4 @@ class OMGCameraPreviewTest {
         verify(camera, times(1)).setPreviewCallback(any())
         verify(camera, times(1)).startPreview()
     }
-
 }

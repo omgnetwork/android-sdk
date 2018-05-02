@@ -8,8 +8,8 @@ package co.omisego.omisego.model.pagination
  */
 
 data class Pagination(
-        val perPage: Int,
-        val isLastPage: Boolean,
-        val isFirstPage: Boolean,
-        val currentPage: Int
+    val perPage: Int,
+    val isLastPage: Boolean,
+    val isFirstPage: Boolean,
+    val currentPage: Int
 )

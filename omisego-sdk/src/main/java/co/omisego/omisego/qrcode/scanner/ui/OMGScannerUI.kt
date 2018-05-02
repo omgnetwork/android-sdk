@@ -24,7 +24,7 @@ import co.omisego.omisego.custom.camera.utils.DisplayUtils
 import co.omisego.omisego.extension.dp
 
 /**
- * Represents the UI of then QR code scanner
+ * Represents the UI of the QR code scanner
  */
 class OMGScannerUI : View, ScannerUI {
     /* Painter for the corner border */

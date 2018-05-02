@@ -54,7 +54,6 @@ class OMGResponseConverterFactoryTest {
         userResult = Response.success(OMGResponse(Versions.EWALLET_API, true, sampleUser))
     }
 
-
     @Test
     fun `OMGConverterFactory should parse the successful response successfully`() {
         whenever(mockResponseBody.string()).thenReturn(userFile.readText())

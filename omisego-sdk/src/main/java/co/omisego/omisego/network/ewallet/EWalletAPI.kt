@@ -7,6 +7,7 @@ package co.omisego.omisego.network.ewallet
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.constant.Endpoints
 import co.omisego.omisego.constant.Endpoints.CREATE_TRANSACTION_REQUEST
 import co.omisego.omisego.constant.Endpoints.GET_CURRENT_USER
 import co.omisego.omisego.constant.Endpoints.GET_SETTINGS
@@ -20,12 +21,15 @@ import co.omisego.omisego.model.Logout
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.pagination.PaginationList
-import co.omisego.omisego.model.transaction.list.TransactionListParams
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
 import co.omisego.omisego.model.transaction.list.Transaction
+import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
 import co.omisego.omisego.model.transaction.request.TransactionRequestParams
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface EWalletAPI {
@@ -49,4 +53,10 @@ interface EWalletAPI {
 
     @POST(RETRIEVE_TRANSACTION_REQUEST)
     fun retrieveTransactionRequest(@Body request: TransactionRequestParams): OMGCall<TransactionRequest>
+
+    @POST(Endpoints.CONSUME_TRANSACTION_REQUEST)
+    fun consumeTransactionRequest(
+        @Body request: TransactionConsumptionParams,
+        @Header("Idempotency-Token") idempotencyToken: String = request.idempotencyToken
+    ): OMGCall<TransactionConsumption>
 }

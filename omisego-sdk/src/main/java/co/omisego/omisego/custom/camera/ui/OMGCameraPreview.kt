@@ -48,16 +48,20 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
         private const val TAG = "OMGCameraPreview"
     }
 
-    constructor(context: Context,
+    constructor(
+        context: Context,
         cameraWrapper: CameraWrapper?,
-        previewCallback: Camera.PreviewCallback) : super(context) {
+        previewCallback: Camera.PreviewCallback
+    ) : super(context) {
         init(cameraWrapper, previewCallback)
     }
 
-    constructor(context: Context,
+    constructor(
+        context: Context,
         attributeSet: AttributeSet,
         cameraWrapper: CameraWrapper?,
-        previewCallback: Camera.PreviewCallback) : super(context, attributeSet) {
+        previewCallback: Camera.PreviewCallback
+    ) : super(context, attributeSet) {
         init(cameraWrapper, previewCallback)
     }
 

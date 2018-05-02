@@ -17,7 +17,7 @@ import com.google.gson.JsonSerializer
 import java.lang.reflect.Type
 
 @Suppress("UNCHECKED_CAST")
-internal class OMGEnumAdapter<T: OMGEnum> : JsonDeserializer<T>, JsonSerializer<T> {
+internal class OMGEnumAdapter<T : OMGEnum> : JsonDeserializer<T>, JsonSerializer<T> {
     override fun deserialize(json: JsonElement, type: Type, context: JsonDeserializationContext): T? {
         val enumConstants = (type as Class<T>).enumConstants
         return enumConstants.firstOrNull { it.value == json.asString }
