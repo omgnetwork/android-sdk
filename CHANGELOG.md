@@ -23,7 +23,7 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ### Fixed
 - [OMGKeyManager KeyStoreException bug](https://github.com/omisego/android-sdk/pull/18)
 
-## [0.9.1] - 2018-03-19
+## 0.9.1 - 2018-03-19
 ### Added
 - [Retrieves the current user](https://github.com/omisego/android-sdk#get-the-current-user)
 - [Retrieves the addresses of the current user](https://github.com/omisego/android-sdk#get-the-addresses-of-the-current-user)
