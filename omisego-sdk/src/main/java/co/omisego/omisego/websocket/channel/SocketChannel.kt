@@ -8,6 +8,8 @@ package co.omisego.omisego.websocket.channel
  */
 
 import co.omisego.omisego.websocket.SocketClientContract
+import co.omisego.omisego.websocket.enum.SocketEventSend
+import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.WebSocketListener
 
 internal class SocketChannel(

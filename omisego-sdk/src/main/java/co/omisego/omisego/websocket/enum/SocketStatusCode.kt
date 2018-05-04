@@ -1,5 +1,4 @@
-package co.omisego.omisego.websocket.channel
-
+package co.omisego.omisego.websocket.enum
 
 /*
  * OmiseGO
@@ -7,6 +6,6 @@ package co.omisego.omisego.websocket.channel
  * Created by Phuchit Sirimongkolsathien on 3/5/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
-class SocketDataParser {
-
+enum class SocketStatusCode(val code: Int) {
+    NORMAL(1000)
 }

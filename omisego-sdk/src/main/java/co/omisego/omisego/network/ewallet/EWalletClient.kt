@@ -8,16 +8,11 @@ package co.omisego.omisego.network.ewallet
  */
 
 import co.omisego.omisego.constant.Exceptions
-import co.omisego.omisego.constant.enums.ErrorCode
-import co.omisego.omisego.constant.enums.OMGEnum
-import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
-import co.omisego.omisego.custom.gson.OMGEnumAdapter
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
 import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.network.InterceptorProvider
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.GsonBuilder
+import co.omisego.omisego.utils.GsonProvider
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -112,13 +107,7 @@ class EWalletClient {
                 }
             }.build()
 
-            /* Use a simple gson for now */
-            val gson = GsonBuilder()
-                    .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
-                    .registerTypeHierarchyAdapter(OMGEnum::class.java, OMGEnumAdapter<OMGEnum>())
-                    .serializeNulls()
-                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                    .create()
+            val gson = GsonProvider.create()
 
             /* Create retrofit with OMGConverter and OMGCaller */
             eWalletClient.retrofit = Retrofit.Builder().apply {

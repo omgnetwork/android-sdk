@@ -7,6 +7,8 @@ package co.omisego.omisego.websocket.channel
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.WebSocketListener
 
 interface SocketChannelContract {
@@ -20,7 +22,7 @@ interface SocketChannelContract {
     }
 
     interface SocketClient {
-        fun send(topic: String, event: SocketEventSend)
+        fun send(message: SocketSend): Boolean
         fun closeConnection(status: SocketStatusCode, reason: String)
     }
 
@@ -29,5 +31,4 @@ interface SocketChannelContract {
         fun handleConsumeEvents()
         fun retrieveWebSocketListener(): WebSocketListener
     }
-
 }

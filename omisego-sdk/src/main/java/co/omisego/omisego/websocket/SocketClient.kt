@@ -9,35 +9,29 @@ package co.omisego.omisego.websocket
 
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.HTTPHeaders
+import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.websocket.channel.SocketChannel
 import co.omisego.omisego.websocket.channel.SocketChannelContract
-import co.omisego.omisego.websocket.channel.SocketEventSend
-import co.omisego.omisego.websocket.channel.SocketStatusCode
-import co.omisego.omisego.websocket.channel.dispatcher.SocketCallback
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcher
+import co.omisego.omisego.websocket.channel.dispatcher.callback.SocketCallback
+import co.omisego.omisego.websocket.channel.dispatcher.callback.SocketReceiveParser
+import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
+import okhttp3.logging.HttpLoggingInterceptor
 
 class SocketClient private constructor(
     private val okHttpClient: OkHttpClient,
+    private val request: Request,
     private val socketMessageRef: SocketMessageRef,
-    private val request: Request
+    private val socketSendParser: SocketClientContract.PayloadSendParser
 ) : SocketClientContract.Core, SocketChannelContract.SocketClient {
     private var wsClient: WebSocket? = null
     private lateinit var socketChannel: SocketChannel
 
-    override fun send(topic: String, event: SocketEventSend) {
-        if (wsClient == null) {
-            wsClient = okHttpClient.newWebSocket(request, socketChannel.retrieveWebSocketCallback())
-        }
-        wsClient?.send(topic)
-    }
-
-    override fun closeConnection(status: SocketStatusCode, reason: String) {
-        wsClient?.close(status.code, reason)
-        okHttpClient.dispatcher().executorService().shutdown()
-    }
+    /* SocketClientContract.Core */
 
     override fun joinChannel(topic: String) {
         socketChannel.addChannel(topic)
@@ -47,7 +41,29 @@ class SocketClient private constructor(
         socketChannel.removeChannel(topic)
     }
 
-    /* The initializer of the [SocketClient] */
+    override fun hasSentAllMessages(): Boolean =
+        (wsClient?.queueSize() ?: 0L) == 0L
+
+    /**
+     * Immediately and violently release resources held by this web socket, discarding any enqueued
+     * messages. This does nothing if the web socket has already been closed or canceled.
+     */
+    override fun cancel() {
+        wsClient?.cancel()
+    }
+
+    /* SocketClientContract.SocketClient */
+
+    override fun send(message: SocketSend): Boolean {
+        wsClient = wsClient ?: okHttpClient.newWebSocket(request, socketChannel.retrieveWebSocketCallback())
+        val payload = socketSendParser.parse(message)
+        return wsClient?.send(payload) ?: false
+    }
+
+    override fun closeConnection(status: SocketStatusCode, reason: String) {
+        wsClient?.close(status.code, reason)
+    }
+
     class Builder(init: Builder.() -> Unit) : SocketClientContract.Builder {
         override var authenticationToken: String = ""
             set(value) {
@@ -70,26 +86,44 @@ class SocketClient private constructor(
             }
 
             val request = Request.Builder()
+                .url(baseURL)
                 .addHeader(HTTPHeaders.AUTHORIZATION, "${HTTPHeaders.AUTHORIZATION_SCHEME} $authenticationToken")
                 .addHeader(HTTPHeaders.ACCEPT, HTTPHeaders.ACCEPT_OMG)
                 .build()
 
-            val okHttpClient = OkHttpClient()
+            val okHttpClient = OkHttpClient.Builder().apply {
+                /* If set debug true, then print the http logging */
+                if (debug) {
+                    addInterceptor(HttpLoggingInterceptor().apply {
+                        level = HttpLoggingInterceptor.Level.BODY
+                    })
+                }
+            }.build()
+
             val socketMessageRef = SocketMessageRef()
+
+            val gson = GsonProvider.create()
 
             val socketClient = SocketClient(
                 okHttpClient,
+                request,
                 socketMessageRef,
-                request
+                SocketSendParser(gson)
             )
 
-            val socketChannel = SocketChannel(
-                SocketDispatcher(SocketCallback()),
-                socketClient
-            )
+            val socketCallback = SocketCallback(SocketReceiveParser(gson))
 
+            /* Bind two-way communication. SocketDispatcher <--> SocketCallback */
+            val socketDispatcher = SocketDispatcher(socketCallback)
+            socketCallback.socketDispatcher = socketDispatcher
+
+            /* Bind two-way communication. SocketClient <--> SocketChannel */
+            val socketChannel = SocketChannel(socketDispatcher, socketClient)
             socketClient.socketChannel = socketChannel
+
             socketClient.wsClient = null
+
+            /* The connection flow will be look like SocketClient <--> SocketChannel <--> SocketDispatcher <--> SocketCallback */
 
             return socketClient
         }
