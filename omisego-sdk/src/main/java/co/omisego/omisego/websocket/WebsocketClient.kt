@@ -13,7 +13,7 @@ import okio.ByteString
 
 class WebsocketClient {
     private lateinit var mSocketClient: WebSocket
-    private lateinit var mWebsocketCallback: WebsocketCallback
+    private lateinit var mWebSocketCallback: WebSocketCallback
     fun init() {
         val request = Request.Builder().url("ws://192.168.1.16:8080").build()
         val client = OkHttpClient()
@@ -33,7 +33,7 @@ class WebsocketClient {
             override fun onMessage(webSocket: WebSocket?, text: String?) {
                 Log.d("EuroTag", "onMessage text $text")
 
-                mWebsocketCallback.onMessage(text!!)
+                mWebSocketCallback.onMessage(text!!)
             }
 
             override fun onMessage(webSocket: WebSocket?, bytes: ByteString?) {
@@ -45,6 +45,9 @@ class WebsocketClient {
             }
         })
 
+//        mSocketClient.close()
+
+        mSocketClient.queueSize()
 
 //        client.dispatcher().executorService().shutdown()
     }
@@ -53,11 +56,11 @@ class WebsocketClient {
         mSocketClient.send(msg)
     }
 
-    fun setWebSocketCallback(callback: WebsocketCallback){
-        mWebsocketCallback = callback
+    fun setWebSocketCallback(callback: WebSocketCallback){
+        mWebSocketCallback = callback
     }
 
-    interface WebsocketCallback {
+    interface WebSocketCallback {
         fun onMessage(msg: String)
     }
 }
