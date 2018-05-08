@@ -8,7 +8,7 @@ package co.omisego.omisego.websocket
  */
 
 class SocketMessageRef : SocketClientContract.MessageRef {
-    override var value: String = "1"
+    override var value: String = "0"
         get() {
             field = "${field.toInt() + 1}"
             return field

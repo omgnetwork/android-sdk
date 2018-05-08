@@ -22,14 +22,13 @@ import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.logging.HttpLoggingInterceptor
 
-class SocketClient private constructor(
-    private val okHttpClient: OkHttpClient,
-    private val request: Request,
-    private val socketMessageRef: SocketMessageRef,
-    private val socketSendParser: SocketClientContract.PayloadSendParser
+class SocketClient internal constructor(
+    internal val okHttpClient: OkHttpClient,
+    internal val request: Request,
+    internal val socketSendParser: SocketClientContract.PayloadSendParser
 ) : SocketClientContract.Core, SocketChannelContract.SocketClient {
-    private var wsClient: WebSocket? = null
-    private lateinit var socketChannel: SocketChannel
+    internal var wsClient: WebSocket? = null
+    internal lateinit var socketChannel: SocketChannel
 
     /* SocketClientContract.Core */
 
@@ -100,14 +99,11 @@ class SocketClient private constructor(
                 }
             }.build()
 
-            val socketMessageRef = SocketMessageRef()
-
             val gson = GsonProvider.create()
 
             val socketClient = SocketClient(
                 okHttpClient,
                 request,
-                socketMessageRef,
                 SocketSendParser(gson)
             )
 
@@ -120,6 +116,7 @@ class SocketClient private constructor(
             /* Bind two-way communication. SocketClient <--> SocketChannel */
             val socketChannel = SocketChannel(socketDispatcher, socketClient)
             socketClient.socketChannel = socketChannel
+            socketDispatcher.socketChannel = socketChannel
 
             socketClient.wsClient = null
 

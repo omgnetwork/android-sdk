@@ -13,9 +13,16 @@ interface SocketDispatcherContract {
 
     interface Core {
         val socketCallback: Callback
+        val socketChannel: SocketChannel?
     }
 
     interface Callback {
         fun getWebSocketListener(): WebSocketListener
+    }
+
+    interface SocketChannel {
+        fun onLeftChannel(topic: String)
+        fun onJoinedChannel(topic: String)
+        fun joined(topic: String): Boolean
     }
 }

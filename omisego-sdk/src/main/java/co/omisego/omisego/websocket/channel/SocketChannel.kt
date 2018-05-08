@@ -7,40 +7,53 @@ package co.omisego.omisego.websocket.channel
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import android.util.Log
+import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.websocket.SocketClientContract
+import co.omisego.omisego.websocket.SocketMessageRef
+import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.WebSocketListener
 
 internal class SocketChannel(
     override val socketDispatcher: SocketChannelContract.Dispatcher,
-    override val socketClient: SocketChannelContract.SocketClient
-) : SocketClientContract.Channel, SocketChannelContract.Core {
+    override val socketClient: SocketChannelContract.SocketClient,
+    override val socketMessageRef: SocketMessageRef = SocketMessageRef()
+) : SocketClientContract.Channel, SocketChannelContract.Core, SocketDispatcherContract.SocketChannel {
     private val channelList: MutableMap<String, SocketChannelContract.Channel> by lazy { mutableMapOf<String, SocketChannelContract.Channel>() }
 
-    override fun addChannel(topic: String): Map<String, SocketChannelContract.Channel> {
-        channelList[topic] = Channel(topic)
-        socketClient.send(topic, SocketEventSend.JOIN)
-        return channelList
+    override fun addChannel(topic: String) {
+        socketClient.send(createJoinMessage(topic))
     }
 
-    override fun removeChannel(topic: String): Map<String, SocketChannelContract.Channel> {
-        socketClient.send(topic, SocketEventSend.LEAVE)
-        channelList.remove(topic)
+    override fun removeChannel(topic: String) {
+        socketClient.send(createLeaveMessage(topic))
+    }
 
+    override fun retrieveChannels(): Map<String, SocketChannelContract.Channel> = channelList
+
+    override fun retrieveWebSocketCallback(): WebSocketListener = socketDispatcher.retrieveWebSocketListener()
+
+    override fun joined(topic: String) = channelList.containsKey(topic)
+
+    override fun createJoinMessage(topic: String): SocketSend =
+        SocketSend(topic, SocketEventSend.JOIN, socketMessageRef.value, mapOf())
+
+    override fun createLeaveMessage(topic: String): SocketSend =
+        SocketSend(topic, SocketEventSend.LEAVE, socketMessageRef.value, mapOf())
+
+    override fun onJoinedChannel(topic: String) {
+        Log.d("SocketChannel", "onJoinedChannel: $topic")
+        channelList[topic] = Channel(topic)
+    }
+
+    override fun onLeftChannel(topic: String) {
+        Log.d("SocketChannel", "onLeftChannel: $topic")
+        channelList.remove(topic)
         if (channelList.isEmpty()) {
             socketClient.closeConnection(SocketStatusCode.NORMAL, "Disconnected successfully")
         }
-
-        return channelList
-    }
-
-    override fun retrieveChannels(): Map<String, SocketChannelContract.Channel> {
-        return channelList
-    }
-
-    override fun retrieveWebSocketCallback(): WebSocketListener {
-        return socketDispatcher.retrieveWebSocketListener()
     }
 
     class Channel(

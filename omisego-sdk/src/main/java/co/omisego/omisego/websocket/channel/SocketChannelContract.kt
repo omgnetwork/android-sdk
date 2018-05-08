@@ -8,6 +8,7 @@ package co.omisego.omisego.websocket.channel
  */
 
 import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.websocket.SocketMessageRef
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.WebSocketListener
 
@@ -19,6 +20,10 @@ interface SocketChannelContract {
     interface Core {
         val socketDispatcher: Dispatcher
         val socketClient: SocketClient
+        val socketMessageRef: SocketMessageRef
+
+        fun createJoinMessage(topic: String): SocketSend
+        fun createLeaveMessage(topic: String): SocketSend
     }
 
     interface SocketClient {

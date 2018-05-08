@@ -14,7 +14,7 @@ data class SocketReceive(
     val topic: String,
     val event: SocketEventReceive,
     val ref: String?,
-    val data: NotImplementedError,
+    val data: Map<String, Any>,
     val version: String,
     val success: Boolean,
     val error: APIError
