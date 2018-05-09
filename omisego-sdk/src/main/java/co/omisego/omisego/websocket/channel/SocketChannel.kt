@@ -33,7 +33,9 @@ internal class SocketChannel(
     }
 
     override fun removeChannel(topic: String) {
-        socketClient.send(createLeaveMessage(topic))
+        if (joined(topic)) {
+            socketClient.send(createLeaveMessage(topic))
+        }
     }
 
     override fun retrieveChannels(): Map<String, SocketChannelContract.Channel> = channelList
