@@ -14,8 +14,8 @@ import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.websocket.channel.SocketChannel
 import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcher
-import co.omisego.omisego.websocket.channel.dispatcher.callback.SocketDelegator
-import co.omisego.omisego.websocket.channel.dispatcher.callback.SocketReceiveParser
+import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegator
+import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketReceiveParser
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -78,6 +78,7 @@ class SocketClient internal constructor(
 
     override fun closeConnection(status: SocketStatusCode, reason: String) {
         wsClient?.close(status.code, reason)
+        wsClient = null
     }
 
     private fun invalidateCallbacks() {

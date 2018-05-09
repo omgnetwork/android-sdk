@@ -1,4 +1,4 @@
-package co.omisego.omisego.websocket.channel.dispatcher.callback
+package co.omisego.omisego.websocket.channel.dispatcher.delegator
 
 /*
  * OmiseGO

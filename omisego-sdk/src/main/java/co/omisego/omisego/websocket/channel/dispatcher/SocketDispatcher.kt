@@ -14,7 +14,7 @@ import co.omisego.omisego.websocket.SocketConnectionCallback
 import co.omisego.omisego.websocket.SocketTopicCallback
 import co.omisego.omisego.websocket.SocketTransactionRequestEvent
 import co.omisego.omisego.websocket.channel.SocketChannelContract
-import co.omisego.omisego.websocket.channel.dispatcher.callback.SocketDelegatorContract
+import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegatorContract
 import co.omisego.omisego.websocket.enum.SocketEventReceive
 import okhttp3.Response
 import okhttp3.WebSocketListener
