@@ -8,7 +8,10 @@ package co.omisego.omisego.websocket.channel
  */
 
 import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.websocket.SocketConnectionCallback
 import co.omisego.omisego.websocket.SocketMessageRef
+import co.omisego.omisego.websocket.SocketTopicCallback
+import co.omisego.omisego.websocket.SocketTransactionRequestEvent
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.WebSocketListener
 
@@ -32,8 +35,17 @@ interface SocketChannelContract {
     }
 
     interface Dispatcher {
+        var socketConnectionCallback: SocketConnectionCallback?
+        var socketTopicCallback: SocketTopicCallback?
+        var socketTransactionRequestEvent: SocketTransactionRequestEvent?
+
         fun handleRequestEvents()
         fun handleConsumeEvents()
         fun retrieveWebSocketListener(): WebSocketListener
+        fun setCallbacks(
+            socketConnectionCallback: SocketConnectionCallback?,
+            socketTopicCallback: SocketTopicCallback?,
+            socketTransactionRequestEvent: SocketTransactionRequestEvent?
+        )
     }
 }

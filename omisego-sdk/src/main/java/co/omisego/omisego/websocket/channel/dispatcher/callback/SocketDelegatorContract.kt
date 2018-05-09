@@ -11,7 +11,7 @@ import co.omisego.omisego.model.socket.SocketReceive
 import com.google.gson.Gson
 import okhttp3.Response
 
-interface SocketCallbackContract {
+interface SocketDelegatorContract {
     interface Core {
         val socketResponseParser: PayloadReceiveParser
         var socketDispatcher: Dispatcher?

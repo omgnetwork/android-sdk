@@ -12,10 +12,10 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 
-class SocketCallback(
-    override val socketResponseParser: SocketCallbackContract.PayloadReceiveParser
-) : SocketDispatcherContract.Callback, SocketCallbackContract.Core, WebSocketListener() {
-    override var socketDispatcher: SocketCallbackContract.Dispatcher? = null
+class SocketDelegator(
+    override val socketResponseParser: SocketDelegatorContract.PayloadReceiveParser
+) : SocketDispatcherContract.Delegator, SocketDelegatorContract.Core, WebSocketListener() {
+    override var socketDispatcher: SocketDelegatorContract.Dispatcher? = null
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
         socketDispatcher?.dispatchOnOpened(response)

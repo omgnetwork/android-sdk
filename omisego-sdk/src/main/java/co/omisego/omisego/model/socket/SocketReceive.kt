@@ -8,13 +8,14 @@ package co.omisego.omisego.model.socket
  */
 
 import co.omisego.omisego.model.APIError
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.websocket.enum.SocketEventReceive
 
 data class SocketReceive(
     val topic: String,
     val event: SocketEventReceive,
     val ref: String?,
-    val data: Map<String, Any>,
+    val data: TransactionConsumption,
     val version: String,
     val success: Boolean,
     val error: APIError

@@ -17,14 +17,21 @@ interface SocketClientContract {
         var authenticationToken: String
         var baseURL: String
         var debug: Boolean
-        fun build(): SocketClient
+        fun build(): SocketClientContract.Core
     }
 
     interface Core {
+        var socketConnectionCallback: SocketConnectionCallback?
+        var socketTopicCallback: SocketTopicCallback?
+        var socketTransactionRequestEvent: SocketTransactionRequestEvent?
+
+        fun cancel()
+        fun hasSentAllMessages(): Boolean
         fun joinChannel(topic: String)
         fun leaveChannel(topic: String)
-        fun hasSentAllMessages(): Boolean
-        fun cancel()
+        fun setConnectionCallback(callback: SocketConnectionCallback)
+        fun setTopicCallback(callback: SocketTopicCallback)
+        fun setTransactionRequestEventCallback(callback: SocketTransactionRequestEvent)
     }
 
     interface MessageRef {
@@ -35,7 +42,12 @@ interface SocketClientContract {
         fun addChannel(topic: String)
         fun removeChannel(topic: String)
         fun retrieveChannels(): Map<String, SocketChannelContract.Channel>
-        fun retrieveWebSocketCallback(): WebSocketListener
+        fun retrieveWebSocketListener(): WebSocketListener
+        fun setCallbacks(
+            socketConnectionCallback: SocketConnectionCallback?,
+            socketTopicCallback: SocketTopicCallback?,
+            socketTransactionRequestEvent: SocketTransactionRequestEvent?
+        )
     }
 
     interface PayloadSendParser {

@@ -11,6 +11,6 @@ import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.Gson
 
-class SocketReceiveParser(override val gson: Gson = GsonProvider.create()) : SocketCallbackContract.PayloadReceiveParser {
+class SocketReceiveParser(override val gson: Gson = GsonProvider.create()) : SocketDelegatorContract.PayloadReceiveParser {
     override fun parse(json: String): SocketReceive = gson.fromJson(json, SocketReceive::class.java)
 }

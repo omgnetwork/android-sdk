@@ -14,7 +14,7 @@ import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.websocket.channel.SocketChannel
 import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcher
-import co.omisego.omisego.websocket.channel.dispatcher.callback.SocketCallback
+import co.omisego.omisego.websocket.channel.dispatcher.callback.SocketDelegator
 import co.omisego.omisego.websocket.channel.dispatcher.callback.SocketReceiveParser
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.OkHttpClient
@@ -28,9 +28,22 @@ class SocketClient internal constructor(
     internal val socketSendParser: SocketClientContract.PayloadSendParser
 ) : SocketClientContract.Core, SocketChannelContract.SocketClient {
     internal var wsClient: WebSocket? = null
-    internal lateinit var socketChannel: SocketChannel
+    internal lateinit var socketChannel: SocketClientContract.Channel
+    override var socketConnectionCallback: SocketConnectionCallback? = null
+    override var socketTopicCallback: SocketTopicCallback? = null
+    override var socketTransactionRequestEvent: SocketTransactionRequestEvent? = null
 
     /* SocketClientContract.Core */
+    /**
+     * Immediately and violently release resources held by this web socket, discarding any enqueued
+     * messages. This does nothing if the web socket has already been closed or canceled.
+     */
+    override fun cancel() {
+        wsClient?.cancel()
+    }
+
+    override fun hasSentAllMessages(): Boolean =
+        (wsClient?.queueSize() ?: 0L) == 0L
 
     override fun joinChannel(topic: String) {
         socketChannel.addChannel(topic)
@@ -40,27 +53,35 @@ class SocketClient internal constructor(
         socketChannel.removeChannel(topic)
     }
 
-    override fun hasSentAllMessages(): Boolean =
-        (wsClient?.queueSize() ?: 0L) == 0L
+    override fun setConnectionCallback(callback: SocketConnectionCallback) {
+        socketConnectionCallback = callback
+        invalidateCallbacks()
+    }
 
-    /**
-     * Immediately and violently release resources held by this web socket, discarding any enqueued
-     * messages. This does nothing if the web socket has already been closed or canceled.
-     */
-    override fun cancel() {
-        wsClient?.cancel()
+    override fun setTopicCallback(callback: SocketTopicCallback) {
+        socketTopicCallback = callback
+        invalidateCallbacks()
+    }
+
+    override fun setTransactionRequestEventCallback(callback: SocketTransactionRequestEvent) {
+        socketTransactionRequestEvent = callback
+        invalidateCallbacks()
     }
 
     /* SocketClientContract.SocketClient */
 
     override fun send(message: SocketSend): Boolean {
-        wsClient = wsClient ?: okHttpClient.newWebSocket(request, socketChannel.retrieveWebSocketCallback())
+        wsClient = wsClient ?: okHttpClient.newWebSocket(request, socketChannel.retrieveWebSocketListener())
         val payload = socketSendParser.parse(message)
         return wsClient?.send(payload) ?: false
     }
 
     override fun closeConnection(status: SocketStatusCode, reason: String) {
         wsClient?.close(status.code, reason)
+    }
+
+    private fun invalidateCallbacks() {
+        socketChannel.setCallbacks(socketConnectionCallback, socketTopicCallback, socketTransactionRequestEvent)
     }
 
     class Builder(init: Builder.() -> Unit) : SocketClientContract.Builder {
@@ -78,7 +99,7 @@ class SocketClient internal constructor(
 
         override var debug: Boolean = false
 
-        override fun build(): SocketClient {
+        override fun build(): SocketClientContract.Core {
             when {
                 authenticationToken.isEmpty() -> throw Exceptions.emptyAuthenticationToken
                 baseURL.isEmpty() -> throw Exceptions.emptyBaseURL
@@ -107,11 +128,11 @@ class SocketClient internal constructor(
                 SocketSendParser(gson)
             )
 
-            val socketCallback = SocketCallback(SocketReceiveParser(gson))
+            val socketDelegator = SocketDelegator(SocketReceiveParser(gson))
 
-            /* Bind two-way communication. SocketDispatcher <--> SocketCallback */
-            val socketDispatcher = SocketDispatcher(socketCallback)
-            socketCallback.socketDispatcher = socketDispatcher
+            /* Bind two-way communication. SocketDispatcher <--> SocketDelegator */
+            val socketDispatcher = SocketDispatcher(socketDelegator)
+            socketDelegator.socketDispatcher = socketDispatcher
 
             /* Bind two-way communication. SocketClient <--> SocketChannel */
             val socketChannel = SocketChannel(socketDispatcher, socketClient)
@@ -120,7 +141,7 @@ class SocketClient internal constructor(
 
             socketClient.wsClient = null
 
-            /* The connection flow will be look like SocketClient <--> SocketChannel <--> SocketDispatcher <--> SocketCallback */
+            /* The connection flow will be look like SocketClient <--> SocketChannel <--> SocketDispatcher <--> SocketDelegator */
 
             return socketClient
         }

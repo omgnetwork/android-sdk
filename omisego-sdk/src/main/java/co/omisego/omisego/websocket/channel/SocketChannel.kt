@@ -10,7 +10,10 @@ package co.omisego.omisego.websocket.channel
 import android.util.Log
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.websocket.SocketClientContract
+import co.omisego.omisego.websocket.SocketConnectionCallback
 import co.omisego.omisego.websocket.SocketMessageRef
+import co.omisego.omisego.websocket.SocketTopicCallback
+import co.omisego.omisego.websocket.SocketTransactionRequestEvent
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
@@ -24,7 +27,9 @@ internal class SocketChannel(
     private val channelList: MutableMap<String, SocketChannelContract.Channel> by lazy { mutableMapOf<String, SocketChannelContract.Channel>() }
 
     override fun addChannel(topic: String) {
-        socketClient.send(createJoinMessage(topic))
+        if (!joined(topic)) {
+            socketClient.send(createJoinMessage(topic))
+        }
     }
 
     override fun removeChannel(topic: String) {
@@ -33,7 +38,7 @@ internal class SocketChannel(
 
     override fun retrieveChannels(): Map<String, SocketChannelContract.Channel> = channelList
 
-    override fun retrieveWebSocketCallback(): WebSocketListener = socketDispatcher.retrieveWebSocketListener()
+    override fun retrieveWebSocketListener(): WebSocketListener = socketDispatcher.retrieveWebSocketListener()
 
     override fun joined(topic: String) = channelList.containsKey(topic)
 
@@ -54,6 +59,14 @@ internal class SocketChannel(
         if (channelList.isEmpty()) {
             socketClient.closeConnection(SocketStatusCode.NORMAL, "Disconnected successfully")
         }
+    }
+
+    override fun setCallbacks(
+        socketConnectionCallback: SocketConnectionCallback?,
+        socketTopicCallback: SocketTopicCallback?,
+        socketTransactionRequestEvent: SocketTransactionRequestEvent?
+    ) {
+        socketDispatcher.setCallbacks(socketConnectionCallback, socketTopicCallback, socketTransactionRequestEvent)
     }
 
     class Channel(

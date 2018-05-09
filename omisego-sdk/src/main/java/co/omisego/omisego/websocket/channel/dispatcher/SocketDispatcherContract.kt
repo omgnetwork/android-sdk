@@ -7,16 +7,18 @@ package co.omisego.omisego.websocket.channel.dispatcher
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import okhttp3.WebSocketListener
 
 interface SocketDispatcherContract {
 
     interface Core {
-        val socketCallback: Callback
+        val socketDelegator: Delegator
         val socketChannel: SocketChannel?
+        val mainThreadExecutor: MainThreadExecutor
     }
 
-    interface Callback {
+    interface Delegator {
         fun getWebSocketListener(): WebSocketListener
     }
 
