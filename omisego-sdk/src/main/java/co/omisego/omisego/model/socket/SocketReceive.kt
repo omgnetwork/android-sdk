@@ -15,8 +15,13 @@ data class SocketReceive(
     val topic: String,
     val event: SocketEventReceive,
     val ref: String?,
-    val data: TransactionConsumption,
+    val data: SocketReceiveData?,
     val version: String,
     val success: Boolean,
-    val error: APIError
+    val error: APIError?
 )
+
+sealed class SocketReceiveData {
+    data class SocketConsumeTransaction(val data: TransactionConsumption) : SocketReceiveData()
+    data class Other(val data: Map<String, Any>) : SocketReceiveData()
+}

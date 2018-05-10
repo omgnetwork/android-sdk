@@ -1,13 +1,14 @@
 package co.omisego.omisego.websocket
 
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-
 /*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 8/5/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import co.omisego.omisego.model.APIError
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 
 interface SocketConnectionCallback {
     fun onConnected()
@@ -17,11 +18,21 @@ interface SocketConnectionCallback {
 interface SocketTopicCallback {
     fun onSubscribedTopic()
     fun onUnsubscribedTopic()
-    fun onError()
+    fun onError(apiError: APIError)
 }
 
-interface SocketTransactionRequestEvent {
+sealed class SocketTransactionEvent {
+    abstract class RequestEvent : SocketTransactionRequestEvent, SocketTransactionEvent()
+    abstract class ConsumptionEvent : SocketTransactionConsumptionEvent, SocketTransactionEvent()
+}
+
+private interface SocketTransactionRequestEvent {
     fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption)
-    fun onTransactionConsumptionSuccess(transactionConsumption: TransactionConsumption)
-    fun onTransactionConsumptionFailed()
+    fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
+    fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
+}
+
+private interface SocketTransactionConsumptionEvent {
+    fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
+    fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
 }

@@ -26,8 +26,8 @@ class SocketDelegator(
     }
 
     override fun onMessage(webSocket: WebSocket, text: String) {
-        val response = socketResponseParser.parse(text)
-        socketDispatcher?.dispatchOnMessage(response)
+        val socketReceive = socketResponseParser.parse(text)
+        socketDispatcher?.dispatchOnMessage(socketReceive)
     }
 
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {

@@ -31,7 +31,7 @@ class SocketClient internal constructor(
     internal lateinit var socketChannel: SocketClientContract.Channel
     override var socketConnectionCallback: SocketConnectionCallback? = null
     override var socketTopicCallback: SocketTopicCallback? = null
-    override var socketTransactionRequestEvent: SocketTransactionRequestEvent? = null
+    override var socketTransactionEvent: SocketTransactionEvent? = null
 
     /* SocketClientContract.Core */
     /**
@@ -45,8 +45,10 @@ class SocketClient internal constructor(
     override fun hasSentAllMessages(): Boolean =
         (wsClient?.queueSize() ?: 0L) == 0L
 
-    override fun joinChannel(topic: String) {
+    override fun joinChannel(topic: String, event: SocketTransactionEvent) {
         socketChannel.addChannel(topic)
+        this.socketTransactionEvent = event
+        invalidateCallbacks()
     }
 
     override fun leaveChannel(topic: String) {
@@ -60,11 +62,6 @@ class SocketClient internal constructor(
 
     override fun setTopicCallback(callback: SocketTopicCallback) {
         socketTopicCallback = callback
-        invalidateCallbacks()
-    }
-
-    override fun setTransactionRequestEventCallback(callback: SocketTransactionRequestEvent) {
-        socketTransactionRequestEvent = callback
         invalidateCallbacks()
     }
 
@@ -82,7 +79,7 @@ class SocketClient internal constructor(
     }
 
     private fun invalidateCallbacks() {
-        socketChannel.setCallbacks(socketConnectionCallback, socketTopicCallback, socketTransactionRequestEvent)
+        socketChannel.setCallbacks(socketConnectionCallback, socketTopicCallback, socketTransactionEvent)
     }
 
     class Builder(init: Builder.() -> Unit) : SocketClientContract.Builder {

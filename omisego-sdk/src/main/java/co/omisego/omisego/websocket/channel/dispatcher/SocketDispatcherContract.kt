@@ -8,6 +8,8 @@ package co.omisego.omisego.websocket.channel.dispatcher
  */
 
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
+import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.websocket.SocketTransactionEvent
 import okhttp3.WebSocketListener
 
 interface SocketDispatcherContract {
@@ -16,6 +18,9 @@ interface SocketDispatcherContract {
         val socketDelegator: Delegator
         val socketChannel: SocketChannel?
         val mainThreadExecutor: MainThreadExecutor
+
+        fun SocketTransactionEvent.RequestEvent.handleTransactionRequestEvent(socketReceive: SocketReceive)
+        fun SocketTransactionEvent.ConsumptionEvent.handleTransactionConsumptionEvent(socketReceive: SocketReceive)
     }
 
     interface Delegator {

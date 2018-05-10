@@ -13,7 +13,7 @@ import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketConnectionCallback
 import co.omisego.omisego.websocket.SocketMessageRef
 import co.omisego.omisego.websocket.SocketTopicCallback
-import co.omisego.omisego.websocket.SocketTransactionRequestEvent
+import co.omisego.omisego.websocket.SocketTransactionEvent
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
@@ -66,9 +66,9 @@ internal class SocketChannel(
     override fun setCallbacks(
         socketConnectionCallback: SocketConnectionCallback?,
         socketTopicCallback: SocketTopicCallback?,
-        socketTransactionRequestEvent: SocketTransactionRequestEvent?
+        socketTransactionEvent: SocketTransactionEvent?
     ) {
-        socketDispatcher.setCallbacks(socketConnectionCallback, socketTopicCallback, socketTransactionRequestEvent)
+        socketDispatcher.setCallbacks(socketConnectionCallback, socketTopicCallback, socketTransactionEvent)
     }
 
     class Channel(

@@ -23,15 +23,14 @@ interface SocketClientContract {
     interface Core {
         var socketConnectionCallback: SocketConnectionCallback?
         var socketTopicCallback: SocketTopicCallback?
-        var socketTransactionRequestEvent: SocketTransactionRequestEvent?
+        var socketTransactionEvent: SocketTransactionEvent?
 
         fun cancel()
         fun hasSentAllMessages(): Boolean
-        fun joinChannel(topic: String)
+        fun joinChannel(topic: String, event: SocketTransactionEvent)
         fun leaveChannel(topic: String)
         fun setConnectionCallback(callback: SocketConnectionCallback)
         fun setTopicCallback(callback: SocketTopicCallback)
-        fun setTransactionRequestEventCallback(callback: SocketTransactionRequestEvent)
     }
 
     interface MessageRef {
@@ -46,7 +45,7 @@ interface SocketClientContract {
         fun setCallbacks(
             socketConnectionCallback: SocketConnectionCallback?,
             socketTopicCallback: SocketTopicCallback?,
-            socketTransactionRequestEvent: SocketTransactionRequestEvent?
+            socketTransactionEvent: SocketTransactionEvent?
         )
     }
 
