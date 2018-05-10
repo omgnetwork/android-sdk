@@ -40,7 +40,7 @@ interface SocketClientContract {
     interface Channel {
         fun addChannel(topic: String)
         fun removeChannel(topic: String)
-        fun retrieveChannels(): Map<String, SocketChannelContract.Channel>
+        fun retrieveChannels(): Set<String>
         fun retrieveWebSocketListener(): WebSocketListener
         fun setCallbacks(
             socketConnectionCallback: SocketConnectionCallback?,

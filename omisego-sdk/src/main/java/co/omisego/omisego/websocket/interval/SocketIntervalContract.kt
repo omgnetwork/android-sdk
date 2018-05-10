@@ -1,5 +1,8 @@
 package co.omisego.omisego.websocket.interval
 
+import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.websocket.SocketMessageRef
+import java.util.Timer
 
 /*
  * OmiseGO
@@ -8,5 +11,9 @@ package co.omisego.omisego.websocket.interval
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 interface SocketIntervalContract {
+    var timer: Timer?
+    val socketMessageRef: SocketMessageRef
 
+    fun startInterval(task: (SocketSend) -> Unit)
+    fun stopInterval()
 }

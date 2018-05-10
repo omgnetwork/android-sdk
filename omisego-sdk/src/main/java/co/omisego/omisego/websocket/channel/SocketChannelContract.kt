@@ -13,7 +13,9 @@ import co.omisego.omisego.websocket.SocketMessageRef
 import co.omisego.omisego.websocket.SocketTopicCallback
 import co.omisego.omisego.websocket.SocketTransactionEvent
 import co.omisego.omisego.websocket.enum.SocketStatusCode
+import co.omisego.omisego.websocket.interval.SocketIntervalContract
 import okhttp3.WebSocketListener
+import java.util.Timer
 
 interface SocketChannelContract {
     interface Channel {
@@ -24,6 +26,8 @@ interface SocketChannelContract {
         val socketDispatcher: Dispatcher
         val socketClient: SocketClient
         val socketMessageRef: SocketMessageRef
+        val socketHeartbeat: SocketIntervalContract
+        val heartbeatTimer: Timer?
 
         fun createJoinMessage(topic: String): SocketSend
         fun createLeaveMessage(topic: String): SocketSend
