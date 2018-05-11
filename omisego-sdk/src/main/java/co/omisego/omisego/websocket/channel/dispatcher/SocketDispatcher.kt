@@ -35,16 +35,6 @@ class SocketDispatcher(
         return socketDelegator.getWebSocketListener()
     }
 
-    override fun setCallbacks(
-        socketConnectionCallback: SocketConnectionCallback?,
-        socketTopicCallback: SocketTopicCallback?,
-        socketTransactionEvent: SocketTransactionEvent?
-    ) {
-        this.socketConnectionCallback = socketConnectionCallback
-        this.socketTopicCallback = socketTopicCallback
-        this.socketTransactionEvent = socketTransactionEvent
-    }
-
     override fun dispatchOnOpened(response: Response) {
         mainThreadExecutor.execute {
             socketConnectionCallback?.onConnected()
