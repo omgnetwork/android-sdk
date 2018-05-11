@@ -7,13 +7,15 @@ package co.omisego.omisego.network.ewallet
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.Endpoints
+import co.omisego.omisego.constant.Endpoints.CONSUME_TRANSACTION_REQUEST
+import co.omisego.omisego.constant.Endpoints.APPROVE_TRANSACTION
 import co.omisego.omisego.constant.Endpoints.CREATE_TRANSACTION_REQUEST
 import co.omisego.omisego.constant.Endpoints.GET_CURRENT_USER
 import co.omisego.omisego.constant.Endpoints.GET_SETTINGS
 import co.omisego.omisego.constant.Endpoints.LIST_BALANCE
 import co.omisego.omisego.constant.Endpoints.LIST_TRANSACTIONS
 import co.omisego.omisego.constant.Endpoints.LOGOUT
+import co.omisego.omisego.constant.Endpoints.REJECT_TRANSACTION
 import co.omisego.omisego.constant.Endpoints.RETRIEVE_TRANSACTION_REQUEST
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
 import co.omisego.omisego.model.BalanceList
@@ -21,6 +23,7 @@ import co.omisego.omisego.model.Logout
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.pagination.PaginationList
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionActionParams
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
 import co.omisego.omisego.model.transaction.list.Transaction
@@ -54,9 +57,19 @@ interface EWalletAPI {
     @POST(RETRIEVE_TRANSACTION_REQUEST)
     fun retrieveTransactionRequest(@Body request: TransactionRequestParams): OMGCall<TransactionRequest>
 
-    @POST(Endpoints.CONSUME_TRANSACTION_REQUEST)
+    @POST(CONSUME_TRANSACTION_REQUEST)
     fun consumeTransactionRequest(
         @Body request: TransactionConsumptionParams,
         @Header("Idempotency-Token") idempotencyToken: String = request.idempotencyToken
+    ): OMGCall<TransactionConsumption>
+
+    @POST(APPROVE_TRANSACTION)
+    fun approveTransactionConsumption(
+        @Body request: TransactionConsumptionActionParams
+    ): OMGCall<TransactionConsumption>
+
+    @POST(REJECT_TRANSACTION)
+    fun rejectTransactionConsumption(
+        @Body request: TransactionConsumptionActionParams
     ): OMGCall<TransactionConsumption>
 }

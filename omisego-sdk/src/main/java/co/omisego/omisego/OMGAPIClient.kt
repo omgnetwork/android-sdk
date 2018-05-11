@@ -10,6 +10,7 @@ package co.omisego.omisego
 import co.omisego.omisego.model.Address
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionActionParams
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
 import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
@@ -123,6 +124,25 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      */
     fun consumeTransactionRequest(request: TransactionConsumptionParams) =
         eWalletAPI.consumeTransactionRequest(request)
+
+    /**
+     * Asynchronously approve the transaction consumption from the given [TransactionConsumptionActionParams] object
+     * if *success* the [OMGCallback<TransactionConsumption>] will be invoked with the [co.omisego.omisego.model.transaction.consumption.TransactionConsumption] parameter,
+     * if *fail* the [OMGCallback<TransactionConsumption>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
+     *
+     * @param request The TransactionConsumptionActionParams object containing the transaction consumption id to be approved.
+     */
+    fun approveTransactionConsumption(request: TransactionConsumptionActionParams) =
+        eWalletAPI.approveTransactionConsumption(request)
+
+    /**
+     * Asynchronously reject the transaction consumption from the given [TransactionConsumptionActionParams] object
+     * if *success* the [OMGCallback<TransactionConsumption>] will be invoked with the [co.omisego.omisego.model.transaction.consumption.TransactionConsumption] parameter,
+     * if *fail* the [OMGCallback<TransactionConsumption>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
+     * @param request The TransactionConsumptionActionParams object containing the transaction consumption id to be rejected.
+     */
+    fun rejectTransactionConsumption(request: TransactionConsumptionActionParams) =
+        eWalletAPI.rejectTransactionConsumption(request)
 
     /**
      * Set new [authenticationToken].

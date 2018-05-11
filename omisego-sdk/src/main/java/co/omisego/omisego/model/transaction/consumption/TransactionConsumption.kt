@@ -8,7 +8,9 @@ package co.omisego.omisego.model.transaction.consumption
  */
 
 import android.accounts.Account
+import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.constant.enums.OMGEnum
+import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
 import co.omisego.omisego.model.MintedToken
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.transaction.list.Transaction
@@ -146,3 +148,21 @@ data class TransactionConsumption(
         return other is TransactionConsumption && other.id == id
     }
 }
+
+/**
+ * An extension function that uses the id from `TransactionConsumption` object to approve the transaction
+ *
+ * @param omgAPIClient the [OMGAPIClient] object in your application to be used to approve the transaction
+ * @return The [OMGCall<TransactionConsumption>] object that you need to call enqueue method on to actually perform the request to the API
+ */
+fun TransactionConsumption.approve(omgAPIClient: OMGAPIClient): OMGCall<TransactionConsumption> =
+    omgAPIClient.approveTransactionConsumption(TransactionConsumptionActionParams(this.id))
+
+/**
+ * An extension function that uses the id from `TransactionConsumption` object to reject the transaction
+ *
+ * @param omgAPIClient the [OMGAPIClient] object in your application to be used to reject the transaction
+ * @return The [OMGCall<TransactionConsumption>] object that you need to call enqueue method on to actually perform the request to the API
+ */
+fun TransactionConsumption.reject(omgAPIClient: OMGAPIClient) =
+    omgAPIClient.rejectTransactionConsumption(TransactionConsumptionActionParams(this.id))
