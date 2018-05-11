@@ -6,7 +6,7 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
-## [0.9.3] - 2018-05-02
+## [0.9.3] - 2018-05-11
 ### Added
 - [Kotlin linter](https://github.com/shyiko/ktlint)
 - [Create a transaction request](https://github.com/omisego/android-sdk#generate-a-transaction-request)
