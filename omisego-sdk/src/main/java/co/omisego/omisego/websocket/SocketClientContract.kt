@@ -8,7 +8,7 @@ package co.omisego.omisego.websocket
  */
 
 import co.omisego.omisego.model.socket.SocketSend
-import co.omisego.omisego.websocket.channel.SocketChannelContract
+import co.omisego.omisego.model.socket.SocketTopic
 import com.google.gson.Gson
 import okhttp3.WebSocketListener
 
@@ -24,13 +24,19 @@ interface SocketClientContract {
         var socketConnectionCallback: SocketConnectionCallback?
         var socketTopicCallback: SocketTopicCallback?
         var socketTransactionEvent: SocketTransactionEvent?
+        val socketChannel: Channel
 
         fun cancel()
         fun hasSentAllMessages(): Boolean
-        fun joinChannel(topic: String, event: SocketTransactionEvent)
-        fun leaveChannel(topic: String)
-        fun setConnectionCallback(callback: SocketConnectionCallback)
-        fun setTopicCallback(callback: SocketTopicCallback)
+        fun joinChannel(
+            topic: SocketTopic,
+            payload: Map<String, Any> = mapOf(),
+            transactionListener: SocketTransactionEvent? = null
+        )
+
+        fun setConnectionListener(connectionListener: SocketConnectionCallback)
+        fun setTopicListener(topicListener: SocketTopicCallback)
+        fun leaveChannel(topic: SocketTopic, payload: Map<String, Any>)
     }
 
     interface MessageRef {
@@ -38,9 +44,9 @@ interface SocketClientContract {
     }
 
     interface Channel {
-        fun addChannel(topic: String)
-        fun removeChannel(topic: String)
-        fun retrieveChannels(): Set<String>
+        fun addChannel(topic: SocketTopic, payload: Map<String, Any>)
+        fun removeChannel(topic: SocketTopic, payload: Map<String, Any>)
+        fun retrieveChannels(): Set<SocketTopic>
         fun retrieveWebSocketListener(): WebSocketListener
         fun setCallbacks(
             socketConnectionCallback: SocketConnectionCallback?,
@@ -52,10 +58,5 @@ interface SocketClientContract {
     interface PayloadSendParser {
         val gson: Gson
         fun parse(payload: SocketSend): String
-    }
-
-    interface Interval {
-        fun startInterval()
-        fun stopInterval()
     }
 }

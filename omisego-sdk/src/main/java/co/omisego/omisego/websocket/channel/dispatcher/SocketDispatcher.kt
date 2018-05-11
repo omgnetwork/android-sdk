@@ -11,6 +11,8 @@ import android.util.Log
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketReceiveData
+import co.omisego.omisego.model.socket.SocketTopic
+import co.omisego.omisego.model.socket.runIfNotInternalTopic
 import co.omisego.omisego.websocket.SocketConnectionCallback
 import co.omisego.omisego.websocket.SocketTopicCallback
 import co.omisego.omisego.websocket.SocketTransactionEvent
@@ -60,14 +62,19 @@ class SocketDispatcher(
         mainThreadExecutor.execute {
             when (response.event) {
                 SocketEventReceive.CLOSE -> {
-                    socketChannel?.onLeftChannel(response.topic)
-                    socketTopicCallback?.onUnsubscribedTopic()
-
+                    val topic = SocketTopic(response.topic)
+                    topic.runIfNotInternalTopic {
+                        socketChannel?.onLeftChannel(topic)
+                        socketTopicCallback?.onUnSubscribedTopic(topic)
+                    }
                 }
                 SocketEventReceive.REPLY -> {
-                    if (socketChannel?.joined(response.topic) != true) {
-                        socketChannel?.onJoinedChannel(response.topic)
-                        socketTopicCallback?.onSubscribedTopic()
+                    val topic = SocketTopic(response.topic)
+                    topic.runIfNotInternalTopic {
+                        topic.runIfFirstJoined {
+                            socketChannel?.onJoinedChannel(topic)
+                            socketTopicCallback?.onSubscribedTopic(topic)
+                        }
                     }
                 }
                 SocketEventReceive.ERROR -> Log.d("SocketDispatcher", "Receive an error event.")
@@ -76,7 +83,7 @@ class SocketDispatcher(
             // Cannot do smart-cast if don't store in the immutable variable
             val transactionEvent = socketTransactionEvent
 
-            if(response.event == SocketEventReceive.TRANSACTION_CONSUMPTION_REQUEST || response.event == SocketEventReceive.TRANSACTION_CONSUMPTION_FINALIZED) {
+            if (response.event == SocketEventReceive.TRANSACTION_CONSUMPTION_REQUEST || response.event == SocketEventReceive.TRANSACTION_CONSUMPTION_FINALIZED) {
                 when (transactionEvent) {
                     is SocketTransactionEvent.RequestEvent -> transactionEvent.handleTransactionRequestEvent(response)
                     is SocketTransactionEvent.ConsumptionEvent -> transactionEvent.handleTransactionConsumptionEvent(response)
@@ -128,4 +135,18 @@ class SocketDispatcher(
     override fun dispatchOnFailure(throwable: Throwable, response: Response?) {
         Log.e("SocketDispatcher", throwable.message)
     }
+
+    /**
+     * Run the lambda when meets the following condition
+     *  - The topic hasn't joined yet
+     */
+    internal fun SocketTopic.runIfFirstJoined(lambda: () -> Unit) {
+        if (socketChannel?.joined(this) == false) {
+            lambda()
+        }
+    }
+}
+
+infix fun SocketDispatcher.talksTo(socketChannel: SocketDispatcherContract.SocketChannel) {
+    this.socketChannel = socketChannel
 }

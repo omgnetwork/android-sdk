@@ -10,12 +10,15 @@ package co.omisego.omisego.websocket
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.HTTPHeaders
 import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.websocket.channel.SocketChannel
 import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegator
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketReceiveParser
+import co.omisego.omisego.websocket.channel.dispatcher.delegator.talksTo
+import co.omisego.omisego.websocket.channel.dispatcher.talksTo
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -28,12 +31,13 @@ class SocketClient internal constructor(
     internal val socketSendParser: SocketClientContract.PayloadSendParser
 ) : SocketClientContract.Core, SocketChannelContract.SocketClient {
     internal var wsClient: WebSocket? = null
-    internal lateinit var socketChannel: SocketClientContract.Channel
+    override lateinit var socketChannel: SocketClientContract.Channel
     override var socketConnectionCallback: SocketConnectionCallback? = null
     override var socketTopicCallback: SocketTopicCallback? = null
     override var socketTransactionEvent: SocketTransactionEvent? = null
 
     /* SocketClientContract.Core */
+
     /**
      * Immediately and violently release resources held by this web socket, discarding any enqueued
      * messages. This does nothing if the web socket has already been closed or canceled.
@@ -45,23 +49,27 @@ class SocketClient internal constructor(
     override fun hasSentAllMessages(): Boolean =
         (wsClient?.queueSize() ?: 0L) == 0L
 
-    override fun joinChannel(topic: String, event: SocketTransactionEvent) {
-        socketChannel.addChannel(topic)
-        this.socketTransactionEvent = event
+    override fun joinChannel(
+        topic: SocketTopic,
+        payload: Map<String, Any>,
+        transactionListener: SocketTransactionEvent?
+    ) {
+        socketChannel.addChannel(topic, payload)
+        this.socketTransactionEvent = transactionListener
         invalidateCallbacks()
     }
 
-    override fun leaveChannel(topic: String) {
-        socketChannel.removeChannel(topic)
+    override fun leaveChannel(topic: SocketTopic, payload: Map<String, Any>) {
+        socketChannel.removeChannel(topic, payload)
     }
 
-    override fun setConnectionCallback(callback: SocketConnectionCallback) {
-        socketConnectionCallback = callback
+    override fun setConnectionListener(connectionListener: SocketConnectionCallback) {
+        this.socketConnectionCallback = connectionListener
         invalidateCallbacks()
     }
 
-    override fun setTopicCallback(callback: SocketTopicCallback) {
-        socketTopicCallback = callback
+    override fun setTopicListener(topicListener: SocketTopicCallback) {
+        this.socketTopicCallback = topicListener
         invalidateCallbacks()
     }
 
@@ -85,29 +93,27 @@ class SocketClient internal constructor(
     class Builder(init: Builder.() -> Unit) : SocketClientContract.Builder {
         override var authenticationToken: String = ""
             set(value) {
-                if (value.isEmpty()) throw Exceptions.emptyAuthenticationToken
+                check(value.isNotEmpty()) { Exceptions.MSG_EMPTY_AUTH_TOKEN }
                 field = value
             }
 
         override var baseURL: String = ""
             set(value) {
-                if (value.isEmpty()) throw Exceptions.emptyBaseURL
+                check(value.isNotEmpty()) { Exceptions.MSG_EMPTY_BASE_URL }
                 field = value
             }
 
         override var debug: Boolean = false
 
         override fun build(): SocketClientContract.Core {
-            when {
-                authenticationToken.isEmpty() -> throw Exceptions.emptyAuthenticationToken
-                baseURL.isEmpty() -> throw Exceptions.emptyBaseURL
-            }
+            check(authenticationToken.isNotEmpty()) { Exceptions.MSG_EMPTY_AUTH_TOKEN }
+            check(baseURL.isNotEmpty()) { Exceptions.MSG_EMPTY_BASE_URL }
 
-            val request = Request.Builder()
-                .url(baseURL)
-                .addHeader(HTTPHeaders.AUTHORIZATION, "${HTTPHeaders.AUTHORIZATION_SCHEME} $authenticationToken")
-                .addHeader(HTTPHeaders.ACCEPT, HTTPHeaders.ACCEPT_OMG)
-                .build()
+            val request = Request.Builder().apply {
+                url(baseURL)
+                addHeader(HTTPHeaders.AUTHORIZATION, "${HTTPHeaders.AUTHORIZATION_SCHEME} $authenticationToken")
+                addHeader(HTTPHeaders.ACCEPT, HTTPHeaders.ACCEPT_OMG)
+            }.build()
 
             val okHttpClient = OkHttpClient.Builder().apply {
                 /* If set debug true, then print the http logging */
@@ -130,12 +136,12 @@ class SocketClient internal constructor(
 
             /* Bind two-way communication. SocketDispatcher <--> SocketDelegator */
             val socketDispatcher = SocketDispatcher(socketDelegator)
-            socketDelegator.socketDispatcher = socketDispatcher
+            socketDelegator talksTo socketDispatcher
 
             /* Bind two-way communication. SocketClient <--> SocketChannel */
             val socketChannel = SocketChannel(socketDispatcher, socketClient)
-            socketClient.socketChannel = socketChannel
-            socketDispatcher.socketChannel = socketChannel
+            socketClient talksTo socketChannel
+            socketDispatcher talksTo socketChannel
 
             socketClient.wsClient = null
 
@@ -148,4 +154,8 @@ class SocketClient internal constructor(
             init()
         }
     }
+}
+
+infix fun SocketClient.talksTo(socketChannel: SocketClientContract.Channel) {
+    this.socketChannel = socketChannel
 }

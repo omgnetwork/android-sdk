@@ -8,6 +8,7 @@ package co.omisego.omisego.websocket.channel
  */
 
 import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.SocketConnectionCallback
 import co.omisego.omisego.websocket.SocketMessageRef
 import co.omisego.omisego.websocket.SocketTopicCallback
@@ -18,10 +19,6 @@ import okhttp3.WebSocketListener
 import java.util.Timer
 
 interface SocketChannelContract {
-    interface Channel {
-        val topic: String
-    }
-
     interface Core {
         val socketDispatcher: Dispatcher
         val socketClient: SocketClient
@@ -29,8 +26,8 @@ interface SocketChannelContract {
         val socketHeartbeat: SocketIntervalContract
         val heartbeatTimer: Timer?
 
-        fun createJoinMessage(topic: String): SocketSend
-        fun createLeaveMessage(topic: String): SocketSend
+        fun createJoinMessage(topic: SocketTopic, payload: Map<String, Any>): SocketSend
+        fun createLeaveMessage(topic: SocketTopic, payload: Map<String, Any>): SocketSend
     }
 
     interface SocketClient {

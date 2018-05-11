@@ -9,6 +9,7 @@ package co.omisego.omisego.websocket.channel.dispatcher
 
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.SocketTransactionEvent
 import okhttp3.WebSocketListener
 
@@ -28,8 +29,8 @@ interface SocketDispatcherContract {
     }
 
     interface SocketChannel {
-        fun onLeftChannel(topic: String)
-        fun onJoinedChannel(topic: String)
-        fun joined(topic: String): Boolean
+        fun onLeftChannel(topic: SocketTopic)
+        fun onJoinedChannel(topic: SocketTopic)
+        fun joined(topic: SocketTopic): Boolean
     }
 }

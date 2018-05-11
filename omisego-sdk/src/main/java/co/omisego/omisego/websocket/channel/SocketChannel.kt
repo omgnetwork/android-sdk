@@ -9,6 +9,7 @@ package co.omisego.omisego.websocket.channel
 
 import android.util.Log
 import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketConnectionCallback
 import co.omisego.omisego.websocket.SocketMessageRef
@@ -27,53 +28,54 @@ internal class SocketChannel(
     override val socketClient: SocketChannelContract.SocketClient,
     override val socketMessageRef: SocketMessageRef = SocketMessageRef()
 ) : SocketClientContract.Channel, SocketChannelContract.Core, SocketDispatcherContract.SocketChannel {
-    private val channelSet: MutableSet<String> by lazy { mutableSetOf<String>() }
+    private val channelSet: MutableSet<SocketTopic> by lazy { mutableSetOf<SocketTopic>() }
     override val socketHeartbeat: SocketIntervalContract by lazy { SocketHeartbeat(socketMessageRef) }
     override var heartbeatTimer: Timer? = null
 
-    override fun addChannel(topic: String) {
+    override fun addChannel(topic: SocketTopic, payload: Map<String, Any>) {
         if (!joined(topic)) {
-            socketClient.send(createJoinMessage(topic))
+            socketClient.send(createJoinMessage(topic, payload))
         }
     }
 
-    override fun removeChannel(topic: String) {
+    override fun removeChannel(topic: SocketTopic, payload: Map<String, Any>) {
         if (joined(topic)) {
-            socketClient.send(createLeaveMessage(topic))
+            socketClient.send(createLeaveMessage(topic, payload))
         }
     }
 
-    override fun retrieveChannels(): Set<String> = channelSet
+    override fun retrieveChannels(): Set<SocketTopic> = channelSet
 
     override fun retrieveWebSocketListener(): WebSocketListener = socketDispatcher.retrieveWebSocketListener()
 
-    override fun joined(topic: String) = channelSet.contains(topic)
+    override fun joined(topic: SocketTopic) = channelSet.contains(topic)
 
-    override fun createJoinMessage(topic: String): SocketSend =
-        SocketSend(topic, SocketEventSend.JOIN, socketMessageRef.value, mapOf())
+    override fun createJoinMessage(topic: SocketTopic, payload: Map<String, Any>): SocketSend =
+        SocketSend(topic.name, SocketEventSend.JOIN, socketMessageRef.value, payload)
 
-    override fun createLeaveMessage(topic: String): SocketSend =
-        SocketSend(topic, SocketEventSend.LEAVE, socketMessageRef.value, mapOf())
+    override fun createLeaveMessage(topic: SocketTopic, payload: Map<String, Any>): SocketSend =
+        SocketSend(topic.name, SocketEventSend.LEAVE, socketMessageRef.value, payload)
 
-    override fun onJoinedChannel(topic: String) {
-        if (channelSet.isEmpty() && topic != SocketHeartbeat.EVENT_NAME) {
-            socketHeartbeat.startInterval {
-                Log.d("SocketChannel", "Channel List: $channelSet")
-                socketClient.send(it)
+    override fun onJoinedChannel(topic: SocketTopic) {
+        with(topic) {
+            runIfEmptyChannel {
+                socketHeartbeat.startInterval {
+                    Log.d("SocketChannel", "Channel List: $channelSet")
+                    socketClient.send(it)
+                }
             }
-        }
-
-        // Don't keep heartbeat!
-        if (topic != SocketHeartbeat.EVENT_NAME)
             channelSet.add(topic)
+        }
     }
 
-    override fun onLeftChannel(topic: String) {
-        Log.d("SocketChannel", "onLeftChannel: $topic")
-        channelSet.remove(topic)
-        if (channelSet.isEmpty()) {
-            socketHeartbeat.stopInterval()
-            socketClient.closeConnection(SocketStatusCode.NORMAL, "Disconnected successfully")
+    override fun onLeftChannel(topic: SocketTopic) {
+        with(topic) {
+            Log.d("SocketChannel", "onLeftChannel: $this")
+            channelSet.remove(this)
+            runIfEmptyChannel {
+                socketHeartbeat.stopInterval()
+                socketClient.closeConnection(SocketStatusCode.NORMAL, "Disconnected successfully")
+            }
         }
     }
 
@@ -85,7 +87,9 @@ internal class SocketChannel(
         socketDispatcher.setCallbacks(socketConnectionCallback, socketTopicCallback, socketTransactionEvent)
     }
 
-//    class Channel(
-//        override val topic: String
-//    ) : SocketChannelContract.Channel
+    internal inline fun runIfEmptyChannel(doSomething: () -> Unit) {
+        if (channelSet.isEmpty()) {
+            doSomething()
+        }
+    }
 }

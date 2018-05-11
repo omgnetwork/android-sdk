@@ -8,6 +8,7 @@ package co.omisego.omisego.websocket
  */
 
 import co.omisego.omisego.model.APIError
+import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 
 interface SocketConnectionCallback {
@@ -16,8 +17,8 @@ interface SocketConnectionCallback {
 }
 
 interface SocketTopicCallback {
-    fun onSubscribedTopic()
-    fun onUnsubscribedTopic()
+    fun onSubscribedTopic(topic: SocketTopic)
+    fun onUnSubscribedTopic(topic: SocketTopic)
     fun onError(apiError: APIError)
 }
 

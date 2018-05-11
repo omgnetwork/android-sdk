@@ -38,3 +38,7 @@ class SocketDelegator(
         return this
     }
 }
+
+infix fun SocketDelegator.talksTo(socketDispatcher: SocketDelegatorContract.Dispatcher) {
+    this.socketDispatcher = socketDispatcher
+}

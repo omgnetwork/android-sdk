@@ -12,4 +12,7 @@ object Exceptions {
         get() = IllegalStateException("baseUrl should not be empty.")
     val emptyAuthenticationToken
         get() = IllegalStateException("Authentication token should not be empty.")
+
+    const val MSG_EMPTY_BASE_URL = "baseUrl should not be empty."
+    const val MSG_EMPTY_AUTH_TOKEN = "Authentication token should not be empty."
 }
