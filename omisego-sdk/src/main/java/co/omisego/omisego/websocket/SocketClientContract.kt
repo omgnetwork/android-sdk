@@ -21,11 +21,7 @@ interface SocketClientContract {
     }
 
     interface Core {
-        var socketConnectionCallback: SocketConnectionCallback?
-        var socketTopicCallback: SocketTopicCallback?
-        var socketTransactionEvent: SocketTransactionEvent?
         val socketChannel: Channel
-
         fun cancel()
         fun hasSentAllMessages(): Boolean
         fun joinChannel(
@@ -48,11 +44,9 @@ interface SocketClientContract {
         fun removeChannel(topic: SocketTopic, payload: Map<String, Any>)
         fun retrieveChannels(): Set<SocketTopic>
         fun retrieveWebSocketListener(): WebSocketListener
-        fun setCallbacks(
-            socketConnectionCallback: SocketConnectionCallback?,
-            socketTopicCallback: SocketTopicCallback?,
-            socketTransactionEvent: SocketTransactionEvent?
-        )
+        fun setSocketConnectionCallback(connectionListener: SocketConnectionCallback?)
+        fun setSocketTopicCallback(topicListener: SocketTopicCallback?)
+        fun setSocketTransactionCallback(transactionListener: SocketTransactionEvent?)
     }
 
     interface PayloadSendParser {

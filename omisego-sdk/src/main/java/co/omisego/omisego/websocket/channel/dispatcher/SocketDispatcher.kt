@@ -140,7 +140,7 @@ class SocketDispatcher(
      * Run the lambda when meets the following condition
      *  - The topic hasn't joined yet
      */
-    internal fun SocketTopic.runIfFirstJoined(lambda: () -> Unit) {
+    internal inline fun SocketTopic.runIfFirstJoined(lambda: () -> Unit) {
         if (socketChannel?.joined(this) == false) {
             lambda()
         }

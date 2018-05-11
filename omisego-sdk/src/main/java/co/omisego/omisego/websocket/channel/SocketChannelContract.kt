@@ -41,10 +41,5 @@ interface SocketChannelContract {
         var socketTransactionEvent: SocketTransactionEvent?
 
         fun retrieveWebSocketListener(): WebSocketListener
-        fun setCallbacks(
-            socketConnectionCallback: SocketConnectionCallback?,
-            socketTopicCallback: SocketTopicCallback?,
-            socketTransactionEvent: SocketTransactionEvent?
-        )
     }
 }

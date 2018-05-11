@@ -79,12 +79,16 @@ internal class SocketChannel(
         }
     }
 
-    override fun setCallbacks(
-        socketConnectionCallback: SocketConnectionCallback?,
-        socketTopicCallback: SocketTopicCallback?,
-        socketTransactionEvent: SocketTransactionEvent?
-    ) {
-        socketDispatcher.setCallbacks(socketConnectionCallback, socketTopicCallback, socketTransactionEvent)
+    override fun setSocketConnectionCallback(connectionListener: SocketConnectionCallback?) {
+        socketDispatcher.socketConnectionCallback = connectionListener
+    }
+
+    override fun setSocketTopicCallback(topicListener: SocketTopicCallback?) {
+        socketDispatcher.socketTopicCallback = topicListener
+    }
+
+    override fun setSocketTransactionCallback(transactionListener: SocketTransactionEvent?) {
+        socketDispatcher.socketTransactionEvent = transactionListener
     }
 
     internal inline fun runIfEmptyChannel(doSomething: () -> Unit) {

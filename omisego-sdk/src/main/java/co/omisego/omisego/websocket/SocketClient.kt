@@ -32,9 +32,6 @@ class SocketClient internal constructor(
 ) : SocketClientContract.Core, SocketChannelContract.SocketClient {
     internal var wsClient: WebSocket? = null
     override lateinit var socketChannel: SocketClientContract.Channel
-    override var socketConnectionCallback: SocketConnectionCallback? = null
-    override var socketTopicCallback: SocketTopicCallback? = null
-    override var socketTransactionEvent: SocketTransactionEvent? = null
 
     /* SocketClientContract.Core */
 
@@ -54,9 +51,10 @@ class SocketClient internal constructor(
         payload: Map<String, Any>,
         transactionListener: SocketTransactionEvent?
     ) {
-        socketChannel.addChannel(topic, payload)
-        this.socketTransactionEvent = transactionListener
-        invalidateCallbacks()
+        with(socketChannel) {
+            addChannel(topic, payload)
+            setSocketTransactionCallback(transactionListener)
+        }
     }
 
     override fun leaveChannel(topic: SocketTopic, payload: Map<String, Any>) {
@@ -64,13 +62,11 @@ class SocketClient internal constructor(
     }
 
     override fun setConnectionListener(connectionListener: SocketConnectionCallback) {
-        this.socketConnectionCallback = connectionListener
-        invalidateCallbacks()
+        socketChannel.setSocketConnectionCallback(connectionListener)
     }
 
     override fun setTopicListener(topicListener: SocketTopicCallback) {
-        this.socketTopicCallback = topicListener
-        invalidateCallbacks()
+        socketChannel.setSocketTopicCallback(topicListener)
     }
 
     /* SocketClientContract.SocketClient */
@@ -84,10 +80,6 @@ class SocketClient internal constructor(
     override fun closeConnection(status: SocketStatusCode, reason: String) {
         wsClient?.close(status.code, reason)
         wsClient = null
-    }
-
-    private fun invalidateCallbacks() {
-        socketChannel.setCallbacks(socketConnectionCallback, socketTopicCallback, socketTransactionEvent)
     }
 
     class Builder(init: Builder.() -> Unit) : SocketClientContract.Builder {
