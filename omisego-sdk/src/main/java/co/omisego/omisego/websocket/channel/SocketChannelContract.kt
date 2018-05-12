@@ -10,9 +10,9 @@ package co.omisego.omisego.websocket.channel
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.SocketConnectionCallback
+import co.omisego.omisego.websocket.SocketListenEvent
 import co.omisego.omisego.websocket.SocketMessageRef
 import co.omisego.omisego.websocket.SocketTopicCallback
-import co.omisego.omisego.websocket.SocketTransactionEvent
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.interval.SocketIntervalContract
 import okhttp3.WebSocketListener
@@ -36,9 +36,9 @@ interface SocketChannelContract {
     }
 
     interface Dispatcher {
-        var socketConnectionCallback: SocketConnectionCallback?
-        var socketTopicCallback: SocketTopicCallback?
-        var socketTransactionEvent: SocketTransactionEvent?
+        fun setSocketConnectionCallback(connectionListener: SocketConnectionCallback?)
+        fun setSocketTopicCallback(topicListener: SocketTopicCallback?)
+        fun setSocketTransactionCallback(listener: SocketListenEvent?)
 
         fun retrieveWebSocketListener(): WebSocketListener
     }

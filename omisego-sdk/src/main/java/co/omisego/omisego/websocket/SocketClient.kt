@@ -14,7 +14,9 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.websocket.channel.SocketChannel
 import co.omisego.omisego.websocket.channel.SocketChannelContract
+import co.omisego.omisego.websocket.channel.dispatcher.SystemEventDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcher
+import co.omisego.omisego.websocket.channel.dispatcher.SendableEventDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegator
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketReceiveParser
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.talksTo
@@ -49,11 +51,11 @@ class SocketClient internal constructor(
     override fun joinChannel(
         topic: SocketTopic,
         payload: Map<String, Any>,
-        transactionListener: SocketTransactionEvent?
+        listener: SocketListenEvent?
     ) {
         with(socketChannel) {
             addChannel(topic, payload)
-            setSocketTransactionCallback(transactionListener)
+            setSocketTransactionCallback(listener)
         }
     }
 
@@ -126,18 +128,16 @@ class SocketClient internal constructor(
 
             val socketDelegator = SocketDelegator(SocketReceiveParser(gson))
 
-            /* Bind two-way communication. SocketDispatcher <--> SocketDelegator */
-            val socketDispatcher = SocketDispatcher(socketDelegator)
+            val socketDispatcher = SocketDispatcher(socketDelegator, SystemEventDispatcher(), SendableEventDispatcher())
             socketDelegator talksTo socketDispatcher
 
-            /* Bind two-way communication. SocketClient <--> SocketChannel */
             val socketChannel = SocketChannel(socketDispatcher, socketClient)
             socketClient talksTo socketChannel
             socketDispatcher talksTo socketChannel
 
             socketClient.wsClient = null
 
-            /* The connection flow will be look like SocketClient <--> SocketChannel <--> SocketDispatcher <--> SocketDelegator */
+            /* The sdk's websocket flow will look like SocketClient <--> SocketChannel <--> SocketDispatcher <--> SocketDelegator */
 
             return socketClient
         }

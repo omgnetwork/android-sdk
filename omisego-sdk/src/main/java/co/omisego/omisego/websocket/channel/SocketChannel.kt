@@ -12,9 +12,9 @@ import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketConnectionCallback
+import co.omisego.omisego.websocket.SocketListenEvent
 import co.omisego.omisego.websocket.SocketMessageRef
 import co.omisego.omisego.websocket.SocketTopicCallback
-import co.omisego.omisego.websocket.SocketTransactionEvent
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
@@ -80,18 +80,18 @@ internal class SocketChannel(
     }
 
     override fun setSocketConnectionCallback(connectionListener: SocketConnectionCallback?) {
-        socketDispatcher.socketConnectionCallback = connectionListener
+        socketDispatcher.setSocketConnectionCallback(connectionListener)
     }
 
     override fun setSocketTopicCallback(topicListener: SocketTopicCallback?) {
-        socketDispatcher.socketTopicCallback = topicListener
+        socketDispatcher.setSocketTopicCallback(topicListener)
     }
 
-    override fun setSocketTransactionCallback(transactionListener: SocketTransactionEvent?) {
-        socketDispatcher.socketTransactionEvent = transactionListener
+    override fun setSocketTransactionCallback(listener: SocketListenEvent?) {
+        socketDispatcher.setSocketTransactionCallback(listener)
     }
 
-    internal inline fun runIfEmptyChannel(doSomething: () -> Unit) {
+    private inline fun runIfEmptyChannel(doSomething: () -> Unit) {
         if (channelSet.isEmpty()) {
             doSomething()
         }

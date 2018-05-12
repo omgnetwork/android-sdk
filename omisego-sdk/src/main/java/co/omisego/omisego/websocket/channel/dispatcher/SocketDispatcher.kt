@@ -7,29 +7,39 @@ package co.omisego.omisego.websocket.channel.dispatcher
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import android.util.Log
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.model.socket.SocketReceiveData
-import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.model.socket.runIfNotInternalTopic
 import co.omisego.omisego.websocket.SocketConnectionCallback
+import co.omisego.omisego.websocket.SocketListenEvent
 import co.omisego.omisego.websocket.SocketTopicCallback
-import co.omisego.omisego.websocket.SocketTransactionEvent
 import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegatorContract
-import co.omisego.omisego.websocket.enum.SocketEventReceive
+import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.Response
 import okhttp3.WebSocketListener
 
 class SocketDispatcher(
-    override val socketDelegator: SocketDispatcherContract.Delegator
+    override val socketDelegator: SocketDispatcherContract.Delegator,
+    override val systemEventDispatcher: SocketDispatcherContract.SystemEventDispatcher,
+    override val sendableEventDispatcher: SocketDispatcherContract.SendableEventDispatcher
 ) : SocketChannelContract.Dispatcher, SocketDispatcherContract.Core, SocketDelegatorContract.Dispatcher {
     override var socketChannel: SocketDispatcherContract.SocketChannel? = null
-    override var socketConnectionCallback: SocketConnectionCallback? = null
-    override var socketTopicCallback: SocketTopicCallback? = null
-    override var socketTransactionEvent: SocketTransactionEvent? = null
+    override var socketConnectionListener: SocketConnectionCallback? = null
     override val mainThreadExecutor by lazy { MainThreadExecutor() }
+
+    override fun setSocketConnectionCallback(connectionListener: SocketConnectionCallback?) {
+        socketConnectionListener = connectionListener
+        systemEventDispatcher.socketConnectionCallback = connectionListener
+    }
+
+    override fun setSocketTopicCallback(topicListener: SocketTopicCallback?) {
+        systemEventDispatcher.socketTopicCallback = topicListener
+        sendableEventDispatcher.socketTopicCallback = topicListener
+    }
+
+    override fun setSocketTransactionCallback(listener: SocketListenEvent?) {
+        sendableEventDispatcher.socketListenEvent = listener
+    }
 
     override fun retrieveWebSocketListener(): WebSocketListener {
         return socketDelegator.getWebSocketListener()
@@ -37,106 +47,33 @@ class SocketDispatcher(
 
     override fun dispatchOnOpened(response: Response) {
         mainThreadExecutor.execute {
-            socketConnectionCallback?.onConnected()
+            socketConnectionListener?.onConnected()
         }
     }
 
     override fun dispatchOnClosed(code: Int, reason: String) {
         mainThreadExecutor.execute {
-            socketConnectionCallback?.onDisconnected()
+            if (code == SocketStatusCode.NORMAL.code)
+                socketConnectionListener?.onDisconnected(null)
+            else {
+                socketConnectionListener?.onDisconnected(Throwable("$code $reason"))
+            }
         }
     }
 
     override fun dispatchOnMessage(response: SocketReceive) {
-        Log.d("SocketDispatcher", "Dispatch OnMessage $response")
         mainThreadExecutor.execute {
-            when (response.event) {
-                SocketEventReceive.CLOSE -> {
-                    val topic = SocketTopic(response.topic)
-                    topic.runIfNotInternalTopic {
-                        socketChannel?.onLeftChannel(topic)
-                        socketTopicCallback?.onUnSubscribedTopic(topic)
-                    }
-                }
-                SocketEventReceive.REPLY -> {
-                    val topic = SocketTopic(response.topic)
-                    topic.runIfNotInternalTopic {
-                        topic.runIfFirstJoined {
-                            socketChannel?.onJoinedChannel(topic)
-                            socketTopicCallback?.onSubscribedTopic(topic)
-                        }
-                    }
-                }
-                SocketEventReceive.ERROR -> Log.d("SocketDispatcher", "Receive an error event.")
-            }
-
-            // Cannot do smart-cast if don't store in the immutable variable
-            val transactionEvent = socketTransactionEvent
-
-            if (response.event == SocketEventReceive.TRANSACTION_CONSUMPTION_REQUEST || response.event == SocketEventReceive.TRANSACTION_CONSUMPTION_FINALIZED) {
-                when (transactionEvent) {
-                    is SocketTransactionEvent.RequestEvent -> transactionEvent.handleTransactionRequestEvent(response)
-                    is SocketTransactionEvent.ConsumptionEvent -> transactionEvent.handleTransactionConsumptionEvent(response)
-                }
-            }
-        }
-    }
-
-    override fun SocketTransactionEvent.RequestEvent.handleTransactionRequestEvent(socketReceive: SocketReceive) {
-        val error = socketReceive.error
-        val finalizedEvent = socketReceive.event == SocketEventReceive.TRANSACTION_CONSUMPTION_FINALIZED
-        val requestEvent = socketReceive.event == SocketEventReceive.TRANSACTION_CONSUMPTION_REQUEST
-        val socketReceiveData = socketReceive.data
-
-        when {
-            requestEvent && error == null && socketReceiveData is SocketReceiveData.SocketConsumeTransaction -> {
-                onTransactionConsumptionRequest(socketReceiveData.data)
-            }
-            finalizedEvent && error == null && socketReceiveData is SocketReceiveData.SocketConsumeTransaction -> {
-                onTransactionConsumptionFinalizedSuccess(socketReceiveData.data)
-            }
-            finalizedEvent && error != null && socketReceiveData is SocketReceiveData.SocketConsumeTransaction -> {
-                onTransactionConsumptionFinalizedFail(socketReceiveData.data, error)
-            }
-            error != null -> {
-                socketTopicCallback?.onError(error)
-            }
-        }
-    }
-
-    override fun SocketTransactionEvent.ConsumptionEvent.handleTransactionConsumptionEvent(socketReceive: SocketReceive) {
-        val error = socketReceive.error
-        val finalizedEvent = socketReceive.event == SocketEventReceive.TRANSACTION_CONSUMPTION_FINALIZED
-        val socketReceiveData = socketReceive.data
-
-        when {
-            finalizedEvent && error == null && socketReceiveData is SocketReceiveData.SocketConsumeTransaction -> {
-                onTransactionConsumptionFinalizedSuccess(socketReceiveData.data)
-            }
-            finalizedEvent && error != null && socketReceiveData is SocketReceiveData.SocketConsumeTransaction -> {
-                onTransactionConsumptionFinalizedFail(socketReceiveData.data, error)
-            }
-            error != null -> {
-                socketTopicCallback?.onError(error)
-            }
+            systemEventDispatcher.socketReceive = response
+            sendableEventDispatcher.socketReceive = response
+            response.event.either(systemEventDispatcher::handleEvent, sendableEventDispatcher::handleEvent)
         }
     }
 
     override fun dispatchOnFailure(throwable: Throwable, response: Response?) {
-        Log.e("SocketDispatcher", throwable.message)
-    }
-
-    /**
-     * Run the lambda when meets the following condition
-     *  - The topic hasn't joined yet
-     */
-    internal inline fun SocketTopic.runIfFirstJoined(lambda: () -> Unit) {
-        if (socketChannel?.joined(this) == false) {
-            lambda()
-        }
+        socketConnectionListener?.onDisconnected(throwable)
     }
 }
 
-infix fun SocketDispatcher.talksTo(socketChannel: SocketDispatcherContract.SocketChannel) {
+internal infix fun SocketDispatcher.talksTo(socketChannel: SocketDispatcherContract.SocketChannel) {
     this.socketChannel = socketChannel
 }

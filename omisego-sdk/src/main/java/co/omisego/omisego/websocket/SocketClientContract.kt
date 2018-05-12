@@ -27,7 +27,7 @@ interface SocketClientContract {
         fun joinChannel(
             topic: SocketTopic,
             payload: Map<String, Any> = mapOf(),
-            transactionListener: SocketTransactionEvent? = null
+            listener: SocketListenEvent? = null
         )
 
         fun setConnectionListener(connectionListener: SocketConnectionCallback)
@@ -46,7 +46,7 @@ interface SocketClientContract {
         fun retrieveWebSocketListener(): WebSocketListener
         fun setSocketConnectionCallback(connectionListener: SocketConnectionCallback?)
         fun setSocketTopicCallback(topicListener: SocketTopicCallback?)
-        fun setSocketTransactionCallback(transactionListener: SocketTransactionEvent?)
+        fun setSocketTransactionCallback(listener: SocketListenEvent?)
     }
 
     interface PayloadSendParser {

@@ -13,7 +13,7 @@ import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 
 interface SocketConnectionCallback {
     fun onConnected()
-    fun onDisconnected()
+    fun onDisconnected(throwable: Throwable?)
 }
 
 interface SocketTopicCallback {
@@ -22,9 +22,9 @@ interface SocketTopicCallback {
     fun onError(apiError: APIError)
 }
 
-sealed class SocketTransactionEvent {
-    abstract class RequestEvent : SocketTransactionRequestEvent, SocketTransactionEvent()
-    abstract class ConsumptionEvent : SocketTransactionConsumptionEvent, SocketTransactionEvent()
+sealed class SocketListenEvent {
+    abstract class TransactionRequestEvent : SocketTransactionRequestEvent, SocketListenEvent()
+    abstract class TransactionConsumptionEvent : SocketTransactionConsumptionEvent, SocketListenEvent()
 }
 
 private interface SocketTransactionRequestEvent {

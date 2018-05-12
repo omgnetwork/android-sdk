@@ -2,6 +2,7 @@ package co.omisego.omisego.utils
 
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.constant.enums.OMGEnum
+import co.omisego.omisego.custom.gson.EitherEnumDeserializer
 import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
 import co.omisego.omisego.custom.gson.OMGEnumAdapter
 import co.omisego.omisego.custom.gson.SocketReceiveDataDeserializer
@@ -22,6 +23,7 @@ internal class GsonProvider {
         fun create(): Gson {
             return GsonBuilder()
                 .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
+                .registerTypeAdapter(Either::class.java, EitherEnumDeserializer<OMGEnum, OMGEnum>())
                 .registerTypeAdapter(SocketReceiveData::class.java, SocketReceiveDataDeserializer())
                 .registerTypeHierarchyAdapter(OMGEnum::class.java, OMGEnumAdapter<OMGEnum>())
                 .serializeNulls()
