@@ -1,4 +1,4 @@
-package co.omisego.omisego.websocket
+package co.omisego.omisego.websocket.channel
 
 /*
  * OmiseGO
@@ -7,7 +7,7 @@ package co.omisego.omisego.websocket
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-class SocketMessageRef : SocketClientContract.MessageRef {
+class SocketMessageRef : SocketChannelContract.MessageRef {
     override var value: String = "0"
         get() {
             field = "${field.toInt() + 1}"

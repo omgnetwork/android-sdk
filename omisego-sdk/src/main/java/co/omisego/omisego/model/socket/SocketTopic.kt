@@ -1,6 +1,6 @@
 package co.omisego.omisego.model.socket
 
-import co.omisego.omisego.websocket.interval.SocketHeartbeat
+import co.omisego.omisego.websocket.channel.interval.SocketHeartbeat
 
 /*
  * OmiseGO

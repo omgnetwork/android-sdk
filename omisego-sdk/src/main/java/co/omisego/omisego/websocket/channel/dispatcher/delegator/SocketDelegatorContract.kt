@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import okhttp3.Response
 
 interface SocketDelegatorContract {
+    /* Delegator Package */
     interface Core {
         val socketResponseParser: PayloadReceiveParser
         var socketDispatcher: Dispatcher?
@@ -22,6 +23,7 @@ interface SocketDelegatorContract {
         fun parse(json: String): SocketReceive
     }
 
+    /* Dispatcher Package */
     interface Dispatcher {
         fun dispatchOnOpened(response: Response)
         fun dispatchOnClosed(code: Int, reason: String)

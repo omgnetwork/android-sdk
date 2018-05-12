@@ -19,6 +19,7 @@ import okhttp3.WebSocketListener
 
 interface SocketDispatcherContract {
 
+    /* Dispatcher Package */
     interface Core {
         val socketDelegator: Delegator
         val systemEventDispatcher: SystemEventDispatcher
@@ -26,16 +27,6 @@ interface SocketDispatcherContract {
         val socketChannel: SocketChannel?
         val mainThreadExecutor: MainThreadExecutor
         var socketConnectionListener: SocketConnectionCallback?
-    }
-
-    interface Delegator {
-        fun getWebSocketListener(): WebSocketListener
-    }
-
-    interface SocketChannel {
-        fun onLeftChannel(topic: SocketTopic)
-        fun onJoinedChannel(topic: SocketTopic)
-        fun joined(topic: SocketTopic): Boolean
     }
 
     interface SystemEventDispatcher {
@@ -59,5 +50,17 @@ interface SocketDispatcherContract {
             socketReceive: SocketReceive,
             featuredEvent: SocketFeaturedEvent
         )
+    }
+
+    /* Delegator Package */
+    interface Delegator {
+        fun getWebSocketListener(): WebSocketListener
+    }
+
+    /* Channel Package */
+    interface SocketChannel {
+        fun onLeftChannel(topic: SocketTopic)
+        fun onJoinedChannel(topic: SocketTopic)
+        fun joined(topic: SocketTopic): Boolean
     }
 }

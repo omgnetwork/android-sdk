@@ -1,4 +1,4 @@
-package co.omisego.omisego.websocket.interval
+package co.omisego.omisego.websocket.channel.interval
 
 
 /*

@@ -13,13 +13,11 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketConnectionCallback
 import co.omisego.omisego.websocket.SocketListenEvent
-import co.omisego.omisego.websocket.SocketMessageRef
 import co.omisego.omisego.websocket.SocketTopicCallback
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract
+import co.omisego.omisego.websocket.channel.interval.SocketHeartbeat
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
-import co.omisego.omisego.websocket.interval.SocketHeartbeat
-import co.omisego.omisego.websocket.interval.SocketIntervalContract
 import okhttp3.WebSocketListener
 import java.util.Timer
 
@@ -29,7 +27,7 @@ internal class SocketChannel(
     override val socketMessageRef: SocketMessageRef = SocketMessageRef()
 ) : SocketClientContract.Channel, SocketChannelContract.Core, SocketDispatcherContract.SocketChannel {
     private val channelSet: MutableSet<SocketTopic> by lazy { mutableSetOf<SocketTopic>() }
-    override val socketHeartbeat: SocketIntervalContract by lazy { SocketHeartbeat(socketMessageRef) }
+    override val socketHeartbeat: SocketChannelContract.SocketInterval by lazy { SocketHeartbeat(socketMessageRef) }
     override var heartbeatTimer: Timer? = null
 
     override fun addChannel(topic: SocketTopic, payload: Map<String, Any>) {

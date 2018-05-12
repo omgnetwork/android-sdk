@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import okhttp3.WebSocketListener
 
 interface SocketClientContract {
+    /* WebSocket Package */
     interface Builder {
         var authenticationToken: String
         var baseURL: String
@@ -35,10 +36,12 @@ interface SocketClientContract {
         fun leaveChannel(topic: SocketTopic, payload: Map<String, Any>)
     }
 
-    interface MessageRef {
-        var value: String
+    interface PayloadSendParser {
+        val gson: Gson
+        fun parse(payload: SocketSend): String
     }
 
+    /* Channel Package */
     interface Channel {
         fun addChannel(topic: SocketTopic, payload: Map<String, Any>)
         fun removeChannel(topic: SocketTopic, payload: Map<String, Any>)
@@ -47,10 +50,5 @@ interface SocketClientContract {
         fun setSocketConnectionCallback(connectionListener: SocketConnectionCallback?)
         fun setSocketTopicCallback(topicListener: SocketTopicCallback?)
         fun setSocketTransactionCallback(listener: SocketListenEvent?)
-    }
-
-    interface PayloadSendParser {
-        val gson: Gson
-        fun parse(payload: SocketSend): String
     }
 }
