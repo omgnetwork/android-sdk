@@ -37,8 +37,8 @@ class SocketDispatcher(
         customEventDispatcher.socketChannelCallback = channelListener
     }
 
-    override fun setSocketTransactionCallback(listener: SocketCustomEventCallback?) {
-        customEventDispatcher.socketCustomEventCallback = listener
+    override fun setSocketCustomEVentCallback(customEventListener: SocketCustomEventCallback?) {
+        customEventDispatcher.socketCustomEventCallback = customEventListener
     }
 
     override fun retrieveWebSocketListener(): WebSocketListener {

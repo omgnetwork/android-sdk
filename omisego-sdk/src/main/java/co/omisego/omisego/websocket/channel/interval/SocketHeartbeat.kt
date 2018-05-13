@@ -18,11 +18,12 @@ class SocketHeartbeat(
     override val socketMessageRef: SocketChannelContract.MessageRef
 ) : SocketChannelContract.SocketInterval {
     override var timer: Timer? = null
+    override var period: Long = 5000
 
     @Suppress("OVERRIDE_BY_INLINE")
     override inline fun startInterval(crossinline task: (SocketSend) -> Unit) {
         timer = Timer()
-        timer?.schedule(Date(), 5000, {
+        timer?.schedule(Date(), period, {
             task(SocketSend(EVENT_NAME, SocketEventSend.HEARTBEAT, socketMessageRef.value, mapOf()))
         })
     }

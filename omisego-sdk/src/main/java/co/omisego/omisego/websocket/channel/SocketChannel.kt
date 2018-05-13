@@ -18,7 +18,6 @@ import co.omisego.omisego.websocket.channel.interval.SocketHeartbeat
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.WebSocketListener
-import java.util.Timer
 
 internal class SocketChannel(
     override val socketDispatcher: SocketChannelContract.Dispatcher,
@@ -26,8 +25,8 @@ internal class SocketChannel(
     override val socketMessageRef: SocketChannelContract.MessageRef = SocketMessageRef()
 ) : SocketClientContract.Channel, SocketChannelContract.Channel, SocketDispatcherContract.SocketChannel {
     private val channelSet: MutableSet<SocketTopic> by lazy { mutableSetOf<SocketTopic>() }
+    override var period: Long = 5000
     override val socketHeartbeat: SocketChannelContract.SocketInterval by lazy { SocketHeartbeat(socketMessageRef) }
-    override var heartbeatTimer: Timer? = null
 
     override fun join(topic: SocketTopic, payload: Map<String, Any>) {
         if (!joined(topic)) {
@@ -68,6 +67,7 @@ internal class SocketChannel(
         with(topic) {
             channelSet.remove(this)
             runIfEmptyChannel {
+                socketHeartbeat.period = period
                 socketHeartbeat.stopInterval()
                 socketClient.closeConnection(SocketStatusCode.NORMAL, "Disconnected successfully")
             }
@@ -83,7 +83,7 @@ internal class SocketChannel(
     }
 
     override fun setCustomEventListener(customEventListener: SocketCustomEventCallback?) {
-        socketDispatcher.setSocketTransactionCallback(customEventListener)
+        socketDispatcher.setSocketCustomEVentCallback(customEventListener)
     }
 
     private inline fun runIfEmptyChannel(doSomething: () -> Unit) {

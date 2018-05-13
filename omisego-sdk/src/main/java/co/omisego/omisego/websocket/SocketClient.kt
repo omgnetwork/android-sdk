@@ -91,6 +91,10 @@ class SocketClient internal constructor(
         socketChannel.leave(topic, payload)
     }
 
+    override fun setIntervalPeriod(period: Long) {
+        socketChannel.period = period
+    }
+
     /**
      * Subscribe to the [SocketConnectionCallback] event.
      *
@@ -152,6 +156,12 @@ class SocketClient internal constructor(
          */
         override var debug: Boolean = false
 
+        /**
+         * Create a [SocketClient] instance to be used for connecting to the web socket API.
+         *
+         * @return An instance of the [SocketClient].
+         * @throws IllegalStateException if either [authenticationToken] or the [baseURL] is empty.
+         */
         override fun build(): SocketClientContract.Client {
             check(authenticationToken.isNotEmpty()) { Exceptions.MSG_EMPTY_AUTH_TOKEN }
             check(baseURL.isNotEmpty()) { Exceptions.MSG_EMPTY_BASE_URL }
@@ -190,7 +200,7 @@ class SocketClient internal constructor(
 
             socketClient.wsClient = null
 
-            /* The sdk's websocket flow will look like SocketClient <--> SocketChannel <--> SocketDispatcher <--> SocketDelegator */
+            /* The web socket flow will look like SocketClient <--> SocketChannel <--> SocketDispatcher <--> SocketDelegator */
 
             return socketClient
         }

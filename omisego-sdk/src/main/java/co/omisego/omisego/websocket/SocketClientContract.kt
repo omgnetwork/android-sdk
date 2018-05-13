@@ -106,6 +106,13 @@ interface SocketClientContract {
         fun leaveChannel(topic: SocketTopic, payload: Map<String, Any>)
 
         /**
+         * Set an interval of milliseconds for scheduling the interval event such as the heartbeat event which used for keeping the connection alive.
+         *
+         * @param period an interval of milliseconds
+         */
+        fun setIntervalPeriod(period: Long)
+
+        /**
          * Subscribe to the [SocketConnectionCallback] event.
          *
          * @param connectionListener The [SocketConnectionCallback] to be invoked when the web socket connection is connected or disconnected.
@@ -129,6 +136,12 @@ interface SocketClientContract {
 
     /* Channel Package */
     interface Channel {
+        /**
+         * An interval of milliseconds for scheduling the interval event such as the heartbeat event which used for keeping the connection alive.
+         * Default 5,000 milliseconds.
+         */
+        var period: Long
+
         /**
          * Send [SocketEventSend.JOIN] event to the server. Do nothing if the channel has already joined.
          *
