@@ -23,9 +23,13 @@ class SocketDispatcher(
     override val systemEventDispatcher: SocketDispatcherContract.SystemEventDispatcher,
     override val customEventDispatcher: SocketDispatcherContract.CustomEventDispatcher
 ) : SocketChannelContract.Dispatcher, SocketDispatcherContract.Dispatcher, SocketDelegatorContract.Dispatcher {
-    override var socketChannel: SocketDispatcherContract.SocketChannel? = null
     override var socketConnectionListener: SocketConnectionCallback? = null
     override val mainThreadExecutor by lazy { MainThreadExecutor() }
+    override var socketChannel: SocketDispatcherContract.SocketChannel? = null
+        set(value) {
+            field = value
+            systemEventDispatcher.socketChannel = value
+        }
 
     override fun setSocketConnectionCallback(connectionListener: SocketConnectionCallback?) {
         socketConnectionListener = connectionListener
