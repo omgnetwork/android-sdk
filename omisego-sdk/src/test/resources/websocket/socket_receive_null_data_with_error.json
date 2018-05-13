@@ -1,0 +1,12 @@
+{
+  "version": "1",
+  "topic": "transaction_request:328e61ac-9f35-4da5-a891-bd39f5442283",
+  "success": false,
+  "ref": "991238",
+  "event": "transaction_consumption_request",
+  "data": null,
+  "error": {
+    "code": "transaction_request:transaction_request_not_found",
+    "description": "Transaction request cannot be found"
+  }
+}
