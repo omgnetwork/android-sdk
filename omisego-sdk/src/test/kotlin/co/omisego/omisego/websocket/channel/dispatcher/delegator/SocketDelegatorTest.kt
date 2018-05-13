@@ -69,4 +69,14 @@ class SocketDelegatorTest {
     fun `retrievesWebSocketListener should return the SocketDelegator instance`() {
         socketDelegator.retrievesWebSocketListener() shouldBe socketDelegator
     }
+
+    @Test
+    fun `talkTo should assign the socket dispatcher correctly`() {
+        val socketDispatcher: SocketDelegatorContract.Dispatcher = mock()
+        socketDelegator.apply {
+            talksTo(socketDispatcher)
+        }
+
+        socketDelegator.socketDispatcher shouldBe socketDispatcher
+    }
 }
