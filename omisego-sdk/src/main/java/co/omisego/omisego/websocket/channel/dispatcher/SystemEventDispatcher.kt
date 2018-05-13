@@ -14,25 +14,46 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.socket.runIfNotInternalTopic
 import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketConnectionCallback
-import co.omisego.omisego.websocket.enum.SocketBasicEvent
+import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract.SocketChannel
+import co.omisego.omisego.websocket.enum.SocketSystemEvent
 
 class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
+    /**
+     * A connection callback that will be used for dispatch the [SocketConnectionCallback] events.
+     */
     override var socketConnectionCallback: SocketConnectionCallback? = null
+
+    /**
+     * A channel callback that be used for dispatch the [SocketChannelCallback] events.
+     */
     override var socketChannelCallback: SocketChannelCallback? = null
+
+    /**
+     * A socketChannel for delegate the event to the [SocketChannel] internally for further handling the event.
+     */
     override var socketChannel: SocketDispatcherContract.SocketChannel? = null
+
+    /**
+     * The web socket replied object from eWallet API.
+     */
     override var socketReceive: SocketReceive? = null
 
-    override fun handleEvent(basicEvent: SocketBasicEvent) {
+    /**
+     * Handles the [SocketSystemEvent] and may dispatch the [SocketChannelCallback] or [SocketConnectionCallback] to the client.
+     *
+     * @param systemEvent To indicate which event of the [SocketSystemEvent]
+     */
+    override fun handleEvent(systemEvent: SocketSystemEvent) {
         val response = socketReceive ?: return
-        when (basicEvent) {
-            SocketBasicEvent.CLOSE -> {
+        when (systemEvent) {
+            SocketSystemEvent.CLOSE -> {
                 val topic = SocketTopic(response.topic)
                 topic.runIfNotInternalTopic {
                     socketChannel?.onLeftChannel(topic)
                     socketChannelCallback?.onLeftChannel(topic)
                 }
             }
-            SocketBasicEvent.REPLY -> {
+            SocketSystemEvent.REPLY -> {
                 val topic = SocketTopic(response.topic)
                 topic.runIfNotInternalTopic {
                     topic.runIfFirstJoined {
@@ -41,10 +62,10 @@ class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
                     }
                 }
             }
-            SocketBasicEvent.ERROR -> {
+            SocketSystemEvent.ERROR -> {
                 socketChannelCallback?.onError(APIError(ErrorCode.SDK_SOCKET_ERROR, "Something goes wrong while connecting to a channel"))
             }
-            SocketBasicEvent.OTHER -> {
+            SocketSystemEvent.OTHER -> {
                 //TODO: Handle other event
             }
         }

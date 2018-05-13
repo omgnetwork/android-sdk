@@ -9,6 +9,7 @@ package co.omisego.omisego.websocket
 
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
+import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import com.google.gson.Gson
 import okhttp3.WebSocketListener
 
@@ -57,8 +58,8 @@ interface SocketClientContract {
      * This interface defines all methods that the client can be used.
      *
      * Note: As you can see, there is no method like `connect` or `disconnect` are provided. The reason is here:
-     * 1. The client will be automatically connected, once you've joined the channel.
-     * 2. The client will be automatically disconnected, once you've left all the channels you've joined.
+     * 1. The client will be automatically connected before you've joined the first channel.
+     * 2. The client will be automatically disconnected after you've left all the channels you've joined.
      */
     interface Client {
         /**
@@ -166,7 +167,7 @@ interface SocketClientContract {
         fun retrieveChannels(): Set<SocketTopic>
 
         /**
-         * Retrieves the [WebSocketListener]
+         * Retrieves the [WebSocketListener]  to be used for initializing the [Websocket] in the [SocketClient].
          *
          * @return [WebSocketListener]
          */

@@ -9,17 +9,33 @@ package co.omisego.omisego.websocket.channel.interval
 
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.websocket.channel.SocketChannelContract
+import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import java.util.Date
 import java.util.Timer
 import kotlin.concurrent.schedule
 
 class SocketHeartbeat(
+    /**
+     * [SocketMessageRef] is responsible for creating a unique ref value to be sent with the [SocketSend].
+     */
     override val socketMessageRef: SocketChannelContract.MessageRef
 ) : SocketChannelContract.SocketInterval {
+    /**
+     * The timer for scheduling the [SocketSend] periodically to be sent to the server.
+     */
     override var timer: Timer? = null
+
+    /**
+     * An interval of milliseconds between the end of the previous task and the start of the next one.
+     */
     override var period: Long = 5000
 
+    /**
+     * Start to schedule the [SocketSend] to be sent to the server periodically.
+     *
+     * @param task A lambda with a [SocketSend] parameter. This will be executed periodically that starts immediately.
+     */
     @Suppress("OVERRIDE_BY_INLINE")
     override inline fun startInterval(crossinline task: (SocketSend) -> Unit) {
         timer = Timer()
@@ -28,6 +44,9 @@ class SocketHeartbeat(
         })
     }
 
+    /**
+     * Stop to schedule the task to be sent to the server.
+     */
     override fun stopInterval() {
         timer?.cancel()
         timer = null

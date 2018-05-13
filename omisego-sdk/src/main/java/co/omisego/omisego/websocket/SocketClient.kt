@@ -190,7 +190,6 @@ class SocketClient internal constructor(
             )
 
             val socketDelegator = SocketDelegator(SocketReceiveParser(gson))
-
             val socketDispatcher = SocketDispatcher(socketDelegator, SystemEventDispatcher(), CustomEventDispatcher())
             socketDelegator talksTo socketDispatcher
 

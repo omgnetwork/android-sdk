@@ -35,7 +35,7 @@ enum class SocketEventReceive(override val value: String) : OMGEnum {
     }
 }
 
-enum class SocketBasicEvent(override val value: String) : OMGEnum {
+enum class SocketSystemEvent(override val value: String) : OMGEnum {
     CLOSE("phx_close"),
     ERROR("phx_error"),
     REPLY("phx_reply"),
@@ -44,7 +44,7 @@ enum class SocketBasicEvent(override val value: String) : OMGEnum {
     override fun toString(): String = this.value
 }
 
-enum class SocketFeaturedEvent(override val value: String) : OMGEnum {
+enum class SocketCustomEvent(override val value: String) : OMGEnum {
     TRANSACTION_CONSUMPTION_REQUEST("transaction_consumption_request"),
     TRANSACTION_CONSUMPTION_FINALIZED("transaction_consumption_finalized");
 

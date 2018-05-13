@@ -10,12 +10,12 @@ package co.omisego.omisego.model.socket
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.utils.Either
-import co.omisego.omisego.websocket.enum.SocketBasicEvent
-import co.omisego.omisego.websocket.enum.SocketFeaturedEvent
+import co.omisego.omisego.websocket.enum.SocketCustomEvent
+import co.omisego.omisego.websocket.enum.SocketSystemEvent
 
 data class SocketReceive(
     val topic: String,
-    val event: Either<SocketBasicEvent, SocketFeaturedEvent>,
+    val event: Either<SocketSystemEvent, SocketCustomEvent>,
     val ref: String?,
     val data: SocketReceiveData?,
     val version: String,

@@ -46,7 +46,7 @@ class SocketDispatcher(
     }
 
     override fun retrieveWebSocketListener(): WebSocketListener {
-        return socketDelegator.getWebSocketListener()
+        return socketDelegator.retrievesWebSocketListener()
     }
 
     override fun dispatchOnOpened(response: Response) {

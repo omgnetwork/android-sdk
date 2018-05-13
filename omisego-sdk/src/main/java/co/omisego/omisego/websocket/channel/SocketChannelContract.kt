@@ -42,11 +42,21 @@ interface SocketChannelContract {
 
         /**
          * Create a [SocketSend] instance to be used for join a channel.
+         *
+         * @param topic A topic indicating which channel will be joined.
+         * @param payload (Optional) the additional data you might want to send bundled with the request.
+         *
+         * @return A [SocketSend] instance used for joining the channel.
          */
         fun createJoinMessage(topic: SocketTopic, payload: Map<String, Any>): SocketSend
 
         /**
          * Create a [SocketSend] instance to be used for join a channel.
+         *
+         * @param topic A topic indicating which channel will be joined.
+         * @param payload (Optional) the additional data you might want to send bundled with the request.
+         *
+         * @return A [SocketSend] instance used for leaving the channel.
          */
         fun createLeaveMessage(topic: SocketTopic, payload: Map<String, Any>): SocketSend
     }
