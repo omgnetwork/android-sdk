@@ -199,8 +199,6 @@ class SocketClient internal constructor(
 
             socketClient.wsClient = null
 
-            /* The web socket flow will look like SocketClient <--> SocketChannel <--> SocketDispatcher <--> SocketDelegator */
-
             return socketClient
         }
 

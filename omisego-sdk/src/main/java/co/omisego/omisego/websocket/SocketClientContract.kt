@@ -131,7 +131,17 @@ interface SocketClientContract {
     }
 
     interface PayloadSendParser {
+        /**
+         * A gson object for parsing the [SocketSend] to the json string.
+         */
         val gson: Gson
+
+        /**
+         * Parse [SocketSend] object to raw json for sending to the web socket API.
+         *
+         * @param payload [SocketSend] object which will be sent to the eWallet web socket API.
+         * @return A json string for sending to the web socket API.
+         */
         fun parse(payload: SocketSend): String
     }
 
