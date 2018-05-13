@@ -7,13 +7,12 @@ package co.omisego.omisego.websocket.channel
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import android.util.Log
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
+import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketConnectionCallback
-import co.omisego.omisego.websocket.SocketListenEvent
-import co.omisego.omisego.websocket.SocketTopicCallback
+import co.omisego.omisego.websocket.SocketCustomEventCallback
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract
 import co.omisego.omisego.websocket.channel.interval.SocketHeartbeat
 import co.omisego.omisego.websocket.enum.SocketEventSend
@@ -24,19 +23,19 @@ import java.util.Timer
 internal class SocketChannel(
     override val socketDispatcher: SocketChannelContract.Dispatcher,
     override val socketClient: SocketChannelContract.SocketClient,
-    override val socketMessageRef: SocketMessageRef = SocketMessageRef()
-) : SocketClientContract.Channel, SocketChannelContract.Core, SocketDispatcherContract.SocketChannel {
+    override val socketMessageRef: SocketChannelContract.MessageRef = SocketMessageRef()
+) : SocketClientContract.Channel, SocketChannelContract.Channel, SocketDispatcherContract.SocketChannel {
     private val channelSet: MutableSet<SocketTopic> by lazy { mutableSetOf<SocketTopic>() }
     override val socketHeartbeat: SocketChannelContract.SocketInterval by lazy { SocketHeartbeat(socketMessageRef) }
     override var heartbeatTimer: Timer? = null
 
-    override fun addChannel(topic: SocketTopic, payload: Map<String, Any>) {
+    override fun join(topic: SocketTopic, payload: Map<String, Any>) {
         if (!joined(topic)) {
             socketClient.send(createJoinMessage(topic, payload))
         }
     }
 
-    override fun removeChannel(topic: SocketTopic, payload: Map<String, Any>) {
+    override fun leave(topic: SocketTopic, payload: Map<String, Any>) {
         if (joined(topic)) {
             socketClient.send(createLeaveMessage(topic, payload))
         }
@@ -58,7 +57,6 @@ internal class SocketChannel(
         with(topic) {
             runIfEmptyChannel {
                 socketHeartbeat.startInterval {
-                    Log.d("SocketChannel", "Channel List: $channelSet")
                     socketClient.send(it)
                 }
             }
@@ -68,7 +66,6 @@ internal class SocketChannel(
 
     override fun onLeftChannel(topic: SocketTopic) {
         with(topic) {
-            Log.d("SocketChannel", "onLeftChannel: $this")
             channelSet.remove(this)
             runIfEmptyChannel {
                 socketHeartbeat.stopInterval()
@@ -77,16 +74,16 @@ internal class SocketChannel(
         }
     }
 
-    override fun setSocketConnectionCallback(connectionListener: SocketConnectionCallback?) {
+    override fun setConnectionListener(connectionListener: SocketConnectionCallback?) {
         socketDispatcher.setSocketConnectionCallback(connectionListener)
     }
 
-    override fun setSocketTopicCallback(topicListener: SocketTopicCallback?) {
-        socketDispatcher.setSocketTopicCallback(topicListener)
+    override fun setChannelListener(channelListener: SocketChannelCallback?) {
+        socketDispatcher.setSocketChannelCallback(channelListener)
     }
 
-    override fun setSocketTransactionCallback(listener: SocketListenEvent?) {
-        socketDispatcher.setSocketTransactionCallback(listener)
+    override fun setCustomEventListener(customEventListener: SocketCustomEventCallback?) {
+        socketDispatcher.setSocketTransactionCallback(customEventListener)
     }
 
     private inline fun runIfEmptyChannel(doSomething: () -> Unit) {

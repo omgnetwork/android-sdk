@@ -11,7 +11,7 @@ import co.omisego.omisego.model.pagination.Paginable.Transaction.SearchableField
 import co.omisego.omisego.model.pagination.Paginable.Transaction.SortableFields
 import co.omisego.omisego.model.pagination.SortDirection
 import co.omisego.omisego.model.transaction.list.TransactionListParams
-import co.omisego.omisego.testUtils.GsonProvider
+import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.Gson
 import org.amshove.kluent.shouldEqual
 import org.junit.Before
@@ -21,7 +21,7 @@ class TransactionListParamsTest {
     private lateinit var gson: Gson
     @Before
     fun setUp() {
-        gson = GsonProvider.provide()
+        gson = GsonProvider.create()
     }
 
     @Test

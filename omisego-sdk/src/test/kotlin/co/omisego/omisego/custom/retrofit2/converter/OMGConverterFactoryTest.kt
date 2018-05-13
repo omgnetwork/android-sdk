@@ -14,7 +14,7 @@ import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.User
-import co.omisego.omisego.testUtils.GsonProvider
+import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.MediaType
@@ -43,7 +43,7 @@ class OMGConverterFactoryTest {
 
     @Before
     fun setup() {
-        gson = GsonProvider.provide()
+        gson = GsonProvider.create()
         val userType = object : TypeToken<OMGResponse<User>>() {}.type
         val errorType = object : TypeToken<OMGResponse<APIError>>() {}.type
         val retrofit = Retrofit.Builder().baseUrl("http://localhost:8080/").build()

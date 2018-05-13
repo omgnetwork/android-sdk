@@ -14,7 +14,7 @@ import okhttp3.WebSocketListener
 
 class SocketDelegator(
     override val socketResponseParser: SocketDelegatorContract.PayloadReceiveParser
-) : SocketDispatcherContract.Delegator, SocketDelegatorContract.Core, WebSocketListener() {
+) : SocketDispatcherContract.Delegator, SocketDelegatorContract.Delegator, WebSocketListener() {
     override var socketDispatcher: SocketDelegatorContract.Dispatcher? = null
 
     override fun onOpen(webSocket: WebSocket, response: Response) {

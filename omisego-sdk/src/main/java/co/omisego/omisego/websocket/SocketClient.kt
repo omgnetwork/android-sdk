@@ -12,11 +12,12 @@ import co.omisego.omisego.constant.HTTPHeaders
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.utils.GsonProvider
+import co.omisego.omisego.websocket.SocketClientContract.Channel
 import co.omisego.omisego.websocket.channel.SocketChannel
 import co.omisego.omisego.websocket.channel.SocketChannelContract
-import co.omisego.omisego.websocket.channel.dispatcher.SystemEventDispatcher
+import co.omisego.omisego.websocket.channel.dispatcher.CustomEventDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcher
-import co.omisego.omisego.websocket.channel.dispatcher.SendableEventDispatcher
+import co.omisego.omisego.websocket.channel.dispatcher.SystemEventDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegator
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketReceiveParser
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.talksTo
@@ -27,15 +28,19 @@ import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.logging.HttpLoggingInterceptor
 
+/**
+ * The [SocketClient] is the main file used to connect to the eWallet web socket API.
+ *
+ * The available methods and details are listed in the [SocketClientContract.Client]
+ * @see SocketClientContract.Client
+ */
 class SocketClient internal constructor(
     internal val okHttpClient: OkHttpClient,
     internal val request: Request,
     internal val socketSendParser: SocketClientContract.PayloadSendParser
-) : SocketClientContract.Core, SocketChannelContract.SocketClient {
+) : SocketClientContract.Client, SocketChannelContract.SocketClient {
     internal var wsClient: WebSocket? = null
     override lateinit var socketChannel: SocketClientContract.Channel
-
-    /* SocketClientContract.Core */
 
     /**
      * Immediately and violently release resources held by this web socket, discarding any enqueued
@@ -45,33 +50,66 @@ class SocketClient internal constructor(
         wsClient?.cancel()
     }
 
+    /**
+     * A boolean indicating if all messages have been sent to the server.
+     *
+     * @return true, if all messages have been sent, otherwise false.
+     */
     override fun hasSentAllMessages(): Boolean =
         (wsClient?.queueSize() ?: 0L) == 0L
 
+    /**
+     * Joining a channel by the given [SocketTopic].
+     *
+     * @param topic The topic (channel) to which the event to be sent.
+     * @param payload (Optional) the additional data you might want to send bundled with the request.
+     * @param listener The event you want to receive for the specified [Channel].
+     * Be careful, the listener should be related to the topic, otherwise you won't receive any message.
+     * For example, if you are sending the topic begins with "transaction_request", then the listener must be the [SocketCustomEventCallback.TransactionRequestCallback] event.
+     *
+     * @see SocketCustomEventCallback
+     */
     override fun joinChannel(
         topic: SocketTopic,
         payload: Map<String, Any>,
-        listener: SocketListenEvent?
+        listener: SocketCustomEventCallback
     ) {
         with(socketChannel) {
-            addChannel(topic, payload)
-            setSocketTransactionCallback(listener)
+            join(topic, payload)
+            setCustomEventListener(listener)
         }
     }
 
+    /**
+     * Leave the [Channel] with the given [SocketTopic].
+     * If the channel haven't joined yet, then this method does nothing.
+     *
+     * @param topic The topic (channel) to be left.
+     * @param payload (Optional) the additional data you might want to send bundled with the request.
+     */
     override fun leaveChannel(topic: SocketTopic, payload: Map<String, Any>) {
-        socketChannel.removeChannel(topic, payload)
+        socketChannel.leave(topic, payload)
     }
 
+    /**
+     * Subscribe to the [SocketConnectionCallback] event.
+     *
+     * @param connectionListener The [SocketConnectionCallback] to be invoked when the web socket connection is connected or disconnected.
+     * @see SocketConnectionCallback for the event detail.
+     */
     override fun setConnectionListener(connectionListener: SocketConnectionCallback) {
-        socketChannel.setSocketConnectionCallback(connectionListener)
+        socketChannel.setConnectionListener(connectionListener)
     }
 
-    override fun setTopicListener(topicListener: SocketTopicCallback) {
-        socketChannel.setSocketTopicCallback(topicListener)
+    /**
+     * Subscribe to the [SocketChannelCallback] event.
+     *
+     * @param channelListener The [SocketChannelCallback] to be invoked when the channel has been joined, left, or got an error.
+     * @see SocketChannelCallback for the event detail.
+     */
+    override fun setChannelListener(channelListener: SocketChannelCallback) {
+        socketChannel.setChannelListener(channelListener)
     }
-
-    /* SocketClientContract.SocketClient */
 
     override fun send(message: SocketSend): Boolean {
         wsClient = wsClient ?: okHttpClient.newWebSocket(request, socketChannel.retrieveWebSocketListener())
@@ -84,22 +122,37 @@ class SocketClient internal constructor(
         wsClient = null
     }
 
+    /**
+     * A [SocketClient.Builder] used to define the required data to create an instance of the [SocketClient]
+     */
     class Builder(init: Builder.() -> Unit) : SocketClientContract.Builder {
+        /**
+         * An authenticationToken used to tell the identity of who is connecting to the web socket API.
+         */
         override var authenticationToken: String = ""
             set(value) {
                 check(value.isNotEmpty()) { Exceptions.MSG_EMPTY_AUTH_TOKEN }
                 field = value
             }
 
+        /**
+         * The base url of the eWallet server
+         * This url must follow the web socket protocol (ws or wss for ssl).
+         * The interface of the eWallet web socket API is available at `/api/socket`.
+         * For example, ws(s)://ewallet.demo.omisego.io/api/socket
+         */
         override var baseURL: String = ""
             set(value) {
                 check(value.isNotEmpty()) { Exceptions.MSG_EMPTY_BASE_URL }
                 field = value
             }
 
+        /**
+         * A boolean indicating if debug info should be printed in the console.
+         */
         override var debug: Boolean = false
 
-        override fun build(): SocketClientContract.Core {
+        override fun build(): SocketClientContract.Client {
             check(authenticationToken.isNotEmpty()) { Exceptions.MSG_EMPTY_AUTH_TOKEN }
             check(baseURL.isNotEmpty()) { Exceptions.MSG_EMPTY_BASE_URL }
 
@@ -128,7 +181,7 @@ class SocketClient internal constructor(
 
             val socketDelegator = SocketDelegator(SocketReceiveParser(gson))
 
-            val socketDispatcher = SocketDispatcher(socketDelegator, SystemEventDispatcher(), SendableEventDispatcher())
+            val socketDispatcher = SocketDispatcher(socketDelegator, SystemEventDispatcher(), CustomEventDispatcher())
             socketDelegator talksTo socketDispatcher
 
             val socketChannel = SocketChannel(socketDispatcher, socketClient)

@@ -9,7 +9,7 @@ package co.omisego.omisego.custom.gson
 
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.socket.SocketReceiveData
-import co.omisego.omisego.testUtils.GsonProvider
+import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.Gson
 import org.junit.Before
 import java.io.File
@@ -20,7 +20,7 @@ class SocketReceiveDataAdapterTest {
     private lateinit var gson: Gson
     @Before
     fun setUp() {
-        gson = GsonProvider.provide()
+        gson = GsonProvider.create()
     }
 
     @Test

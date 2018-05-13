@@ -13,7 +13,7 @@ import okhttp3.Response
 
 interface SocketDelegatorContract {
     /* Delegator Package */
-    interface Core {
+    interface Delegator {
         val socketResponseParser: PayloadReceiveParser
         var socketDispatcher: Dispatcher?
     }

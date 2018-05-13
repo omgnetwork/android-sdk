@@ -7,17 +7,18 @@ package co.omisego.omisego.websocket.channel.dispatcher
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import android.util.Log
+import co.omisego.omisego.constant.enums.ErrorCode
+import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.socket.runIfNotInternalTopic
+import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketConnectionCallback
-import co.omisego.omisego.websocket.SocketTopicCallback
 import co.omisego.omisego.websocket.enum.SocketBasicEvent
 
 class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
     override var socketConnectionCallback: SocketConnectionCallback? = null
-    override var socketTopicCallback: SocketTopicCallback? = null
+    override var socketChannelCallback: SocketChannelCallback? = null
     override var socketChannel: SocketDispatcherContract.SocketChannel? = null
     override var socketReceive: SocketReceive? = null
 
@@ -28,7 +29,7 @@ class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
                 val topic = SocketTopic(response.topic)
                 topic.runIfNotInternalTopic {
                     socketChannel?.onLeftChannel(topic)
-                    socketTopicCallback?.onUnSubscribedTopic(topic)
+                    socketChannelCallback?.onLeftChannel(topic)
                 }
             }
             SocketBasicEvent.REPLY -> {
@@ -36,12 +37,12 @@ class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
                 topic.runIfNotInternalTopic {
                     topic.runIfFirstJoined {
                         socketChannel?.onJoinedChannel(topic)
-                        socketTopicCallback?.onSubscribedTopic(topic)
+                        socketChannelCallback?.onJoinedChannel(topic)
                     }
                 }
             }
             SocketBasicEvent.ERROR -> {
-                Log.d("SocketDispatcher", "Receive an error event.")
+                socketChannelCallback?.onError(APIError(ErrorCode.SDK_SOCKET_ERROR, "Something goes wrong while connecting to a channel"))
             }
             SocketBasicEvent.OTHER -> {
                 //TODO: Handle other event

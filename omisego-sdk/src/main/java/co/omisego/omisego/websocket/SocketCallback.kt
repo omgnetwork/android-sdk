@@ -16,15 +16,15 @@ interface SocketConnectionCallback {
     fun onDisconnected(throwable: Throwable?)
 }
 
-interface SocketTopicCallback {
-    fun onSubscribedTopic(topic: SocketTopic)
-    fun onUnSubscribedTopic(topic: SocketTopic)
+interface SocketChannelCallback {
+    fun onJoinedChannel(topic: SocketTopic)
+    fun onLeftChannel(topic: SocketTopic)
     fun onError(apiError: APIError)
 }
 
-sealed class SocketListenEvent {
-    abstract class TransactionRequestEvent : SocketTransactionRequestEvent, SocketListenEvent()
-    abstract class TransactionConsumptionEvent : SocketTransactionConsumptionEvent, SocketListenEvent()
+sealed class SocketCustomEventCallback {
+    abstract class TransactionRequestCallback : SocketTransactionRequestEvent, SocketCustomEventCallback()
+    abstract class TransactionConsumptionCallback : SocketTransactionConsumptionEvent, SocketCustomEventCallback()
 }
 
 private interface SocketTransactionRequestEvent {

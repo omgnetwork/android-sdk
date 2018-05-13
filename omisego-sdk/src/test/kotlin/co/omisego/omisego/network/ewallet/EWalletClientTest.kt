@@ -19,7 +19,7 @@ import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.transaction.list.TransactionListParams
-import co.omisego.omisego.testUtils.GsonProvider
+import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.utils.OMGEncryptionHelper
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
@@ -181,7 +181,7 @@ class EWalletClientTest {
         val json = JSONObject(responseText)
         val success = json.getBoolean("success")
         val dataText = json.getJSONObject("data").toString()
-        val gson = GsonProvider.provide()
+        val gson = GsonProvider.create()
         val data = gson.fromJson<T>(dataText, T::class.java)
         return OMGResponse(Versions.EWALLET_API, success, data)
     }

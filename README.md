@@ -49,7 +49,7 @@ Before using the SDK to retrieve a resource, you need to initialize the client (
 You should to this as soon as you obtain a valid authentication token corresponding to the current user from the Wallet API.
 
 ```kotlin
- val token = EncryptionHelper.encryptBase64(apiKey, authToken)
+ val token = OMGEncryption.createAuthorizationHeader(apiKey, authToken)
  
  val eWalletClient = EWalletClient.Builder {
      baseURL = baseURL

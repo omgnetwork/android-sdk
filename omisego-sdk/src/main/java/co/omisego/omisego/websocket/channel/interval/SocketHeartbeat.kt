@@ -9,14 +9,13 @@ package co.omisego.omisego.websocket.channel.interval
 
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.websocket.channel.SocketChannelContract
-import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import java.util.Date
 import java.util.Timer
 import kotlin.concurrent.schedule
 
 class SocketHeartbeat(
-    override val socketMessageRef: SocketMessageRef
+    override val socketMessageRef: SocketChannelContract.MessageRef
 ) : SocketChannelContract.SocketInterval {
     override var timer: Timer? = null
 

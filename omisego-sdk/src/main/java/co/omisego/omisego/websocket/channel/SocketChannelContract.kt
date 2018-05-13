@@ -9,16 +9,16 @@ package co.omisego.omisego.websocket.channel
 
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
+import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketConnectionCallback
-import co.omisego.omisego.websocket.SocketListenEvent
-import co.omisego.omisego.websocket.SocketTopicCallback
+import co.omisego.omisego.websocket.SocketCustomEventCallback
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.WebSocketListener
 import java.util.Timer
 
 interface SocketChannelContract {
     /* Channel Package */
-    interface Core {
+    interface Channel {
         val socketDispatcher: Dispatcher
         val socketClient: SocketClient
         val socketHeartbeat: SocketInterval
@@ -42,7 +42,7 @@ interface SocketChannelContract {
     /* Interval Package */
     interface SocketInterval {
         var timer: Timer?
-        val socketMessageRef: SocketMessageRef
+        val socketMessageRef: SocketChannelContract.MessageRef
 
         fun startInterval(task: (SocketSend) -> Unit)
         fun stopInterval()
@@ -51,8 +51,8 @@ interface SocketChannelContract {
     /* Dispatcher Package */
     interface Dispatcher {
         fun setSocketConnectionCallback(connectionListener: SocketConnectionCallback?)
-        fun setSocketTopicCallback(topicListener: SocketTopicCallback?)
-        fun setSocketTransactionCallback(listener: SocketListenEvent?)
+        fun setSocketChannelCallback(channelListener: SocketChannelCallback?)
+        fun setSocketTransactionCallback(listener: SocketCustomEventCallback?)
         fun retrieveWebSocketListener(): WebSocketListener
     }
 }

@@ -9,30 +9,30 @@ package co.omisego.omisego.websocket.channel.dispatcher
 
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketReceiveData
-import co.omisego.omisego.websocket.SocketListenEvent
-import co.omisego.omisego.websocket.SocketTopicCallback
+import co.omisego.omisego.websocket.SocketChannelCallback
+import co.omisego.omisego.websocket.SocketCustomEventCallback
 import co.omisego.omisego.websocket.enum.SocketFeaturedEvent
 import co.omisego.omisego.websocket.enum.SocketFeaturedEvent.TRANSACTION_CONSUMPTION_FINALIZED
 import co.omisego.omisego.websocket.enum.SocketFeaturedEvent.TRANSACTION_CONSUMPTION_REQUEST
 
-class SendableEventDispatcher : SocketDispatcherContract.SendableEventDispatcher {
-    override var socketListenEvent: SocketListenEvent? = null
+class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
+    override var socketCustomEventCallback: SocketCustomEventCallback? = null
     override var socketReceive: SocketReceive? = null
-    override var socketTopicCallback: SocketTopicCallback? = null
+    override var socketChannelCallback: SocketChannelCallback? = null
 
     override fun handleEvent(featuredEvent: SocketFeaturedEvent) {
         val response = socketReceive ?: return
-        val listenEvent = socketListenEvent ?: return
+        val listenEvent = socketCustomEventCallback ?: return
 
         when (listenEvent) {
-            is SocketListenEvent.TransactionRequestEvent ->
+            is SocketCustomEventCallback.TransactionRequestCallback ->
                 listenEvent.handleTransactionRequestEvent(response, featuredEvent)
-            is SocketListenEvent.TransactionConsumptionEvent ->
+            is SocketCustomEventCallback.TransactionConsumptionCallback ->
                 listenEvent.handleTransactionConsumptionEvent(response, featuredEvent)
         }
     }
 
-    override fun SocketListenEvent.TransactionRequestEvent.handleTransactionRequestEvent(
+    override fun SocketCustomEventCallback.TransactionRequestCallback.handleTransactionRequestEvent(
         socketReceive: SocketReceive,
         featuredEvent: SocketFeaturedEvent
     ) {
@@ -50,11 +50,11 @@ class SendableEventDispatcher : SocketDispatcherContract.SendableEventDispatcher
         }
 
         if (socketReceive.error != null) {
-            socketTopicCallback?.onError(socketReceive.error)
+            socketChannelCallback?.onError(socketReceive.error)
         }
     }
 
-    override fun SocketListenEvent.TransactionConsumptionEvent.handleTransactionConsumptionEvent(socketReceive: SocketReceive, featuredEvent: SocketFeaturedEvent) {
+    override fun SocketCustomEventCallback.TransactionConsumptionCallback.handleTransactionConsumptionEvent(socketReceive: SocketReceive, featuredEvent: SocketFeaturedEvent) {
         val socketReceiveData = socketReceive.data as? SocketReceiveData.SocketConsumeTransaction ?: return
         if (featuredEvent == TRANSACTION_CONSUMPTION_FINALIZED) {
             when (socketReceive.error) {
@@ -66,7 +66,7 @@ class SendableEventDispatcher : SocketDispatcherContract.SendableEventDispatcher
                 }
             }
         } else if (socketReceive.error != null) {
-            socketTopicCallback?.onError(socketReceive.error)
+            socketChannelCallback?.onError(socketReceive.error)
         }
     }
 }

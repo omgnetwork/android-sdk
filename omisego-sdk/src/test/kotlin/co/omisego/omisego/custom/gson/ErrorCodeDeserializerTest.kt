@@ -12,8 +12,8 @@ import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
-import co.omisego.omisego.testUtils.GsonProvider
 import co.omisego.omisego.testUtils.ResourceFile
+import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.reflect.TypeToken
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
@@ -32,7 +32,7 @@ class ErrorCodeDeserializerTest {
 
     @Test
     fun `ErrorCode should be deserialized successfully`() {
-        val gson = GsonProvider.provide()
+        val gson = GsonProvider.create()
 
         val typeToken = object : TypeToken<OMGResponse<APIError>>() {}.type
         val response = gson.fromJson<OMGResponse<APIError>>(errorFile.readText(), typeToken)

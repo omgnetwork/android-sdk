@@ -9,9 +9,9 @@ package co.omisego.omisego.websocket.channel.dispatcher
 
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketConnectionCallback
-import co.omisego.omisego.websocket.SocketListenEvent
-import co.omisego.omisego.websocket.SocketTopicCallback
+import co.omisego.omisego.websocket.SocketCustomEventCallback
 import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegatorContract
 import co.omisego.omisego.websocket.enum.SocketStatusCode
@@ -21,8 +21,8 @@ import okhttp3.WebSocketListener
 class SocketDispatcher(
     override val socketDelegator: SocketDispatcherContract.Delegator,
     override val systemEventDispatcher: SocketDispatcherContract.SystemEventDispatcher,
-    override val sendableEventDispatcher: SocketDispatcherContract.SendableEventDispatcher
-) : SocketChannelContract.Dispatcher, SocketDispatcherContract.Core, SocketDelegatorContract.Dispatcher {
+    override val customEventDispatcher: SocketDispatcherContract.CustomEventDispatcher
+) : SocketChannelContract.Dispatcher, SocketDispatcherContract.Dispatcher, SocketDelegatorContract.Dispatcher {
     override var socketChannel: SocketDispatcherContract.SocketChannel? = null
     override var socketConnectionListener: SocketConnectionCallback? = null
     override val mainThreadExecutor by lazy { MainThreadExecutor() }
@@ -32,13 +32,13 @@ class SocketDispatcher(
         systemEventDispatcher.socketConnectionCallback = connectionListener
     }
 
-    override fun setSocketTopicCallback(topicListener: SocketTopicCallback?) {
-        systemEventDispatcher.socketTopicCallback = topicListener
-        sendableEventDispatcher.socketTopicCallback = topicListener
+    override fun setSocketChannelCallback(channelListener: SocketChannelCallback?) {
+        systemEventDispatcher.socketChannelCallback = channelListener
+        customEventDispatcher.socketChannelCallback = channelListener
     }
 
-    override fun setSocketTransactionCallback(listener: SocketListenEvent?) {
-        sendableEventDispatcher.socketListenEvent = listener
+    override fun setSocketTransactionCallback(listener: SocketCustomEventCallback?) {
+        customEventDispatcher.socketCustomEventCallback = listener
     }
 
     override fun retrieveWebSocketListener(): WebSocketListener {
@@ -64,8 +64,8 @@ class SocketDispatcher(
     override fun dispatchOnMessage(response: SocketReceive) {
         mainThreadExecutor.execute {
             systemEventDispatcher.socketReceive = response
-            sendableEventDispatcher.socketReceive = response
-            response.event.either(systemEventDispatcher::handleEvent, sendableEventDispatcher::handleEvent)
+            customEventDispatcher.socketReceive = response
+            response.event.either(systemEventDispatcher::handleEvent, customEventDispatcher::handleEvent)
         }
     }
 

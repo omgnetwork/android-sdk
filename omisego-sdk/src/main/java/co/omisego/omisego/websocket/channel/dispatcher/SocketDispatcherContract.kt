@@ -10,9 +10,9 @@ package co.omisego.omisego.websocket.channel.dispatcher
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
+import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketConnectionCallback
-import co.omisego.omisego.websocket.SocketListenEvent
-import co.omisego.omisego.websocket.SocketTopicCallback
+import co.omisego.omisego.websocket.SocketCustomEventCallback
 import co.omisego.omisego.websocket.enum.SocketBasicEvent
 import co.omisego.omisego.websocket.enum.SocketFeaturedEvent
 import okhttp3.WebSocketListener
@@ -20,10 +20,10 @@ import okhttp3.WebSocketListener
 interface SocketDispatcherContract {
 
     /* Dispatcher Package */
-    interface Core {
+    interface Dispatcher {
         val socketDelegator: Delegator
         val systemEventDispatcher: SystemEventDispatcher
-        val sendableEventDispatcher: SendableEventDispatcher
+        val customEventDispatcher: CustomEventDispatcher
         val socketChannel: SocketChannel?
         val mainThreadExecutor: MainThreadExecutor
         var socketConnectionListener: SocketConnectionCallback?
@@ -31,22 +31,22 @@ interface SocketDispatcherContract {
 
     interface SystemEventDispatcher {
         var socketConnectionCallback: SocketConnectionCallback?
-        var socketTopicCallback: SocketTopicCallback?
+        var socketChannelCallback: SocketChannelCallback?
         var socketReceive: SocketReceive?
         var socketChannel: SocketChannel?
         fun handleEvent(basicEvent: SocketBasicEvent)
     }
 
-    interface SendableEventDispatcher {
-        var socketListenEvent: SocketListenEvent?
-        var socketTopicCallback: SocketTopicCallback?
+    interface CustomEventDispatcher {
+        var socketCustomEventCallback: SocketCustomEventCallback?
+        var socketChannelCallback: SocketChannelCallback?
         var socketReceive: SocketReceive?
         fun handleEvent(featuredEvent: SocketFeaturedEvent)
-        fun SocketListenEvent.TransactionRequestEvent.handleTransactionRequestEvent(
+        fun SocketCustomEventCallback.TransactionRequestCallback.handleTransactionRequestEvent(
             socketReceive: SocketReceive,
             featuredEvent: SocketFeaturedEvent
         )
-        fun SocketListenEvent.TransactionConsumptionEvent.handleTransactionConsumptionEvent(
+        fun SocketCustomEventCallback.TransactionConsumptionCallback.handleTransactionConsumptionEvent(
             socketReceive: SocketReceive,
             featuredEvent: SocketFeaturedEvent
         )

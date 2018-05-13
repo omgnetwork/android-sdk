@@ -16,7 +16,7 @@ import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.User
-import co.omisego.omisego.testUtils.GsonProvider
+import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.reflect.TypeToken
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -44,7 +44,7 @@ class OMGCallbackWrapperTest {
     private lateinit var mockCall: Call<OMGResponse<User>>
     private lateinit var mockOMGCallback: OMGCallback<User>
     private lateinit var callback: OMGCallbackWrapper<User>
-    private val gson by lazy { GsonProvider.provide() }
+    private val gson by lazy { GsonProvider.create() }
 
     @Before
     fun setup() {

@@ -13,7 +13,7 @@ import co.omisego.omisego.exception.OMGAPIErrorException
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.User
-import co.omisego.omisego.testUtils.GsonProvider
+import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.testUtils.ResourceFile
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -43,7 +43,7 @@ class OMGResponseConverterFactoryTest {
 
     @Before
     fun setup() {
-        gson = GsonProvider.provide()
+        gson = GsonProvider.create()
         mockResponseBody = mock()
         val userType = object : TypeToken<OMGResponse<User>>() {}.type
         val errorType = object : TypeToken<OMGResponse<APIError>>() {}.type

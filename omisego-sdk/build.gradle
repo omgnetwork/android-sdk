@@ -70,7 +70,7 @@ tasks.withType(Javadoc) {
 }
 
 dependencies {
-    // Core dependencies
+    // Client dependencies
     api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     // Used for the QRCode generator and the QRCode scanner.
