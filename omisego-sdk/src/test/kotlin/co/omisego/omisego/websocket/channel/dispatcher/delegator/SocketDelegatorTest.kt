@@ -1,5 +1,12 @@
 package co.omisego.omisego.websocket.channel.dispatcher.delegator
 
+/*
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 13/5/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
 import co.omisego.omisego.model.socket.SocketReceive
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -10,13 +17,6 @@ import org.amshove.kluent.mock
 import org.amshove.kluent.shouldBe
 import org.junit.Before
 import org.junit.Test
-
-/*
- * OmiseGO
- *
- * Created by Phuchit Sirimongkolsathien on 13/5/2018 AD.
- * Copyright © 2017-2018 OmiseGO. All rights reserved.
- */
 
 class SocketDelegatorTest {
     private val mockSocketDispatcher: SocketDelegatorContract.Dispatcher = mock()
