@@ -8,7 +8,7 @@ package co.omisego.omisego.utils
  */
 
 /**
- * Represents a value of one of two possible types (a disjoint union).
+ * Represents value value of one of two possible types (value disjoint union).
  * Instances of [Either] are either an instance of [Left] or [Right].
  *
  * @see Left
@@ -16,15 +16,15 @@ package co.omisego.omisego.utils
  */
 
 sealed class Either<out L, out R> {
-    data class Left<out L>(val a: L) : Either<L, Nothing>()
-    data class Right<out R>(val b: R) : Either<Nothing, R>()
+    data class Left<out L>(val value: L) : Either<L, Nothing>()
+    data class Right<out R>(val value: R) : Either<Nothing, R>()
 
     val isRight get() = this is Right<R>
     val isLeft get() = this is Left<L>
 
     inline fun either(fnL: (L) -> Any, fnR: (R) -> Any): Any =
         when (this) {
-            is Either.Left -> fnL(a)
-            is Either.Right -> fnR(b)
+            is Either.Left -> fnL(value)
+            is Either.Right -> fnR(value)
         }
 }

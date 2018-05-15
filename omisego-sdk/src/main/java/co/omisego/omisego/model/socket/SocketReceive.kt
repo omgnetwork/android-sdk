@@ -35,13 +35,13 @@ data class SocketReceive(
     /**
      * null for events emitted from the server in response to a server action.
      */
-    val ref: String?,
+    val ref: String? = null,
 
     /**
      * The data relevant to the event.
-     * Can be null if success is equal to false (but could also contain the [SocketReceiveData] to provide context for the error).
+     * Can be null if success is equal to false (but could also contain the [SocketReceive.Data] to provide context for the error).
      */
-    val data: SocketReceiveData?,
+    val data: Data? = null,
 
     /**
      * The web socket API version.
@@ -56,10 +56,12 @@ data class SocketReceive(
     /**
      * The error resulting from the action generating th event
      */
-    val error: APIError?
-)
-
-sealed class SocketReceiveData {
-    data class SocketConsumeTransaction(val data: TransactionConsumption) : SocketReceiveData()
-    data class Other(val data: Map<String, Any>) : SocketReceiveData()
+    val error: APIError? = null
+) {
+    sealed class Data {
+        data class SocketConsumeTransaction(val data: TransactionConsumption) : Data()
+        data class Other(val data: Map<String, Any>) : Data()
+    }
 }
+
+

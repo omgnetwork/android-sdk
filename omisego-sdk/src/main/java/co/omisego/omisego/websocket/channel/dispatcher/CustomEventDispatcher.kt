@@ -8,10 +8,10 @@ package co.omisego.omisego.websocket.channel.dispatcher
  */
 
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.model.socket.SocketReceiveData
 import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketCustomEventCallback
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
+import co.omisego.omisego.websocket.enum.SocketCustomEvent.OTHER
 import co.omisego.omisego.websocket.enum.SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED
 import co.omisego.omisego.websocket.enum.SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST
 
@@ -51,6 +51,7 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
     /**
      * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventCallback.TransactionRequestCallback].
      * This method will be invoked by the [handleEvent] method.
+     * Any event excepts [TRANSACTION_CONSUMPTION_REQUEST] or [TRANSACTION_CONSUMPTION_FINALIZED] is [OTHER], managed by the [EitherEnumDeserializer].
      *
      * @param socketReceive The web socket replied object from eWallet API.
      * @param customEvent The custom event used for decide the event to be dispatched
@@ -59,7 +60,7 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
         socketReceive: SocketReceive,
         customEvent: SocketCustomEvent
     ) {
-        val socketReceiveData = socketReceive.data as? SocketReceiveData.SocketConsumeTransaction ?: return
+        val socketReceiveData = socketReceive.data as? SocketReceive.Data.SocketConsumeTransaction ?: return
         when (customEvent) {
             TRANSACTION_CONSUMPTION_REQUEST -> {
                 onTransactionConsumptionRequest(socketReceiveData.data)
@@ -70,10 +71,11 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
                     else -> onTransactionConsumptionFinalizedFail(socketReceiveData.data, socketReceive.error)
                 }
             }
-        }
-
-        if (socketReceive.error != null) {
-            socketChannelCallback?.onError(socketReceive.error)
+            OTHER -> {
+                if (socketReceive.error != null) {
+                    socketChannelCallback?.onError(socketReceive.error)
+                }
+            }
         }
     }
 
@@ -85,7 +87,8 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
      * @param customEvent The custom event used for decide the event to be dispatched
      */
     override fun SocketCustomEventCallback.TransactionConsumptionCallback.handleTransactionConsumptionEvent(socketReceive: SocketReceive, customEvent: SocketCustomEvent) {
-        val socketReceiveData = socketReceive.data as? SocketReceiveData.SocketConsumeTransaction ?: return
+        val socketReceiveData = socketReceive.data as? SocketReceive.Data.SocketConsumeTransaction ?: return
+
         if (customEvent == TRANSACTION_CONSUMPTION_FINALIZED) {
             when (socketReceive.error) {
                 null -> {
@@ -95,7 +98,7 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
                     onTransactionConsumptionFinalizedFail(socketReceiveData.data, socketReceive.error)
                 }
             }
-        } else if (socketReceive.error != null) {
+        } else if (customEvent == OTHER && socketReceive.error != null) {
             socketChannelCallback?.onError(socketReceive.error)
         }
     }

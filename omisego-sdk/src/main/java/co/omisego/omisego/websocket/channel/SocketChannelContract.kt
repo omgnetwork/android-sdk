@@ -131,7 +131,7 @@ interface SocketChannelContract {
         /**
          * Set the socket custom events callback to be used for dispatch the custom events.
          */
-        fun setSocketCustomEVentCallback(customEventListener: SocketCustomEventCallback?)
+        fun setSocketCustomEventCallback(customEventListener: SocketCustomEventCallback?)
 
         /**
          * Retrieves the [WebSocketListener] to be used for initializing the [Websocket] in the [SocketClient].

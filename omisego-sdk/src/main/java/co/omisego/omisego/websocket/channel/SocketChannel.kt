@@ -175,7 +175,7 @@ internal class SocketChannel(
      *
      */
     override fun setCustomEventListener(customEventListener: SocketCustomEventCallback?) {
-        socketDispatcher.setSocketCustomEVentCallback(customEventListener)
+        socketDispatcher.setSocketCustomEventCallback(customEventListener)
     }
 
     private inline fun runIfEmptyChannel(doSomething: () -> Unit) {

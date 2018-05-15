@@ -19,18 +19,27 @@ class EitherEnumDeserializer<L : OMGEnum, R : OMGEnum> : JsonDeserializer<Either
     @Suppress("UNCHECKED_CAST")
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Either<L, R> {
         val types = (typeOfT as ParameterizedType).actualTypeArguments
-        val leftEnum = (types[0] as Class<L>)
-        val rightEnum = (types[1] as Class<R>)
-        val l = leftEnum.enumConstants.firstOrNull { it.value == json.asString }
-        val r = rightEnum.enumConstants.firstOrNull { it.value == json.asString }
+        val leftEnumClass = (types[0] as Class<L>)
+        val rightEnumClass = (types[1] as Class<R>)
+        val leftEnum = leftEnumClass.findFirstNonNullOMGEnum(json.asString)
+        val rightEnum = rightEnumClass.findFirstNonNullOMGEnum(json.asString)
         return when {
-            l != null -> Either.Left(l)
-            r != null -> Either.Right(r)
+            leftEnum != null -> Either.Left(leftEnum)
+            rightEnum != null -> Either.Right(rightEnum)
             else -> {
                 throw IllegalStateException(
-                    "Neither ${leftEnum.simpleName} nor ${rightEnum.simpleName} can be parsed"
+                    "Neither ${leftEnumClass.simpleName} nor ${rightEnumClass.simpleName} can be parsed"
                 )
             }
         }
+    }
+
+    private fun <T : OMGEnum> Class<T>.findFirstNonNullOMGEnum(
+        predicate: String,
+        backupPredicate: String = "other"
+    ): T? {
+        return this.enumConstants.firstOrNull { it.value == predicate }
+            ?: this.enumConstants.firstOrNull { it.value == backupPredicate }
+            ?: return null
     }
 }

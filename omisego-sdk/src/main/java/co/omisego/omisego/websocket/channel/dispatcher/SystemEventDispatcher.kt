@@ -63,10 +63,7 @@ class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
                 }
             }
             SocketSystemEvent.ERROR -> {
-                socketChannelCallback?.onError(APIError(ErrorCode.SDK_SOCKET_ERROR, "Something goes wrong while connecting to a channel"))
-            }
-            SocketSystemEvent.OTHER -> {
-                //TODO: Handle other event
+                socketChannelCallback?.onError(APIError(ErrorCode.SDK_SOCKET_ERROR, "Something goes wrong while connecting to the channel"))
             }
         }
     }
