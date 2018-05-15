@@ -8,7 +8,7 @@ package co.omisego.omisego.custom.gson
  */
 
 import co.omisego.omisego.helpers.delegation.ResourceFile
-import co.omisego.omisego.model.socket.SocketReceiveData
+import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.Gson
 import org.junit.Before
@@ -25,7 +25,7 @@ class SocketReceiveDataAdapterTest {
 
     @Test
     fun `SocketReceiveDataAdapter should parse TransactionConsumption successfully`() {
-        val test = gson.fromJson(consumeTransactionRequestFile.readText(), SocketReceiveData::class.java)
+        val test = gson.fromJson(consumeTransactionRequestFile.readText(), SocketReceive.Data::class.java)
         println(test)
     }
 }
