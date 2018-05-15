@@ -91,6 +91,11 @@ class SocketClient internal constructor(
         socketChannel.leave(topic, payload)
     }
 
+    /**
+     * Set an interval of milliseconds for scheduling the interval event such as the heartbeat event which used for keeping the connection alive.
+     *
+     * @param period an interval of milliseconds (Default 5_000)
+     */
     override fun setIntervalPeriod(period: Long) {
         socketChannel.period = period
     }
