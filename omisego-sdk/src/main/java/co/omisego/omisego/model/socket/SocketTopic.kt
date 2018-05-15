@@ -1,13 +1,13 @@
 package co.omisego.omisego.model.socket
 
-import co.omisego.omisego.websocket.channel.interval.SocketHeartbeat
-
 /*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 11/5/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import co.omisego.omisego.websocket.channel.interval.SocketHeartbeat
 
 data class SocketTopic(val name: String)
 
