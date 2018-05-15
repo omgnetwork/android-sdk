@@ -16,7 +16,6 @@ data class SocketTopic(val name: String)
  *  - The topic is coming from the user (exclude heartbeat, etc.)
  */
 inline fun SocketTopic.runIfNotInternalTopic(lambda: SocketTopic.() -> Unit) {
-    // Note for myself: need to check == true because socketChannel cannot cast from Boolean? to Boolean (it's var)
     if (this.name != SocketHeartbeat.EVENT_NAME) {
         lambda()
     }
