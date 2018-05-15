@@ -9,7 +9,7 @@ package co.omisego.omisego.websocket.channel.dispatcher.delegator
 
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
-import co.omisego.omisego.model.socket.SocketReceiveData
+import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionStatus
 import co.omisego.omisego.model.transaction.request.TransactionRequestStatus
 import co.omisego.omisego.model.transaction.request.TransactionRequestType
@@ -42,10 +42,10 @@ class SocketReceiveParserTest {
             topic shouldEqualTo "transaction_request:328e61ac-9f35-4da5-a891-bd39f5442283"
             ref!! shouldEqualTo "991238"
             event shouldEqual Either.Right(SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST)
-            data shouldBeInstanceOf SocketReceiveData.SocketConsumeTransaction::class
+            data shouldBeInstanceOf SocketReceive.Data.SocketConsumeTransaction::class
             error shouldBe null
 
-            val transactionConsumptionData = data as SocketReceiveData.SocketConsumeTransaction
+            val transactionConsumptionData = data as SocketReceive.Data.SocketConsumeTransaction
             with(transactionConsumptionData.data) {
                 status shouldEqual TransactionConsumptionStatus.PENDING
                 socketTopic shouldEqualTo "transaction_consumption:42292c2d-2249-467b-bfd1-bb557211399b"
