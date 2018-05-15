@@ -63,5 +63,3 @@ data class SocketReceive(
         data class Other(val data: Map<String, Any>) : Data()
     }
 }
-
-

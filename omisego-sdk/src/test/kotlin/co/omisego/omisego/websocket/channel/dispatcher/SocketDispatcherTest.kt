@@ -161,7 +161,7 @@ class SocketDispatcherTest {
 
     @Test
     fun `talksTo should assign socketChannel correctly`() {
-        with(socketDispatcher){
+        with(socketDispatcher) {
             this talksTo mockSocketChannel
             this.socketChannel shouldEqual mockSocketChannel
         }
