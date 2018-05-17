@@ -23,7 +23,7 @@ interface SocketConnectionCallback {
     /**
      * Invoked when the web socket client has disconnected from the eWallet web socket API.
      *
-     * @param throwable (Optional) The exception might be raised if the web socket wasn't disconnected successfully.
+     * @param throwable (Optional) The exception might be raised if the web socket was not disconnected successfully.
      */
     fun onDisconnected(throwable: Throwable?)
 }
@@ -66,10 +66,10 @@ sealed class SocketCustomEventCallback {
 private interface SocketTransactionRequestEvent {
     fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption)
     fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
-    fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
+    fun onTransactionConsumptionFinalizedFail(apiError: APIError)
 }
 
 private interface SocketTransactionConsumptionEvent {
     fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
-    fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
+    fun onTransactionConsumptionFinalizedFail(apiError: APIError)
 }

@@ -60,15 +60,18 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
         socketReceive: SocketReceive,
         customEvent: SocketCustomEvent
     ) {
-        val socketReceiveData = socketReceive.data as? SocketReceive.Data.SocketConsumeTransaction ?: return
         when (customEvent) {
             TRANSACTION_CONSUMPTION_REQUEST -> {
+                val socketReceiveData = socketReceive.data as? SocketReceive.Data.SocketConsumeTransaction ?: return
                 onTransactionConsumptionRequest(socketReceiveData.data)
             }
             TRANSACTION_CONSUMPTION_FINALIZED -> {
                 when (socketReceive.error) {
-                    null -> onTransactionConsumptionFinalizedSuccess(socketReceiveData.data)
-                    else -> onTransactionConsumptionFinalizedFail(socketReceiveData.data, socketReceive.error)
+                    null -> {
+                        val socketReceiveData = socketReceive.data as? SocketReceive.Data.SocketConsumeTransaction ?: return
+                        onTransactionConsumptionFinalizedSuccess(socketReceiveData.data)
+                    }
+                    else -> onTransactionConsumptionFinalizedFail(socketReceive.error)
                 }
             }
             OTHER -> {
@@ -87,15 +90,15 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
      * @param customEvent The custom event used for decide the event to be dispatched
      */
     override fun SocketCustomEventCallback.TransactionConsumptionCallback.handleTransactionConsumptionEvent(socketReceive: SocketReceive, customEvent: SocketCustomEvent) {
-        val socketReceiveData = socketReceive.data as? SocketReceive.Data.SocketConsumeTransaction ?: return
 
         if (customEvent == TRANSACTION_CONSUMPTION_FINALIZED) {
             when (socketReceive.error) {
                 null -> {
+                    val socketReceiveData = socketReceive.data as? SocketReceive.Data.SocketConsumeTransaction ?: return
                     onTransactionConsumptionFinalizedSuccess(socketReceiveData.data)
                 }
                 else -> {
-                    onTransactionConsumptionFinalizedFail(socketReceiveData.data, socketReceive.error)
+                    onTransactionConsumptionFinalizedFail(socketReceive.error)
                 }
             }
         } else if (customEvent == OTHER && socketReceive.error != null) {
