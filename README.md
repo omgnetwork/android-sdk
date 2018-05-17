@@ -675,7 +675,7 @@ socketClient.joinChannel(SocketTopic(transactionRequestTopic), listener = object
 })
 ```
 
-> Be careful, this way 🖕, it is possible to pass a wrong callback without any compile error. If that happen you won't receive any event from the callback.
+> Be careful, this way ☝️, it is possible to pass a wrong callback without any compile error. If that happen you won't receive any event from the callback.
 
 ## Stop listening for the custom event
 
