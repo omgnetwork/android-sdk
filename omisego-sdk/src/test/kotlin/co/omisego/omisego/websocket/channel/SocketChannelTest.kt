@@ -31,7 +31,6 @@ class SocketChannelTest {
     private val mockSocketClient: SocketChannelContract.SocketClient = mock()
     private val mockSocketHeartbeat: SocketChannelContract.SocketInterval = mock()
     private val socketTopic = SocketTopic("topic")
-
     private lateinit var socketChannel: SocketChannel
 
     @Before
