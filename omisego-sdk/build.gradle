@@ -75,11 +75,13 @@ dependencies {
 
     // Used for the QRCode generator and the QRCode scanner.
     api 'com.google.zxing:core:3.3.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:support-v4:27.1.1'
+
+    // For networking stuff
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
-    implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support:support-v4:27.1.0'
 
     // Testing dependencies
     testImplementation 'org.json:json:20160810'
