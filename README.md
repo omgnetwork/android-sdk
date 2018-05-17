@@ -537,7 +537,7 @@ val socketClient = OMGSocketClient.Builder {
 
 Where:
 * `apiKey` is the API key (typically generated on the admin panel).
-* `authenticationToken` is the token which is the base64 of `apiKey:authenticationToken`.
+* `authenticationToken` is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
 > You can find more info on how to retrieve this token in the [OmiseGO server SDK documentations](https://github.com/omisego/ruby-sdk#login). 
 * `baseURL` is the URL of the OmiseGO Wallet API, this needs to be an ws(s) url. **Note**: This need to be ended with '/'.
 * `debug` is a boolean indicating if the SDK should print logs in the console.
