@@ -645,7 +645,7 @@ transactionConsumption.startListeningEvents(socketClient, object: SocketCustomEv
 
 > Note: You might want to listen for the event later after you got the `TransactionRequest` or `TransactionConsumption` object, but you might not want to pass the object around.
 In this case, it is possible to keep only the `socket_topic` string directly. Then you can alternatively listening for custom events by using `joinChannel` method of the `OMGSocketClient` instance.
-This result in the exactly same effect as the implementation above 🖕. For example,
+This result in the exactly same effect as the implementation above ☝️. For example,
 
 ```kotlin
 // The transaction requestor listen for the event 
