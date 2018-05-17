@@ -31,8 +31,13 @@ import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.withMessage
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
-class SocketClientTest {
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [23])
+class OMGSocketClientTest {
 
     private val mockOkHttpClient: OkHttpClient = mock()
     private val mockRequest: Request = mock()
@@ -41,11 +46,11 @@ class SocketClientTest {
     private val mockCustomEventListener: SocketCustomEventCallback = mock()
     private val mockSocketSendParser: SocketClientContract.PayloadSendParser = mock()
 
-    private lateinit var socketClient: SocketClient
+    private lateinit var socketClient: OMGSocketClient
 
     @Before
     fun setup() {
-        socketClient = SocketClient(mockOkHttpClient, mockRequest, mockSocketSendParser).apply {
+        socketClient = OMGSocketClient(mockOkHttpClient, mockRequest, mockSocketSendParser).apply {
             wsClient = mockWebSocket
         }
     }
@@ -161,7 +166,7 @@ class SocketClientTest {
     @Test
     fun `authenticationToken should throw an IllegalStateException when assigning it the empty value`() {
         val error = {
-            SocketClient.Builder {
+            OMGSocketClient.Builder {
                 authenticationToken = ""
             }
         }
@@ -172,7 +177,7 @@ class SocketClientTest {
     @Test
     fun `baseURL should throw an IllegalStateException when assigning it the empty value`() {
         val error = {
-            SocketClient.Builder {
+            OMGSocketClient.Builder {
                 baseURL = ""
             }
         }
@@ -183,7 +188,7 @@ class SocketClientTest {
     @Test
     fun `authenticationToken should not be thrown an exception when assigning non-empty value`() {
         val error = {
-            SocketClient.Builder {
+            OMGSocketClient.Builder {
                 authenticationToken = "a1234"
             }
         }
@@ -194,7 +199,7 @@ class SocketClientTest {
     @Test
     fun `baseURL should not be thrown an exception when assigning non-empty value`() {
         val error = {
-            SocketClient.Builder {
+            OMGSocketClient.Builder {
                 baseURL = "ws://localhost:4000/"
             }
         }
@@ -204,10 +209,11 @@ class SocketClientTest {
 
     @Test
     fun `build should create an instance of the socket client successfully given both valid authenticationToken and baseURL`() {
-        val socketClient = SocketClient.Builder {
+        val socketClient = OMGSocketClient.Builder {
             baseURL = "ws://localhost:4000/"
             authenticationToken = "a1234"
-        }.build() as SocketClient
+            apiKey = "api1234"
+        }.build() as OMGSocketClient
 
         socketClient shouldNotBe null
         socketClient.okHttpClient shouldNotBe null
@@ -215,7 +221,7 @@ class SocketClientTest {
         socketClient.socketChannel shouldNotBe null
         socketClient.socketSendParser shouldNotBe null
 
-        // Validate dependencies flow wired up between SocketClient <-- SocketChannel --> SocketDispatcher
+        // Validate dependencies flow wired up between OMGSocketClient <-- SocketChannel --> SocketDispatcher
         val channel = socketClient.socketChannel as SocketChannel
         channel.socketDispatcher shouldNotBe null
         channel.socketClient shouldNotBe null

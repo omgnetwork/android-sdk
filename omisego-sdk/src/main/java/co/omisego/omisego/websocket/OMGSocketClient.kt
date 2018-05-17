@@ -12,6 +12,7 @@ import co.omisego.omisego.constant.HTTPHeaders
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.utils.GsonProvider
+import co.omisego.omisego.utils.OMGEncryption
 import co.omisego.omisego.websocket.SocketClientContract.Channel
 import co.omisego.omisego.websocket.channel.SocketChannel
 import co.omisego.omisego.websocket.channel.SocketChannelContract
@@ -29,12 +30,21 @@ import okhttp3.WebSocket
 import okhttp3.logging.HttpLoggingInterceptor
 
 /**
- * The [SocketClient] is the main file used to connect to the eWallet web socket API.
+ * The [OMGSocketClient] represents an object that knows how to interact with the eWallet Web Socket API.
+ * An instance should be created by using [OMGSocketClient.Builder]. For example,
+ *
+ * <code>
+ *     val omgSocketClient = OMGSocketClient.Builder{
+ *          authenticationToken = YOUR_TOKEN
+ *          apiKey = YOUR_API_KEY
+ *          baseUrl = wss://your_ewallet_domain/api/socket/
+ *     }.build(
+ * </code>
  *
  * The available methods and details are listed in the [SocketClientContract.Client]
  * @see SocketClientContract.Client
  */
-class SocketClient internal constructor(
+class OMGSocketClient internal constructor(
     internal val okHttpClient: OkHttpClient,
     internal val request: Request,
     internal val socketSendParser: SocketClientContract.PayloadSendParser
@@ -106,7 +116,7 @@ class SocketClient internal constructor(
      * @param connectionListener The [SocketConnectionCallback] to be invoked when the web socket connection is connected or disconnected.
      * @see SocketConnectionCallback for the event detail.
      */
-    override fun setConnectionListener(connectionListener: SocketConnectionCallback) {
+    override fun setConnectionListener(connectionListener: SocketConnectionCallback?) {
         socketChannel.setConnectionListener(connectionListener)
     }
 
@@ -116,27 +126,40 @@ class SocketClient internal constructor(
      * @param channelListener The [SocketChannelCallback] to be invoked when the channel has been joined, left, or got an error.
      * @see SocketChannelCallback for the event detail.
      */
-    override fun setChannelListener(channelListener: SocketChannelCallback) {
+    override fun setChannelListener(channelListener: SocketChannelCallback?) {
         socketChannel.setChannelListener(channelListener)
     }
 
+    /**
+     * Send the [SocketSend] request to the eWallet web socket API.
+     *
+     * @return A boolean indicating if the message was sent successfully.
+     */
     override fun send(message: SocketSend): Boolean {
         wsClient = wsClient ?: okHttpClient.newWebSocket(request, socketChannel.retrieveWebSocketListener())
         val payload = socketSendParser.parse(message)
         return wsClient?.send(payload) ?: false
     }
 
+    /**
+     * Close the web socket connection
+     *
+     * @param status The web socket status code
+     * @param reason The detail why the connection is closed
+     */
     override fun closeConnection(status: SocketStatusCode, reason: String) {
         wsClient?.close(status.code, reason)
         wsClient = null
     }
 
     /**
-     * A [SocketClient.Builder] used to define the required data to create an instance of the [SocketClient]
+     * A [OMGSocketClient.Builder] used to define the required data to create an instance of the [OMGSocketClient]
      */
     class Builder(init: Builder.() -> Unit) : SocketClientContract.Builder {
         /**
-         * An authenticationToken used to tell the identity of who is connecting to the web socket API.
+         * An authenticationToken is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
+         *
+         * @throws IllegalStateException if set with an empty string.
          */
         override var authenticationToken: String = ""
             set(value) {
@@ -145,10 +168,23 @@ class SocketClient internal constructor(
             }
 
         /**
+         *  An apiKey is the API key (typically generated on the admin panel)
+         *
+         * @throws IllegalStateException if set with an empty string.
+         */
+        override var apiKey: String = ""
+            set(value) {
+                check(value.isNotEmpty()) { Exceptions.MSG_EMPTY_API_KEY }
+                field = value
+            }
+
+        /**
          * The base url of the eWallet server
          * This url must follow the web socket protocol (ws or wss for ssl).
          * The interface of the eWallet web socket API is available at `/api/socket`.
          * For example, ws(s)://ewallet.demo.omisego.io/api/socket
+         *
+         * @throws IllegalStateException if set with an empty string.
          */
         override var baseURL: String = ""
             set(value) {
@@ -162,18 +198,19 @@ class SocketClient internal constructor(
         override var debug: Boolean = false
 
         /**
-         * Create a [SocketClient] instance to be used for connecting to the web socket API.
+         * Create a [OMGSocketClient] instance to be used for connecting to the web socket API.
          *
-         * @return An instance of the [SocketClient].
-         * @throws IllegalStateException if either [authenticationToken] or the [baseURL] is empty.
+         * @return An instance of the [OMGSocketClient].
+         * @throws IllegalStateException if [authenticationToken], [apiKey] or the [baseURL] is empty.
          */
         override fun build(): SocketClientContract.Client {
             check(authenticationToken.isNotEmpty()) { Exceptions.MSG_EMPTY_AUTH_TOKEN }
+            check(apiKey.isNotEmpty()) { Exceptions.MSG_EMPTY_API_KEY }
             check(baseURL.isNotEmpty()) { Exceptions.MSG_EMPTY_BASE_URL }
 
             val request = Request.Builder().apply {
                 url(baseURL)
-                addHeader(HTTPHeaders.AUTHORIZATION, "${HTTPHeaders.AUTHORIZATION_SCHEME} $authenticationToken")
+                addHeader(HTTPHeaders.AUTHORIZATION, "${HTTPHeaders.AUTHORIZATION_SCHEME} ${OMGEncryption.createAuthorizationHeader(apiKey, authenticationToken)}")
                 addHeader(HTTPHeaders.ACCEPT, HTTPHeaders.ACCEPT_OMG)
             }.build()
 
@@ -188,7 +225,7 @@ class SocketClient internal constructor(
 
             val gson = GsonProvider.create()
 
-            val socketClient = SocketClient(
+            val socketClient = OMGSocketClient(
                 okHttpClient,
                 request,
                 SocketSendParser(gson)
@@ -213,6 +250,6 @@ class SocketClient internal constructor(
     }
 }
 
-infix fun SocketClient.talksTo(socketChannel: SocketClientContract.Channel) {
+infix fun OMGSocketClient.talksTo(socketChannel: SocketClientContract.Channel) {
     this.socketChannel = socketChannel
 }
