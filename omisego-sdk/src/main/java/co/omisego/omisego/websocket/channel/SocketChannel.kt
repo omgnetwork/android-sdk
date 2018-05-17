@@ -30,14 +30,14 @@ internal class SocketChannel(
     /**
      * A [SocketClient] for sending a message to the eWallet web socket API and close the web socket connection.
      */
-    override val socketClient: SocketChannelContract.SocketClient,
+    override val socketClient: SocketChannelContract.SocketClient
+) : SocketClientContract.Channel, SocketChannelContract.Channel, SocketDispatcherContract.SocketChannel {
+    private val channelSet: MutableSet<SocketTopic> by lazy { mutableSetOf<SocketTopic>() }
 
     /**
      * A [SocketMessageRef] is responsible for create unique ref value to be included in the [SocketSend] request.
      */
-    override val socketMessageRef: SocketChannelContract.MessageRef = SocketMessageRef()
-) : SocketClientContract.Channel, SocketChannelContract.Channel, SocketDispatcherContract.SocketChannel {
-    private val channelSet: MutableSet<SocketTopic> by lazy { mutableSetOf<SocketTopic>() }
+    override val socketMessageRef: SocketChannelContract.MessageRef = SocketMessageRef().apply { scheme = SocketMessageRef.SCHEME_JOIN }
 
     /**
      * An interval of milliseconds for scheduling the interval event such as the heartbeat event which used for keeping the connection alive.
@@ -48,7 +48,9 @@ internal class SocketChannel(
     /**
      * A [SocketHeartbeat] is responsible for schedule sending the heartbeat event for keep the connection alive
      */
-    override val socketHeartbeat: SocketChannelContract.SocketInterval by lazy { SocketHeartbeat(socketMessageRef) }
+    override val socketHeartbeat: SocketChannelContract.SocketInterval by lazy {
+        SocketHeartbeat(SocketMessageRef().apply { scheme = SocketMessageRef.SCHEME_HEARTBEAT })
+    }
 
     /**
      * Send [SocketEventSend.JOIN] event to the server. Do nothing if the channel has already joined.
@@ -71,6 +73,15 @@ internal class SocketChannel(
     override fun leave(topic: SocketTopic, payload: Map<String, Any>) {
         if (joined(topic)) {
             socketClient.send(createLeaveMessage(topic, payload))
+        }
+    }
+
+    /**
+     * Send leave event for all currently active channels.
+     */
+    override fun leaveAll() {
+        for (channel in channelSet) {
+            leave(channel, mapOf())
         }
     }
 
@@ -116,7 +127,7 @@ internal class SocketChannel(
      * @return A [SocketSend] instance used for leaving the channel.
      */
     override fun createLeaveMessage(topic: SocketTopic, payload: Map<String, Any>): SocketSend =
-        SocketSend(topic.name, SocketEventSend.LEAVE, socketMessageRef.value, payload)
+        SocketSend(topic.name, SocketEventSend.LEAVE, null, payload)
 
     /**
      * Invoked when the client have been joined the channel successfully.

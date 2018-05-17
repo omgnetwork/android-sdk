@@ -66,6 +66,7 @@ interface SocketChannelContract {
      */
     interface MessageRef {
         var value: String
+        var scheme: String
     }
 
     /* WebSocket Package */

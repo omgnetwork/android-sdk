@@ -11,9 +11,9 @@ import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.model.socket.runIfNotInternalTopic
 import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketConnectionCallback
+import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract.SocketChannel
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
 
@@ -48,14 +48,14 @@ class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
         when (systemEvent) {
             SocketSystemEvent.CLOSE -> {
                 val topic = SocketTopic(response.topic)
-                topic.runIfNotInternalTopic {
+                response.runIfRefSchemeIsJoined {
                     socketChannel?.onLeftChannel(topic)
                     socketChannelCallback?.onLeftChannel(topic)
                 }
             }
             SocketSystemEvent.REPLY -> {
                 val topic = SocketTopic(response.topic)
-                topic.runIfNotInternalTopic {
+                response.runIfRefSchemeIsJoined {
                     topic.runIfFirstJoined {
                         socketChannel?.onJoinedChannel(topic)
                         socketChannelCallback?.onJoinedChannel(topic)
@@ -72,8 +72,15 @@ class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
      * Run the lambda when meets the following condition
      *  - The topic hasn't joined yet
      */
-    internal inline fun SocketTopic.runIfFirstJoined(lambda: () -> Unit) {
+    private inline fun SocketTopic.runIfFirstJoined(lambda: () -> Unit) {
         if (socketChannel?.joined(this) == false) {
+            lambda()
+        }
+    }
+
+    private inline fun SocketReceive.runIfRefSchemeIsJoined(lambda: () -> Unit) {
+        val ref = this.ref ?: return
+        if (ref.startsWith(SocketMessageRef.SCHEME_JOIN)) {
             lambda()
         }
     }

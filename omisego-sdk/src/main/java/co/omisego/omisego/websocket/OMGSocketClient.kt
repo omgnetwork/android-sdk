@@ -46,7 +46,7 @@ import okhttp3.logging.HttpLoggingInterceptor
  */
 class OMGSocketClient internal constructor(
     internal val okHttpClient: OkHttpClient,
-    internal val request: Request,
+    internal var request: Request,
     internal val socketSendParser: SocketClientContract.PayloadSendParser
 ) : SocketClientContract.Client, SocketChannelContract.SocketClient {
     internal var wsClient: WebSocket? = null
@@ -99,6 +99,24 @@ class OMGSocketClient internal constructor(
      */
     override fun leaveChannel(topic: SocketTopic, payload: Map<String, Any>) {
         socketChannel.leave(topic, payload)
+    }
+
+    /**
+     * Set new authentication header. This will send leave request for every channel to the server.
+     * You'll need to join the channel again (please wait for disconnected callback is invoked).
+     *
+     * @param apiKey is the API key (typically generated on the admin panel).
+     * @param authenticationToken is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
+     */
+    override fun setAuthenticationHeader(apiKey: String, authenticationToken: String) {
+        // Leave all channels
+        socketChannel.leaveAll()
+        // Create new request to use with a new authenticationHeader
+        request = Request.Builder()
+            .url(request.url())
+            .addHeader(HTTPHeaders.AUTHORIZATION, "${HTTPHeaders.AUTHORIZATION_SCHEME} ${OMGEncryption.createAuthorizationHeader(apiKey, authenticationToken)}")
+            .addHeader(HTTPHeaders.ACCEPT, HTTPHeaders.ACCEPT_OMG)
+            .build()
     }
 
     /**

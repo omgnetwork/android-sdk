@@ -9,4 +9,4 @@ package co.omisego.omisego.model.socket
 
 import co.omisego.omisego.websocket.enum.SocketEventSend
 
-data class SocketSend(val topic: String, val event: SocketEventSend, val ref: String, val data: Map<String, Any>)
+data class SocketSend(val topic: String, val event: SocketEventSend, val ref: String?, val data: Map<String, Any>)

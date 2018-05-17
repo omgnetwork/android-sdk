@@ -118,6 +118,14 @@ interface SocketClientContract {
         fun leaveChannel(topic: SocketTopic, payload: Map<String, Any>)
 
         /**
+         * Set new authentication header
+         *
+         * @param apiKey is the API key (typically generated on the admin panel).
+         * @param authenticationToken is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
+         */
+        fun setAuthenticationHeader(apiKey: String, authenticationToken: String)
+
+        /**
          * Set an interval of milliseconds for scheduling the interval event such as the heartbeat event which used for keeping the connection alive.
          *
          * @param period an interval of milliseconds
@@ -179,6 +187,11 @@ interface SocketClientContract {
          * @param payload (Optional) payload you want to send along with the request/.
          */
         fun leave(topic: SocketTopic, payload: Map<String, Any>)
+
+        /**
+         * Send leave event for all currently active channels.
+         */
+        fun leaveAll()
 
         /**
          * Retrieves a set of active [SocketTopic].

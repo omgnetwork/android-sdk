@@ -8,6 +8,8 @@ package co.omisego.omisego.websocket.channel.dispatcher.delegator
  */
 
 import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.model.socket.SocketTopic
+import co.omisego.omisego.model.socket.runIfNotInternalTopic
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract
 import okhttp3.Response
@@ -36,7 +38,9 @@ class SocketDelegator(
 
     override fun onMessage(webSocket: WebSocket, text: String) {
         val socketReceive = socketResponseParser.parse(text)
-        socketDispatcher?.dispatchOnMessage(socketReceive)
+        SocketTopic(socketReceive.topic).runIfNotInternalTopic {
+            socketDispatcher?.dispatchOnMessage(socketReceive)
+        }
     }
 
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {

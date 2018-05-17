@@ -8,9 +8,16 @@ package co.omisego.omisego.websocket.channel
  */
 
 class SocketMessageRef : SocketChannelContract.MessageRef {
+    override var scheme: String = ""
     override var value: String = "0"
         get() {
-            field = "${field.toInt() + 1}"
-            return field
+            val incremental = "${field.toInt() + 1}"
+            field = incremental
+            return "$scheme:$incremental"
         }
+
+    companion object {
+        const val SCHEME_JOIN: String = "join"
+        const val SCHEME_HEARTBEAT: String = "heartbeat"
+    }
 }
