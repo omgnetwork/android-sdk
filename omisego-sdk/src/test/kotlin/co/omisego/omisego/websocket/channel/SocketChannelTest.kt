@@ -203,7 +203,7 @@ class SocketChannelTest {
         socketChannel.leaveAll()
 
         // Leave five channels
-        for(topic in 1..5) {
+        for (topic in 1..5) {
             verify(mockSocketClient, times(1)).send(SocketSend("$topic", SocketEventSend.LEAVE, null, mapOf()))
         }
     }

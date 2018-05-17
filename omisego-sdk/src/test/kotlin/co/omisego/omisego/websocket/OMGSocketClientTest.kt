@@ -242,7 +242,7 @@ class OMGSocketClientTest {
     }
 
     @Test
-    fun `setAuthenticationHeader should call leaveAll in socketChannel and build a new request with new authentication header`(){
+    fun `setAuthenticationHeader should call leaveAll in socketChannel and build a new request with new authentication header`() {
         whenever(mockRequest.url()).thenReturn(HttpUrl.Builder().host("localhost").scheme("http").build())
         socketClient.socketChannel = mockSocketChannel
 
