@@ -11,6 +11,7 @@ import co.omisego.omisego.constant.enums.OMGEnum
 import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
+import co.omisego.omisego.operation.Listenable
 import java.math.BigDecimal
 import java.util.Date
 
@@ -79,7 +80,7 @@ data class TransactionRequest(
     /**
      * The topic which can be listened in order to receive events regarding this request
      */
-    val socketTopic: String,
+    override val socketTopic: String,
 
     /**
      * The maximum number of time that this request can be consumed
@@ -125,7 +126,7 @@ data class TransactionRequest(
      * The date when the request expired
      */
     val expiredAt: Date?
-)
+) : Listenable
 
 /**
  * An extension function that converts the [TransactionRequest] to the [TransactionConsumptionParams] easily
