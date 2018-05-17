@@ -16,13 +16,13 @@ class SocketMessageRefTest {
 
     @Before
     fun setup() {
-        socketMessageRef = SocketMessageRef()
+        socketMessageRef = SocketMessageRef().apply { scheme = "test" }
     }
 
     @Test
     fun `value should be increased for every access`() {
-        socketMessageRef.value shouldEqualTo "1"
-        socketMessageRef.value shouldEqualTo "2"
-        socketMessageRef.value shouldEqualTo "3"
+        socketMessageRef.value shouldEqualTo "test:1"
+        socketMessageRef.value shouldEqualTo "test:2"
+        socketMessageRef.value shouldEqualTo "test:3"
     }
 }

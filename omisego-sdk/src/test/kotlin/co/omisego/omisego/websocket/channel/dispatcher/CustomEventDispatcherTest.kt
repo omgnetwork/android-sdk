@@ -114,7 +114,7 @@ class CustomEventDispatcherTest {
             txRequestCb.handleTransactionRequestEvent(dataTxFinalizedFail, SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
         }
 
-        verify(txRequestCb, times(1)).onTransactionConsumptionFinalizedFail(mockData.data, apiError)
+        verify(txRequestCb, times(1)).onTransactionConsumptionFinalizedFail(apiError)
         verifyNoMoreInteractions(txRequestCb)
     }
 
@@ -136,7 +136,7 @@ class CustomEventDispatcherTest {
             txConsumptionCb.handleTransactionConsumptionEvent(dataTxFinalizedFail, SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
         }
 
-        verify(txConsumptionCb, times(1)).onTransactionConsumptionFinalizedFail(mockData.data, apiError)
+        verify(txConsumptionCb, times(1)).onTransactionConsumptionFinalizedFail(apiError)
         verifyNoMoreInteractions(txConsumptionCb)
     }
 }

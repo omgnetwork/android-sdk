@@ -14,6 +14,7 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.utils.Either
 import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketConnectionCallback
+import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -30,6 +31,7 @@ class SystemEventDispatcherTest {
         event = Either.Left(SocketSystemEvent.REPLY),
         data = null,
         version = "1",
+        ref = "${SocketMessageRef.SCHEME_HEARTBEAT}:1",
         success = true
     )
 
@@ -38,6 +40,7 @@ class SystemEventDispatcherTest {
         event = Either.Left(SocketSystemEvent.REPLY),
         data = null,
         version = "1",
+        ref = "${SocketMessageRef.SCHEME_JOIN}:1",
         success = true
     )
 
@@ -46,6 +49,7 @@ class SystemEventDispatcherTest {
         event = Either.Left(SocketSystemEvent.CLOSE),
         data = null,
         version = "1",
+        ref = "${SocketMessageRef.SCHEME_JOIN}:1",
         success = true
     )
 

@@ -69,8 +69,7 @@ class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
     }
 
     /**
-     * Run the lambda when meets the following condition
-     *  - The topic hasn't joined yet
+     * Run the lambda when the topic hasn't joined yet
      */
     private inline fun SocketTopic.runIfFirstJoined(lambda: () -> Unit) {
         if (socketChannel?.joined(this) == false) {
@@ -78,6 +77,9 @@ class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
         }
     }
 
+    /**
+     * Run the lambda when the ref starts with "join"
+     */
     private inline fun SocketReceive.runIfRefSchemeIsJoined(lambda: () -> Unit) {
         val ref = this.ref ?: return
         if (ref.startsWith(SocketMessageRef.SCHEME_JOIN)) {

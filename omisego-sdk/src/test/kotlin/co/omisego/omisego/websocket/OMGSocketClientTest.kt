@@ -8,6 +8,7 @@ package co.omisego.omisego.websocket
  */
 
 import co.omisego.omisego.constant.Exceptions
+import co.omisego.omisego.constant.HTTPHeaders
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.channel.SocketChannel
@@ -20,6 +21,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
@@ -237,5 +239,19 @@ class OMGSocketClientTest {
         val delegator = dispatcher.socketDelegator as SocketDelegator
         delegator.socketDispatcher shouldNotBe null
         delegator.socketResponseParser shouldNotBe null
+    }
+
+    @Test
+    fun `setAuthenticationHeader should call leaveAll in socketChannel and build a new request with new authentication header`(){
+        whenever(mockRequest.url()).thenReturn(HttpUrl.Builder().host("localhost").scheme("http").build())
+        socketClient.socketChannel = mockSocketChannel
+
+        socketClient.setAuthenticationHeader("apiKey", "authToken")
+
+        verify(mockRequest, times(1)).url()
+        verify(mockSocketChannel, times(1)).leaveAll()
+
+        // Expecting a base64 of "apiKey:authToken"
+        socketClient.request.header(HTTPHeaders.AUTHORIZATION) shouldEqual "OMGClient YXBpS2V5OmF1dGhUb2tlbg=="
     }
 }

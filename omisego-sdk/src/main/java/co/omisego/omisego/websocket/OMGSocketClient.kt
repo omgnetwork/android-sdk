@@ -111,6 +111,7 @@ class OMGSocketClient internal constructor(
     override fun setAuthenticationHeader(apiKey: String, authenticationToken: String) {
         // Leave all channels
         socketChannel.leaveAll()
+
         // Create new request to use with a new authenticationHeader
         request = Request.Builder()
             .url(request.url())

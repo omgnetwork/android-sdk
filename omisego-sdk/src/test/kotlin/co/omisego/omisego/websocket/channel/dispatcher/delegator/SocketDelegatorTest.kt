@@ -52,6 +52,7 @@ class SocketDelegatorTest {
         val text = "¯\\_(ツ)_/¯"
         val socketReceive = mock<SocketReceive>()
         whenever(mockSocketResponseParser.parse(text)).thenReturn(socketReceive)
+        whenever(socketReceive.topic).thenReturn(text)
 
         socketDelegator.onMessage(mockWebSocket, text)
         verify(mockSocketDispatcher, times(1)).dispatchOnMessage(socketReceive)
