@@ -602,17 +602,17 @@ All possible callbacks are the following:
 
 When creating a `TransactionRequest` that requires a confirmation it is possible to listen for all incoming using the `TransactionRequestCallback`.
 The possible events are: 
-* `onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption)`: Invoked when a `TransactionConsumption` is trying to consume the `TransactionRequest`. 
+* `onTransactionConsumptionRequest(TransactionConsumption)`: Invoked when a `TransactionConsumption` is trying to consume the `TransactionRequest`. 
 This allows the requester to [confirm](https://github.com/omisego/ios-sdk#confirm-a-transaction-consumption) or not the consumption if legitimate. 
-* `onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)`: Invoked if a `TransactionConsumption` has been finalized successfully, and the transfer was made between the 2 addresses.
-* `onTransactionConsumptionFinalizedFail(apiError: APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
+* `onTransactionConsumptionFinalizedSuccess(TransactionConsumption)`: Invoked if a `TransactionConsumption` has been finalized successfully, and the transfer was made between the 2 addresses.
+* `onTransactionConsumptionFinalizedFail(APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
         
 ### TransactionConsumption Event
  
 Similarly to the `TransactionRequestCallback`, a `TransactionConsumption` can be listened for incoming confirmations using the `TransactionConsumptionCallback`.
 The possible events are:
-* `onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)`: Invoked if a `TransactionConsumption` has been finalized successfully, and the transfer was made between the 2 addresses.
-* `onTransactionConsumptionFinalizedFail(apiError: APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
+* `onTransactionConsumptionFinalizedSuccess(TransactionConsumption)`: Invoked if a `TransactionConsumption` has been finalized successfully, and the transfer was made between the 2 addresses.
+* `onTransactionConsumptionFinalizedFail(APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
 
 **Usage**
 ```kotlin
