@@ -27,15 +27,26 @@ interface SocketClientContract {
      */
     interface Builder {
         /**
-         * An authenticationToken used to tell the identity of who is connecting to the web socket API.
+         * An authenticationToken is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
+         *
+         * @throws IllegalStateException if set with an empty string.
          */
         var authenticationToken: String
+
+        /**
+         *  An apiKey is the API key (typically generated on the admin panel)
+         *
+         * @throws IllegalStateException if set with an empty string.
+         */
+        var apiKey: String
 
         /**
          * The base url of the eWallet server
          * This url must follow the web socket protocol (ws or wss for ssl).
          * The interface of the eWallet web socket API is available at `/api/socket`.
          * For example, ws(s)://ewallet.demo.omisego.io/api/socket
+         *
+         * @throws IllegalStateException if set with an empty string.
          */
         var baseURL: String
 
@@ -119,7 +130,7 @@ interface SocketClientContract {
          * @param connectionListener The [SocketConnectionCallback] to be invoked when the web socket connection is connected or disconnected.
          * @see SocketConnectionCallback for the event detail.
          */
-        fun setConnectionListener(connectionListener: SocketConnectionCallback)
+        fun setConnectionListener(connectionListener: SocketConnectionCallback?)
 
         /**
          * Subscribe to the [SocketChannelCallback] event.
@@ -127,7 +138,7 @@ interface SocketClientContract {
          * @param channelListener The [SocketChannelCallback] to be invoked when the channel has been joined, left, or got an error.
          * @see SocketChannelCallback for the event detail.
          */
-        fun setChannelListener(channelListener: SocketChannelCallback)
+        fun setChannelListener(channelListener: SocketChannelCallback?)
     }
 
     interface PayloadSendParser {
