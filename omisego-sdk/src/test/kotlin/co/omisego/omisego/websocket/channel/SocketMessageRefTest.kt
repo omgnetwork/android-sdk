@@ -25,4 +25,12 @@ class SocketMessageRefTest {
         socketMessageRef.value shouldEqualTo "test:2"
         socketMessageRef.value shouldEqualTo "test:3"
     }
+
+    @Test
+    fun `the scheme should be prepended to the value correctly`(){
+        socketMessageRef.scheme="omg"
+        socketMessageRef.value shouldEqualTo "omg:1"
+        socketMessageRef.value shouldEqualTo "omg:2"
+        socketMessageRef.value shouldEqualTo "omg:3"
+    }
 }
