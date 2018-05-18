@@ -7,6 +7,7 @@ package co.omisego.omisego.operation
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.model.User
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.request.TransactionRequest
@@ -38,10 +39,14 @@ private fun Listenable.createSocketTopic(): SocketTopic {
  * Typically, this should be used to listen for consumption request made on the request.
  *
  * @param client The correctly initialised client to use for the websocket connection.
+ * @param payload The additional metadata for the consumption
  * @param callback The delegate that will receive events.
  */
-fun TransactionRequest.startListeningEvents(client: SocketClientContract.Client, callback: SocketCustomEventCallback.TransactionRequestCallback) {
-    client.joinChannel(createSocketTopic(), mapOf(), callback)
+fun TransactionRequest.startListeningEvents(
+    client: SocketClientContract.Client,
+    payload: Map<String, Any> = mapOf(),
+    callback: SocketCustomEventCallback.TransactionRequestCallback) {
+    client.joinChannel(createSocketTopic(), payload, callback)
 }
 
 /**
@@ -49,8 +54,26 @@ fun TransactionRequest.startListeningEvents(client: SocketClientContract.Client,
  * Typically, this should be used to listen for consumption confirmation.
  *
  * @param client The correctly initialised client to use for the websocket connection.
+ * @param payload The additional metadata for the consumption
  * @param callback The delegate that will receive events.
  */
-fun TransactionConsumption.startListeningEvents(client: SocketClientContract.Client, callback: SocketCustomEventCallback.TransactionConsumptionCallback) {
-    client.joinChannel(createSocketTopic(), mapOf(), callback)
+fun TransactionConsumption.startListeningEvents(
+    client: SocketClientContract.Client,
+    payload: Map<String, Any> = mapOf(),
+    callback: SocketCustomEventCallback.TransactionConsumptionCallback) {
+    client.joinChannel(createSocketTopic(), payload, callback)
+}
+
+/**
+ * Opens a websocket connection with the server and starts to listen for any event regarding the current user.
+ *
+ * @param client The correctly initialised client to use for the websocket connection.
+ * @param payload The additional metadata for the consumption
+ * @param callback The delegate that will receive events.
+ */
+fun User.startListeningEvents(
+    client: SocketClientContract.Client,
+    payload: Map<String, Any> = mapOf(),
+    callback: SocketCustomEventCallback) {
+    client.joinChannel(createSocketTopic(), payload, callback)
 }

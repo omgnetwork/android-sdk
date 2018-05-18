@@ -1,5 +1,6 @@
 package co.omisego.omisego.model
 
+import co.omisego.omisego.operation.Listenable
 import java.util.Date
 
 /*
@@ -27,7 +28,7 @@ data class User(
     val username: String,
     val metaData: Map<String, Any>,
     val encryptedMetadata: Map<String, Any>,
-    val socketTopic: String,
+    override val socketTopic: String,
     val createdAt: Date,
     val updatedAt: Date
-)
+) : Listenable
