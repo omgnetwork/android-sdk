@@ -14,7 +14,7 @@ import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
 
 /**
- * A socket event model for receiving the replied object from the eWallet API.
+ * A model for receiving the replied object from the eWallet web socket API.
  * It closely follows the usual envelope used in the eWallet HTTP APIs with some added attributes related to web socket.
  * Note that those events can either be successful or not.
  *
@@ -39,7 +39,7 @@ data class SocketReceive(
 
     /**
      * The data relevant to the event.
-     * Can be null if success is equal to false (but could also contain the [SocketReceive.Data] to provide context for the error).
+     * Could be null if success field is equal to false (but could also contain the [SocketReceive.Data] to provide context for the error).
      */
     val data: Data? = null,
 
@@ -54,7 +54,7 @@ data class SocketReceive(
     val success: Boolean,
 
     /**
-     * The error resulting from the action generating th event
+     * The error resulting from the action generating the event
      */
     val error: APIError? = null
 ) {

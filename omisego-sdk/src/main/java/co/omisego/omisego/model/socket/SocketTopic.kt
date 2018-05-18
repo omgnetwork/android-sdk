@@ -12,10 +12,9 @@ import co.omisego.omisego.websocket.channel.interval.SocketHeartbeat
 data class SocketTopic(val name: String)
 
 /**
- * Run the lambda when meets the following condition
- *  - The topic is coming from the user (exclude heartbeat, etc.)
+ * Run the lambda when the topic is coming from the user (to exclude the heartbeat event).
  */
-inline fun SocketTopic.runIfNotInternalTopic(lambda: SocketTopic.() -> Unit) {
+internal inline fun SocketTopic.runIfNotInternalTopic(lambda: SocketTopic.() -> Unit) {
     if (this.name != SocketHeartbeat.EVENT_NAME) {
         lambda()
     }
