@@ -21,15 +21,14 @@ import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.WebSocketListener
 
+/**
+ * A SocketChannel is responsible for handling join or leave from the socket channel.
+ *
+ * @param socketDispatcher A [Dispatcher] is responsible dispatch all events to the client.
+ * @param socketClient A [SocketClient] for sending a message to the eWallet web socket API and close the web socket connection.
+ */
 internal class SocketChannel(
-    /**
-     * A [Dispatcher] is responsible dispatch all events to the client.
-     */
     override val socketDispatcher: SocketChannelContract.Dispatcher,
-
-    /**
-     * A [SocketClient] for sending a message to the eWallet web socket API and close the web socket connection.
-     */
     override val socketClient: SocketChannelContract.SocketClient
 ) : SocketClientContract.Channel, SocketChannelContract.Channel, SocketDispatcherContract.SocketChannel {
     private val channelSet: MutableSet<SocketTopic> by lazy { mutableSetOf<SocketTopic>() }

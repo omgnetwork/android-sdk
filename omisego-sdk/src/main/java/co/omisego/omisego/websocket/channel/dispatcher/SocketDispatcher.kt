@@ -23,20 +23,16 @@ import okhttp3.Response
 import okhttp3.WebSocketListener
 import java.net.SocketException
 
+/**
+ * A callback dispatcher for events related to the web socket.
+ *
+ * @param socketDelegator responsible for delegate value raw [WebSocketListener] event to be processed in the [Dispatcher].
+ * @param systemEventDispatcher responsible for handling the [SocketSystemEvent] and dispatch the [SocketConnectionCallback] or the [SocketChannelCallback]
+ * @param customEventDispatcher responsible for handling the [SocketSystemEvent] and dispatch the [SocketCustomEventCallback].
+ */
 class SocketDispatcher(
-    /**
-     * A socketDelegator is responsible for delegate value raw [WebSocketListener] event to be processed in the [Dispatcher].
-     */
     override val socketDelegator: SocketDispatcherContract.Delegator,
-
-    /**
-     * A systemEventDispatcher is responsible for handling the [SocketSystemEvent] and dispatch the [SocketConnectionCallback] or the [SocketChannelCallback].
-     */
     override val systemEventDispatcher: SocketDispatcherContract.SystemEventDispatcher,
-
-    /**
-     * A customEventDispatcher is responsible for handling the [SocketSystemEvent] and dispatch the [SocketCustomEventCallback].
-     */
     override val customEventDispatcher: SocketDispatcherContract.CustomEventDispatcher
 ) : SocketChannelContract.Dispatcher, SocketDispatcherContract.Dispatcher, SocketDelegatorContract.Dispatcher {
 

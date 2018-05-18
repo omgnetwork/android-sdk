@@ -17,6 +17,9 @@ import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract.SocketChannel
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
 
+/**
+ * A callback for dispatcher the [SocketConnectionCallback] and [SocketChannelCallback] events.
+ */
 class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
     /**
      * A connection callback that will be used for dispatch the [SocketConnectionCallback] events.

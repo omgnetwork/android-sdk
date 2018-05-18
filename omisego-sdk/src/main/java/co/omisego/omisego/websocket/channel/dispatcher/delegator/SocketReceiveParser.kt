@@ -11,10 +11,12 @@ import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.Gson
 
+/**
+ * A data deserializer for receiving an object from the eWallet web socket API
+ *
+ * @param gson A gson object for parsing the raw replied json object to the [SocketReceive] object.
+ */
 class SocketReceiveParser(
-    /**
-     * A gson object for parsing the raw replied json object to the [SocketReceive] object.
-     */
     override val gson: Gson = GsonProvider.create()
 ) : SocketDelegatorContract.PayloadReceiveParser {
 

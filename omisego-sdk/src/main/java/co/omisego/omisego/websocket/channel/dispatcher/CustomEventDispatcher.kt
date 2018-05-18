@@ -15,6 +15,9 @@ import co.omisego.omisego.websocket.enum.SocketCustomEvent.OTHER
 import co.omisego.omisego.websocket.enum.SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED
 import co.omisego.omisego.websocket.enum.SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST
 
+/**
+ * A callback for dispatch the [SocketCustomEventCallback] events.
+ */
 class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
     /**
      * For dispatching the [SocketCustomEventCallback] event.

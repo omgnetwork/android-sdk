@@ -41,7 +41,8 @@ import okhttp3.logging.HttpLoggingInterceptor
  *     }.build(
  * </code>
  *
- * The available methods and details are listed in the [SocketClientContract.Client]
+ * The available methods and details are listed in the [SocketClientContract.Client
+ *
  * @see SocketClientContract.Client
  */
 class OMGSocketClient internal constructor(
