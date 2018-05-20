@@ -7,7 +7,6 @@ package co.omisego.omisego.websocket.channel.dispatcher
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import android.util.Log
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.websocket.SocketChannelCallback
@@ -118,7 +117,6 @@ class SocketDispatcher(
      * @param response A [SocketReceive] object to be used for further handling by the [Dispatcher]
      */
     override fun dispatchOnMessage(response: SocketReceive) {
-        Log.d("Zeus", response.toString())
         mainThreadExecutor.execute {
             when {
                 response.event.isLeft -> systemEventDispatcher.socketReceive = response
