@@ -45,7 +45,8 @@ private fun Listenable.createSocketTopic(): SocketTopic {
 fun TransactionRequest.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    callback: SocketCustomEventCallback.TransactionRequestCallback) {
+    callback: SocketCustomEventCallback.TransactionRequestCallback
+) {
     client.joinChannel(createSocketTopic(), payload, callback)
 }
 
@@ -60,7 +61,8 @@ fun TransactionRequest.startListeningEvents(
 fun TransactionConsumption.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    callback: SocketCustomEventCallback.TransactionConsumptionCallback) {
+    callback: SocketCustomEventCallback.TransactionConsumptionCallback
+) {
     client.joinChannel(createSocketTopic(), payload, callback)
 }
 
@@ -74,6 +76,7 @@ fun TransactionConsumption.startListeningEvents(
 fun User.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    callback: SocketCustomEventCallback) {
+    callback: SocketCustomEventCallback
+) {
     client.joinChannel(createSocketTopic(), payload, callback)
 }
