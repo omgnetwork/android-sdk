@@ -21,7 +21,10 @@ import java.util.Date
 enum class TransactionRequestType constructor(override val value: String) : OMGEnum {
 
     /* The initiator wants to receive a specified token */
-    RECEIVE("receive");
+    RECEIVE("receive"),
+
+    /* The initiator wants to send a specified token */
+    SEND("send");
 
     override fun toString(): String = value
 }
