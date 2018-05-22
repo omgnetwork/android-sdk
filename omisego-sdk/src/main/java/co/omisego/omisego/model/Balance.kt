@@ -7,6 +7,8 @@ package co.omisego.omisego.model
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -16,7 +18,8 @@ import java.math.RoundingMode
  * @param token The token corresponding to the balance
  * @param amount The total amount of token available for the current user.
  */
-data class Balance(val amount: BigDecimal, val token: Token) {
+@Parcelize
+data class Balance(val amount: BigDecimal, val token: Token): Parcelable {
 
     /**
      * Helper method that returns an easily readable value of the amount

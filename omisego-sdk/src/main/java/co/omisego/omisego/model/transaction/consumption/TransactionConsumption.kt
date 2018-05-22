@@ -8,6 +8,7 @@ package co.omisego.omisego.model.transaction.consumption
  */
 
 import android.accounts.Account
+import android.os.Parcelable
 import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.constant.enums.OMGEnum
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
@@ -17,6 +18,8 @@ import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.list.Transaction
 import co.omisego.omisego.model.transaction.request.TransactionRequest
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 import co.omisego.omisego.operation.Listenable
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import java.math.BigDecimal
@@ -40,6 +43,7 @@ enum class TransactionConsumptionStatus constructor(override val value: String) 
     override fun toString(): String = value
 }
 
+@Parcelize
 data class TransactionConsumption(
     /**
      * The unique identifier of the consumption
@@ -141,13 +145,14 @@ data class TransactionConsumption(
     /**
      * Additional metadata for the consumption
      */
-    val metadata: Map<String, Any>,
+
+    val metadata: @RawValue Map<String, Any>,
 
     /**
      * Additional encrypted metadata for the consumption
      */
-    val encryptedMetadata: Map<String, Any>
-) : Listenable<SocketCustomEventListener.TransactionConsumptionListener>, SocketReceive.SocketData {
+    val encryptedMetadata: @RawValue Map<String, Any>
+) : Parcelable, Listenable<SocketCustomEventListener.TransactionConsumptionListener>, SocketReceive.SocketData {
     override fun equals(other: Any?): Boolean {
         return other is TransactionConsumption && other.id == id
     }

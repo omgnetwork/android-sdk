@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka-android'
 apply plugin: 'checkstyle'
 apply plugin: 'com.novoda.bintray-release'
@@ -33,6 +34,10 @@ android {
             includeAndroidResources = true
         }
     }
+}
+
+androidExtensions {
+    experimental = true
 }
 
 publish {
@@ -94,9 +99,9 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:3.4.2'
     testImplementation 'com.squareup.okhttp3:mockwebserver:3.9.1'
     testImplementation 'com.squareup.retrofit2:retrofit-mock:2.3.0'
+    testImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
 }
 
 repositories {

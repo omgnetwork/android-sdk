@@ -7,11 +7,13 @@ package co.omisego.omisego.model.transaction.request
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import android.os.Parcelable
 import co.omisego.omisego.constant.enums.OMGEnum
 import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
+import kotlinx.android.parcel.Parcelize
 import co.omisego.omisego.operation.Listenable
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import java.math.BigDecimal
@@ -48,6 +50,7 @@ enum class TransactionRequestStatus constructor(override val value: String) : OM
  * Represents a transaction request
  *
  */
+@Parcelize
 data class TransactionRequest(
     /**
      * The unique identifier of the request
@@ -131,7 +134,7 @@ data class TransactionRequest(
      * The date when the request expired
      */
     val expiredAt: Date?
-) : Listenable<SocketCustomEventListener.TransactionRequestListener>
+) : Parcelable, Listenable<SocketCustomEventListener.TransactionRequestListener>
 
 /**
  * An extension function that converts the [TransactionRequest] to the [TransactionConsumptionParams] easily

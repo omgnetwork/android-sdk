@@ -16,5 +16,8 @@ import java.math.BigDecimal
 val Double.bd: BigDecimal
     get() = BigDecimal.valueOf(this)
 
+val Long.bd: BigDecimal
+    get() = BigDecimal.valueOf(this)
+
 val Int.bd: BigDecimal
     get() = this.toBigDecimal()
