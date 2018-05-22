@@ -11,7 +11,6 @@
     "object": "list",
     "data": [
       {
-        "updated_at": "2018-03-14T10:07:57.580212Z",
         "to": {
           "object": "transaction_source",
           "minted_token": {
@@ -57,7 +56,6 @@
         "created_at": "2018-03-14T10:07:57.202080Z"
       },
       {
-        "updated_at": "2018-03-14T10:16:11.491819Z",
         "to": {
           "object": "transaction_source",
           "minted_token": {
@@ -103,7 +101,6 @@
         "created_at": "2018-03-14T10:16:11.444569Z"
       },
       {
-        "updated_at": "2018-03-14T10:19:22.560746Z",
         "to": {
           "object": "transaction_source",
           "minted_token": {
@@ -149,7 +146,6 @@
         "created_at": "2018-03-14T10:19:22.520718Z"
       },
       {
-        "updated_at": "2018-03-14T10:19:36.469182Z",
         "to": {
           "object": "transaction_source",
           "minted_token": {
@@ -195,7 +191,6 @@
         "created_at": "2018-03-14T10:19:36.433334Z"
       },
       {
-        "updated_at": "2018-03-14T10:21:30.087141Z",
         "to": {
           "object": "transaction_source",
           "minted_token": {
@@ -241,7 +236,6 @@
         "created_at": "2018-03-14T10:21:30.024036Z"
       },
       {
-        "updated_at": "2018-03-14T10:40:59.359332Z",
         "to": {
           "object": "transaction_source",
           "minted_token": {
@@ -287,7 +281,6 @@
         "created_at": "2018-03-14T10:40:59.310651Z"
       },
       {
-        "updated_at": "2018-03-14T10:41:16.205825Z",
         "to": {
           "object": "transaction_source",
           "minted_token": {
@@ -333,7 +326,6 @@
         "created_at": "2018-03-14T10:41:16.165945Z"
       },
       {
-        "updated_at": "2018-03-14T10:42:03.066812Z",
         "to": {
           "object": "transaction_source",
           "minted_token": {
@@ -379,7 +371,6 @@
         "created_at": "2018-03-14T10:42:03.008787Z"
       },
       {
-        "updated_at": "2018-03-14T10:42:21.982037Z",
         "to": {
           "object": "transaction_source",
           "minted_token": {

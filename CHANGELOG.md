@@ -6,6 +6,15 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [0.9.4] - 2018-05-xx
+### Added
+- [Websocket](https://github.com/omisego/android-sdk#websocket)
+
+### Changed
+- Renamed `EncryptionHelper` to `OMGEncryption`. Now, it can be only used for create an authorization header for connecting to the eWallet API.
+- Changed the initialization steps of the `EWalletClient` from passing the base64 encrypted of "apiKey:authorizationToken" to pass both `apiKey` and `authenticationToken` to prevent misconfiguration.
+- Removed `updatedAt` field from the `Transaction`
+
 ## [0.9.3] - 2018-05-11
 ### Added
 - [Kotlin linter](https://github.com/shyiko/ktlint)
@@ -31,6 +40,7 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Logout the current user
 - [OMGKeyManager - encryption and decryption helpers](https://github.com/omisego/android-sdk/pull/11)
 
-[Unreleased]: https://github.com/omisego/android-sdk/compare/v0.9.3...HEAD
+[Unreleased]: https://github.com/omisego/android-sdk/compare/v0.9.4...HEAD
+[0.9.4]: https://github.com/omisego/android-sdk/compare/v0.9.4...v0.9.3
 [0.9.3]: https://github.com/omisego/android-sdk/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/omisego/android-sdk/compare/v0.9.1...v0.9.2
