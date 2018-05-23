@@ -7,7 +7,9 @@ package co.omisego.omisego.websocket.channel.dispatcher
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketCustomEventCallback
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
@@ -65,16 +67,18 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
     ) {
         when (customEvent) {
             TRANSACTION_CONSUMPTION_REQUEST -> {
-                val socketReceiveData = socketReceive.data as? SocketReceive.Data.SocketConsumeTransaction ?: return
-                onTransactionConsumptionRequest(socketReceiveData.data)
+                if (socketReceive.data is TransactionConsumption) {
+                    onTransactionConsumptionRequest(socketReceive.data)
+                }
             }
             TRANSACTION_CONSUMPTION_FINALIZED -> {
-                when (socketReceive.error) {
-                    null -> {
-                        val socketReceiveData = socketReceive.data as? SocketReceive.Data.SocketConsumeTransaction ?: return
-                        onTransactionConsumptionFinalizedSuccess(socketReceiveData.data)
-                    }
-                    else -> onTransactionConsumptionFinalizedFail(socketReceive.error)
+                val judge = socketReceive.judgeCustomEventCallback(
+                    this::onTransactionConsumptionFinalizedFail,
+                    this::onTransactionConsumptionFinalizedSuccess
+                )
+
+                if (!judge && socketReceive.error != null) {
+                    socketChannelCallback?.onError(socketReceive.error)
                 }
             }
             OTHER -> {
@@ -93,19 +97,29 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
      * @param customEvent The custom event used for decide the event to be dispatched
      */
     override fun SocketCustomEventCallback.TransactionConsumptionCallback.handleTransactionConsumptionEvent(socketReceive: SocketReceive, customEvent: SocketCustomEvent) {
-
         if (customEvent == TRANSACTION_CONSUMPTION_FINALIZED) {
-            when (socketReceive.error) {
-                null -> {
-                    val socketReceiveData = socketReceive.data as? SocketReceive.Data.SocketConsumeTransaction ?: return
-                    onTransactionConsumptionFinalizedSuccess(socketReceiveData.data)
-                }
-                else -> {
-                    onTransactionConsumptionFinalizedFail(socketReceive.error)
-                }
+            val judge = socketReceive.judgeCustomEventCallback(
+                this::onTransactionConsumptionFinalizedFail,
+                this::onTransactionConsumptionFinalizedSuccess
+            )
+
+            if (!judge && socketReceive.error != null) {
+                socketChannelCallback?.onError(socketReceive.error)
             }
         } else if (customEvent == OTHER && socketReceive.error != null) {
             socketChannelCallback?.onError(socketReceive.error)
         }
+    }
+
+    internal inline fun <reified T : SocketReceive.SocketData> SocketReceive.judgeCustomEventCallback(
+        matchedTypeWithErrorLambda: (T, APIError) -> Unit,
+        matchedTypeLambda: (T) -> Unit
+    ): Boolean {
+        when {
+            this.data is T && this.error != null -> matchedTypeWithErrorLambda(this.data, this.error)
+            this.data is T -> matchedTypeLambda(this.data)
+            else -> return false
+        }
+        return true
     }
 }

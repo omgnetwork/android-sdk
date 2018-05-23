@@ -8,7 +8,6 @@ package co.omisego.omisego.model.socket
  */
 
 import co.omisego.omisego.model.APIError
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.utils.Either
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
@@ -34,13 +33,11 @@ data class SocketReceive(
     val topic: String,
     val event: Either<SocketSystemEvent, SocketCustomEvent>,
     val ref: String? = null,
-    val data: Data? = null,
+    val data: SocketData? = null,
     val version: String,
     val success: Boolean,
     val error: APIError? = null
 ) {
-    sealed class Data {
-        data class SocketConsumeTransaction(val data: TransactionConsumption) : Data()
-        data class Other(val data: Map<String, Any>) : Data()
-    }
+    interface SocketData
+    data class Other(val data: Map<String, Any>) : SocketData
 }

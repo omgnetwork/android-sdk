@@ -15,21 +15,16 @@ import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
-class SocketReceiveDataDeserializer : JsonDeserializer<SocketReceive.Data> {
-    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): SocketReceive.Data? {
+class SocketReceiveDataDeserializer : JsonDeserializer<SocketReceive.SocketData> {
+    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): SocketReceive.SocketData? {
         val objectType = (json.asJsonObject.get("object") ?: return null).asString
 
         return when (objectType) {
             "transaction_consumption" -> {
-                SocketReceive.Data.SocketConsumeTransaction(
-                    context.deserialize(
-                        json.asJsonObject,
-                        object : TypeToken<TransactionConsumption>() {}.type
-                    )
-                )
+                context.deserialize(json.asJsonObject, TransactionConsumption::class.java)
             }
             else -> {
-                SocketReceive.Data.Other(
+                SocketReceive.Other(
                     context.deserialize(
                         json.asJsonObject,
                         object : TypeToken<Map<String, Any>>() {}.type

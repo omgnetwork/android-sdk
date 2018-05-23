@@ -10,6 +10,7 @@ package co.omisego.omisego.websocket.channel.dispatcher
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.utils.Either
 import co.omisego.omisego.websocket.SocketCustomEventCallback
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
@@ -22,7 +23,7 @@ import org.junit.Test
 
 class CustomEventDispatcherTest {
 
-    private val mockData: SocketReceive.Data.SocketConsumeTransaction = mock()
+    private val mockData: TransactionConsumption = mock()
     private val dataTxRequest: SocketReceive = SocketReceive(
         "topic",
         event = Either.Right(SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST),
@@ -92,7 +93,7 @@ class CustomEventDispatcherTest {
             txRequestCb.handleTransactionRequestEvent(dataTxRequest, SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST)
         }
 
-        verify(txRequestCb, times(1)).onTransactionConsumptionRequest(mockData.data)
+        verify(txRequestCb, times(1)).onTransactionConsumptionRequest(mockData)
         verifyNoMoreInteractions(txRequestCb)
     }
 
@@ -103,7 +104,7 @@ class CustomEventDispatcherTest {
             txRequestCb.handleTransactionRequestEvent(dataTxFinalizedSuccess, SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
         }
 
-        verify(txRequestCb, times(1)).onTransactionConsumptionFinalizedSuccess(mockData.data)
+        verify(txRequestCb, times(1)).onTransactionConsumptionFinalizedSuccess(mockData)
         verifyNoMoreInteractions(txRequestCb)
     }
 
@@ -114,7 +115,7 @@ class CustomEventDispatcherTest {
             txRequestCb.handleTransactionRequestEvent(dataTxFinalizedFail, SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
         }
 
-        verify(txRequestCb, times(1)).onTransactionConsumptionFinalizedFail(apiError)
+        verify(txRequestCb, times(1)).onTransactionConsumptionFinalizedFail(mockData, apiError)
         verifyNoMoreInteractions(txRequestCb)
     }
 
@@ -125,7 +126,7 @@ class CustomEventDispatcherTest {
             txConsumptionCb.handleTransactionConsumptionEvent(dataTxFinalizedSuccess, SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
         }
 
-        verify(txConsumptionCb, times(1)).onTransactionConsumptionFinalizedSuccess(mockData.data)
+        verify(txConsumptionCb, times(1)).onTransactionConsumptionFinalizedSuccess(mockData)
         verifyNoMoreInteractions(txConsumptionCb)
     }
 
@@ -136,7 +137,7 @@ class CustomEventDispatcherTest {
             txConsumptionCb.handleTransactionConsumptionEvent(dataTxFinalizedFail, SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
         }
 
-        verify(txConsumptionCb, times(1)).onTransactionConsumptionFinalizedFail(apiError)
+        verify(txConsumptionCb, times(1)).onTransactionConsumptionFinalizedFail(mockData, apiError)
         verifyNoMoreInteractions(txConsumptionCb)
     }
 }

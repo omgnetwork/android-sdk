@@ -66,10 +66,10 @@ sealed class SocketCustomEventCallback {
 private interface SocketTransactionRequestEvent {
     fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption)
     fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
-    fun onTransactionConsumptionFinalizedFail(apiError: APIError)
+    fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
 }
 
 private interface SocketTransactionConsumptionEvent {
     fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
-    fun onTransactionConsumptionFinalizedFail(apiError: APIError)
+    fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
 }

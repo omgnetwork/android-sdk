@@ -605,14 +605,14 @@ The possible events are:
 * `onTransactionConsumptionRequest(TransactionConsumption)`: Invoked when a `TransactionConsumption` is trying to consume the `TransactionRequest`. 
 This allows the requester to [confirm](https://github.com/omisego/ios-sdk#confirm-a-transaction-consumption) or not the consumption if legitimate. 
 * `onTransactionConsumptionFinalizedSuccess(TransactionConsumption)`: Invoked if a `TransactionConsumption` has been finalized successfully, and the transfer was made between the 2 addresses.
-* `onTransactionConsumptionFinalizedFail(APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
+* `onTransactionConsumptionFinalizedFail(TransactionConsumption, APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
         
 ### TransactionConsumption Event
  
 Similarly to the `TransactionRequestCallback`, a `TransactionConsumption` can be listened for incoming confirmations using the `TransactionConsumptionCallback`.
 The possible events are:
 * `onTransactionConsumptionFinalizedSuccess(TransactionConsumption)`: Invoked if a `TransactionConsumption` has been finalized successfully, and the transfer was made between the 2 addresses.
-* `onTransactionConsumptionFinalizedFail(APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
+* `onTransactionConsumptionFinalizedFail(TransactionConsumption, APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
 
 **Usage**
 ```kotlin
@@ -626,7 +626,7 @@ transactionRequest.startListeningEvents(socketClient, object: SocketCustomEventC
        // Do something
    }
 
-   override fun onTransactionConsumptionFinalizedFail(apiError: APIError) {
+   override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
        // Do something
    }
 })
@@ -637,7 +637,7 @@ transactionConsumption.startListeningEvents(socketClient, object: SocketCustomEv
       // Do something
   }
 
-  override fun onTransactionConsumptionFinalizedFail(apiError: APIError) {
+  override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
       // Do something
   }
 })
@@ -659,7 +659,7 @@ socketClient.joinChannel(SocketTopic(transactionRequestTopic), listener = object
       // Do something
   }
 
-  override fun onTransactionConsumptionFinalizedFail(apiError: APIError) {
+  override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
       // Do something
   }
 })
@@ -670,7 +670,7 @@ socketClient.joinChannel(SocketTopic(transactionRequestTopic), listener = object
         // Do something
     }
 
-    override fun onTransactionConsumptionFinalizedFail(apiError: APIError) {
+    override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
         // Do something
     }
 })

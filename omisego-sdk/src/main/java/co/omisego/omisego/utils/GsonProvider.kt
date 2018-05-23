@@ -24,7 +24,7 @@ internal class GsonProvider {
             return GsonBuilder()
                 .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
                 .registerTypeAdapter(Either::class.java, EitherEnumDeserializer<OMGEnum, OMGEnum>())
-                .registerTypeAdapter(SocketReceive.Data::class.java, SocketReceiveDataDeserializer())
+                .registerTypeAdapter(SocketReceive.SocketData::class.java, SocketReceiveDataDeserializer())
                 .registerTypeHierarchyAdapter(OMGEnum::class.java, OMGEnumAdapter<OMGEnum>())
                 .serializeNulls()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
