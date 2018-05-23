@@ -31,8 +31,8 @@ import java.io.File
 import java.io.IOException
 
 class OMGConverterFactoryTest {
-    private val userFile: File by ResourceFile("user.me-post.json")
-    private val errorFile: File by ResourceFile("fail.client-invalid_auth_scheme.json")
+    private val userFile: File by ResourceFile("user.json")
+    private val errorFile: File by ResourceFile("error-invalid_auth.json")
     private lateinit var gson: Gson
     private lateinit var responseBody: ResponseBody
     private lateinit var omgConverterFactory: OMGConverterFactory

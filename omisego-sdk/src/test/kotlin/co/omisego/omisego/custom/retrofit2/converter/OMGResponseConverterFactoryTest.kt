@@ -13,8 +13,8 @@ import co.omisego.omisego.exception.OMGAPIErrorException
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.User
-import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.testUtils.ResourceFile
+import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.nhaarman.mockito_kotlin.whenever
@@ -31,8 +31,8 @@ import java.io.File
 import java.io.IOException
 
 class OMGResponseConverterFactoryTest {
-    private val userFile: File by ResourceFile("user.me-post.json")
-    private val errorFile: File by ResourceFile("fail.client-invalid_auth_scheme.json")
+    private val userFile: File by ResourceFile("user.json")
+    private val errorFile: File by ResourceFile("error-invalid_auth.json")
     private lateinit var gson: Gson
     private lateinit var mockResponseBody: ResponseBody
     private lateinit var omgConverterFactory: OMGConverterFactory

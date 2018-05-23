@@ -40,7 +40,7 @@ import java.util.concurrent.Executor
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
 class OMGQRScannerLogicTest {
-    private val retrieveTransactionRequestFile: File by ResourceFile("me.create_transaction_request-post.json")
+    private val retrieveTransactionRequestFile: File by ResourceFile("transaction_request.json")
     private val omgQRScannerView: OMGQRScannerContract.View = mock()
     private val multiFormatReader: Reader = mock()
     private val sampleByteArray = byteArrayOf(0x00, 0x01, 0x02, 0x03)

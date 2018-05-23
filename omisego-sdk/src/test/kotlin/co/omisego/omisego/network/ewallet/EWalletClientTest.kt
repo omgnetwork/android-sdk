@@ -163,7 +163,7 @@ class EWalletClientTest {
     @Test
     fun `EWalletClient should throws an IllegalStateException if the clientConfiguration is not set`() {
         val error = { EWalletClient.Builder { }.build() }
-        error shouldThrow IllegalStateException::class withMessage Exceptions.emptyAuthenticationToken.message!!
+        error shouldThrow IllegalStateException::class withMessage Exceptions.MSG_EMPTY_BASE_URL
     }
 
     private fun loadSecretFile(filename: String): JSONObject {

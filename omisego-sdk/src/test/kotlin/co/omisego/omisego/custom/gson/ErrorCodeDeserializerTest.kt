@@ -28,7 +28,7 @@ import org.junit.Test
 
 class ErrorCodeDeserializerTest {
 
-    private val errorFile by ResourceFile("fail.client-invalid_auth_scheme.json")
+    private val errorFile by ResourceFile("error-invalid_auth.json")
 
     @Test
     fun `ErrorCode should be deserialized successfully`() {

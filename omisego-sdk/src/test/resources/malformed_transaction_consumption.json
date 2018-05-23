@@ -1,0 +1,22 @@
+{
+  "version": "1",
+  "success": true,
+  "data": {
+    "object": "iam_malformed_transaction_consumption",
+    "updated_at": "2018-04-26T07:31:47.789309Z",
+    "transaction_request_id": "4fb2ab5d-0ca6-4639-8a77-10abb091b71c",
+    "transaction_id": "698d68cb-0a1b-41f0-aa2b-4cd0a71c822b",
+    "transaction": null,
+    "status": "confirmed",
+    "socket_topic": "transaction_consumption:e932fb80-f34c-4f7e-aab4-38b5135fe0eb",
+    "minted_token_id": "OMG:a9ef7096-4060-4155-b79d-b36c42d5d095",
+    "metadata": {},
+    "id": "e932fb80-f34c-4f7e-aab4-38b5135fe0eb",
+    "finalized_at": "2018-04-26T07:31:47.747607Z",
+    "encrypted_metadata": {},
+    "created_at": "2018-04-26T07:31:47.731597Z",
+    "approved": true,
+    "amount": 1,
+    "address": "319d8d32-1b2e-4d4c-9234-9c4caddd65d5"
+  }
+}

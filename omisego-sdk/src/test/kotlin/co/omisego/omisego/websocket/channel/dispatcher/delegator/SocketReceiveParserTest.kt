@@ -55,7 +55,7 @@ class SocketReceiveParserTest {
                 transactionRequest.status shouldEqual TransactionRequestStatus.VALID
                 transactionRequest.socketTopic shouldEqualTo "transaction_request:328e61ac-9f35-4da5-a891-bd39f5442283"
                 transactionRequest.requireConfirmation shouldEqualTo true
-                transactionRequest.mintedToken.id shouldEqualTo "OMG:a9ef7096-4060-4155-b79d-b36c42d5d095"
+                transactionRequest.token.id shouldEqualTo "OMG:a9ef7096-4060-4155-b79d-b36c42d5d095"
             }
         }
     }
