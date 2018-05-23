@@ -58,7 +58,7 @@ dependencies {
 
 Before using the SDK to retrieve a resource, you need to initialize the client (`EWalletClient`) with a builder (`EWalletClient.Builder`).
 
-Last, you will need to pass the instance that you got from the previous step to the `OMGAPIClient`'s constructor.
+Lastly, you will need to pass the instance that you got from the previous step to the `OMGAPIClient`'s constructor.
 
 For example,
 ```kotlin
@@ -542,7 +542,7 @@ Where:
 * `baseURL` is the URL of the OmiseGO Wallet API, this needs to be an ws(s) url. **Note**: This need to be ended with '/'.
 * `debug` is a boolean indicating if the SDK should print logs in the console.
 
-## Listen for the system event
+## Listen for system events
 
 The system event is giving general information related to the status of the web socket connection.
 All listenable system events are the **Connection status** and the **Channel status**. 
@@ -592,10 +592,10 @@ socketClient.setChannelListener(object : SocketChannelCallback {
 })
 ```
 
-## Listen for the custom event
+## Listen for custom events
 
-The custom event is the special event that currently limited to the `TransactionRequest` and the `TransactionConsumption` event.
-All custom events will be a sub-class of the `SocketCustomEventCallback`. `SocketCustomEventCallback` is the **required** generic callback that you will need to pass its sub-class when joining to the channel for listening for the event.
+Custom event are special events that are currently limited to the `TransactionRequest` and the `TransactionConsumption` event.
+All custom events will be a sub-class of the `SocketCustomEventCallback`. `SocketCustomEventCallback` is a **required** generic callback that you will need to pass its sub-class when joining to the channel for listening to the events.
 All possible callbacks are the following:
 
 ### TransactionRequest Event
