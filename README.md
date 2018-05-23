@@ -66,7 +66,7 @@ For example,
      baseURL = baseURL
      authenticationToken = YOUR_AUTH_TOKEN
      apiKey = YOUR_API_KEY
-     debug = true // Print the request and response log
+     debug = false
  }.build()
  
  val omgAPIClient = OMGAPIClient(eWalletClient)
@@ -77,7 +77,7 @@ Where:
 * `authenticationToken` is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
 > You can find more info on how to retrieve this token in the [OmiseGO server SDK documentations](https://github.com/omisego/ruby-sdk#login).
 * `baseURL` is the URL of the OmiseGO Wallet API. **Note**: This need to be ended with '/'.
-* `debug` is a boolean indicating if the SDK should print logs in the console. 
+* `debug` *(Optional)* is a boolean indicating if the SDK should print logs in the console. default: `false`. 
 
 ## Retrieving resources
 
@@ -531,7 +531,7 @@ val socketClient = OMGSocketClient.Builder {
     baseURL = "wss://your_ewallet_base_url/api/socket/"
     apiKey = YOUR_API_KEY
     authenticationToken = YOUR_AUTH_TOKEN
-    debug = true
+    debug = false
 }.build()
 ```
 
@@ -540,7 +540,7 @@ Where:
 * `authenticationToken` is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
 > You can find more info on how to retrieve this token in the [OmiseGO server SDK documentations](https://github.com/omisego/ruby-sdk#login). 
 * `baseURL` is the URL of the OmiseGO Wallet API, this needs to be an ws(s) url. **Note**: This need to be ended with '/'.
-* `debug` is a boolean indicating if the SDK should print logs in the console.
+* `debug` *(Optional)* is a boolean indicating if the SDK should print logs in the console. default: `false`.
 
 ## Listen for system events
 
@@ -600,7 +600,7 @@ All possible callbacks are the following:
 
 ### TransactionRequest Event
 
-When creating a `TransactionRequest` that requires a confirmation it is possible to listen for all incoming using the `TransactionRequestCallback`.
+When creating a `TransactionRequest` that requires a confirmation it is possible to listen for all incoming events using the `TransactionRequestCallback`.
 The possible events are: 
 * `onTransactionConsumptionRequest(TransactionConsumption)`: Invoked when a `TransactionConsumption` is trying to consume the `TransactionRequest`. 
 This allows the requester to [confirm](https://github.com/omisego/ios-sdk#confirm-a-transaction-consumption) or not the consumption if legitimate. 
