@@ -648,6 +648,7 @@ In this case, it is possible to keep only the `socket_topic` string directly. Th
 This implementation will provide the exactly same result as the implementation above ☝️. For example,
 
 ```kotlin
+val transactionRequestTopic = transactionRequest.socketTopic // "transaction_consumption:txc_01cbfg9qtdken61agxhx6wvj9h"
 // The transaction requestor listen for the event 
 socketClient.joinChannel(SocketTopic(transactionRequestTopic), listener = object: SocketCustomEventCallback.TransactionRequestCallback(){
   override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
