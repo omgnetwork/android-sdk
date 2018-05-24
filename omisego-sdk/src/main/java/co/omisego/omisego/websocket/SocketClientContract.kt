@@ -7,6 +7,7 @@ package co.omisego.omisego.websocket
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
@@ -26,32 +27,14 @@ interface SocketClientContract {
      * An interface for [SocketClient.Builder] to define the required data to create an instance of the [SocketClient]
      */
     interface Builder {
-        /**
-         * An authenticationToken is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
-         *
-         * @throws IllegalStateException if set with an empty string.
-         */
-        var authenticationToken: String
 
         /**
-         *  An apiKey is the API key (typically generated on the admin panel)
-         *
-         * @throws IllegalStateException if set with an empty string.
+         * (Required) A client configuration that need to be first initialized before calling build()
          */
-        var apiKey: String
+        var clientConfiguration: ClientConfiguration?
 
         /**
-         * The base url of the eWallet server
-         * This url must follow the web socket protocol (ws or wss for ssl).
-         * The interface of the eWallet web socket API is available at `/api/socket`.
-         * For example, ws(s)://ewallet.demo.omisego.io/api/socket
-         *
-         * @throws IllegalStateException if set with an empty string.
-         */
-        var baseURL: String
-
-        /**
-         * A boolean indicating if debug info should be printed in the console.
+         * (Optional) A boolean indicating if debug info should be printed in the console. Default: false.
          */
         var debug: Boolean
 

@@ -9,6 +9,7 @@ package co.omisego.omisego.websocket
 
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.HTTPHeaders
+import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.utils.GsonProvider
@@ -34,11 +35,16 @@ import okhttp3.logging.HttpLoggingInterceptor
  * An instance should be created by using [OMGSocketClient.Builder]. For example,
  *
  * <code>
+ *     val config = ClientConfiguration(
+ *          baseURL = "YOUR_BASE_URL",
+ *          apiKey = "YOUR_API_KEY",
+ *          authenticationToken = "YOUR_AUTH_TOKEN"
+ *      )
+ *
  *     val omgSocketClient = OMGSocketClient.Builder{
- *          authenticationToken = YOUR_TOKEN
- *          apiKey = YOUR_API_KEY
- *          baseUrl = wss://your_ewallet_domain/api/socket/
- *     }.build(
+ *          clientConfiguration = config
+ *          debug = false
+ *     }.build()
  * </code>
  *
  * The available methods and details are listed in the [SocketClientContract.Client]
@@ -176,44 +182,14 @@ class OMGSocketClient internal constructor(
      * A [OMGSocketClient.Builder] used to define the required data to create an instance of the [OMGSocketClient]
      */
     class Builder(init: Builder.() -> Unit) : SocketClientContract.Builder {
-        /**
-         * An authenticationToken is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
-         *
-         * @throws IllegalStateException if set with an empty string.
-         */
-        override var authenticationToken: String = ""
-            set(value) {
-                check(value.isNotEmpty()) { Exceptions.MSG_EMPTY_AUTH_TOKEN }
-                field = value
-            }
 
         /**
-         *  An apiKey is the API key (typically generated on the admin panel)
-         *
-         * @throws IllegalStateException if set with an empty string.
+         * (Required) A client configuration that need to be first initialized before calling build()
          */
-        override var apiKey: String = ""
-            set(value) {
-                check(value.isNotEmpty()) { Exceptions.MSG_EMPTY_API_KEY }
-                field = value
-            }
+        override var clientConfiguration: ClientConfiguration? = null
 
         /**
-         * The base url of the eWallet server
-         * This url must follow the web socket protocol (ws or wss for ssl).
-         * The interface of the eWallet web socket API is available at `/api/socket`.
-         * For example, ws(s)://ewallet.demo.omisego.io/api/socket
-         *
-         * @throws IllegalStateException if set with an empty string.
-         */
-        override var baseURL: String = ""
-            set(value) {
-                check(value.isNotEmpty()) { Exceptions.MSG_EMPTY_BASE_URL }
-                field = value
-            }
-
-        /**
-         * A boolean indicating if debug info should be printed in the console.
+         * (Optional) A boolean indicating if debug info should be printed in the console. Default: false.
          */
         override var debug: Boolean = false
 
@@ -224,6 +200,9 @@ class OMGSocketClient internal constructor(
          * @throws IllegalStateException if [authenticationToken], [apiKey] or the [baseURL] is empty.
          */
         override fun build(): SocketClientContract.Client {
+            val (baseURL, apiKey, authenticationToken) = clientConfiguration
+                ?: throw IllegalStateException(Exceptions.MSG_NULL_CLIENT_CONFIGURATION)
+
             check(authenticationToken.isNotEmpty()) { Exceptions.MSG_EMPTY_AUTH_TOKEN }
             check(apiKey.isNotEmpty()) { Exceptions.MSG_EMPTY_API_KEY }
             check(baseURL.isNotEmpty()) { Exceptions.MSG_EMPTY_BASE_URL }

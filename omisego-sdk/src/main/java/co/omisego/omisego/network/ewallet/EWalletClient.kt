@@ -11,6 +11,7 @@ import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
 import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
+import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.network.InterceptorProvider
 import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.utils.OMGEncryption
@@ -28,10 +29,14 @@ import java.util.concurrent.Executor
  *
  * For example,
  * <code>
+ * val config = ClientConfiguration(
+ *      baseURL = "YOUR_BASE_URL",
+ *      apiKey = "YOUR_API_KEY",
+ *      authenticationToken = "YOUR_AUTH_TOKEN"
+ * )
  * val eWalletClient = EWalletClient.Builder {
- *      authorizationToken = YOUR_TOKEN
- *      apiKey = YOUR_API_KEY
- *      baseUrl = YOUR_BASE_URL
+ *      clientConfiguration = config
+ *      debug = false
  * }.build()
  *
  * </code>
@@ -50,55 +55,29 @@ class EWalletClient {
      * @receiver A [Builder]'s methods.
      */
     class Builder(init: Builder.() -> Unit) {
-        var debug: Boolean = false
-
-        /**
-         * Set the [authenticationToken].to be a part of the authorizationToken in the http request header
-         */
-        var authenticationToken: String = ""
-            set(value) {
-                if (value.isEmpty()) throw IllegalStateException(Exceptions.MSG_EMPTY_AUTH_TOKEN)
-                field = value
-            }
-
-        /**
-         * Set the [apiKey].to be a part of the authorizationToken in the http request header
-         */
-        var apiKey: String = ""
-            set(value) {
-                if (value.isEmpty()) throw IllegalStateException(Exceptions.MSG_EMPTY_API_KEY)
-                field = value
-            }
-
-        /**
-         * Set the URL of the OmiseGO Wallet API [baseUrl].
-         */
-        var baseUrl: String = ""
-            set(value) {
-                if (value.isEmpty()) throw IllegalStateException(Exceptions.MSG_EMPTY_BASE_URL)
-                field = value
-            }
-
         /**
          * Set the callback executor (default UI thread)
          */
         var callbackExecutor: Executor? = null
 
         /**
+         * (Required) A client configuration that need to be first initialized before calling build()
+         */
+        var clientConfiguration: ClientConfiguration? = null
+
+        /**
+         * (Optional) A boolean indicating if debug info should be printed in the console. Default: false.
+         */
+        var debug: Boolean = false
+
+        /**
          * For testing purpose
          */
         internal var debugUrl: HttpUrl? = null
 
-        /**
-         * Create the [EWalletClient] instance using the configured values.
-         * Note: Set [Builder.authenticationToken], [Builder.apiKey] and [Builder.baseUrl] are required before calling this.
-         */
         fun build(): EWalletClient {
-            when {
-                authenticationToken.isEmpty() -> throw IllegalStateException(Exceptions.MSG_EMPTY_AUTH_TOKEN)
-                apiKey.isEmpty() -> throw IllegalStateException(Exceptions.MSG_EMPTY_API_KEY)
-                baseUrl.isEmpty() && debugUrl == null -> throw IllegalStateException(Exceptions.MSG_EMPTY_BASE_URL)
-            }
+            val (baseURL, apiKey, authenticationToken) = clientConfiguration
+                ?: throw IllegalStateException(Exceptions.MSG_NULL_CLIENT_CONFIGURATION)
 
             /* Encrypted base64 of apiKey:authenticationToken */
             val authorizationHeader = OMGEncryption.createAuthorizationHeader(apiKey, authenticationToken)
@@ -130,7 +109,7 @@ class EWalletClient {
                 callbackExecutor(callbackExecutor ?: MainThreadExecutor())
                 when {
                     debugUrl != null -> baseUrl(debugUrl!!)
-                    else -> baseUrl(this@Builder.baseUrl)
+                    else -> baseUrl(baseURL)
                 }
                 client(client)
             }.build()

@@ -9,6 +9,7 @@ package co.omisego.omisego.websocket
 
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.HTTPHeaders
+import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.channel.SocketChannel
@@ -28,7 +29,6 @@ import okhttp3.WebSocket
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
-import org.amshove.kluent.shouldNotThrowTheException
 import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.withMessage
 import org.junit.Before
@@ -166,55 +166,16 @@ class OMGSocketClientTest {
     }
 
     @Test
-    fun `authenticationToken should throw an IllegalStateException when assigning it the empty value`() {
-        val error = {
-            OMGSocketClient.Builder {
-                authenticationToken = ""
-            }
-        }
-
-        error shouldThrow IllegalStateException::class withMessage Exceptions.MSG_EMPTY_AUTH_TOKEN
-    }
-
-    @Test
-    fun `baseURL should throw an IllegalStateException when assigning it the empty value`() {
-        val error = {
-            OMGSocketClient.Builder {
-                baseURL = ""
-            }
-        }
-
-        error shouldThrow IllegalStateException::class withMessage Exceptions.MSG_EMPTY_BASE_URL
-    }
-
-    @Test
-    fun `authenticationToken should not be thrown an exception when assigning non-empty value`() {
-        val error = {
-            OMGSocketClient.Builder {
-                authenticationToken = "a1234"
-            }
-        }
-
-        error shouldNotThrowTheException IllegalStateException::class
-    }
-
-    @Test
-    fun `baseURL should not be thrown an exception when assigning non-empty value`() {
-        val error = {
-            OMGSocketClient.Builder {
-                baseURL = "ws://localhost:4000/"
-            }
-        }
-
-        error shouldNotThrowTheException IllegalStateException::class
-    }
-
-    @Test
     fun `build should create an instance of the socket client successfully given both valid authenticationToken and baseURL`() {
+        val config = ClientConfiguration(
+            "ws://localhost:4000/",
+            "api1234",
+            "at1234"
+        )
+
         val socketClient = OMGSocketClient.Builder {
-            baseURL = "ws://localhost:4000/"
-            authenticationToken = "a1234"
-            apiKey = "api1234"
+            clientConfiguration = config
+            debug = false
         }.build() as OMGSocketClient
 
         socketClient shouldNotBe null
@@ -253,5 +214,11 @@ class OMGSocketClientTest {
 
         // Expecting a base64 of "apiKey:authToken"
         socketClient.request.header(HTTPHeaders.AUTHORIZATION) shouldEqual "OMGClient YXBpS2V5OmF1dGhUb2tlbg=="
+    }
+
+    @Test
+    fun `OMGSocketClient should throws an IllegalStateException if the clientConfiguration is not set`() {
+        val error = { OMGSocketClient.Builder { }.build() }
+        error shouldThrow IllegalStateException::class withMessage Exceptions.MSG_NULL_CLIENT_CONFIGURATION
     }
 }

@@ -56,16 +56,24 @@ dependencies {
 
 ### Initialization
 
-Before using the SDK to retrieve a resource, you need to initialize the client (`EWalletClient`) with a builder (`EWalletClient.Builder`).
+Before using the SDK to retrieve a resource, you need to initialize the client (`EWalletClient`) with a `ClientConfiguration` object.
+
+You should do this as soon as you obtain a valid authentication token corresponding to the current user from the Wallet API.
+
+Then you need to pass it to the `EWalletClient.Builder` and call `build()` to get the `EWalletClient` instance.
 
 Lastly, you will need to pass the instance that you got from the previous step to the `OMGAPIClient`'s constructor.
 
 For example,
 ```kotlin
+ val config = ClientConfiguration(
+     baseURL = "YOUR_BASE_URL",
+     apiKey = "YOUR_API_KEY",
+     authenticationToken = "YOUR_AUTH_TOKEN"
+ )
+
  val eWalletClient = EWalletClient.Builder {
-     baseURL = baseURL
-     authenticationToken = YOUR_AUTH_TOKEN
-     apiKey = YOUR_API_KEY
+     clientConfiguration = config
      debug = false
  }.build()
  
@@ -524,13 +532,17 @@ This section describes the use of the `OMGSocketClient` in order to listen for e
 
 ## Websocket Initialization
 
-Similarly to the `OMGAPIClient`, the `OMGSocketClient` needs to be first initialized with a `OMGSocketClient.Builder` before using it.
+Similarly to the `OMGAPIClient`, the `OMGSocketClient` needs to be first initialized with a `ClientConfiguration` before using it.
 
 ```kotlin
+val config = ClientConfiguration(
+     baseURL = "YOUR_BASE_URL",
+     apiKey = "YOUR_API_KEY",
+     authenticationToken = "YOUR_AUTH_TOKEN"
+ )
+ 
 val socketClient = OMGSocketClient.Builder {
-    baseURL = "wss://your_ewallet_base_url/api/socket/"
-    apiKey = YOUR_API_KEY
-    authenticationToken = YOUR_AUTH_TOKEN
+    clientConfiguration = config
     debug = false
 }.build()
 ```

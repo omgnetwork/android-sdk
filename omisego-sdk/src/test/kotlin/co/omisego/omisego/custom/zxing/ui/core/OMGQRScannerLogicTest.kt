@@ -13,6 +13,7 @@ import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.custom.camera.utils.CameraUtils
 import co.omisego.omisego.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
+import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerLogic
@@ -55,12 +56,16 @@ class OMGQRScannerLogicTest {
         mockWebServer.start()
         val mockUrl = mockWebServer.url("/api/")
 
+        val config = ClientConfiguration(
+            "base_url",
+            "apiKey",
+            "authToken"
+        )
+
         val eWalletClient = EWalletClient.Builder {
             debugUrl = mockUrl
-            authenticationToken = "authToken"
-            apiKey = "apiKey"
+            clientConfiguration = config
             callbackExecutor = Executor { it.run() }
-            debug = false
         }.build()
 
         omgAPIClient = OMGAPIClient(eWalletClient)
