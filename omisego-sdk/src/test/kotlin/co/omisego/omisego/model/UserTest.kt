@@ -8,6 +8,7 @@ package co.omisego.omisego.model
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.model.socket.SocketTopic
 import org.amshove.kluent.shouldEqual
 import org.junit.Before
 import org.junit.Test
@@ -23,7 +24,7 @@ class UserTest {
     fun setUp() {
         createdAt = Date()
         updatedAt = Date()
-        user = User("pizza-1234", "2017-11-5", "OmiseGO", mapOf(), mapOf(), "test", createdAt, updatedAt)
+        user = User("pizza-1234", "2017-11-5", "OmiseGO", mapOf(), mapOf(), SocketTopic("test"), createdAt, updatedAt)
     }
 
     @Test

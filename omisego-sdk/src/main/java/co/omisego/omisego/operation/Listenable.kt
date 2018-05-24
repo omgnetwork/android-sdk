@@ -17,8 +17,8 @@ import co.omisego.omisego.websocket.SocketCustomEventCallback
 /**
  * Represents an object that can be listened with websocket
  */
-interface Listenable {
-    val socketTopic: String
+interface Listenable<T : SocketCustomEventCallback> {
+    val socketTopic: SocketTopic<T>
 
     /**
      * Stop listening for events
@@ -26,12 +26,8 @@ interface Listenable {
      * @param client The client used when starting to listen
      */
     fun stopListening(client: SocketClientContract.Client) {
-        client.leaveChannel(createSocketTopic(), mapOf())
+        client.leaveChannel(socketTopic, mapOf())
     }
-}
-
-private fun Listenable.createSocketTopic(): SocketTopic {
-    return SocketTopic(socketTopic)
 }
 
 /**
@@ -47,7 +43,7 @@ fun TransactionRequest.startListeningEvents(
     payload: Map<String, Any> = mapOf(),
     callback: SocketCustomEventCallback.TransactionRequestCallback
 ) {
-    client.joinChannel(createSocketTopic(), payload, callback)
+    client.joinChannel(socketTopic, payload, callback)
 }
 
 /**
@@ -63,7 +59,7 @@ fun TransactionConsumption.startListeningEvents(
     payload: Map<String, Any> = mapOf(),
     callback: SocketCustomEventCallback.TransactionConsumptionCallback
 ) {
-    client.joinChannel(createSocketTopic(), payload, callback)
+    client.joinChannel(socketTopic, payload, callback)
 }
 
 /**
@@ -73,10 +69,10 @@ fun TransactionConsumption.startListeningEvents(
  * @param payload The additional metadata for the consumption
  * @param callback The delegate that will receive events.
  */
-fun User.startListeningEvents(
+fun <T : SocketCustomEventCallback> User.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    callback: SocketCustomEventCallback
+    callback: T
 ) {
-    client.joinChannel(createSocketTopic(), payload, callback)
+    client.joinChannel(socketTopic, payload, callback)
 }

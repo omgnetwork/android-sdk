@@ -583,18 +583,18 @@ socketClient.setConnectionListener(object : SocketConnectionCallback {
 
 `SocketChannelCallback` *(optional)* is the callback that listens for a **channel connection status**. The possible events are:
 
-* `onJoinedChannel(topic: SocketTopic)`: Invoked when the client have been joined the channel successfully.
-* `onLeftChannel(topic: SocketTopic)`: Invoked when the client have been left the channel successfully.
+* `onJoinedChannel(topic: String)`: Invoked when the client have been joined the channel successfully.
+* `onLeftChannel(topic: String)`: Invoked when the client have been left the channel successfully.
 * `onError(apiError: APIError)`: Invoked when something goes wrong while connecting to a channel.
     
 **Usage**
 ```kotlin
 socketClient.setChannelListener(object : SocketChannelCallback {
-    override fun onJoinedChannel(topic: SocketTopic) {
+    override fun onJoinedChannel(topic: String) {
         // Do something
     }
 
-    override fun onLeftChannel(topic: SocketTopic) {
+    override fun onLeftChannel(topic: String) {
         // Do something
     }
 
@@ -656,13 +656,14 @@ transactionConsumption.startListeningEvents(socketClient, object: SocketCustomEv
 ```
 
 > Note: You might want to listen for the event later after you got the `TransactionRequest` or `TransactionConsumption` object, but you might not want to pass the object around.
-In this case, it is possible to keep only the `socket_topic` string directly. Then you can alternatively listening for custom events by using `joinChannel` method of the `OMGSocketClient` instance.
+In this case, it is possible to keep only the `SocketTopic` directly. Then you can alternatively listening for custom events by using `joinChannel` method of the `OMGSocketClient` instance.
 This implementation will provide the exactly same result as the implementation above ☝️. For example,
 
 ```kotlin
-val transactionRequestTopic = transactionRequest.socketTopic // "transaction_consumption:txc_01cbfg9qtdken61agxhx6wvj9h"
 // The transaction requestor listen for the event 
-socketClient.joinChannel(SocketTopic(transactionRequestTopic), listener = object: SocketCustomEventCallback.TransactionRequestCallback(){
+// Typically, it doesn't need to create a [SocketTopic] instance. it can be retrieved from the `TransactionRequest` or `TransactionConsumption` object.
+val topic = SocketTopic<SocketCustomEventCallback.TransactionRequestCallback>("transaction_request:1234")
+socketClient.joinChannel(topic, listener = object: SocketCustomEventCallback.TransactionRequestCallback(){
   override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
       // Do something
   }
@@ -677,7 +678,9 @@ socketClient.joinChannel(SocketTopic(transactionRequestTopic), listener = object
 })
 
 // The transaction consumer listen for the event
-socketClient.joinChannel(SocketTopic(transactionRequestTopic), listener = object: SocketCustomEventCallback.TransactionConsumptionCallback() {
+// Typically, it doesn't need to create a [SocketTopic] instance. it can be retrieved from the `TransactionRequest` or `TransactionConsumption` object.
+val topic = SocketTopic<SocketCustomEventCallback.TransactionConsumptionCallback>("transaction_request:1234")
+socketClient.joinChannel(topic, listener = object: SocketCustomEventCallback.TransactionConsumptionCallback() {
     override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
         // Do something
     }
@@ -687,8 +690,6 @@ socketClient.joinChannel(SocketTopic(transactionRequestTopic), listener = object
     }
 })
 ```
-
-> Be careful, this way ☝️, it is possible to pass a wrong callback without any compile error. If that happen you won't receive any event from the callback.
 
 ## Stop listening for the custom event
 

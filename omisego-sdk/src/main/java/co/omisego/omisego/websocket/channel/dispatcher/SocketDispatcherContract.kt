@@ -9,7 +9,6 @@ package co.omisego.omisego.websocket.channel.dispatcher
 
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketConnectionCallback
 import co.omisego.omisego.websocket.SocketCustomEventCallback
@@ -158,14 +157,14 @@ interface SocketDispatcherContract {
          *
          * @param topic A topic indicating which channel will be joined.
          */
-        fun onLeftChannel(topic: SocketTopic)
+        fun onLeftChannel(topic: String)
 
         /**
          * Executes when the client have been joined the channel successfully.
          *
          * @param topic A topic indicating which channel will be joined.
          */
-        fun onJoinedChannel(topic: SocketTopic)
+        fun onJoinedChannel(topic: String)
 
         /**
          * Returns a boolean indicating if the channel is joined.
@@ -173,6 +172,6 @@ interface SocketDispatcherContract {
          * @param topic A topic indicating which channel will be joined.
          * @return A boolean indicating if the channel is joined.
          */
-        fun joined(topic: SocketTopic): Boolean
+        fun joined(topic: String): Boolean
     }
 }

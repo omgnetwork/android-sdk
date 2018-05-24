@@ -1,6 +1,8 @@
 package co.omisego.omisego.model
 
+import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.operation.Listenable
+import co.omisego.omisego.websocket.SocketCustomEventCallback
 import java.util.Date
 
 /*
@@ -28,7 +30,7 @@ data class User(
     val username: String,
     val metaData: Map<String, Any>,
     val encryptedMetadata: Map<String, Any>,
-    override val socketTopic: String,
+    override val socketTopic: SocketTopic<SocketCustomEventCallback>,
     val createdAt: Date,
     val updatedAt: Date
-) : Listenable
+) : Listenable<SocketCustomEventCallback>

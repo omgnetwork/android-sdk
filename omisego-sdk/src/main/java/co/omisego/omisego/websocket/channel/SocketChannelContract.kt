@@ -8,7 +8,6 @@ package co.omisego.omisego.websocket.channel
  */
 
 import co.omisego.omisego.model.socket.SocketSend
-import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketConnectionCallback
 import co.omisego.omisego.websocket.SocketCustomEventCallback
@@ -48,7 +47,7 @@ interface SocketChannelContract {
          *
          * @return A [SocketSend] instance used for joining the channel.
          */
-        fun createJoinMessage(topic: SocketTopic, payload: Map<String, Any>): SocketSend
+        fun createJoinMessage(topic: String, payload: Map<String, Any>): SocketSend
 
         /**
          * Create a [SocketSend] instance to be used for join a channel.
@@ -58,7 +57,7 @@ interface SocketChannelContract {
          *
          * @return A [SocketSend] instance used for leaving the channel.
          */
-        fun createLeaveMessage(topic: SocketTopic, payload: Map<String, Any>): SocketSend
+        fun createLeaveMessage(topic: String, payload: Map<String, Any>): SocketSend
     }
 
     /**

@@ -10,7 +10,6 @@ package co.omisego.omisego.websocket.channel.dispatcher
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.utils.Either
 import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketConnectionCallback
@@ -89,8 +88,8 @@ class SystemEventDispatcherTest {
         systemEventDispatcher.socketReceive = dataPhxClose
         systemEventDispatcher.handleEvent(SocketSystemEvent.CLOSE)
 
-        verify(socketChannel, times(1)).onLeftChannel(SocketTopic(dataPhxClose.topic))
-        verify(socketChannelCallback, times(1)).onLeftChannel(SocketTopic(dataPhxClose.topic))
+        verify(socketChannel, times(1)).onLeftChannel(dataPhxClose.topic)
+        verify(socketChannelCallback, times(1)).onLeftChannel(dataPhxClose.topic)
         verifyNoMoreInteractions(socketChannel, socketChannelCallback)
     }
 
@@ -99,8 +98,8 @@ class SystemEventDispatcherTest {
         systemEventDispatcher.socketReceive = dataPhxReply
         systemEventDispatcher.handleEvent(SocketSystemEvent.REPLY)
 
-        verify(socketChannel, times(1)).onJoinedChannel(SocketTopic(dataPhxReply.topic))
-        verify(socketChannelCallback, times(1)).onJoinedChannel(SocketTopic(dataPhxReply.topic))
+        verify(socketChannel, times(1)).onJoinedChannel(dataPhxReply.topic)
+        verify(socketChannelCallback, times(1)).onJoinedChannel(dataPhxReply.topic)
     }
 
     @Test

@@ -45,7 +45,7 @@ class OMGSocketClientTest {
     private val mockRequest: Request = mock()
     private val mockWebSocket: WebSocket = mock()
     private val mockSocketChannel: SocketClientContract.Channel = mock()
-    private val mockCustomEventListener: SocketCustomEventCallback = mock()
+    private val mockCustomEventListener: SocketCustomEventCallback.TransactionRequestCallback = mock()
     private val mockSocketSendParser: SocketClientContract.PayloadSendParser = mock()
 
     private lateinit var socketClient: OMGSocketClient
@@ -75,26 +75,26 @@ class OMGSocketClientTest {
 
     @Test
     fun `joinChannel should call the socket channel join and setCustomEventListener correctly`() {
-        val socketTopic = SocketTopic("topic")
+        val socketTopic = SocketTopic<SocketCustomEventCallback.TransactionRequestCallback>("topic")
         val payload = mapOf<String, Any>()
 
         socketClient.socketChannel = mockSocketChannel
         socketClient.joinChannel(socketTopic, payload, mockCustomEventListener)
 
-        verify(mockSocketChannel, times(1)).join(socketTopic, payload)
+        verify(mockSocketChannel, times(1)).join(socketTopic.name, payload)
         verify(mockSocketChannel, times(1)).setCustomEventListener(mockCustomEventListener)
         verifyNoMoreInteractions(mockSocketChannel)
     }
 
     @Test
     fun `leaveChannel should call the socket channel leave correctly`() {
-        val socketTopic = SocketTopic("topic")
+        val socketTopic = SocketTopic<SocketCustomEventCallback.TransactionRequestCallback>("topic")
         val payload = mapOf<String, Any>()
 
         socketClient.socketChannel = mockSocketChannel
         socketClient.leaveChannel(socketTopic, payload)
 
-        verify(mockSocketChannel, times(1)).leave(socketTopic, payload)
+        verify(mockSocketChannel, times(1)).leave(socketTopic.name, payload)
         verifyNoMoreInteractions(mockSocketChannel)
     }
 

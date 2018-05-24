@@ -13,6 +13,7 @@ import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketConnectionCallback
+import co.omisego.omisego.websocket.SocketCustomEventCallback
 import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract.SocketChannel
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
@@ -50,18 +51,17 @@ class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
         val response = socketReceive ?: return
         when (systemEvent) {
             SocketSystemEvent.CLOSE -> {
-                val topic = SocketTopic(response.topic)
                 response.runIfRefSchemeIsJoined {
-                    socketChannel?.onLeftChannel(topic)
-                    socketChannelCallback?.onLeftChannel(topic)
+                    socketChannel?.onLeftChannel(response.topic)
+                    socketChannelCallback?.onLeftChannel(response.topic)
                 }
             }
             SocketSystemEvent.REPLY -> {
-                val topic = SocketTopic(response.topic)
+                val topic = SocketTopic<SocketCustomEventCallback>(response.topic)
                 response.runIfRefSchemeIsJoined {
                     topic.runIfFirstJoined {
-                        socketChannel?.onJoinedChannel(topic)
-                        socketChannelCallback?.onJoinedChannel(topic)
+                        socketChannel?.onJoinedChannel(topic.name)
+                        socketChannelCallback?.onJoinedChannel(topic.name)
                     }
                 }
             }
@@ -74,8 +74,8 @@ class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
     /**
      * Run the lambda when the topic hasn't joined yet
      */
-    private inline fun SocketTopic.runIfFirstJoined(lambda: () -> Unit) {
-        if (socketChannel?.joined(this) == false) {
+    private inline fun SocketTopic<*>.runIfFirstJoined(lambda: () -> Unit) {
+        if (socketChannel?.joined(this.name) == false) {
             lambda()
         }
     }

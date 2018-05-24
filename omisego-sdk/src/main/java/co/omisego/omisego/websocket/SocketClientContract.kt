@@ -85,10 +85,10 @@ interface SocketClientContract {
          *
          * @see SocketCustomEventCallback
          */
-        fun joinChannel(
-            topic: SocketTopic,
+        fun <T : SocketCustomEventCallback> joinChannel(
+            topic: SocketTopic<T>,
             payload: Map<String, Any> = mapOf(),
-            listener: SocketCustomEventCallback
+            listener: T
         )
 
         /**
@@ -98,7 +98,7 @@ interface SocketClientContract {
          * @param topic The topic (channel) to be left.
          * @param payload (Optional) the additional data you might want to send bundled with the request.
          */
-        fun leaveChannel(topic: SocketTopic, payload: Map<String, Any>)
+        fun <T : SocketCustomEventCallback> leaveChannel(topic: SocketTopic<T>, payload: Map<String, Any>)
 
         /**
          * Set new authentication header
@@ -161,7 +161,7 @@ interface SocketClientContract {
          * @param topic Join the channel by the given topic.
          * @param payload (Optional) the additional data you might want to send bundled with the request.
          */
-        fun join(topic: SocketTopic, payload: Map<String, Any>)
+        fun join(topic: String, payload: Map<String, Any>)
 
         /**
          * Send [SocketEventSend.LEAVE] event to the server. Do nothing if the channel has already left.
@@ -169,7 +169,7 @@ interface SocketClientContract {
          * @param topic Leave from the channel by the given topic.
          * @param payload (Optional) payload you want to send along with the request/.
          */
-        fun leave(topic: SocketTopic, payload: Map<String, Any>)
+        fun leave(topic: String, payload: Map<String, Any>)
 
         /**
          * Send leave event for all currently active channels.
@@ -181,7 +181,7 @@ interface SocketClientContract {
          *
          * @return A set of active [SocketTopic].
          */
-        fun retrieveChannels(): Set<SocketTopic>
+        fun retrieveChannels(): Set<String>
 
         /**
          * Retrieves the [WebSocketListener]  to be used for initializing the [Websocket] in the [SocketClient].

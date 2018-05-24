@@ -14,9 +14,11 @@ import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
 import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.list.Transaction
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.operation.Listenable
+import co.omisego.omisego.websocket.SocketCustomEventCallback
 import java.math.BigDecimal
 import java.util.Date
 
@@ -99,7 +101,7 @@ data class TransactionConsumption(
     /**
      * The topic which can be listened in order to receive events regarding this consumption
      */
-    override val socketTopic: String,
+    override val socketTopic: SocketTopic<SocketCustomEventCallback.TransactionConsumptionCallback>,
 
     /**
      * The creation date of the consumption
@@ -145,7 +147,7 @@ data class TransactionConsumption(
      * Additional encrypted metadata for the consumption
      */
     val encryptedMetadata: Map<String, Any>
-) : Listenable, SocketReceive.SocketData {
+) : Listenable<SocketCustomEventCallback.TransactionConsumptionCallback>, SocketReceive.SocketData {
     override fun equals(other: Any?): Boolean {
         return other is TransactionConsumption && other.id == id
     }

@@ -8,13 +8,8 @@ package co.omisego.omisego.custom.gson
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.constant.enums.ErrorCode
-import co.omisego.omisego.model.APIError
-import co.omisego.omisego.model.OMGResponse
-import co.omisego.omisego.testUtils.ResourceFile
 import co.omisego.omisego.utils.GsonProvider
-import com.google.gson.reflect.TypeToken
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
 
@@ -27,23 +22,18 @@ import org.junit.Test
  */
 
 class ErrorCodeDeserializerTest {
+    private val gson by lazy { GsonProvider.create() }
 
-    private val errorFile by ResourceFile("error-invalid_auth.json")
+    data class TestData(
+        val code: ErrorCode
+    )
 
     @Test
     fun `ErrorCode should be deserialized successfully`() {
-        val gson = GsonProvider.create()
+        val errorResponse = """{"code": "transaction_request:transaction_request_not_found"}"""
 
-        val typeToken = object : TypeToken<OMGResponse<APIError>>() {}.type
-        val response = gson.fromJson<OMGResponse<APIError>>(errorFile.readText(), typeToken)
+        val response = gson.fromJson(errorResponse, TestData::class.java)
 
-        val expected = OMGResponse(Versions.EWALLET_API, false,
-                APIError(
-                        ErrorCode.CLIENT_INVALID_AUTH_SCHEME,
-                        "The provided authentication scheme is not supported"
-                )
-        )
-
-        response shouldEqual expected
+        response.code shouldEqual ErrorCode.TRANSACTION_REQUEST_NOT_FOUND
     }
 }

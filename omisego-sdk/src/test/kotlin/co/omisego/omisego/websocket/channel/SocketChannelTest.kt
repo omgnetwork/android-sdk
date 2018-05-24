@@ -30,7 +30,7 @@ class SocketChannelTest {
     private val mockSocketDispatcher: SocketChannelContract.Dispatcher = mock()
     private val mockSocketClient: SocketChannelContract.SocketClient = mock()
     private val mockSocketHeartbeat: SocketChannelContract.SocketInterval = mock()
-    private val socketTopic = SocketTopic("topic")
+    private val socketTopic = SocketTopic<SocketCustomEventCallback.TransactionRequestCallback>("topic")
     private lateinit var socketChannel: SocketChannel
 
     @Before
@@ -40,9 +40,9 @@ class SocketChannelTest {
 
     @Test
     fun `join should not be send any message when the channel has been joined`() {
-        whenever(socketChannel.joined(socketTopic)).thenReturn(true)
+        whenever(socketChannel.joined(socketTopic.name)).thenReturn(true)
 
-        socketChannel.join(socketTopic, mapOf())
+        socketChannel.join(socketTopic.name, mapOf())
 
         verifyNoMoreInteractions(mockSocketClient)
     }
@@ -50,18 +50,18 @@ class SocketChannelTest {
     @Test
     fun `join should send join message when the channel has never been joined`() {
         val joinMessage = SocketSend("topic", SocketEventSend.JOIN, "${SocketMessageRef.SCHEME_JOIN}:1", mapOf())
-        whenever(socketChannel.joined(socketTopic)).thenReturn(false)
+        whenever(socketChannel.joined(socketTopic.name)).thenReturn(false)
 
-        socketChannel.join(socketTopic, mapOf())
+        socketChannel.join(socketTopic.name, mapOf())
 
         verify(mockSocketClient, times(1)).send(joinMessage)
     }
 
     @Test
     fun `leave should not send any message when the channel has never been joined`() {
-        whenever(socketChannel.joined(socketTopic)).thenReturn(false)
+        whenever(socketChannel.joined(socketTopic.name)).thenReturn(false)
 
-        socketChannel.leave(socketTopic, mapOf())
+        socketChannel.leave(socketTopic.name, mapOf())
 
         verifyZeroInteractions(mockSocketClient)
     }
@@ -69,9 +69,9 @@ class SocketChannelTest {
     @Test
     fun `leave should send leave message when the channel has already been joined`() {
         val leaveMessage = SocketSend("topic", SocketEventSend.LEAVE, null, mapOf())
-        whenever(socketChannel.joined(socketTopic)).thenReturn(true)
+        whenever(socketChannel.joined(socketTopic.name)).thenReturn(true)
 
-        socketChannel.leave(socketTopic, mapOf())
+        socketChannel.leave(socketTopic.name, mapOf())
 
         verify(mockSocketClient, times(1)).send(leaveMessage)
     }
@@ -90,36 +90,36 @@ class SocketChannelTest {
 
     @Test
     fun `joined should return false if the channel set does not contain the specify channel`() {
-        socketChannel.joined(socketTopic) shouldEqual false
+        socketChannel.joined(socketTopic.name) shouldEqual false
     }
 
     @Test
     fun `joined should return true if the channel set contain the specify channel`() {
-        socketChannel.onJoinedChannel(socketTopic)
+        socketChannel.onJoinedChannel(socketTopic.name)
 
-        socketChannel.joined(socketTopic) shouldEqual true
+        socketChannel.joined(socketTopic.name) shouldEqual true
     }
 
     @Test
     fun `createJoinMessage should return a SocketSend with JOIN event`() {
-        socketChannel.createJoinMessage(socketTopic, mapOf()) shouldEqual
+        socketChannel.createJoinMessage(socketTopic.name, mapOf()) shouldEqual
             SocketSend("topic", SocketEventSend.JOIN, "${SocketMessageRef.SCHEME_JOIN}:1", mapOf())
     }
 
     @Test
     fun `createLeaveMessage should return a SocketSend with LEAVE event`() {
-        socketChannel.createLeaveMessage(socketTopic, mapOf()) shouldEqual
+        socketChannel.createLeaveMessage(socketTopic.name, mapOf()) shouldEqual
             SocketSend("topic", SocketEventSend.LEAVE, null, mapOf())
     }
 
     @Test
     fun `onJoinedChannel should not start sending a periodic heartbeat event if the channel set is not empty`() {
         // Add first channel
-        socketChannel.onJoinedChannel(socketTopic)
+        socketChannel.onJoinedChannel(socketTopic.name)
         whenever(socketChannel.socketHeartbeat).thenReturn(mockSocketHeartbeat)
 
         // Add the existing channel
-        socketChannel.onJoinedChannel(socketTopic)
+        socketChannel.onJoinedChannel(socketTopic.name)
 
         // The heartbeat should not start
         verifyZeroInteractions(mockSocketHeartbeat)
@@ -127,13 +127,13 @@ class SocketChannelTest {
 
     @Test
     fun `onJoinedChannel should start sending a periodic heartbeat event and add it to the channel set if the channel set is empty`() {
-        socketChannel.onJoinedChannel(socketTopic)
+        socketChannel.onJoinedChannel(socketTopic.name)
 
         Thread.sleep(15)
         verify(mockSocketClient, times(1)).send(
             SocketSend("phoenix", SocketEventSend.HEARTBEAT, "${SocketMessageRef.SCHEME_HEARTBEAT}:1", mapOf())
         )
-        socketChannel.retrieveChannels().contains(socketTopic) shouldEqualTo true
+        socketChannel.retrieveChannels().contains(socketTopic.name) shouldEqualTo true
     }
 
     @Test
@@ -141,10 +141,10 @@ class SocketChannelTest {
         whenever(socketChannel.socketHeartbeat).thenReturn(mockSocketHeartbeat)
 
         // Add the channel first
-        socketChannel.onJoinedChannel(socketTopic)
+        socketChannel.onJoinedChannel(socketTopic.name)
 
         // Then remove it
-        socketChannel.onLeftChannel(socketTopic)
+        socketChannel.onLeftChannel(socketTopic.name)
 
         socketChannel.retrieveChannels().size shouldEqualTo 0
         verify(mockSocketHeartbeat, times(1)).period = 5000L
@@ -157,9 +157,9 @@ class SocketChannelTest {
     fun `onLeftChannel should not stop heartbeat interval if the channel set is not empty`() {
         whenever(socketChannel.socketHeartbeat).thenReturn(mockSocketHeartbeat)
 
-        socketChannel.onJoinedChannel(socketTopic)
-        socketChannel.onJoinedChannel(socketTopic.copy(name = "topic2"))
-        socketChannel.onLeftChannel(socketTopic)
+        socketChannel.onJoinedChannel(socketTopic.name)
+        socketChannel.onJoinedChannel("topic2")
+        socketChannel.onLeftChannel(socketTopic.name)
 
         verify(mockSocketHeartbeat, times(0)).stopInterval()
         verifyNoMoreInteractions(mockSocketClient)
@@ -196,7 +196,7 @@ class SocketChannelTest {
     fun `leaveAll should call leave on every channel in the channel set`() {
         // Join five channels
         for (topic in 1..5) {
-            socketChannel.onJoinedChannel(SocketTopic("$topic"))
+            socketChannel.onJoinedChannel(topic.toString())
         }
 
         socketChannel.leaveAll()

@@ -9,12 +9,14 @@ package co.omisego.omisego.websocket.channel.dispatcher.delegator
 
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
+import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionStatus
 import co.omisego.omisego.model.transaction.request.TransactionRequestStatus
 import co.omisego.omisego.model.transaction.request.TransactionRequestType
 import co.omisego.omisego.utils.Either
 import co.omisego.omisego.utils.GsonProvider
+import co.omisego.omisego.websocket.SocketCustomEventCallback
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
@@ -48,12 +50,16 @@ class SocketReceiveParserTest {
             val transactionConsumptionData = data as TransactionConsumption
             with(transactionConsumptionData) {
                 status shouldEqual TransactionConsumptionStatus.PENDING
-                socketTopic shouldEqualTo "transaction_consumption:42292c2d-2249-467b-bfd1-bb557211399b"
+                socketTopic shouldEqual SocketTopic<SocketCustomEventCallback.TransactionConsumptionCallback>(
+                    "transaction_consumption:42292c2d-2249-467b-bfd1-bb557211399b"
+                )
                 user?.id shouldEqual "2b1f058c-b927-44b0-8ea0-c16cf1244ebd"
                 user?.username shouldEqual "user02"
                 transactionRequest.type shouldEqual TransactionRequestType.RECEIVE
                 transactionRequest.status shouldEqual TransactionRequestStatus.VALID
-                transactionRequest.socketTopic shouldEqualTo "transaction_request:328e61ac-9f35-4da5-a891-bd39f5442283"
+                transactionRequest.socketTopic shouldEqual SocketTopic<SocketCustomEventCallback.TransactionConsumptionCallback>(
+                    "transaction_request:328e61ac-9f35-4da5-a891-bd39f5442283"
+                )
                 transactionRequest.requireConfirmation shouldEqualTo true
                 transactionRequest.token.id shouldEqualTo "OMG:a9ef7096-4060-4155-b79d-b36c42d5d095"
             }

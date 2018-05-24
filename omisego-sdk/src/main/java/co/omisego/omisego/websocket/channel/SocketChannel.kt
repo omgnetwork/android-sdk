@@ -31,7 +31,7 @@ internal class SocketChannel(
     override val socketDispatcher: SocketChannelContract.Dispatcher,
     override val socketClient: SocketChannelContract.SocketClient
 ) : SocketClientContract.Channel, SocketChannelContract.Channel, SocketDispatcherContract.SocketChannel {
-    private val channelSet: MutableSet<SocketTopic> by lazy { mutableSetOf<SocketTopic>() }
+    private val channelSet: MutableSet<String> by lazy { mutableSetOf<String>() }
 
     /**
      * A [SocketMessageRef] is responsible for create unique ref value to be included in the [SocketSend] request.
@@ -57,7 +57,7 @@ internal class SocketChannel(
      * @param topic Join the channel by the given topic.
      * @param payload (Optional) the additional data you might want to send bundled with the request.
      */
-    override fun join(topic: SocketTopic, payload: Map<String, Any>) {
+    override fun join(topic: String, payload: Map<String, Any>) {
         if (!joined(topic)) {
             socketClient.send(createJoinMessage(topic, payload))
         }
@@ -69,7 +69,7 @@ internal class SocketChannel(
      * @param topic Leave from the channel by the given topic.
      * @param payload (Optional) payload you want to send along with the request/.
      */
-    override fun leave(topic: SocketTopic, payload: Map<String, Any>) {
+    override fun leave(topic: String, payload: Map<String, Any>) {
         if (joined(topic)) {
             socketClient.send(createLeaveMessage(topic, payload))
         }
@@ -89,7 +89,7 @@ internal class SocketChannel(
      *
      * @return A set of active [SocketTopic].
      */
-    override fun retrieveChannels(): Set<SocketTopic> = channelSet
+    override fun retrieveChannels(): Set<String> = channelSet
 
     /**
      * Retrieves the [WebSocketListener]  to be used for initializing the [Websocket] in the [SocketClient].
@@ -104,7 +104,7 @@ internal class SocketChannel(
      * @param topic A topic indicating which channel will be joined.
      * @return A boolean indicating if the channel is joined.
      */
-    override fun joined(topic: SocketTopic) = channelSet.contains(topic)
+    override fun joined(topic: String) = channelSet.contains(topic)
 
     /**
      * Create a [SocketSend] instance to be used for join a channel.
@@ -114,8 +114,8 @@ internal class SocketChannel(
      *
      * @return A [SocketSend] instance used for joining the channel.
      */
-    override fun createJoinMessage(topic: SocketTopic, payload: Map<String, Any>): SocketSend =
-        SocketSend(topic.name, SocketEventSend.JOIN, socketMessageRef.value, payload)
+    override fun createJoinMessage(topic: String, payload: Map<String, Any>): SocketSend =
+        SocketSend(topic, SocketEventSend.JOIN, socketMessageRef.value, payload)
 
     /**
      * Create a [SocketSend] instance to be used for join a channel.
@@ -125,15 +125,15 @@ internal class SocketChannel(
      *
      * @return A [SocketSend] instance used for leaving the channel.
      */
-    override fun createLeaveMessage(topic: SocketTopic, payload: Map<String, Any>): SocketSend =
-        SocketSend(topic.name, SocketEventSend.LEAVE, null, payload)
+    override fun createLeaveMessage(topic: String, payload: Map<String, Any>): SocketSend =
+        SocketSend(topic, SocketEventSend.LEAVE, null, payload)
 
     /**
      * Invoked when the client have been joined the channel successfully.
      *
      * @param topic A topic indicating which channel will be joined.
      */
-    override fun onJoinedChannel(topic: SocketTopic) {
+    override fun onJoinedChannel(topic: String) {
         with(topic) {
             runIfEmptyChannel {
                 socketHeartbeat.startInterval {
@@ -149,7 +149,7 @@ internal class SocketChannel(
      *
      * @param topic A topic indicating which channel will be joined.
      */
-    override fun onLeftChannel(topic: SocketTopic) {
+    override fun onLeftChannel(topic: String) {
         with(topic) {
             channelSet.remove(this)
             runIfEmptyChannel {

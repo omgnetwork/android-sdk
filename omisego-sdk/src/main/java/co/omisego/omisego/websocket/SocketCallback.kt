@@ -9,7 +9,6 @@ package co.omisego.omisego.websocket
 
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 
 /**
@@ -35,14 +34,14 @@ interface SocketChannelCallback {
      *
      * @param topic A topic indicating which channel will be joined.
      */
-    fun onJoinedChannel(topic: SocketTopic)
+    fun onJoinedChannel(topic: String)
 
     /**
      * Invoked when the client have been left the channel successfully.
      *
      * @param topic A topic indicating which channel will be joined.
      */
-    fun onLeftChannel(topic: SocketTopic)
+    fun onLeftChannel(topic: String)
 
     /**
      * Invoked when something goes wrong while connecting to a channel.

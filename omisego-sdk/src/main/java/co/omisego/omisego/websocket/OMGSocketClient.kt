@@ -30,6 +30,7 @@ import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.logging.HttpLoggingInterceptor
 
+@Suppress("OVERRIDE_BY_INLINE")
 /**
  * The [OMGSocketClient] represents an object that knows how to interact with the eWallet Web Socket API.
  * An instance should be created by using [OMGSocketClient.Builder]. For example,
@@ -43,7 +44,7 @@ import okhttp3.logging.HttpLoggingInterceptor
  *
  *     val omgSocketClient = OMGSocketClient.Builder{
  *          clientConfiguration = config
- *          debug = false
+ *          debug = fals
  *     }.build()
  * </code>
  *
@@ -86,13 +87,13 @@ class OMGSocketClient internal constructor(
      *
      * @see SocketCustomEventCallback
      */
-    override fun joinChannel(
-        topic: SocketTopic,
+    override fun <T : SocketCustomEventCallback> joinChannel(
+        topic: SocketTopic<T>,
         payload: Map<String, Any>,
-        listener: SocketCustomEventCallback
+        listener: T
     ) {
         with(socketChannel) {
-            join(topic, payload)
+            join(topic.name, payload)
             setCustomEventListener(listener)
         }
     }
@@ -104,8 +105,8 @@ class OMGSocketClient internal constructor(
      * @param topic The topic (channel) to be left.
      * @param payload (Optional) the additional data you might want to send bundled with the request.
      */
-    override fun leaveChannel(topic: SocketTopic, payload: Map<String, Any>) {
-        socketChannel.leave(topic, payload)
+    override fun <T : SocketCustomEventCallback> leaveChannel(topic: SocketTopic<T>, payload: Map<String, Any>) {
+        socketChannel.leave(topic.name, payload)
     }
 
     /**
