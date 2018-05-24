@@ -164,7 +164,7 @@ class EWalletClientTest {
     }
 
     @Test
-    fun `EWalletClient should throws an IllegalStateException if the clientConfiguration is not set`(){
+    fun `EWalletClient should throws an IllegalStateException if the clientConfiguration is not set`() {
         val error = { EWalletClient.Builder { }.build() }
         error shouldThrow IllegalStateException::class withMessage Exceptions.MSG_NULL_CLIENT_CONFIGURATION
     }
