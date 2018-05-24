@@ -316,7 +316,7 @@ class OMGAPIClientTest {
 
         val expected = gson.fromJson<OMGResponse<User>>(result.body(), object : TypeToken<OMGResponse<User>>() {}.type)
 
-        Thread.sleep(300)
+        Thread.sleep(1000)
 
         verify(callback, times(1)).success(expected)
     }

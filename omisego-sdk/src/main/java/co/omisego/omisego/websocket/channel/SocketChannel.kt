@@ -16,7 +16,6 @@ import co.omisego.omisego.websocket.SocketCustomEventCallback
 import co.omisego.omisego.websocket.channel.SocketChannelContract.Dispatcher
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract
-import co.omisego.omisego.websocket.channel.interval.SocketHeartbeat
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.WebSocketListener
@@ -43,13 +42,6 @@ internal class SocketChannel(
      * Default 5,000 milliseconds.
      */
     override var period: Long = 5000
-
-    /**
-     * A [SocketHeartbeat] is responsible for schedule sending the heartbeat event for keep the connection alive
-     */
-    override val socketHeartbeat: SocketChannelContract.SocketInterval by lazy {
-        SocketHeartbeat(SocketMessageRef().apply { scheme = SocketMessageRef.SCHEME_HEARTBEAT })
-    }
 
     /**
      * Send [SocketEventSend.JOIN] event to the server. Do nothing if the channel has already joined.
@@ -134,14 +126,12 @@ internal class SocketChannel(
      * @param topic A topic indicating which channel will be joined.
      */
     override fun onJoinedChannel(topic: String) {
-        with(topic) {
-            runIfEmptyChannel {
-                socketHeartbeat.startInterval {
-                    socketClient.send(it)
-                }
+        runIfEmptyChannel {
+            socketClient.socketHeartbeat.startInterval {
+                socketClient.send(it)
             }
-            channelSet.add(topic)
         }
+        channelSet.add(topic)
     }
 
     /**
@@ -153,8 +143,8 @@ internal class SocketChannel(
         with(topic) {
             channelSet.remove(this)
             runIfEmptyChannel {
-                socketHeartbeat.period = period
-                socketHeartbeat.stopInterval()
+                socketClient.socketHeartbeat.period = period
+                socketClient.socketHeartbeat.stopInterval()
                 socketClient.closeConnection(SocketStatusCode.NORMAL, "Disconnected successfully")
             }
         }

@@ -9,11 +9,11 @@ package co.omisego.omisego.websocket.channel
 
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.websocket.SocketChannelCallback
+import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketConnectionCallback
 import co.omisego.omisego.websocket.SocketCustomEventCallback
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.WebSocketListener
-import java.util.Timer
 
 interface SocketChannelContract {
     /* Channel Package */
@@ -28,11 +28,6 @@ interface SocketChannelContract {
          * A [SocketClient] for sending a message to the eWallet web socket API and close the web socket connection.
          */
         val socketClient: SocketClient
-
-        /**
-         * A [SocketHeartbeat] is responsible for schedule sending the heartbeat event for keep the connection alive
-         */
-        val socketHeartbeat: SocketInterval
 
         /**
          * A [SocketMessageRef] is responsible for create unique ref value to be included in the [SocketSend] request.
@@ -70,6 +65,12 @@ interface SocketChannelContract {
 
     /* WebSocket Package */
     interface SocketClient {
+
+        /**
+         * A [SocketHeartbeat] is responsible for schedule sending the heartbeat event for keep the connection alive
+         */
+        val socketHeartbeat: SocketClientContract.SocketInterval
+
         /**
          * Send the [SocketSend] request to the eWallet web socket API.
          *
@@ -84,36 +85,6 @@ interface SocketChannelContract {
          * @param reason The detail why the connection is closed
          */
         fun closeConnection(status: SocketStatusCode, reason: String)
-    }
-
-    /* Interval Package */
-    interface SocketInterval {
-        /**
-         * The timer for scheduling the [SocketSend] periodically to be sent to the server.
-         */
-        var timer: Timer?
-
-        /**
-         * [SocketMessageRef] is responsible for creating a unique ref value to be sent with the [SocketSend].
-         */
-        val socketMessageRef: SocketChannelContract.MessageRef
-
-        /**
-         * An interval of milliseconds between the end of the previous task and the start of the next one.
-         */
-        var period: Long
-
-        /**
-         * Start to schedule the [SocketSend] to be sent to the server periodically.
-         *
-         * @param task A lambda with a [SocketSend] parameter. This will be executed periodically that starts immediately.
-         */
-        fun startInterval(task: (SocketSend) -> Unit)
-
-        /**
-         * Stop to schedule the task to be sent to the server.
-         */
-        fun stopInterval()
     }
 
     /* Dispatcher Package */

@@ -1,4 +1,4 @@
-package co.omisego.omisego.websocket.channel.interval
+package co.omisego.omisego.websocket.interval
 
 /*
  * OmiseGO
@@ -8,6 +8,7 @@ package co.omisego.omisego.websocket.channel.interval
  */
 
 import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.enum.SocketEventSend
@@ -20,7 +21,7 @@ class SocketHeartbeat(
      * [SocketMessageRef] is responsible for creating a unique ref value to be sent with the [SocketSend].
      */
     override val socketMessageRef: SocketChannelContract.MessageRef
-) : SocketChannelContract.SocketInterval {
+) : SocketClientContract.SocketInterval {
     /**
      * The timer for scheduling the [SocketSend] periodically to be sent to the server.
      */

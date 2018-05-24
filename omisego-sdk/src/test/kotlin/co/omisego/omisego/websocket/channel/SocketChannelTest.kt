@@ -10,10 +10,12 @@ package co.omisego.omisego.websocket.channel
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.SocketChannelCallback
+import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketConnectionCallback
 import co.omisego.omisego.websocket.SocketCustomEventCallback
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
+import co.omisego.omisego.websocket.interval.SocketHeartbeat
 import com.nhaarman.mockito_kotlin.spy
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -29,12 +31,15 @@ import org.junit.Test
 class SocketChannelTest {
     private val mockSocketDispatcher: SocketChannelContract.Dispatcher = mock()
     private val mockSocketClient: SocketChannelContract.SocketClient = mock()
-    private val mockSocketHeartbeat: SocketChannelContract.SocketInterval = mock()
+    private val mockSocketHeartbeat: SocketClientContract.SocketInterval = mock()
     private val socketTopic = SocketTopic<SocketCustomEventCallback.TransactionRequestCallback>("topic")
     private lateinit var socketChannel: SocketChannel
 
     @Before
     fun setup() {
+        whenever(mockSocketClient.socketHeartbeat).thenReturn(
+            SocketHeartbeat(SocketMessageRef().apply { scheme = SocketMessageRef.SCHEME_HEARTBEAT })
+        )
         socketChannel = spy(SocketChannel(mockSocketDispatcher, mockSocketClient))
     }
 
@@ -116,7 +121,7 @@ class SocketChannelTest {
     fun `onJoinedChannel should not start sending a periodic heartbeat event if the channel set is not empty`() {
         // Add first channel
         socketChannel.onJoinedChannel(socketTopic.name)
-        whenever(socketChannel.socketHeartbeat).thenReturn(mockSocketHeartbeat)
+        whenever(mockSocketClient.socketHeartbeat).thenReturn(mockSocketHeartbeat)
 
         // Add the existing channel
         socketChannel.onJoinedChannel(socketTopic.name)
@@ -138,7 +143,7 @@ class SocketChannelTest {
 
     @Test
     fun `onLeftChannel should stop an interval and the socket connection if the channel set is empty`() {
-        whenever(socketChannel.socketHeartbeat).thenReturn(mockSocketHeartbeat)
+        whenever(mockSocketClient.socketHeartbeat).thenReturn(mockSocketHeartbeat)
 
         // Add the channel first
         socketChannel.onJoinedChannel(socketTopic.name)
@@ -150,19 +155,17 @@ class SocketChannelTest {
         verify(mockSocketHeartbeat, times(1)).period = 5000L
         verify(mockSocketHeartbeat, times(1)).stopInterval()
         verify(mockSocketClient, times(1)).closeConnection(SocketStatusCode.NORMAL, "Disconnected successfully")
-        verifyNoMoreInteractions(mockSocketClient)
     }
 
     @Test
     fun `onLeftChannel should not stop heartbeat interval if the channel set is not empty`() {
-        whenever(socketChannel.socketHeartbeat).thenReturn(mockSocketHeartbeat)
+        whenever(mockSocketClient.socketHeartbeat).thenReturn(mockSocketHeartbeat)
 
         socketChannel.onJoinedChannel(socketTopic.name)
         socketChannel.onJoinedChannel("topic2")
         socketChannel.onLeftChannel(socketTopic.name)
 
         verify(mockSocketHeartbeat, times(0)).stopInterval()
-        verifyNoMoreInteractions(mockSocketClient)
     }
 
     @Test

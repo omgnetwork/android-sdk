@@ -17,6 +17,7 @@ import co.omisego.omisego.utils.OMGEncryption
 import co.omisego.omisego.websocket.SocketClientContract.Channel
 import co.omisego.omisego.websocket.channel.SocketChannel
 import co.omisego.omisego.websocket.channel.SocketChannelContract
+import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.channel.dispatcher.CustomEventDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.SystemEventDispatcher
@@ -25,6 +26,7 @@ import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketReceivePa
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.talksTo
 import co.omisego.omisego.websocket.channel.dispatcher.talksTo
 import co.omisego.omisego.websocket.enum.SocketStatusCode
+import co.omisego.omisego.websocket.interval.SocketHeartbeat
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
@@ -59,6 +61,13 @@ class OMGSocketClient internal constructor(
 ) : SocketClientContract.Client, SocketChannelContract.SocketClient {
     internal var wsClient: WebSocket? = null
     override lateinit var socketChannel: SocketClientContract.Channel
+
+    /**
+     * A [SocketHeartbeat] is responsible for schedule sending the heartbeat event for keep the connection alive
+     */
+    override val socketHeartbeat: SocketClientContract.SocketInterval by lazy {
+        SocketHeartbeat(SocketMessageRef().apply { scheme = SocketMessageRef.SCHEME_HEARTBEAT })
+    }
 
     /**
      * Immediately and violently release resources held by this web socket, discarding any enqueued

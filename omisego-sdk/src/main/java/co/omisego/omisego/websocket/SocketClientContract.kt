@@ -10,9 +10,12 @@ package co.omisego.omisego.websocket
 import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
+import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
+import co.omisego.omisego.websocket.channel.SocketMessageRef
 import com.google.gson.Gson
 import okhttp3.WebSocketListener
+import java.util.Timer
 
 /**
  * The _Contracts.kt files can be found in the almost web socket's sub-packages.
@@ -212,5 +215,35 @@ interface SocketClientContract {
          * @see SocketTransactionRequestEvent
          */
         fun setCustomEventListener(customEventListener: SocketCustomEventCallback?)
+    }
+
+    /* Interval Package */
+    interface SocketInterval {
+        /**
+         * The timer for scheduling the [SocketSend] periodically to be sent to the server.
+         */
+        var timer: Timer?
+
+        /**
+         * [SocketMessageRef] is responsible for creating a unique ref value to be sent with the [SocketSend].
+         */
+        val socketMessageRef: SocketChannelContract.MessageRef
+
+        /**
+         * An interval of milliseconds between the end of the previous task and the start of the next one.
+         */
+        var period: Long
+
+        /**
+         * Start to schedule the [SocketSend] to be sent to the server periodically.
+         *
+         * @param task A lambda with a [SocketSend] parameter. This will be executed periodically that starts immediately.
+         */
+        fun startInterval(task: (SocketSend) -> Unit)
+
+        /**
+         * Stop to schedule the task to be sent to the server.
+         */
+        fun stopInterval()
     }
 }
