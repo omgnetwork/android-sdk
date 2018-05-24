@@ -8,6 +8,7 @@ package co.omisego.omisego.websocket
  */
 
 import co.omisego.omisego.model.APIError
+import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 
@@ -53,6 +54,11 @@ interface SocketChannelCallback {
 
 sealed class SocketCustomEventCallback {
     /**
+     * A callback for every event in the SocketCustomEvent (see SocketEvent.kt).
+     */
+    abstract class AnyEventCallback : AnySocketEvent, SocketCustomEventCallback()
+
+    /**
      * A callback for the [SocketTransactionRequestEvent]
      */
     abstract class TransactionRequestCallback : SocketTransactionRequestEvent, SocketCustomEventCallback()
@@ -72,4 +78,8 @@ private interface SocketTransactionRequestEvent {
 private interface SocketTransactionConsumptionEvent {
     fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
     fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
+}
+
+private interface AnySocketEvent {
+    fun on(data: SocketReceive)
 }

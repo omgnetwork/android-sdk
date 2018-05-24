@@ -128,6 +128,16 @@ interface SocketDispatcherContract {
             socketReceive: SocketReceive,
             customEvent: SocketCustomEvent
         )
+
+        /**
+         * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventCallback.AnyEventCallback].
+         * This method will be invoked by the [handleEvent] method.
+         *
+         * @param socketReceive The web socket replied object from eWallet API.
+         */
+        fun SocketCustomEventCallback.AnyEventCallback.handleAnyEvent(
+            socketReceive: SocketReceive
+        )
     }
 
     /* Delegator Package */

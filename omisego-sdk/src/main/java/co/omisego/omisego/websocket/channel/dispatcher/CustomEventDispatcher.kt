@@ -50,6 +50,8 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
                 listenEvent.handleTransactionRequestEvent(response, customEvent)
             is SocketCustomEventCallback.TransactionConsumptionCallback ->
                 listenEvent.handleTransactionConsumptionEvent(response, customEvent)
+            is SocketCustomEventCallback.AnyEventCallback ->
+                listenEvent.handleAnyEvent(response)
         }
     }
 
@@ -96,7 +98,10 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
      * @param socketReceive The web socket replied object from eWallet API.
      * @param customEvent The custom event used for decide the event to be dispatched
      */
-    override fun SocketCustomEventCallback.TransactionConsumptionCallback.handleTransactionConsumptionEvent(socketReceive: SocketReceive, customEvent: SocketCustomEvent) {
+    override fun SocketCustomEventCallback.TransactionConsumptionCallback.handleTransactionConsumptionEvent(
+        socketReceive: SocketReceive,
+        customEvent: SocketCustomEvent
+    ) {
         if (customEvent == TRANSACTION_CONSUMPTION_FINALIZED) {
             val judge = socketReceive.judgeCustomEventCallback(
                 this::onTransactionConsumptionFinalizedFail,
@@ -110,6 +115,16 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
             socketChannelCallback?.onError(socketReceive.error)
         }
     }
+
+    /**
+     * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventCallback.AnyEventCallback].
+     * This method will be invoked by the [handleEvent] method.
+     *
+     * @param socketReceive The web socket replied object from eWallet API.
+     */
+    override fun SocketCustomEventCallback.AnyEventCallback.handleAnyEvent(
+        socketReceive: SocketReceive
+    ) = on(socketReceive)
 
     internal inline fun <reified T : SocketReceive.SocketData> SocketReceive.judgeCustomEventCallback(
         matchedTypeWithErrorLambda: (T, APIError) -> Unit,

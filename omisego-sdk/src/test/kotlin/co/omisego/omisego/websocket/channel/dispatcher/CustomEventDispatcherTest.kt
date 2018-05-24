@@ -52,6 +52,7 @@ class CustomEventDispatcherTest {
 
     private val txRequestCb: SocketCustomEventCallback.TransactionRequestCallback = mock()
     private val txConsumptionCb: SocketCustomEventCallback.TransactionConsumptionCallback = mock()
+    private val txAnyCb: SocketCustomEventCallback.AnyEventCallback = mock()
 
     private lateinit var customEventDispatcher: CustomEventDispatcher
 
@@ -139,5 +140,20 @@ class CustomEventDispatcherTest {
 
         verify(txConsumptionCb, times(1)).onTransactionConsumptionFinalizedFail(mockData, apiError)
         verifyNoMoreInteractions(txConsumptionCb)
+    }
+
+    @Test
+    fun `anyEventCallback should be invoked all custom event`() {
+        customEventDispatcher.socketCustomEventCallback = txAnyCb
+        with(customEventDispatcher) {
+            txAnyCb.handleAnyEvent(dataTxFinalizedFail)
+            txAnyCb.handleAnyEvent(dataTxFinalizedSuccess)
+            txAnyCb.handleAnyEvent(dataTxRequest)
+        }
+
+        verify(txAnyCb, times(1)).on(dataTxFinalizedFail)
+        verify(txAnyCb, times(1)).on(dataTxFinalizedSuccess)
+        verify(txAnyCb, times(1)).on(dataTxRequest)
+        verifyNoMoreInteractions(txAnyCb)
     }
 }
