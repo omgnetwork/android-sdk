@@ -15,7 +15,7 @@ data class SocketTopic<T : SocketCustomEventCallback>(val name: String)
 /**
  * Run the lambda when the topic is coming from the user (to exclude the heartbeat event).
  */
-internal inline fun SocketTopic<*>.runIfNotInternalTopic(lambda: SocketTopic<*>.() -> Unit) {
+internal inline fun <T : SocketCustomEventCallback> SocketTopic<T>.runIfNotInternalTopic(lambda: SocketTopic<T>.() -> Unit) {
     if (this.name != SocketHeartbeat.EVENT_NAME) {
         lambda()
     }
