@@ -526,9 +526,13 @@ When the scanner successfully decodes a `TransactionRequest` it will call its de
 
 # Websocket
 
-After we are able to create a `TransactionRequest`, consume a `TransactionRequest`, and then approve or reject a `TransactionConsumption`.
-Now, we will learn how to use the web socket client for listening for the `TransactionConsumption` events.
-This section describes the use of the `OMGSocketClient` in order to listen for events.
+The transaction request flow is as follow:
+
+1. Create a `TransactionRequest` successfully.
+2. Consume that `TransactionRequest` which will generate a TransactionConsumption.
+3. Approve or reject the `TransactionConsumption` generated in step 2.
+
+This section describes the use of the `OMGSocketClient` in order to listen for events which happens after step 2 or step 3.
 
 ## Websocket Initialization
 
