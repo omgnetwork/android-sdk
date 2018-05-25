@@ -40,6 +40,5 @@ class EitherEnumDeserializer<L : OMGEnum, R : OMGEnum> : JsonDeserializer<Either
     ): T? {
         return this.enumConstants.firstOrNull { it.value == predicate }
             ?: this.enumConstants.firstOrNull { it.value == backupPredicate }
-            ?: return null
     }
 }

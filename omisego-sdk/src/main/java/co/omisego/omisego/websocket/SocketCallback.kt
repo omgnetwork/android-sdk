@@ -11,74 +11,28 @@ import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 
-/**
- * A web socket connection callback that executed when the web socket client is connected to the server or disconnected from the server.
- */
-interface SocketConnectionCallback {
-    /**
-     * Invoked when the web socket client has connected to the eWallet web socket API successfully.
-     */
-    fun onConnected()
-
-    /**
-     * Invoked when the web socket client has disconnected from the eWallet web socket API.
-     *
-     * @param throwable (Optional) The exception might be raised if the web socket was not disconnected successfully.
-     */
-    fun onDisconnected(throwable: Throwable?)
-}
-
-interface SocketChannelCallback {
-    /**
-     * Invoked when the client have been joined the channel successfully.
-     *
-     * @param topic A topic indicating which channel will be joined.
-     */
-    fun onJoinedChannel(topic: String)
-
-    /**
-     * Invoked when the client have been left the channel successfully.
-     *
-     * @param topic A topic indicating which channel will be joined.
-     */
-    fun onLeftChannel(topic: String)
-
-    /**
-     * Invoked when something goes wrong while connecting to a channel.
-     *
-     * @param apiError An [APIError] instance for explaining the failure reason.
-     */
-    fun onError(apiError: APIError)
-}
-
 sealed class SocketCustomEventCallback {
     /**
-     * A callback for every event in the SocketCustomEvent (see SocketEvent.kt).
+     * A callback for every event in the SocketCustomEvent (see SocketEvent.kt, CustomEventDispatcher.kt ).
      */
-    abstract class AnyEventCallback : AnySocketEvent, SocketCustomEventCallback()
+    abstract class AnyEventCallback : SocketCustomEventCallback() {
+        abstract fun onEventReceived(data: SocketReceive)
+    }
 
     /**
      * A callback for the [SocketTransactionRequestEvent]
      */
-    abstract class TransactionRequestCallback : SocketTransactionRequestEvent, SocketCustomEventCallback()
+    abstract class TransactionRequestCallback : SocketCustomEventCallback() {
+        abstract fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption)
+        abstract fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
+        abstract fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
+    }
 
     /**
      * A callback for the [SocketTransactionConsumptionEvent]
      */
-    abstract class TransactionConsumptionCallback : SocketTransactionConsumptionEvent, SocketCustomEventCallback()
-}
-
-private interface SocketTransactionRequestEvent {
-    fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption)
-    fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
-    fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
-}
-
-private interface SocketTransactionConsumptionEvent {
-    fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
-    fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
-}
-
-private interface AnySocketEvent {
-    fun on(data: SocketReceive)
+    abstract class TransactionConsumptionCallback : SocketCustomEventCallback() {
+        abstract fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
+        abstract fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
+    }
 }

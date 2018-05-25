@@ -12,6 +12,9 @@ import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.websocket.SocketChannelCallback
 import co.omisego.omisego.websocket.SocketCustomEventCallback
+import co.omisego.omisego.websocket.SocketCustomEventCallback.AnyEventCallback
+import co.omisego.omisego.websocket.SocketCustomEventCallback.TransactionConsumptionCallback
+import co.omisego.omisego.websocket.SocketCustomEventCallback.TransactionRequestCallback
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketCustomEvent.OTHER
 import co.omisego.omisego.websocket.enum.SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED
@@ -43,15 +46,15 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
      */
     override fun handleEvent(customEvent: SocketCustomEvent) {
         val response = socketReceive ?: return
-        val listenEvent = socketCustomEventCallback ?: return
+        val callback = socketCustomEventCallback ?: return
 
-        when (listenEvent) {
-            is SocketCustomEventCallback.TransactionRequestCallback ->
-                listenEvent.handleTransactionRequestEvent(response, customEvent)
-            is SocketCustomEventCallback.TransactionConsumptionCallback ->
-                listenEvent.handleTransactionConsumptionEvent(response, customEvent)
-            is SocketCustomEventCallback.AnyEventCallback ->
-                listenEvent.handleAnyEvent(response)
+        when (callback) {
+            is TransactionRequestCallback ->
+                callback.handleTransactionRequestEvent(response, customEvent)
+            is TransactionConsumptionCallback ->
+                callback.handleTransactionConsumptionEvent(response, customEvent)
+            is AnyEventCallback ->
+                callback.handleAnyEvent(response)
         }
     }
 
@@ -124,7 +127,7 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
      */
     override fun SocketCustomEventCallback.AnyEventCallback.handleAnyEvent(
         socketReceive: SocketReceive
-    ) = on(socketReceive)
+    ) = onEventReceived(socketReceive)
 
     internal inline fun <reified T : SocketReceive.SocketData> SocketReceive.judgeCustomEventCallback(
         matchedTypeWithErrorLambda: (T, APIError) -> Unit,

@@ -151,9 +151,9 @@ class CustomEventDispatcherTest {
             txAnyCb.handleAnyEvent(dataTxRequest)
         }
 
-        verify(txAnyCb, times(1)).on(dataTxFinalizedFail)
-        verify(txAnyCb, times(1)).on(dataTxFinalizedSuccess)
-        verify(txAnyCb, times(1)).on(dataTxRequest)
+        verify(txAnyCb, times(1)).onEventReceived(dataTxFinalizedFail)
+        verify(txAnyCb, times(1)).onEventReceived(dataTxFinalizedSuccess)
+        verify(txAnyCb, times(1)).onEventReceived(dataTxRequest)
         verifyNoMoreInteractions(txAnyCb)
     }
 }

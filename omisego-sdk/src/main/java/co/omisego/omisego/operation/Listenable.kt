@@ -13,6 +13,7 @@ import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketCustomEventCallback
+import co.omisego.omisego.websocket.SocketCustomEventCallback.*
 
 /**
  * Represents an object that can be listened with websocket
@@ -30,6 +31,8 @@ interface Listenable<T : SocketCustomEventCallback> {
     }
 }
 
+
+
 /**
  * Opens a websocket connection with the server and starts to listen for events happening on this transaction request.
  * Typically, this should be used to listen for consumption request made on the request.
@@ -41,7 +44,7 @@ interface Listenable<T : SocketCustomEventCallback> {
 fun TransactionRequest.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    callback: SocketCustomEventCallback.TransactionRequestCallback
+    callback: TransactionRequestCallback
 ) {
     client.joinChannel(socketTopic, payload, callback)
 }

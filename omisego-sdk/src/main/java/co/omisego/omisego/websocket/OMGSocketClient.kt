@@ -46,7 +46,7 @@ import okhttp3.logging.HttpLoggingInterceptor
  *
  *     val omgSocketClient = OMGSocketClient.Builder{
  *          clientConfiguration = config
- *          debug = fals
+ *          debug = false
  *     }.build()
  * </code>
  *
