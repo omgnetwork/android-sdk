@@ -36,7 +36,7 @@ data class TransactionRequestCreateParams(
 
     /**
      * The address specifying where the transaction should be sent to.
-     * If not specified, the current user's primary address will be used.
+     * If not specified, the current user's primary wallet address will be used.
      */
     val address: String? = null,
 

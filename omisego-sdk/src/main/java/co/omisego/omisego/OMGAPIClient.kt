@@ -7,7 +7,7 @@ package co.omisego.omisego
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.Address
+import co.omisego.omisego.model.Wallet
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionActionParams
@@ -38,8 +38,8 @@ import co.omisego.omisego.network.ewallet.EWalletClient
  * <code>
  * val omgAPIClient = OMGAPIClient(eWalletClient)
  *
- * omgApiClient.listBalances().enqueue(object : OMGCallback<BalanceList> {
- *      override fun success(response: OMGResponse<BalanceList>) {
+ * omgApiClient.listWallets().enqueue(object : OMGCallback<WalletList> {
+ *      override fun success(response: OMGResponse<WalletList>) {
  *          // Handle success
  *      }
  *
@@ -79,11 +79,11 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
     fun logout() = eWalletAPI.logout()
 
     /**
-     * Asynchronously send the request to retrieve the balances of a user corresponding to the provided authentication token.
-     * if *success* the [OMGCallback<BalanceList>] will be invoked with the list of [Address] parameter,
-     * if *fail* [OMGCallback<BalanceList>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
+     * Asynchronously send the request to retrieve wallets of a user corresponding to the provided authentication token.
+     * if *success* the [OMGCallback<WalletList>] will be invoked with the list of [Wallet] parameter,
+     * if *fail* [OMGCallback<WalletList>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
      */
-    fun listBalances() = eWalletAPI.listBalances()
+    fun listWallets() = eWalletAPI.listWallets()
 
     /**
      * Asynchronously get a paginated list of transactions of a user corresponding to the provided authentication token.

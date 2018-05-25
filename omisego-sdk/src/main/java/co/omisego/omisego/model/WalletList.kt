@@ -12,4 +12,4 @@ package co.omisego.omisego.model
  *
  * @param data The list of the addresses
  */
-data class BalanceList(val data: List<Address>)
+data class WalletList(val data: List<Wallet>)

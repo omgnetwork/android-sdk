@@ -7,24 +7,24 @@ package co.omisego.omisego.network.ewallet
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.Endpoints.CONSUME_TRANSACTION_REQUEST
 import co.omisego.omisego.constant.Endpoints.APPROVE_TRANSACTION
+import co.omisego.omisego.constant.Endpoints.CONSUME_TRANSACTION_REQUEST
 import co.omisego.omisego.constant.Endpoints.CREATE_TRANSACTION_REQUEST
 import co.omisego.omisego.constant.Endpoints.GET_CURRENT_USER
 import co.omisego.omisego.constant.Endpoints.GET_SETTINGS
-import co.omisego.omisego.constant.Endpoints.LIST_BALANCE
 import co.omisego.omisego.constant.Endpoints.LIST_TRANSACTIONS
+import co.omisego.omisego.constant.Endpoints.LIST_WALLETS
 import co.omisego.omisego.constant.Endpoints.LOGOUT
 import co.omisego.omisego.constant.Endpoints.REJECT_TRANSACTION
 import co.omisego.omisego.constant.Endpoints.RETRIEVE_TRANSACTION_REQUEST
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
-import co.omisego.omisego.model.BalanceList
 import co.omisego.omisego.model.Logout
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
+import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.pagination.PaginationList
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionActionParams
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionActionParams
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
 import co.omisego.omisego.model.transaction.list.Transaction
 import co.omisego.omisego.model.transaction.list.TransactionListParams
@@ -42,8 +42,8 @@ interface EWalletAPI {
     @POST(LOGOUT)
     fun logout(): OMGCall<Logout>
 
-    @POST(LIST_BALANCE)
-    fun listBalances(): OMGCall<BalanceList>
+    @POST(LIST_WALLETS)
+    fun listWallets(): OMGCall<WalletList>
 
     @POST(GET_SETTINGS)
     fun getSettings(): OMGCall<Setting>
