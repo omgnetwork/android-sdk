@@ -20,7 +20,7 @@ sealed class SocketCustomEventCallback {
     }
 
     /**
-     * A callback for the [SocketTransactionRequestEvent]
+     * A callback for TransactionRequest
      */
     abstract class TransactionRequestCallback : SocketCustomEventCallback() {
         abstract fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption)
@@ -29,7 +29,7 @@ sealed class SocketCustomEventCallback {
     }
 
     /**
-     * A callback for the [SocketTransactionConsumptionEvent]
+     * A callback for the TransactionConsumption
      */
     abstract class TransactionConsumptionCallback : SocketCustomEventCallback() {
         abstract fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)

@@ -15,6 +15,7 @@ enum class SocketEventSend(override val value: String) : OMGEnum {
      * event used to keep the connection open.
      */
     HEARTBEAT("heartbeat"),
+
     /**
      * event used to join a channel.
      */
