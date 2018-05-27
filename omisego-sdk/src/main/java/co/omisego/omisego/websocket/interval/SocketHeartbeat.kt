@@ -22,6 +22,7 @@ class SocketHeartbeat(
      */
     override val socketMessageRef: SocketChannelContract.MessageRef
 ) : SocketClientContract.SocketInterval {
+
     /**
      * The timer for scheduling the [SocketSend] periodically to be sent to the server.
      */
@@ -38,19 +39,26 @@ class SocketHeartbeat(
      * @param task A lambda with a [SocketSend] parameter. This will be executed periodically that starts immediately.
      */
     @Suppress("OVERRIDE_BY_INLINE")
+    @Synchronized
     override inline fun startInterval(crossinline task: (SocketSend) -> Unit) {
-        timer = Timer()
-        timer?.schedule(Date(), period, {
-            task(SocketSend(EVENT_NAME, SocketEventSend.HEARTBEAT, socketMessageRef.value, mapOf()))
-        })
+        synchronized(this) {
+            timer?.cancel()
+            timer = Timer()
+            timer?.schedule(Date(), period, {
+                task(SocketSend(EVENT_NAME, SocketEventSend.HEARTBEAT, socketMessageRef.value, mapOf()))
+            })
+        }
     }
 
     /**
      * Stop to schedule the task to be sent to the server.
      */
+    @Synchronized
     override fun stopInterval() {
-        timer?.cancel()
-        timer = null
+        synchronized(this) {
+            timer?.cancel()
+            timer = null
+        }
     }
 
     companion object {
