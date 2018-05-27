@@ -47,6 +47,15 @@ class SocketHeartbeatTest {
         // Wait task to be called for short period.
         Thread.sleep(50)
 
+        /**
+         * Ensure the following situation will not happen.
+         *
+         * timer?.cancel() <-- Thread B (execute before thread A)
+         * timer = Timer()
+         * timer = timer?.schedule(whatever) <-- Thread A (thread A will throw IllegalStateException, so task() won't be invoked)
+         *
+         * Because of that, this expression will verify that all tasks should be invoked.
+         */
         verify(task, times(1_000)).invoke(any())
     }
 }
