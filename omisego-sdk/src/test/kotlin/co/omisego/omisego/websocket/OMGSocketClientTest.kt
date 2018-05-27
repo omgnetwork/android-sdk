@@ -45,7 +45,7 @@ class OMGSocketClientTest {
     private val mockRequest: Request = mock()
     private val mockWebSocket: WebSocket = mock()
     private val mockSocketChannel: SocketClientContract.Channel = mock()
-    private val mockCustomEventListener: SocketCustomEventCallback.TransactionRequestCallback = mock()
+    private val mockCustomEventListener: SocketCustomEventListener.TransactionRequestListener = mock()
     private val mockSocketSendParser: SocketClientContract.PayloadSendParser = mock()
 
     private lateinit var socketClient: OMGSocketClient
@@ -75,7 +75,7 @@ class OMGSocketClientTest {
 
     @Test
     fun `joinChannel should call the socket channel join and setCustomEventListener correctly`() {
-        val socketTopic = SocketTopic<SocketCustomEventCallback.TransactionRequestCallback>("topic")
+        val socketTopic = SocketTopic<SocketCustomEventListener.TransactionRequestListener>("topic")
         val payload = mapOf<String, Any>()
 
         socketClient.socketChannel = mockSocketChannel
@@ -88,7 +88,7 @@ class OMGSocketClientTest {
 
     @Test
     fun `leaveChannel should call the socket channel leave correctly`() {
-        val socketTopic = SocketTopic<SocketCustomEventCallback.TransactionRequestCallback>("topic")
+        val socketTopic = SocketTopic<SocketCustomEventListener.TransactionRequestListener>("topic")
         val payload = mapOf<String, Any>()
 
         socketClient.socketChannel = mockSocketChannel
@@ -107,19 +107,19 @@ class OMGSocketClientTest {
     }
 
     @Test
-    fun `setConnectionListener should delegate the callback to the socket channel correctly`() {
+    fun `setConnectionListener should delegate the listener to the socket channel correctly`() {
         socketClient.socketChannel = mockSocketChannel
-        val socketConnectionCallback: SocketConnectionCallback = mock()
+        val socketConnectionListener: SocketConnectionListener = mock()
 
-        socketClient.setConnectionListener(socketConnectionCallback)
+        socketClient.setConnectionListener(socketConnectionListener)
 
-        verify(mockSocketChannel, times(1)).setConnectionListener(socketConnectionCallback)
+        verify(mockSocketChannel, times(1)).setConnectionListener(socketConnectionListener)
     }
 
     @Test
-    fun `setChannelListener should delegate the callback to the socket channel correctly`() {
+    fun `setChannelListener should delegate the listener to the socket channel correctly`() {
         socketClient.socketChannel = mockSocketChannel
-        val socketChannelListener: SocketChannelCallback = mock()
+        val socketChannelListener: SocketChannelListener = mock()
 
         socketClient.setChannelListener(socketChannelListener)
 

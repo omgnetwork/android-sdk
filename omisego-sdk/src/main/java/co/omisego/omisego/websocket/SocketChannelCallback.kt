@@ -9,7 +9,7 @@ package co.omisego.omisego.websocket
 
 import co.omisego.omisego.model.APIError
 
-interface SocketChannelCallback {
+interface SocketChannelListener {
     /**
      * Invoked when the client joined the channel successfully.
      *

@@ -565,7 +565,7 @@ All listenable system events are the **Connection status** and the **Channel sta
 
 ### Connection Event
 
-`SocketConnectionCallback` *(optional)* is the callback that listens for a **web socket's server connection status**. The possible events are:
+`SocketConnectionListener` *(optional)* is the listener that listens for a **web socket's server connection status**. The possible events are:
 
 * `onConnected()`: Invoked when the web socket client has connected to the eWallet web socket API successfully.
 * `onDisconnected(throwable: Throwable)`: Invoked when the web socket client has disconnected from the eWallet web socket API.
@@ -573,7 +573,7 @@ Throws an exception if the web socket was not disconnected successfully.
 
 **Usage**
 ```kotlin
-socketClient.setConnectionListener(object : SocketConnectionCallback {
+socketClient.setConnectionListener(object : SocketConnectionListener {
     override fun onConnected() {
         // Do something
     }
@@ -585,7 +585,7 @@ socketClient.setConnectionListener(object : SocketConnectionCallback {
 ```
 ### Channel Event
 
-`SocketChannelCallback` *(optional)* is the callback that listens for a **channel connection status**. The possible events are:
+`SocketChannelListener` *(optional)* is the listener that listens for a **channel connection status**. The possible events are:
 
 * `onJoinedChannel(topic: String)`: Invoked when the client have been joined the channel successfully.
 * `onLeftChannel(topic: String)`: Invoked when the client have been left the channel successfully.
@@ -593,7 +593,7 @@ socketClient.setConnectionListener(object : SocketConnectionCallback {
     
 **Usage**
 ```kotlin
-socketClient.setChannelListener(object : SocketChannelCallback {
+socketClient.setChannelListener(object : SocketChannelListener {
     override fun onJoinedChannel(topic: String) {
         // Do something
     }
@@ -611,12 +611,12 @@ socketClient.setChannelListener(object : SocketChannelCallback {
 ## Listen for custom events
 
 Custom event are special events that are currently limited to the `TransactionRequest` and the `TransactionConsumption` event.
-All custom events will be a sub-class of the `SocketCustomEventCallback`. `SocketCustomEventCallback` is a **required** generic callback that you will need to pass its sub-class when joining to the channel for listening to the events.
-All possible callbacks are the following:
+All custom events will be a sub-class of the `SocketCustomEventListener`. `SocketCustomEventListener` is a **required** generic listener that you will need to pass its sub-class when joining to the channel for listening to the events.
+All possible listeners are the following:
 
 ### TransactionRequest Event
 
-When creating a `TransactionRequest` that requires a confirmation it is possible to listen for all incoming events using the `TransactionRequestCallback`.
+When creating a `TransactionRequest` that requires a confirmation it is possible to listen for all incoming events using the `TransactionRequestListener`.
 The possible events are: 
 * `onTransactionConsumptionRequest(TransactionConsumption)`: Invoked when a `TransactionConsumption` is trying to consume the `TransactionRequest`. 
 This allows the requester to [confirm](https://github.com/omisego/ios-sdk#confirm-a-transaction-consumption) or not the consumption if legitimate. 
@@ -625,7 +625,7 @@ This allows the requester to [confirm](https://github.com/omisego/ios-sdk#confir
         
 ### TransactionConsumption Event
  
-Similarly to the `TransactionRequestCallback`, a `TransactionConsumption` can be listened for incoming confirmations using the `TransactionConsumptionCallback`.
+Similarly to the `TransactionRequestListener`, a `TransactionConsumption` can be listened for incoming confirmations using the `TransactionConsumptionListener`.
 The possible events are:
 * `onTransactionConsumptionFinalizedSuccess(TransactionConsumption)`: Invoked if a `TransactionConsumption` has been finalized successfully, and the transfer was made between the 2 addresses.
 * `onTransactionConsumptionFinalizedFail(TransactionConsumption, APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
@@ -633,7 +633,7 @@ The possible events are:
 **Usage**
 ```kotlin
 // The transaction requestor listen for the event 
-transactionRequest.startListeningEvents(socketClient, object: SocketCustomEventCallback.TransactionRequestCallback() {
+transactionRequest.startListeningEvents(socketClient, object: SocketCustomEventListener.TransactionRequestListener() {
    override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
        // Do something
    }
@@ -648,7 +648,7 @@ transactionRequest.startListeningEvents(socketClient, object: SocketCustomEventC
 })
 
 // The transaction consumer listen for the event
-transactionConsumption.startListeningEvents(socketClient, object: SocketCustomEventCallback.TransactionConsumptionCallback() {
+transactionConsumption.startListeningEvents(socketClient, object: SocketCustomEventListener.TransactionConsumptionListener() {
   override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
       // Do something
   }
@@ -666,8 +666,8 @@ This implementation will provide the exactly same result as the implementation a
 ```kotlin
 // The transaction requestor listen for the event 
 // Typically, it doesn't need to create a [SocketTopic] instance. it can be retrieved from the `TransactionRequest` or `TransactionConsumption` object.
-val topic = SocketTopic<SocketCustomEventCallback.TransactionRequestCallback>("transaction_request:1234")
-socketClient.joinChannel(topic, listener = object: SocketCustomEventCallback.TransactionRequestCallback(){
+val topic = SocketTopic<SocketCustomEventListener.TransactionRequestListener>("transaction_request:1234")
+socketClient.joinChannel(topic, listener = object: SocketCustomEventListener.TransactionRequestListener(){
   override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
       // Do something
   }
@@ -683,8 +683,8 @@ socketClient.joinChannel(topic, listener = object: SocketCustomEventCallback.Tra
 
 // The transaction consumer listen for the event
 // Typically, it doesn't need to create a [SocketTopic] instance. it can be retrieved from the `TransactionRequest` or `TransactionConsumption` object.
-val topic = SocketTopic<SocketCustomEventCallback.TransactionConsumptionCallback>("transaction_request:1234")
-socketClient.joinChannel(topic, listener = object: SocketCustomEventCallback.TransactionConsumptionCallback() {
+val topic = SocketTopic<SocketCustomEventListener.TransactionConsumptionListener>("transaction_request:1234")
+socketClient.joinChannel(topic, listener = object: SocketCustomEventListener.TransactionConsumptionListener() {
     override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
         // Do something
     }

@@ -13,7 +13,7 @@ import co.omisego.omisego.model.User
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
 import co.omisego.omisego.operation.Listenable
-import co.omisego.omisego.websocket.SocketCustomEventCallback
+import co.omisego.omisego.websocket.SocketCustomEventListener
 import java.math.BigDecimal
 import java.util.Date
 
@@ -85,7 +85,7 @@ data class TransactionRequest(
     /**
      * The topic which can be listened in order to receive events regarding this request
      */
-    override val socketTopic: SocketTopic<SocketCustomEventCallback.TransactionRequestCallback>,
+    override val socketTopic: SocketTopic<SocketCustomEventListener.TransactionRequestListener>,
 
     /**
      * The maximum number of time that this request can be consumed
@@ -131,7 +131,7 @@ data class TransactionRequest(
      * The date when the request expired
      */
     val expiredAt: Date?
-) : Listenable<SocketCustomEventCallback.TransactionRequestCallback>
+) : Listenable<SocketCustomEventListener.TransactionRequestListener>
 
 /**
  * An extension function that converts the [TransactionRequest] to the [TransactionConsumptionParams] easily

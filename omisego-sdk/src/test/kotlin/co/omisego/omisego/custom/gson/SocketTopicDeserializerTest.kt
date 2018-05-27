@@ -2,7 +2,7 @@ package co.omisego.omisego.custom.gson
 
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.utils.GsonProvider
-import co.omisego.omisego.websocket.SocketCustomEventCallback
+import co.omisego.omisego.websocket.SocketCustomEventListener
 import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Test
 
@@ -17,7 +17,7 @@ class SocketTopicDeserializerTest {
     private val gson by lazy { GsonProvider.create() }
 
     data class TestData(
-        val topic: SocketTopic<SocketCustomEventCallback.TransactionRequestCallback>
+        val topic: SocketTopic<SocketCustomEventListener.TransactionRequestListener>
     )
 
     @Test

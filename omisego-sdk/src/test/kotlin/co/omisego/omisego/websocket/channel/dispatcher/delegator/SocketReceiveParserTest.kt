@@ -16,7 +16,7 @@ import co.omisego.omisego.model.transaction.request.TransactionRequestStatus
 import co.omisego.omisego.model.transaction.request.TransactionRequestType
 import co.omisego.omisego.utils.Either
 import co.omisego.omisego.utils.GsonProvider
-import co.omisego.omisego.websocket.SocketCustomEventCallback
+import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
@@ -50,14 +50,14 @@ class SocketReceiveParserTest {
             val transactionConsumptionData = data as TransactionConsumption
             with(transactionConsumptionData) {
                 status shouldEqual TransactionConsumptionStatus.PENDING
-                socketTopic shouldEqual SocketTopic<SocketCustomEventCallback.TransactionConsumptionCallback>(
+                socketTopic shouldEqual SocketTopic<SocketCustomEventListener.TransactionConsumptionListener>(
                     "transaction_consumption:42292c2d-2249-467b-bfd1-bb557211399b"
                 )
                 user?.id shouldEqual "2b1f058c-b927-44b0-8ea0-c16cf1244ebd"
                 user?.username shouldEqual "user02"
                 transactionRequest.type shouldEqual TransactionRequestType.RECEIVE
                 transactionRequest.status shouldEqual TransactionRequestStatus.VALID
-                transactionRequest.socketTopic shouldEqual SocketTopic<SocketCustomEventCallback.TransactionConsumptionCallback>(
+                transactionRequest.socketTopic shouldEqual SocketTopic<SocketCustomEventListener.TransactionConsumptionListener>(
                     "transaction_request:328e61ac-9f35-4da5-a891-bd39f5442283"
                 )
                 transactionRequest.requireConfirmation shouldEqualTo true

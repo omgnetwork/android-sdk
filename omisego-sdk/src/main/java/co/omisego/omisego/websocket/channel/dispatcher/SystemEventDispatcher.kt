@@ -11,26 +11,26 @@ import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.websocket.SocketChannelCallback
-import co.omisego.omisego.websocket.SocketConnectionCallback
-import co.omisego.omisego.websocket.SocketCustomEventCallback
+import co.omisego.omisego.websocket.SocketChannelListener
+import co.omisego.omisego.websocket.SocketConnectionListener
+import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract.SocketChannel
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
 
 /**
- * A callback for dispatcher the [SocketConnectionCallback] and [SocketChannelCallback] events.
+ * A listener for dispatcher the [SocketConnectionListener] and [SocketChannelListener] events.
  */
 class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
     /**
-     * A connection callback that will be used for dispatch the [SocketConnectionCallback] events.
+     * A connection listener that will be used for dispatch the [SocketConnectionListener] events.
      */
-    override var socketConnectionCallback: SocketConnectionCallback? = null
+    override var socketConnectionListener: SocketConnectionListener? = null
 
     /**
-     * A channel callback that be used for dispatch the [SocketChannelCallback] events.
+     * A channel listener that be used for dispatch the [SocketChannelListener] events.
      */
-    override var socketChannelCallback: SocketChannelCallback? = null
+    override var socketChannelListener: SocketChannelListener? = null
 
     /**
      * A socketChannel for delegate the event to the [SocketChannel] internally for further handling the event.
@@ -43,7 +43,7 @@ class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
     override var socketReceive: SocketReceive? = null
 
     /**
-     * Handles the [SocketSystemEvent] and may dispatch the [SocketChannelCallback] or [SocketConnectionCallback] to the client.
+     * Handles the [SocketSystemEvent] and may dispatch the [SocketChannelListener] or [SocketConnectionListener] to the client.
      *
      * @param systemEvent To indicate which event of the [SocketSystemEvent]
      */
@@ -53,20 +53,20 @@ class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
             SocketSystemEvent.CLOSE -> {
                 response.runIfRefSchemeIsJoined {
                     socketChannel?.onLeftChannel(response.topic)
-                    socketChannelCallback?.onLeftChannel(response.topic)
+                    socketChannelListener?.onLeftChannel(response.topic)
                 }
             }
             SocketSystemEvent.REPLY -> {
-                val topic = SocketTopic<SocketCustomEventCallback>(response.topic)
+                val topic = SocketTopic<SocketCustomEventListener>(response.topic)
                 response.runIfRefSchemeIsJoined {
                     topic.runIfFirstJoined {
                         socketChannel?.onJoinedChannel(topic.name)
-                        socketChannelCallback?.onJoinedChannel(topic.name)
+                        socketChannelListener?.onJoinedChannel(topic.name)
                     }
                 }
             }
             SocketSystemEvent.ERROR -> {
-                socketChannelCallback?.onError(APIError(ErrorCode.SDK_SOCKET_ERROR, "Something goes wrong while connecting to the channel"))
+                socketChannelListener?.onError(APIError(ErrorCode.SDK_SOCKET_ERROR, "Something goes wrong while connecting to the channel"))
             }
         }
     }

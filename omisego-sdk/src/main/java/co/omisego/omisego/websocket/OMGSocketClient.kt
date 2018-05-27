@@ -92,11 +92,11 @@ class OMGSocketClient internal constructor(
      * @param payload (Optional) the additional data you might want to send bundled with the request.
      * @param listener The event you want to receive for the specified [Channel].
      * Be careful, the listener should be related to the topic, otherwise you won't receive any message.
-     * For example, if you are sending the topic begins with "transaction_request", then the listener must be the [SocketCustomEventCallback.TransactionRequestCallback] event.
+     * For example, if you are sending the topic begins with "transaction_request", then the listener must be the [SocketCustomEventListener.TransactionRequestListener] event.
      *
-     * @see SocketCustomEventCallback
+     * @see SocketCustomEventListener
      */
-    override fun <T : SocketCustomEventCallback> joinChannel(
+    override fun <T : SocketCustomEventListener> joinChannel(
         topic: SocketTopic<T>,
         payload: Map<String, Any>,
         listener: T
@@ -114,13 +114,13 @@ class OMGSocketClient internal constructor(
      * @param topic The topic (channel) to be left.
      * @param payload (Optional) the additional data you might want to send bundled with the request.
      */
-    override fun <T : SocketCustomEventCallback> leaveChannel(topic: SocketTopic<T>, payload: Map<String, Any>) {
+    override fun <T : SocketCustomEventListener> leaveChannel(topic: SocketTopic<T>, payload: Map<String, Any>) {
         socketChannel.leave(topic.name, payload)
     }
 
     /**
      * Set new authentication header. This will send leave request for every channel to the server.
-     * You'll need to join the channel again (please wait for disconnected callback is invoked).
+     * You'll need to join the channel again (please wait for disconnected listener is invoked).
      *
      * @param apiKey is the API key (typically generated on the admin panel).
      * @param authenticationToken is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
@@ -147,22 +147,22 @@ class OMGSocketClient internal constructor(
     }
 
     /**
-     * Subscribe to the [SocketConnectionCallback] event.
+     * Subscribe to the [SocketConnectionListener] event.
      *
-     * @param connectionListener The [SocketConnectionCallback] to be invoked when the web socket connection is connected or disconnected.
-     * @see SocketConnectionCallback for the event detail.
+     * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected.
+     * @see SocketConnectionListener for the event detail.
      */
-    override fun setConnectionListener(connectionListener: SocketConnectionCallback?) {
+    override fun setConnectionListener(connectionListener: SocketConnectionListener?) {
         socketChannel.setConnectionListener(connectionListener)
     }
 
     /**
-     * Subscribe to the [SocketChannelCallback] event.
+     * Subscribe to the [SocketChannelListener] event.
      *
-     * @param channelListener The [SocketChannelCallback] to be invoked when the channel has been joined, left, or got an error.
-     * @see SocketChannelCallback for the event detail.
+     * @param channelListener The [SocketChannelListener] to be invoked when the channel has been joined, left, or got an error.
+     * @see SocketChannelListener for the event detail.
      */
-    override fun setChannelListener(channelListener: SocketChannelCallback?) {
+    override fun setChannelListener(channelListener: SocketChannelListener?) {
         socketChannel.setChannelListener(channelListener)
     }
 
@@ -259,6 +259,6 @@ class OMGSocketClient internal constructor(
     }
 }
 
-infix fun OMGSocketClient.talksTo(socketChannel: SocketClientContract.Channel) {
+internal infix fun OMGSocketClient.talksTo(socketChannel: SocketClientContract.Channel) {
     this.socketChannel = socketChannel
 }

@@ -12,13 +12,14 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.websocket.SocketClientContract
-import co.omisego.omisego.websocket.SocketCustomEventCallback
-import co.omisego.omisego.websocket.SocketCustomEventCallback.*
+import co.omisego.omisego.websocket.SocketCustomEventListener
+import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionRequestListener
+import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionConsumptionListener
 
 /**
  * Represents an object that can be listened with websocket
  */
-interface Listenable<T : SocketCustomEventCallback> {
+interface Listenable<T : SocketCustomEventListener> {
     val socketTopic: SocketTopic<T>
 
     /**
@@ -31,8 +32,6 @@ interface Listenable<T : SocketCustomEventCallback> {
     }
 }
 
-
-
 /**
  * Opens a websocket connection with the server and starts to listen for events happening on this transaction request.
  * Typically, this should be used to listen for consumption request made on the request.
@@ -44,7 +43,7 @@ interface Listenable<T : SocketCustomEventCallback> {
 fun TransactionRequest.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    callback: TransactionRequestCallback
+    callback: TransactionRequestListener
 ) {
     client.joinChannel(socketTopic, payload, callback)
 }
@@ -60,7 +59,7 @@ fun TransactionRequest.startListeningEvents(
 fun TransactionConsumption.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    callback: SocketCustomEventCallback.TransactionConsumptionCallback
+    callback: TransactionConsumptionListener
 ) {
     client.joinChannel(socketTopic, payload, callback)
 }
@@ -72,7 +71,7 @@ fun TransactionConsumption.startListeningEvents(
  * @param payload The additional metadata for the consumption
  * @param callback The delegate that will receive events.
  */
-fun <T : SocketCustomEventCallback> User.startListeningEvents(
+fun <T : SocketCustomEventListener> User.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
     callback: T

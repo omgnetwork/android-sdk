@@ -45,7 +45,7 @@ class SocketHeartbeat(
             timer?.cancel()
             timer = Timer()
             timer?.schedule(Date(), period, {
-                task(SocketSend(EVENT_NAME, SocketEventSend.HEARTBEAT, socketMessageRef.value, mapOf()))
+                task(SocketSend(TOPIC, SocketEventSend.HEARTBEAT, socketMessageRef.value, mapOf()))
             })
         }
     }
@@ -62,6 +62,6 @@ class SocketHeartbeat(
     }
 
     companion object {
-        const val EVENT_NAME = "phoenix"
+        const val TOPIC = "phoenix"
     }
 }

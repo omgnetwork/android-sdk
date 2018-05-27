@@ -10,24 +10,24 @@ package co.omisego.omisego.websocket.channel.dispatcher
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-import co.omisego.omisego.websocket.SocketChannelCallback
-import co.omisego.omisego.websocket.SocketCustomEventCallback
-import co.omisego.omisego.websocket.SocketCustomEventCallback.AnyEventCallback
-import co.omisego.omisego.websocket.SocketCustomEventCallback.TransactionConsumptionCallback
-import co.omisego.omisego.websocket.SocketCustomEventCallback.TransactionRequestCallback
+import co.omisego.omisego.websocket.SocketChannelListener
+import co.omisego.omisego.websocket.SocketCustomEventListener
+import co.omisego.omisego.websocket.SocketCustomEventListener.AnyEventListener
+import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionConsumptionListener
+import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionRequestListener
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketCustomEvent.OTHER
 import co.omisego.omisego.websocket.enum.SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED
 import co.omisego.omisego.websocket.enum.SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST
 
 /**
- * A callback for dispatch the [SocketCustomEventCallback] events.
+ * A listener for dispatch the [SocketCustomEventListener] events.
  */
 class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
     /**
-     * For dispatching the [SocketCustomEventCallback] event.
+     * For dispatching the [SocketCustomEventListener] event.
      */
-    override var socketCustomEventCallback: SocketCustomEventCallback? = null
+    override var socketCustomEventListener: SocketCustomEventListener? = null
 
     /**
      * The web socket replied object from eWallet API.
@@ -35,38 +35,38 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
     override var socketReceive: SocketReceive? = null
 
     /**
-     * For dispatching the [SocketChannelCallback] event.
+     * For dispatching the [SocketChannelListener] event.
      */
-    override var socketChannelCallback: SocketChannelCallback? = null
+    override var socketChannelListener: SocketChannelListener? = null
 
     /**
-     * Handles the [SocketCustomEvent] and dispatch the [SocketCustomEventCallback] to the client.
+     * Handles the [SocketCustomEvent] and dispatch the [SocketCustomEventListener] to the client.
      *
      * @param customEvent To indicate the actual type of generic [SocketCustomEvent]
      */
     override fun handleEvent(customEvent: SocketCustomEvent) {
         val response = socketReceive ?: return
-        val callback = socketCustomEventCallback ?: return
+        val listener = socketCustomEventListener ?: return
 
-        when (callback) {
-            is TransactionRequestCallback ->
-                callback.handleTransactionRequestEvent(response, customEvent)
-            is TransactionConsumptionCallback ->
-                callback.handleTransactionConsumptionEvent(response, customEvent)
-            is AnyEventCallback ->
-                callback.handleAnyEvent(response)
+        when (listener) {
+            is TransactionRequestListener ->
+                listener.handleTransactionRequestEvent(response, customEvent)
+            is TransactionConsumptionListener ->
+                listener.handleTransactionConsumptionEvent(response, customEvent)
+            is AnyEventListener ->
+                listener.handleAnyEvent(response)
         }
     }
 
     /**
-     * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventCallback.TransactionRequestCallback].
+     * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.TransactionRequestListener].
      * This method will be invoked by the [handleEvent] method.
      * Any event excepts [TRANSACTION_CONSUMPTION_REQUEST] or [TRANSACTION_CONSUMPTION_FINALIZED] is [OTHER], managed by the [EitherEnumDeserializer].
      *
      * @param socketReceive The web socket replied object from eWallet API.
      * @param customEvent The custom event used for decide the event to be dispatched
      */
-    override fun SocketCustomEventCallback.TransactionRequestCallback.handleTransactionRequestEvent(
+    override fun SocketCustomEventListener.TransactionRequestListener.handleTransactionRequestEvent(
         socketReceive: SocketReceive,
         customEvent: SocketCustomEvent
     ) {
@@ -77,59 +77,59 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
                 }
             }
             TRANSACTION_CONSUMPTION_FINALIZED -> {
-                val judge = socketReceive.judgeCustomEventCallback(
+                val judge = socketReceive.judgeCustomEventListener(
                     this::onTransactionConsumptionFinalizedFail,
                     this::onTransactionConsumptionFinalizedSuccess
                 )
 
                 if (!judge && socketReceive.error != null) {
-                    socketChannelCallback?.onError(socketReceive.error)
+                    socketChannelListener?.onError(socketReceive.error)
                 }
             }
             OTHER -> {
                 if (socketReceive.error != null) {
-                    socketChannelCallback?.onError(socketReceive.error)
+                    socketChannelListener?.onError(socketReceive.error)
                 }
             }
         }
     }
 
     /**
-     * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventCallback.TransactionConsumptionCallback].
+     * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.TransactionConsumptionListener].
      * This method will be invoked by the [handleEvent] method.
      *
      * @param socketReceive The web socket replied object from eWallet API.
      * @param customEvent The custom event used for decide the event to be dispatched
      */
-    override fun SocketCustomEventCallback.TransactionConsumptionCallback.handleTransactionConsumptionEvent(
+    override fun SocketCustomEventListener.TransactionConsumptionListener.handleTransactionConsumptionEvent(
         socketReceive: SocketReceive,
         customEvent: SocketCustomEvent
     ) {
         if (customEvent == TRANSACTION_CONSUMPTION_FINALIZED) {
-            val judge = socketReceive.judgeCustomEventCallback(
+            val judge = socketReceive.judgeCustomEventListener(
                 this::onTransactionConsumptionFinalizedFail,
                 this::onTransactionConsumptionFinalizedSuccess
             )
 
             if (!judge && socketReceive.error != null) {
-                socketChannelCallback?.onError(socketReceive.error)
+                socketChannelListener?.onError(socketReceive.error)
             }
         } else if (customEvent == OTHER && socketReceive.error != null) {
-            socketChannelCallback?.onError(socketReceive.error)
+            socketChannelListener?.onError(socketReceive.error)
         }
     }
 
     /**
-     * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventCallback.AnyEventCallback].
+     * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.AnyEventListener].
      * This method will be invoked by the [handleEvent] method.
      *
      * @param socketReceive The web socket replied object from eWallet API.
      */
-    override fun SocketCustomEventCallback.AnyEventCallback.handleAnyEvent(
+    override fun SocketCustomEventListener.AnyEventListener.handleAnyEvent(
         socketReceive: SocketReceive
     ) = onEventReceived(socketReceive)
 
-    internal inline fun <reified T : SocketReceive.SocketData> SocketReceive.judgeCustomEventCallback(
+    internal inline fun <reified T : SocketReceive.SocketData> SocketReceive.judgeCustomEventListener(
         matchedTypeWithErrorLambda: (T, APIError) -> Unit,
         matchedTypeLambda: (T) -> Unit
     ): Boolean {

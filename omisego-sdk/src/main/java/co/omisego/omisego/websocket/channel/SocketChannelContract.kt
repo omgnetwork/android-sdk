@@ -8,10 +8,10 @@ package co.omisego.omisego.websocket.channel
  */
 
 import co.omisego.omisego.model.socket.SocketSend
-import co.omisego.omisego.websocket.SocketChannelCallback
+import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketClientContract
-import co.omisego.omisego.websocket.SocketConnectionCallback
-import co.omisego.omisego.websocket.SocketCustomEventCallback
+import co.omisego.omisego.websocket.SocketConnectionListener
+import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import okhttp3.WebSocketListener
 
@@ -90,19 +90,19 @@ interface SocketChannelContract {
     /* Dispatcher Package */
     interface Dispatcher {
         /**
-         * Set the socket connection callback to be used for dispatch the connection status event.
+         * Set the socket connection listener to be used for dispatch the connection status event.
          */
-        fun setSocketConnectionCallback(connectionListener: SocketConnectionCallback?)
+        fun setSocketConnectionListener(connectionListener: SocketConnectionListener?)
 
         /**
-         * Set the socket channel callback to be used for dispatch the channel status event.
+         * Set the socket channel listener to be used for dispatch the channel status event.
          */
-        fun setSocketChannelCallback(channelListener: SocketChannelCallback?)
+        fun setSocketChannelListener(channelListener: SocketChannelListener?)
 
         /**
-         * Set the socket custom events callback to be used for dispatch the custom events.
+         * Set the socket custom events listener to be used for dispatch the custom events.
          */
-        fun setSocketCustomEventCallback(customEventListener: SocketCustomEventCallback?)
+        fun setSocketCustomEventListener(customEventListener: SocketCustomEventListener?)
 
         /**
          * Retrieves the [WebSocketListener] to be used for initializing the [Websocket] in the [SocketClient].

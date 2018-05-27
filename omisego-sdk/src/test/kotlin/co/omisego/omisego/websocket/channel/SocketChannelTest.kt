@@ -9,10 +9,10 @@ package co.omisego.omisego.websocket.channel
 
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.websocket.SocketChannelCallback
+import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketClientContract
-import co.omisego.omisego.websocket.SocketConnectionCallback
-import co.omisego.omisego.websocket.SocketCustomEventCallback
+import co.omisego.omisego.websocket.SocketConnectionListener
+import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.interval.SocketHeartbeat
@@ -32,7 +32,7 @@ class SocketChannelTest {
     private val mockSocketDispatcher: SocketChannelContract.Dispatcher = mock()
     private val mockSocketClient: SocketChannelContract.SocketClient = mock()
     private val mockSocketHeartbeat: SocketClientContract.SocketInterval = mock()
-    private val socketTopic = SocketTopic<SocketCustomEventCallback.TransactionRequestCallback>("topic")
+    private val socketTopic = SocketTopic<SocketCustomEventListener.TransactionRequestListener>("topic")
     private lateinit var socketChannel: SocketChannel
 
     @Before
@@ -170,29 +170,29 @@ class SocketChannelTest {
 
     @Test
     fun `setConnectionListener should bind the connectionListener to the dispatcher correctly`() {
-        val mockConnectionListener: SocketConnectionCallback = mock()
+        val mockConnectionListener: SocketConnectionListener = mock()
 
         socketChannel.setConnectionListener(mockConnectionListener)
 
-        verify(mockSocketDispatcher, times(1)).setSocketConnectionCallback(mockConnectionListener)
+        verify(mockSocketDispatcher, times(1)).setSocketConnectionListener(mockConnectionListener)
     }
 
     @Test
     fun `setChannelListener should bind the channelListener to the dispatcher correctly`() {
-        val mockChannelListener: SocketChannelCallback = mock()
+        val mockChannelListener: SocketChannelListener = mock()
 
         socketChannel.setChannelListener(mockChannelListener)
 
-        verify(mockSocketDispatcher, times(1)).setSocketChannelCallback(mockChannelListener)
+        verify(mockSocketDispatcher, times(1)).setSocketChannelListener(mockChannelListener)
     }
 
     @Test
     fun `setCustomEventListener should bind the customEventListener to the dispatcher correctly`() {
-        val mockCustomEventCallback: SocketCustomEventCallback = mock()
+        val mockCustomEventListener: SocketCustomEventListener = mock()
 
-        socketChannel.setCustomEventListener(mockCustomEventCallback)
+        socketChannel.setCustomEventListener(mockCustomEventListener)
 
-        verify(mockSocketDispatcher, times(1)).setSocketCustomEventCallback(mockCustomEventCallback)
+        verify(mockSocketDispatcher, times(1)).setSocketCustomEventListener(mockCustomEventListener)
     }
 
     @Test

@@ -11,8 +11,8 @@ import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.utils.Either
-import co.omisego.omisego.websocket.SocketChannelCallback
-import co.omisego.omisego.websocket.SocketConnectionCallback
+import co.omisego.omisego.websocket.SocketChannelListener
+import co.omisego.omisego.websocket.SocketConnectionListener
 import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
 import com.nhaarman.mockito_kotlin.times
@@ -60,8 +60,8 @@ class SystemEventDispatcherTest {
         success = false
     )
 
-    private val socketConnectionCallback: SocketConnectionCallback = mock()
-    private val socketChannelCallback: SocketChannelCallback = mock()
+    private val socketConnectionListener: SocketConnectionListener = mock()
+    private val socketChannelListener: SocketChannelListener = mock()
     private val socketChannel: SocketDispatcherContract.SocketChannel = mock()
 
     private lateinit var systemEventDispatcher: SystemEventDispatcher
@@ -69,18 +69,18 @@ class SystemEventDispatcherTest {
     @Before
     fun setup() {
         systemEventDispatcher = SystemEventDispatcher().apply {
-            socketConnectionCallback = this@SystemEventDispatcherTest.socketConnectionCallback
-            socketChannelCallback = this@SystemEventDispatcherTest.socketChannelCallback
+            socketConnectionListener = this@SystemEventDispatcherTest.socketConnectionListener
+            socketChannelListener = this@SystemEventDispatcherTest.socketChannelListener
             socketChannel = this@SystemEventDispatcherTest.socketChannel
         }
     }
 
     @Test
-    fun `handleEvent should not invoke any callback if it is a heartbeat event`() {
+    fun `handleEvent should not invoke any listener if it is a heartbeat event`() {
         systemEventDispatcher.socketReceive = dataHeartbeat
         systemEventDispatcher.handleEvent(SocketSystemEvent.REPLY)
 
-        verifyNoMoreInteractions(socketChannel, socketChannelCallback, socketConnectionCallback)
+        verifyNoMoreInteractions(socketChannel, socketChannelListener, socketConnectionListener)
     }
 
     @Test
@@ -89,8 +89,8 @@ class SystemEventDispatcherTest {
         systemEventDispatcher.handleEvent(SocketSystemEvent.CLOSE)
 
         verify(socketChannel, times(1)).onLeftChannel(dataPhxClose.topic)
-        verify(socketChannelCallback, times(1)).onLeftChannel(dataPhxClose.topic)
-        verifyNoMoreInteractions(socketChannel, socketChannelCallback)
+        verify(socketChannelListener, times(1)).onLeftChannel(dataPhxClose.topic)
+        verifyNoMoreInteractions(socketChannel, socketChannelListener)
     }
 
     @Test
@@ -99,17 +99,17 @@ class SystemEventDispatcherTest {
         systemEventDispatcher.handleEvent(SocketSystemEvent.REPLY)
 
         verify(socketChannel, times(1)).onJoinedChannel(dataPhxReply.topic)
-        verify(socketChannelCallback, times(1)).onJoinedChannel(dataPhxReply.topic)
+        verify(socketChannelListener, times(1)).onJoinedChannel(dataPhxReply.topic)
     }
 
     @Test
-    fun `handleEvent PHX_REPLY should not invoke any callback if the channel topic has already joined`() {
+    fun `handleEvent PHX_REPLY should not invoke any listener if the channel topic has already joined`() {
         whenever(socketChannel.joined(any())).thenReturn(true)
         systemEventDispatcher.socketReceive = dataPhxReply
         systemEventDispatcher.handleEvent(SocketSystemEvent.REPLY)
 
         verify(socketChannel, times(0)).onJoinedChannel(any())
-        verifyNoMoreInteractions(socketChannelCallback)
+        verifyNoMoreInteractions(socketChannelListener)
     }
 
     @Test
@@ -117,7 +117,7 @@ class SystemEventDispatcherTest {
         systemEventDispatcher.socketReceive = dataPhxError
         systemEventDispatcher.handleEvent(SocketSystemEvent.ERROR)
 
-        verify(socketChannelCallback, times(1)).onError(
+        verify(socketChannelListener, times(1)).onError(
             APIError(
                 ErrorCode.SDK_SOCKET_ERROR,
                 "Something goes wrong while connecting to the channel"

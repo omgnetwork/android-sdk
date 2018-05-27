@@ -12,7 +12,7 @@ import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.utils.Either
-import co.omisego.omisego.websocket.SocketCustomEventCallback
+import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -50,9 +50,9 @@ class CustomEventDispatcherTest {
         error = apiError
     )
 
-    private val txRequestCb: SocketCustomEventCallback.TransactionRequestCallback = mock()
-    private val txConsumptionCb: SocketCustomEventCallback.TransactionConsumptionCallback = mock()
-    private val txAnyCb: SocketCustomEventCallback.AnyEventCallback = mock()
+    private val txRequestCb: SocketCustomEventListener.TransactionRequestListener = mock()
+    private val txConsumptionCb: SocketCustomEventListener.TransactionConsumptionListener = mock()
+    private val txAnyCb: SocketCustomEventListener.AnyEventListener = mock()
 
     private lateinit var customEventDispatcher: CustomEventDispatcher
 
@@ -62,9 +62,9 @@ class CustomEventDispatcherTest {
     }
 
     @Test
-    fun `handleEvent should call handleTransactionRequestEvent to handle TransactionRequestCallback`() {
+    fun `handleEvent should call handleTransactionRequestEvent to handle TransactionRequestListener`() {
         customEventDispatcher.socketReceive = dataTxRequest
-        customEventDispatcher.socketCustomEventCallback = txRequestCb
+        customEventDispatcher.socketCustomEventListener = txRequestCb
 
         customEventDispatcher.handleEvent(SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST)
 
@@ -75,9 +75,9 @@ class CustomEventDispatcherTest {
     }
 
     @Test
-    fun `handleEvent should call handleTransactionConsumptionEvent to handle TransactionConsumptionCallback`() {
+    fun `handleEvent should call handleTransactionConsumptionEvent to handle TransactionConsumptionListener`() {
         customEventDispatcher.socketReceive = dataTxFinalizedSuccess
-        customEventDispatcher.socketCustomEventCallback = txConsumptionCb
+        customEventDispatcher.socketCustomEventListener = txConsumptionCb
 
         customEventDispatcher.handleEvent(SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
 
@@ -88,8 +88,8 @@ class CustomEventDispatcherTest {
     }
 
     @Test
-    fun `transactionRequestCallback's onTransactionConsumptionRequest should be invoked correctly`() {
-        customEventDispatcher.socketCustomEventCallback = txRequestCb
+    fun `transactionRequestListener's onTransactionConsumptionRequest should be invoked correctly`() {
+        customEventDispatcher.socketCustomEventListener = txRequestCb
         with(customEventDispatcher) {
             txRequestCb.handleTransactionRequestEvent(dataTxRequest, SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST)
         }
@@ -99,8 +99,8 @@ class CustomEventDispatcherTest {
     }
 
     @Test
-    fun `transactionRequestCallback's onTransactionConsumptionFinalizedSuccess should be invoked correctly`() {
-        customEventDispatcher.socketCustomEventCallback = txRequestCb
+    fun `transactionRequestListener's onTransactionConsumptionFinalizedSuccess should be invoked correctly`() {
+        customEventDispatcher.socketCustomEventListener = txRequestCb
         with(customEventDispatcher) {
             txRequestCb.handleTransactionRequestEvent(dataTxFinalizedSuccess, SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
         }
@@ -110,8 +110,8 @@ class CustomEventDispatcherTest {
     }
 
     @Test
-    fun `transactionRequestCallback's onTransactionConsumptionFinalizedFail should be invoked correctly`() {
-        customEventDispatcher.socketCustomEventCallback = txRequestCb
+    fun `transactionRequestListener's onTransactionConsumptionFinalizedFail should be invoked correctly`() {
+        customEventDispatcher.socketCustomEventListener = txRequestCb
         with(customEventDispatcher) {
             txRequestCb.handleTransactionRequestEvent(dataTxFinalizedFail, SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
         }
@@ -121,8 +121,8 @@ class CustomEventDispatcherTest {
     }
 
     @Test
-    fun `transactionConsumptionCallback's onTransactionConsumptionFinalizedSuccess should be invoked correctly`() {
-        customEventDispatcher.socketCustomEventCallback = txConsumptionCb
+    fun `transactionConsumptionListener's onTransactionConsumptionFinalizedSuccess should be invoked correctly`() {
+        customEventDispatcher.socketCustomEventListener = txConsumptionCb
         with(customEventDispatcher) {
             txConsumptionCb.handleTransactionConsumptionEvent(dataTxFinalizedSuccess, SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
         }
@@ -132,8 +132,8 @@ class CustomEventDispatcherTest {
     }
 
     @Test
-    fun `transactionConsumptionCallback's onTransactionConsumptionFinalizedFail should be invoked correctly`() {
-        customEventDispatcher.socketCustomEventCallback = txConsumptionCb
+    fun `transactionConsumptionListener's onTransactionConsumptionFinalizedFail should be invoked correctly`() {
+        customEventDispatcher.socketCustomEventListener = txConsumptionCb
         with(customEventDispatcher) {
             txConsumptionCb.handleTransactionConsumptionEvent(dataTxFinalizedFail, SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
         }
@@ -143,8 +143,8 @@ class CustomEventDispatcherTest {
     }
 
     @Test
-    fun `anyEventCallback should be invoked all custom event`() {
-        customEventDispatcher.socketCustomEventCallback = txAnyCb
+    fun `anyEventListener should be invoked all custom event`() {
+        customEventDispatcher.socketCustomEventListener = txAnyCb
         with(customEventDispatcher) {
             txAnyCb.handleAnyEvent(dataTxFinalizedFail)
             txAnyCb.handleAnyEvent(dataTxFinalizedSuccess)

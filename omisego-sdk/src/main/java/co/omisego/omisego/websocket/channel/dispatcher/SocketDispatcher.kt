@@ -9,9 +9,9 @@ package co.omisego.omisego.websocket.channel.dispatcher
 
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.websocket.SocketChannelCallback
-import co.omisego.omisego.websocket.SocketConnectionCallback
-import co.omisego.omisego.websocket.SocketCustomEventCallback
+import co.omisego.omisego.websocket.SocketChannelListener
+import co.omisego.omisego.websocket.SocketConnectionListener
+import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract.Dispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract.SocketChannel
@@ -23,11 +23,11 @@ import okhttp3.WebSocketListener
 import java.net.SocketException
 
 /**
- * A callback dispatcher for events related to the web socket.
+ * A listener dispatcher for events related to the web socket.
  *
  * @param socketDelegator responsible for delegate value raw [WebSocketListener] event to be processed in the [Dispatcher].
- * @param systemEventDispatcher responsible for handling the [SocketSystemEvent] and dispatch the [SocketConnectionCallback] or the [SocketChannelCallback]
- * @param customEventDispatcher responsible for handling the [SocketSystemEvent] and dispatch the [SocketCustomEventCallback].
+ * @param systemEventDispatcher responsible for handling the [SocketSystemEvent] and dispatch the [SocketConnectionListener] or the [SocketChannelListener]
+ * @param customEventDispatcher responsible for handling the [SocketSystemEvent] and dispatch the [SocketCustomEventListener].
  */
 class SocketDispatcher(
     override val socketDelegator: SocketDispatcherContract.Delegator,
@@ -36,12 +36,12 @@ class SocketDispatcher(
 ) : SocketChannelContract.Dispatcher, SocketDispatcherContract.Dispatcher, SocketDelegatorContract.Dispatcher {
 
     /**
-     * A socketConnectionListener will be passed to the [systemEventDispatcher] for further handling.
+     * A connectionListener will be passed to the [systemEventDispatcher] for further handling.
      */
-    override var socketConnectionListener: SocketConnectionCallback? = null
+    override var connectionListener: SocketConnectionListener? = null
 
     /**
-     * A main thread executor used for change the background thread to the main thread before invoking the callback.
+     * A main thread executor used for change the background thread to the main thread before invoking the listener.
      */
     override val mainThreadExecutor by lazy { MainThreadExecutor() }
 
@@ -55,26 +55,26 @@ class SocketDispatcher(
         }
 
     /**
-     * Set the socket connection callback to be used for dispatch the connection status event.
+     * Set the socket connection listener to be used for dispatch the connection status event.
      */
-    override fun setSocketConnectionCallback(connectionListener: SocketConnectionCallback?) {
-        socketConnectionListener = connectionListener
-        systemEventDispatcher.socketConnectionCallback = connectionListener
+    override fun setSocketConnectionListener(connectionListener: SocketConnectionListener?) {
+        this.connectionListener = connectionListener
+        systemEventDispatcher.socketConnectionListener = connectionListener
     }
 
     /**
-     * Set the socket channel callback to be used for dispatch the channel status event.
+     * Set the socket channel listener to be used for dispatch the channel status event.
      */
-    override fun setSocketChannelCallback(channelListener: SocketChannelCallback?) {
-        systemEventDispatcher.socketChannelCallback = channelListener
-        customEventDispatcher.socketChannelCallback = channelListener
+    override fun setSocketChannelListener(channelListener: SocketChannelListener?) {
+        systemEventDispatcher.socketChannelListener = channelListener
+        customEventDispatcher.socketChannelListener = channelListener
     }
 
     /**
-     * Set the socket custom events callback to be used for dispatch the custom events.
+     * Set the socket custom events listener to be used for dispatch the custom events.
      */
-    override fun setSocketCustomEventCallback(customEventListener: SocketCustomEventCallback?) {
-        customEventDispatcher.socketCustomEventCallback = customEventListener
+    override fun setSocketCustomEventListener(customEventListener: SocketCustomEventListener?) {
+        customEventDispatcher.socketCustomEventListener = customEventListener
     }
 
     /**
@@ -91,7 +91,7 @@ class SocketDispatcher(
      */
     override fun dispatchOnOpened(response: Response) {
         mainThreadExecutor.execute {
-            socketConnectionListener?.onConnected()
+            connectionListener?.onConnected()
         }
     }
 
@@ -104,9 +104,9 @@ class SocketDispatcher(
     override fun dispatchOnClosed(code: Int, reason: String) {
         mainThreadExecutor.execute {
             if (code == SocketStatusCode.NORMAL.code)
-                socketConnectionListener?.onDisconnected(null)
+                connectionListener?.onDisconnected(null)
             else {
-                socketConnectionListener?.onDisconnected(SocketException("$code $reason"))
+                connectionListener?.onDisconnected(SocketException("$code $reason"))
             }
         }
     }
@@ -133,7 +133,7 @@ class SocketDispatcher(
      * @param response A response is delegated by the [WebSocketListener]'s onFailure
      */
     override fun dispatchOnFailure(throwable: Throwable, response: Response?) {
-        socketConnectionListener?.onDisconnected(throwable)
+        connectionListener?.onDisconnected(throwable)
     }
 }
 

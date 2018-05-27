@@ -8,9 +8,9 @@ package co.omisego.omisego.websocket
  */
 
 /**
- * A web socket connection callback that executed when the web socket client is connected to the server or disconnected from the server.
+ * A web socket connection listener that executed when the web socket client is connected to the server or disconnected from the server.
  */
-interface SocketConnectionCallback {
+interface SocketConnectionListener {
     /**
      * Invoked when the web socket client has connected to the eWallet web socket API successfully.
      */

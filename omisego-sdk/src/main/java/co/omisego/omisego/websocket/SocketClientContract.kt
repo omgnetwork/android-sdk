@@ -84,11 +84,11 @@ interface SocketClientContract {
          * @param payload (Optional) the additional data you might want to send bundled with the request.
          * @param listener The event you want to receive for the specified [Channel].
          * Be careful, the listener should be related to the topic, otherwise you won't receive any message.
-         * For example, if you are sending the topic begins with "transaction_request", then the listener must be the [SocketCustomEventCallback.TransactionRequestCallback] event.
+         * For example, if you are sending the topic begins with "transaction_request", then the listener must be the [SocketCustomEventListener.TransactionRequestListener] event.
          *
-         * @see SocketCustomEventCallback
+         * @see SocketCustomEventListener
          */
-        fun <T : SocketCustomEventCallback> joinChannel(
+        fun <T : SocketCustomEventListener> joinChannel(
             topic: SocketTopic<T>,
             payload: Map<String, Any> = mapOf(),
             listener: T
@@ -101,7 +101,7 @@ interface SocketClientContract {
          * @param topic The topic (channel) to be left.
          * @param payload (Optional) the additional data you might want to send bundled with the request.
          */
-        fun <T : SocketCustomEventCallback> leaveChannel(topic: SocketTopic<T>, payload: Map<String, Any>)
+        fun <T : SocketCustomEventListener> leaveChannel(topic: SocketTopic<T>, payload: Map<String, Any>)
 
         /**
          * Set new authentication header
@@ -119,20 +119,20 @@ interface SocketClientContract {
         fun setIntervalPeriod(period: Long)
 
         /**
-         * Subscribe to the [SocketConnectionCallback] event.
+         * Subscribe to the [SocketConnectionListener] event.
          *
-         * @param connectionListener The [SocketConnectionCallback] to be invoked when the web socket connection is connected or disconnected.
-         * @see SocketConnectionCallback for the event detail.
+         * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected.
+         * @see SocketConnectionListener for the event detail.
          */
-        fun setConnectionListener(connectionListener: SocketConnectionCallback?)
+        fun setConnectionListener(connectionListener: SocketConnectionListener?)
 
         /**
-         * Subscribe to the [SocketChannelCallback] event.
+         * Subscribe to the [SocketChannelListener] event.
          *
-         * @param channelListener The [SocketChannelCallback] to be invoked when the channel has been joined, left, or got an error.
-         * @see SocketChannelCallback for the event detail.
+         * @param channelListener The [SocketChannelListener] to be invoked when the channel has been joined, left, or got an error.
+         * @see SocketChannelListener for the event detail.
          */
-        fun setChannelListener(channelListener: SocketChannelCallback?)
+        fun setChannelListener(channelListener: SocketChannelListener?)
     }
 
     interface PayloadSendParser {
@@ -194,27 +194,27 @@ interface SocketClientContract {
         fun retrieveWebSocketListener(): WebSocketListener
 
         /**
-         * Subscribe to the [SocketConnectionCallback] event.
+         * Subscribe to the [SocketConnectionListener] event.
          *
-         * @param connectionListener The [SocketConnectionCallback] to be invoked when the web socket connection is connected or disconnected
+         * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected
          */
-        fun setConnectionListener(connectionListener: SocketConnectionCallback?)
+        fun setConnectionListener(connectionListener: SocketConnectionListener?)
 
         /**
-         * Subscribe to the [SocketChannelCallback] event.
+         * Subscribe to the [SocketChannelListener] event.
          *
-         * @param channelListener The [SocketChannelCallback] to be invoked when the web socket channel has been joined, left or got an error.
+         * @param channelListener The [SocketChannelListener] to be invoked when the web socket channel has been joined, left or got an error.
          */
-        fun setChannelListener(channelListener: SocketChannelCallback?)
+        fun setChannelListener(channelListener: SocketChannelListener?)
 
         /**
-         * Subscribe to the [SocketCustomEventCallback] event.
+         * Subscribe to the [SocketCustomEventListener] event.
          *
-         * @param customEventListener The [SocketCustomEventCallback] to be invoked when the [CustomEvent] event happened.
+         * @param customEventListener The [SocketCustomEventListener] to be invoked when the [CustomEvent] event happened.
          *
          * @see SocketTransactionRequestEvent
          */
-        fun setCustomEventListener(customEventListener: SocketCustomEventCallback?)
+        fun setCustomEventListener(customEventListener: SocketCustomEventListener?)
     }
 
     /* Interval Package */

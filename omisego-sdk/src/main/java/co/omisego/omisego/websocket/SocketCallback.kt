@@ -11,27 +11,27 @@ import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 
-sealed class SocketCustomEventCallback {
+sealed class SocketCustomEventListener {
     /**
-     * A callback for every event in the SocketCustomEvent (see SocketEvent.kt, CustomEventDispatcher.kt ).
+     * A listener for every event in the SocketCustomEvent (see SocketEvent.kt, CustomEventDispatcher.kt ).
      */
-    abstract class AnyEventCallback : SocketCustomEventCallback() {
+    abstract class AnyEventListener : SocketCustomEventListener() {
         abstract fun onEventReceived(data: SocketReceive)
     }
 
     /**
-     * A callback for TransactionRequest
+     * A listener for TransactionRequest
      */
-    abstract class TransactionRequestCallback : SocketCustomEventCallback() {
+    abstract class TransactionRequestListener : SocketCustomEventListener() {
         abstract fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption)
         abstract fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
         abstract fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
     }
 
     /**
-     * A callback for the TransactionConsumption
+     * A listener for the TransactionConsumption
      */
-    abstract class TransactionConsumptionCallback : SocketCustomEventCallback() {
+    abstract class TransactionConsumptionListener : SocketCustomEventListener() {
         abstract fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
         abstract fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
     }

@@ -9,10 +9,10 @@ package co.omisego.omisego.websocket.channel
 
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.websocket.SocketChannelCallback
+import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketClientContract
-import co.omisego.omisego.websocket.SocketConnectionCallback
-import co.omisego.omisego.websocket.SocketCustomEventCallback
+import co.omisego.omisego.websocket.SocketConnectionListener
+import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.channel.SocketChannelContract.Dispatcher
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract
@@ -151,31 +151,31 @@ internal class SocketChannel(
     }
 
     /**
-     * Subscribe to the [SocketConnectionCallback] event.
+     * Subscribe to the [SocketConnectionListener] event.
      *
-     * @param connectionListener The [SocketConnectionCallback] to be invoked when the web socket connection is connected or disconnected
+     * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected
      */
-    override fun setConnectionListener(connectionListener: SocketConnectionCallback?) {
-        socketDispatcher.setSocketConnectionCallback(connectionListener)
+    override fun setConnectionListener(connectionListener: SocketConnectionListener?) {
+        socketDispatcher.setSocketConnectionListener(connectionListener)
     }
 
     /**
-     * Subscribe to the [SocketChannelCallback] event.
+     * Subscribe to the [SocketChannelListener] event.
      *
-     * @param channelListener The [SocketChannelCallback] to be invoked when the web socket channel has been joined, left or got an error.
+     * @param channelListener The [SocketChannelListener] to be invoked when the web socket channel has been joined, left or got an error.
      */
-    override fun setChannelListener(channelListener: SocketChannelCallback?) {
-        socketDispatcher.setSocketChannelCallback(channelListener)
+    override fun setChannelListener(channelListener: SocketChannelListener?) {
+        socketDispatcher.setSocketChannelListener(channelListener)
     }
 
     /**
-     * Subscribe to the [SocketCustomEventCallback] event.
+     * Subscribe to the [SocketCustomEventListener] event.
      *
-     * @param customEventListener The [SocketCustomEventCallback] to be invoked when the [CustomEvent] event happened.
+     * @param customEventListener The [SocketCustomEventListener] to be invoked when the [CustomEvent] event happened.
      *
      */
-    override fun setCustomEventListener(customEventListener: SocketCustomEventCallback?) {
-        socketDispatcher.setSocketCustomEventCallback(customEventListener)
+    override fun setCustomEventListener(customEventListener: SocketCustomEventListener?) {
+        socketDispatcher.setSocketCustomEventListener(customEventListener)
     }
 
     private inline fun runIfEmptyChannel(doSomething: () -> Unit) {

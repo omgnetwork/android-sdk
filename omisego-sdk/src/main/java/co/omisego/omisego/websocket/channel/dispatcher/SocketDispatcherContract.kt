@@ -9,9 +9,9 @@ package co.omisego.omisego.websocket.channel.dispatcher
 
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.websocket.SocketChannelCallback
-import co.omisego.omisego.websocket.SocketConnectionCallback
-import co.omisego.omisego.websocket.SocketCustomEventCallback
+import co.omisego.omisego.websocket.SocketChannelListener
+import co.omisego.omisego.websocket.SocketConnectionListener
+import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
@@ -27,12 +27,12 @@ interface SocketDispatcherContract {
         val socketDelegator: Delegator
 
         /**
-         * A systemEventDispatcher is responsible for handling the [SocketSystemEvent] and dispatch the [SocketConnectionCallback] or the [SocketChannelCallback].
+         * A systemEventDispatcher is responsible for handling the [SocketSystemEvent] and dispatch the [SocketConnectionListener] or the [SocketChannelListener].
          */
         val systemEventDispatcher: SystemEventDispatcher
 
         /**
-         * A customEventDispatcher is responsible for handling the [SocketSystemEvent] and dispatch the [SocketCustomEventCallback].
+         * A customEventDispatcher is responsible for handling the [SocketSystemEvent] and dispatch the [SocketCustomEventListener].
          */
         val customEventDispatcher: CustomEventDispatcher
 
@@ -42,26 +42,26 @@ interface SocketDispatcherContract {
         val socketChannel: SocketChannel?
 
         /**
-         * A main thread executor used for change the background thread to the main thread before invoking the callback.
+         * A main thread executor used for change the background thread to the main thread before invoking the listener.
          */
         val mainThreadExecutor: MainThreadExecutor
 
         /**
-         * A socketConnectionListener will be passed to the [systemEventDispatcher] for further handling.
+         * A connectionListener will be passed to the [systemEventDispatcher] for further handling.
          */
-        var socketConnectionListener: SocketConnectionCallback?
+        var connectionListener: SocketConnectionListener?
     }
 
     interface SystemEventDispatcher {
         /**
-         * A connection callback that will be used for dispatch the [SocketConnectionCallback] events.
+         * A connection listener that will be used for dispatch the [SocketConnectionListener] events.
          */
-        var socketConnectionCallback: SocketConnectionCallback?
+        var socketConnectionListener: SocketConnectionListener?
 
         /**
-         * A channel callback that be used for dispatch the [SocketChannelCallback] events.
+         * A channel listener that be used for dispatch the [SocketChannelListener] events.
          */
-        var socketChannelCallback: SocketChannelCallback?
+        var socketChannelListener: SocketChannelListener?
 
         /**
          * The web socket replied object from eWallet API.
@@ -74,7 +74,7 @@ interface SocketDispatcherContract {
         var socketChannel: SocketChannel?
 
         /**
-         * Handles the [SocketSystemEvent] and may dispatch the [SocketChannelCallback] or [SocketConnectionCallback] to the client.
+         * Handles the [SocketSystemEvent] and may dispatch the [SocketChannelListener] or [SocketConnectionListener] to the client.
          *
          * @param systemEvent To indicate which event of the [SocketSystemEvent]
          */
@@ -83,14 +83,14 @@ interface SocketDispatcherContract {
 
     interface CustomEventDispatcher {
         /**
-         * For dispatching the [SocketCustomEventCallback] event.
+         * For dispatching the [SocketCustomEventListener] event.
          */
-        var socketCustomEventCallback: SocketCustomEventCallback?
+        var socketCustomEventListener: SocketCustomEventListener?
 
         /**
-         * For dispatching the [SocketChannelCallback] event.
+         * For dispatching the [SocketChannelListener] event.
          */
-        var socketChannelCallback: SocketChannelCallback?
+        var socketChannelListener: SocketChannelListener?
 
         /**
          * The web socket replied object from eWallet API.
@@ -98,43 +98,43 @@ interface SocketDispatcherContract {
         var socketReceive: SocketReceive?
 
         /**
-         * Handles the [SocketCustomEvent] and dispatch the [SocketCustomEventCallback] to the client.
+         * Handles the [SocketCustomEvent] and dispatch the [SocketCustomEventListener] to the client.
          *
          * @param customEvent To indicate the actual type of generic [SocketCustomEvent]
          */
         fun handleEvent(customEvent: SocketCustomEvent)
 
         /**
-         * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventCallback.TransactionRequestCallback].
+         * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.TransactionRequestListener].
          * This method will be invoked by the [handleEvent] method.
          *
          * @param socketReceive The web socket replied object from eWallet API.
          * @param customEvent The custom event used for decide the event to be dispatched
          */
-        fun SocketCustomEventCallback.TransactionRequestCallback.handleTransactionRequestEvent(
+        fun SocketCustomEventListener.TransactionRequestListener.handleTransactionRequestEvent(
             socketReceive: SocketReceive,
             customEvent: SocketCustomEvent
         )
 
         /**
-         * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventCallback.TransactionConsumptionCallback].
+         * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.TransactionConsumptionListener].
          * This method will be invoked by the [handleEvent] method.
          *
          * @param socketReceive The web socket replied object from eWallet API.
          * @param customEvent The custom event used for decide the event to be dispatched
          */
-        fun SocketCustomEventCallback.TransactionConsumptionCallback.handleTransactionConsumptionEvent(
+        fun SocketCustomEventListener.TransactionConsumptionListener.handleTransactionConsumptionEvent(
             socketReceive: SocketReceive,
             customEvent: SocketCustomEvent
         )
 
         /**
-         * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventCallback.AnyEventCallback].
+         * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.AnyEventListener].
          * This method will be invoked by the [handleEvent] method.
          *
          * @param socketReceive The web socket replied object from eWallet API.
          */
-        fun SocketCustomEventCallback.AnyEventCallback.handleAnyEvent(
+        fun SocketCustomEventListener.AnyEventListener.handleAnyEvent(
             socketReceive: SocketReceive
         )
     }

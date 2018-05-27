@@ -1,6 +1,6 @@
 package co.omisego.omisego.model.socket
 
-import co.omisego.omisego.websocket.SocketCustomEventCallback
+import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.interval.SocketHeartbeat
 
 /*
@@ -10,13 +10,13 @@ import co.omisego.omisego.websocket.interval.SocketHeartbeat
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-data class SocketTopic<T : SocketCustomEventCallback>(val name: String)
+data class SocketTopic<T : SocketCustomEventListener>(val name: String)
 
 /**
  * Run the lambda when the topic is coming from the user (to exclude the heartbeat event).
  */
-internal inline fun <T : SocketCustomEventCallback> SocketTopic<T>.runIfNotInternalTopic(lambda: SocketTopic<T>.() -> Unit) {
-    if (this.name != SocketHeartbeat.EVENT_NAME) {
+internal inline fun <T : SocketCustomEventListener> SocketTopic<T>.runIfNotInternalTopic(lambda: SocketTopic<T>.() -> Unit) {
+    if (this.name != SocketHeartbeat.TOPIC) {
         lambda()
     }
 }
