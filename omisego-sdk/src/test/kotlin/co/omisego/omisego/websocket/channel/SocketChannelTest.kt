@@ -38,7 +38,7 @@ class SocketChannelTest {
     @Before
     fun setup() {
         whenever(mockSocketClient.socketHeartbeat).thenReturn(
-            SocketHeartbeat(SocketMessageRef().apply { scheme = SocketMessageRef.SCHEME_HEARTBEAT })
+            SocketHeartbeat(SocketMessageRef(scheme = SocketMessageRef.SCHEME_HEARTBEAT))
         )
         socketChannel = spy(SocketChannel(mockSocketDispatcher, mockSocketClient))
     }

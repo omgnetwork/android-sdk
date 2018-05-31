@@ -16,7 +16,7 @@ class SocketMessageRefTest {
 
     @Before
     fun setup() {
-        socketMessageRef = SocketMessageRef().apply { scheme = "test" }
+        socketMessageRef = SocketMessageRef(scheme = "test")
     }
 
     @Test
@@ -28,9 +28,8 @@ class SocketMessageRefTest {
 
     @Test
     fun `the scheme should be prepended to the value correctly`() {
-        socketMessageRef.scheme = "omg"
-        socketMessageRef.value shouldEqualTo "omg:1"
-        socketMessageRef.value shouldEqualTo "omg:2"
-        socketMessageRef.value shouldEqualTo "omg:3"
+        socketMessageRef.value shouldEqualTo "test:1"
+        socketMessageRef.value shouldEqualTo "test:2"
+        socketMessageRef.value shouldEqualTo "test:3"
     }
 }

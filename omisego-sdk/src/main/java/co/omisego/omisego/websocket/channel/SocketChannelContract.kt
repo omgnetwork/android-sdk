@@ -59,8 +59,8 @@ interface SocketChannelContract {
      * The [MessageRef] is responsible for create a unique string to be used for including in the [SocketSend].
      */
     interface MessageRef {
-        var value: String
-        var scheme: String
+        val scheme: String
+        val value: String
     }
 
     /* WebSocket Package */

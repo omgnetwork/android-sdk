@@ -45,7 +45,7 @@ class SocketHeartbeatTest {
         }
 
         // Wait task to be called for short period.
-        Thread.sleep(50)
+        Thread.sleep(1000)
 
         /**
          * Ensure the following situation will not happen.

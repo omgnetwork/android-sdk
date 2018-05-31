@@ -1,5 +1,7 @@
 package co.omisego.omisego.websocket.channel
 
+import java.util.concurrent.atomic.AtomicInteger
+
 /*
  * OmiseGO
  *
@@ -7,14 +9,10 @@ package co.omisego.omisego.websocket.channel
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-class SocketMessageRef : SocketChannelContract.MessageRef {
-    override var scheme: String = ""
-    override var value: String = "0"
-        get() {
-            val incremental = "${field.toInt() + 1}"
-            field = incremental
-            return "$scheme:$incremental"
-        }
+class SocketMessageRef(override val scheme: String) : SocketChannelContract.MessageRef {
+    private val _value = AtomicInteger(0)
+    override val value: String
+        get() = "$scheme:${_value.incrementAndGet()}"
 
     companion object {
         const val SCHEME_JOIN: String = "join"

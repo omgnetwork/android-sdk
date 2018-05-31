@@ -66,7 +66,7 @@ class OMGSocketClient internal constructor(
      * A [SocketHeartbeat] is responsible for schedule sending the heartbeat event for keep the connection alive
      */
     override val socketHeartbeat: SocketClientContract.SocketInterval by lazy {
-        SocketHeartbeat(SocketMessageRef().apply { scheme = SocketMessageRef.SCHEME_HEARTBEAT })
+        SocketHeartbeat(SocketMessageRef(scheme = SocketMessageRef.SCHEME_HEARTBEAT))
     }
 
     /**

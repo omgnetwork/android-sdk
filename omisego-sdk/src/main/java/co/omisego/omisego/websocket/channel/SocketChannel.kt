@@ -35,7 +35,7 @@ internal class SocketChannel(
     /**
      * A [SocketMessageRef] is responsible for create unique ref value to be included in the [SocketSend] request.
      */
-    override val socketMessageRef: SocketChannelContract.MessageRef = SocketMessageRef().apply { scheme = SocketMessageRef.SCHEME_JOIN }
+    override val socketMessageRef: SocketChannelContract.MessageRef = SocketMessageRef(scheme = SocketMessageRef.SCHEME_JOIN)
 
     /**
      * An interval of milliseconds for scheduling the interval event such as the heartbeat event which used for keeping the connection alive.
@@ -81,10 +81,10 @@ internal class SocketChannel(
      *
      * @return A set of active [SocketTopic].
      */
-    override fun retrieveChannels(): Set<String> = channelSet
+    override fun retrieveChannels(): Set<String> = channelSet.toSet()
 
     /**
-     * Retrieves the [WebSocketListener]  to be used for initializing the [Websocket] in the [SocketClient].
+     * Retrieves the [WebSocketListener] to be used for initializing the [WebSocket] in the [SocketClient].
      *
      * @return [WebSocketListener]
      */

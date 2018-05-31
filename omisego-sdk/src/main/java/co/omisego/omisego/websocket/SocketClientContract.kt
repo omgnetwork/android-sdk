@@ -211,8 +211,6 @@ interface SocketClientContract {
          * Subscribe to the [SocketCustomEventListener] event.
          *
          * @param customEventListener The [SocketCustomEventListener] to be invoked when the [CustomEvent] event happened.
-         *
-         * @see SocketTransactionRequestEvent
          */
         fun setCustomEventListener(customEventListener: SocketCustomEventListener?)
     }
