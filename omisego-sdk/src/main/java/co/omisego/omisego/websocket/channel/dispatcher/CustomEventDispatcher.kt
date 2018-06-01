@@ -24,26 +24,12 @@ import co.omisego.omisego.websocket.enum.SocketCustomEvent.TRANSACTION_CONSUMPTI
  * A listener for dispatch the [SocketCustomEventListener] events.
  */
 class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
-    /**
-     * For dispatching the [SocketCustomEventListener] event.
-     */
     override var socketCustomEventListener: SocketCustomEventListener? = null
 
-    /**
-     * The web socket replied object from eWallet API.
-     */
     override var socketReceive: SocketReceive? = null
 
-    /**
-     * For dispatching the [SocketChannelListener] event.
-     */
     override var socketChannelListener: SocketChannelListener? = null
 
-    /**
-     * Handles the [SocketCustomEvent] and dispatch the [SocketCustomEventListener] to the client.
-     *
-     * @param customEvent To indicate the actual type of generic [SocketCustomEvent]
-     */
     override fun handleEvent(customEvent: SocketCustomEvent) {
         val response = socketReceive ?: return
         val listener = socketCustomEventListener ?: return
@@ -58,14 +44,6 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
         }
     }
 
-    /**
-     * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.TransactionRequestListener].
-     * This method will be invoked by the [handleEvent] method.
-     * Any event excepts [TRANSACTION_CONSUMPTION_REQUEST] or [TRANSACTION_CONSUMPTION_FINALIZED] is [OTHER], managed by the [EitherEnumDeserializer].
-     *
-     * @param socketReceive The web socket replied object from eWallet API.
-     * @param customEvent The custom event used for decide the event to be dispatched
-     */
     override fun SocketCustomEventListener.TransactionRequestListener.handleTransactionRequestEvent(
         socketReceive: SocketReceive,
         customEvent: SocketCustomEvent
@@ -94,13 +72,6 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
         }
     }
 
-    /**
-     * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.TransactionConsumptionListener].
-     * This method will be invoked by the [handleEvent] method.
-     *
-     * @param socketReceive The web socket replied object from eWallet API.
-     * @param customEvent The custom event used for decide the event to be dispatched
-     */
     override fun SocketCustomEventListener.TransactionConsumptionListener.handleTransactionConsumptionEvent(
         socketReceive: SocketReceive,
         customEvent: SocketCustomEvent
@@ -119,12 +90,6 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
         }
     }
 
-    /**
-     * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.AnyEventListener].
-     * This method will be invoked by the [handleEvent] method.
-     *
-     * @param socketReceive The web socket replied object from eWallet API.
-     */
     override fun SocketCustomEventListener.AnyEventListener.handleAnyEvent(
         socketReceive: SocketReceive
     ) = onEventReceived(socketReceive)

@@ -15,38 +15,23 @@ import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketConnectionListener
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.channel.SocketMessageRef
-import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract.SocketChannel
+import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
+import okhttp3.Response
+import java.net.SocketException
 
 /**
  * A listener for dispatcher the [SocketConnectionListener] and [SocketChannelListener] events.
  */
 class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
-    /**
-     * A connection listener that will be used for dispatch the [SocketConnectionListener] events.
-     */
     override var socketConnectionListener: SocketConnectionListener? = null
 
-    /**
-     * A channel listener that be used for dispatch the [SocketChannelListener] events.
-     */
     override var socketChannelListener: SocketChannelListener? = null
 
-    /**
-     * A socketChannel for delegate the event to the [SocketChannel] internally for further handling the event.
-     */
     override var socketChannel: SocketDispatcherContract.SocketChannel? = null
 
-    /**
-     * The web socket replied object from eWallet API.
-     */
     override var socketReceive: SocketReceive? = null
 
-    /**
-     * Handles the [SocketSystemEvent] and may dispatch the [SocketChannelListener] or [SocketConnectionListener] to the client.
-     *
-     * @param systemEvent To indicate which event of the [SocketSystemEvent]
-     */
     override fun handleEvent(systemEvent: SocketSystemEvent) {
         val response = socketReceive ?: return
         when (systemEvent) {
@@ -71,18 +56,28 @@ class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
         }
     }
 
-    /**
-     * Run the lambda when the topic hasn't joined yet
-     */
+    override fun handleSocketFailure(throwable: Throwable, response: Response?) {
+        socketConnectionListener?.onDisconnected(throwable)
+    }
+
+    override fun handleSocketOpened(response: Response) {
+        socketConnectionListener?.onConnected()
+    }
+
+    override fun handleSocketClosed(code: Int, reason: String) {
+        if (code == SocketStatusCode.NORMAL.code)
+            socketConnectionListener?.onDisconnected(null)
+        else {
+            socketConnectionListener?.onDisconnected(SocketException("$code $reason"))
+        }
+    }
+
     private inline fun SocketTopic<*>.runIfFirstJoined(lambda: () -> Unit) {
         if (socketChannel?.joined(this.name) == false) {
             lambda()
         }
     }
 
-    /**
-     * Run the lambda when the ref starts with "join"
-     */
     private inline fun SocketReceive.runIfRefSchemeIsJoined(lambda: () -> Unit) {
         val ref = this.ref ?: return
         if (ref.startsWith(SocketMessageRef.SCHEME_JOIN)) {

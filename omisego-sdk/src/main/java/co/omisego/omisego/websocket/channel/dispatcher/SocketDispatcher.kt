@@ -14,7 +14,6 @@ import co.omisego.omisego.websocket.SocketConnectionListener
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract.Dispatcher
-import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract.SocketChannel
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegatorContract
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
@@ -35,72 +34,40 @@ class SocketDispatcher(
     override val customEventDispatcher: SocketDispatcherContract.CustomEventDispatcher
 ) : SocketChannelContract.Dispatcher, SocketDispatcherContract.Dispatcher, SocketDelegatorContract.Dispatcher {
 
-    /**
-     * A connectionListener will be passed to the [systemEventDispatcher] for further handling.
-     */
     override var connectionListener: SocketConnectionListener? = null
 
-    /**
-     * A main thread executor used for change the background thread to the main thread before invoking the listener.
-     */
     override val mainThreadExecutor by lazy { MainThreadExecutor() }
 
-    /**
-     * A socketChannel is used to receive some event for further handling in the [SocketChannel]
-     */
     override var socketChannel: SocketDispatcherContract.SocketChannel? = null
         set(value) {
             systemEventDispatcher.socketChannel = value
             field = value
         }
 
-    /**
-     * Set the socket connection listener to be used for dispatch the connection status event.
-     */
     override fun setSocketConnectionListener(connectionListener: SocketConnectionListener?) {
         this.connectionListener = connectionListener
         systemEventDispatcher.socketConnectionListener = connectionListener
     }
 
-    /**
-     * Set the socket channel listener to be used for dispatch the channel status event.
-     */
     override fun setSocketChannelListener(channelListener: SocketChannelListener?) {
         systemEventDispatcher.socketChannelListener = channelListener
         customEventDispatcher.socketChannelListener = channelListener
     }
 
-    /**
-     * Set the socket custom events listener to be used for dispatch the custom events.
-     */
     override fun setSocketCustomEventListener(customEventListener: SocketCustomEventListener?) {
         customEventDispatcher.socketCustomEventListener = customEventListener
     }
 
-    /**
-     * Retrieves the [WebSocketListener] to be used for initializing the [Websocket] in the [SocketClient].
-     */
     override fun retrieveWebSocketListener(): WebSocketListener {
         return socketDelegator.retrievesWebSocketListener()
     }
 
-    /**
-     * Invoked when the method [WebSocketListener]'s onOpen is called.
-     *
-     * @param response The response from the OkHttp's WebSocket.
-     */
     override fun dispatchOnOpened(response: Response) {
         mainThreadExecutor.execute {
             connectionListener?.onConnected()
         }
     }
 
-    /**
-     * Invoked when the method [WebSocketListener]'s onClosed is called.
-     *
-     * @param code the status code explaining why the connection is being closed.
-     * @param reason A human-readable string explaining why the connection is closing.
-     */
     override fun dispatchOnClosed(code: Int, reason: String) {
         mainThreadExecutor.execute {
             if (code == SocketStatusCode.NORMAL.code)
@@ -111,11 +78,6 @@ class SocketDispatcher(
         }
     }
 
-    /**
-     * Invoked when the method [WebSocketListener]'s onMessage is called.
-     *
-     * @param response A [SocketReceive] object to be used for further handling by the [Dispatcher]
-     */
     override fun dispatchOnMessage(response: SocketReceive) {
         mainThreadExecutor.execute {
             when {
@@ -126,12 +88,6 @@ class SocketDispatcher(
         }
     }
 
-    /**
-     * Invoked when the method [WebSocketListener]'s onFailure is called.
-     *
-     * @param throwable An exception is delegated from the [WebSocketListener]'s onFailure
-     * @param response A response is delegated by the [WebSocketListener]'s onFailure
-     */
     override fun dispatchOnFailure(throwable: Throwable, response: Response?) {
         connectionListener?.onDisconnected(throwable)
     }

@@ -15,6 +15,7 @@ import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
+import okhttp3.Response
 import okhttp3.WebSocketListener
 
 interface SocketDispatcherContract {
@@ -79,6 +80,27 @@ interface SocketDispatcherContract {
          * @param systemEvent To indicate which event of the [SocketSystemEvent]
          */
         fun handleEvent(systemEvent: SocketSystemEvent)
+
+        /**
+         * the Websocket's [onFailure] will be delegated to this function
+         *
+         * @see [WebSocketListener]
+         */
+        fun handleSocketFailure(throwable: Throwable, response: Response?)
+
+        /**
+         * the Websocket's [onOpened] will be delegated to this function
+         *
+         * @see [WebSocketListener]
+         */
+        fun handleSocketOpened(response: Response)
+
+        /**
+         * the Websocket's [onClosed] will be delegated to this function
+         *
+         * @see [WebSocketListener]
+         */
+        fun handleSocketClosed(code: Int, reason: String)
     }
 
     interface CustomEventDispatcher {

@@ -11,7 +11,6 @@ import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.socket.runIfNotInternalTopic
 import co.omisego.omisego.websocket.SocketCustomEventListener
-import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract
 import okhttp3.Response
 import okhttp3.WebSocket
@@ -26,9 +25,6 @@ class SocketDelegator(
     override val socketResponseParser: SocketDelegatorContract.PayloadReceiveParser
 ) : SocketDispatcherContract.Delegator, SocketDelegatorContract.Delegator, WebSocketListener() {
 
-    /**
-     * A socketDispatcher is responsible for the further handling the raw response from the OkHttp's [WebSocketListener].
-     */
     override var socketDispatcher: SocketDelegatorContract.Dispatcher? = null
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
@@ -50,11 +46,6 @@ class SocketDelegator(
         socketDispatcher?.dispatchOnClosed(code, reason)
     }
 
-    /**
-     * Retrieves the [WebSocketListener]  to be used for initializing the [Websocket] in the [SocketClient].
-     *
-     * @return [WebSocketListener]
-     */
     override fun retrievesWebSocketListener(): WebSocketListener {
         return this
     }
