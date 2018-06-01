@@ -62,7 +62,7 @@ class SocketDispatcher(
         return socketDelegator.retrievesWebSocketListener()
     }
 
-    override fun dispatchOnOpened(response: Response) {
+    override fun dispatchOnOpen(response: Response) {
         mainThreadExecutor.execute {
             connectionListener?.onConnected()
         }

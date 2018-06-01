@@ -36,7 +36,7 @@ class SocketDelegatorTest {
     fun `dispatchOnOpened is invoked correctly when the onOpen is called`() {
         val response = mock<Response>()
         socketDelegator.onOpen(mockWebSocket, response)
-        verify(mockSocketDispatcher, times(1)).dispatchOnOpened(response)
+        verify(mockSocketDispatcher, times(1)).dispatchOnOpen(response)
     }
 
     @Test

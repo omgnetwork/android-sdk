@@ -28,7 +28,7 @@ class SocketDelegator(
     override var socketDispatcher: SocketDelegatorContract.Dispatcher? = null
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
-        socketDispatcher?.dispatchOnOpened(response)
+        socketDispatcher?.dispatchOnOpen(response)
     }
 
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {

@@ -47,7 +47,7 @@ interface SocketDelegatorContract {
          *
          * @param response The response from the OkHttp's WebSocket.
          */
-        fun dispatchOnOpened(response: Response)
+        fun dispatchOnOpen(response: Response)
 
         /**
          * Invoked when the method [WebSocketListener]'s onClosed is called.

@@ -93,7 +93,7 @@ class SocketDispatcherTest {
     @Test
     fun `dispatchOnOpened should invoke the socketConnectionListener's onConnect correctly`() {
         socketDispatcher.connectionListener = mockSocketConnectionListener
-        socketDispatcher.dispatchOnOpened(mock())
+        socketDispatcher.dispatchOnOpen(mock())
 
         verify(mockSocketConnectionListener, times(1)).onConnected()
         verifyNoMoreInteractions(mockSocketConnectionListener)
