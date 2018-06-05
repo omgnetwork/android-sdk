@@ -26,6 +26,7 @@ import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
@@ -44,15 +45,17 @@ class OMGSocketClientTest {
     private val mockOkHttpClient: OkHttpClient = mock()
     private val mockRequest: Request = mock()
     private val mockWebSocket: WebSocket = mock()
+    private val mockWebSocketListener: WebSocketListener = mock()
     private val mockSocketChannel: SocketClientContract.Channel = mock()
     private val mockCustomEventListener: SocketCustomEventListener.TransactionRequestListener = mock()
     private val mockSocketSendParser: SocketClientContract.PayloadSendParser = mock()
+    private val mockSocketDelegator: SocketDelegator = mock()
 
     private lateinit var socketClient: OMGSocketClient
 
     @Before
     fun setup() {
-        socketClient = OMGSocketClient(mockOkHttpClient, mockRequest, mockSocketSendParser).apply {
+        socketClient = OMGSocketClient(mockOkHttpClient, mockRequest, mockSocketSendParser, mockSocketDelegator).apply {
             wsClient = mockWebSocket
         }
     }
@@ -132,13 +135,13 @@ class OMGSocketClientTest {
         socketClient.socketChannel = mockSocketChannel
         val socketSend = SocketSend("topic", SocketEventSend.JOIN, "1", mapOf())
 
-        whenever(mockOkHttpClient.newWebSocket(mockRequest, mockSocketChannel.retrieveWebSocketListener())).thenReturn(mockWebSocket)
+        whenever(mockSocketDelegator.webSocketListener).thenReturn(mockWebSocketListener)
+        whenever(mockOkHttpClient.newWebSocket(mockRequest, mockWebSocketListener)).thenReturn(mockWebSocket)
         whenever(mockSocketSendParser.parse(socketSend)).thenReturn("Hi, web socket")
 
         socketClient.send(socketSend)
 
-        verify(mockSocketChannel, times(2)).retrieveWebSocketListener()
-        verify(mockOkHttpClient, times(1)).newWebSocket(mockRequest, mockSocketChannel.retrieveWebSocketListener())
+        verify(mockOkHttpClient, times(1)).newWebSocket(mockRequest, mockWebSocketListener)
         verify(mockSocketSendParser, times(1)).parse(socketSend)
         verify(mockWebSocket, times(1)).send("Hi, web socket")
     }
@@ -192,14 +195,8 @@ class OMGSocketClientTest {
         // Validate dependencies flow wired up between SocketChannel <-- SocketDispatcher --> SocketDelegator, SystemEventDispatcher, CustomEventDispatcher
         val dispatcher = channel.socketDispatcher as SocketDispatcher
         dispatcher.socketChannel shouldNotBe null
-        dispatcher.socketDelegator shouldNotBe null
         dispatcher.systemEventDispatcher shouldNotBe null
         dispatcher.customEventDispatcher shouldNotBe null
-
-        // Validate dependencies flow wired up between SocketDispatcher <-- SocketDelegator --> SocketResponseParser
-        val delegator = dispatcher.socketDelegator as SocketDelegator
-        delegator.socketDispatcher shouldNotBe null
-        delegator.socketResponseParser shouldNotBe null
     }
 
     @Test

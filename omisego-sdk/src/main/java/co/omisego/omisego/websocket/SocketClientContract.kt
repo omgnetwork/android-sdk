@@ -14,7 +14,6 @@ import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.channel.SocketMessageRef
 import com.google.gson.Gson
-import okhttp3.WebSocketListener
 import java.util.Timer
 
 /**
@@ -185,13 +184,6 @@ interface SocketClientContract {
          * @return A set of active [SocketTopic].
          */
         fun retrieveChannels(): Set<String>
-
-        /**
-         * Retrieves the [WebSocketListener]  to be used for initializing the [Websocket] in the [SocketClient].
-         *
-         * @return [WebSocketListener]
-         */
-        fun retrieveWebSocketListener(): WebSocketListener
 
         /**
          * Subscribe to the [SocketConnectionListener] event.

@@ -29,7 +29,6 @@ import java.net.SocketException
  * @param customEventDispatcher responsible for handling the [SocketSystemEvent] and dispatch the [SocketCustomEventListener].
  */
 class SocketDispatcher(
-    override val socketDelegator: SocketDispatcherContract.Delegator,
     override val systemEventDispatcher: SocketDispatcherContract.SystemEventDispatcher,
     override val customEventDispatcher: SocketDispatcherContract.CustomEventDispatcher
 ) : SocketChannelContract.Dispatcher, SocketDispatcherContract.Dispatcher, SocketDelegatorContract.Dispatcher {
@@ -56,10 +55,6 @@ class SocketDispatcher(
 
     override fun setSocketCustomEventListener(customEventListener: SocketCustomEventListener?) {
         customEventDispatcher.socketCustomEventListener = customEventListener
-    }
-
-    override fun retrieveWebSocketListener(): WebSocketListener {
-        return socketDelegator.retrievesWebSocketListener()
     }
 
     override fun dispatchOnOpen(response: Response) {

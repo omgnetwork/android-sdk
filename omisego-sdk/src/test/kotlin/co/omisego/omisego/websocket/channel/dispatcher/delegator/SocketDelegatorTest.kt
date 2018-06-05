@@ -27,7 +27,7 @@ class SocketDelegatorTest {
 
     @Before
     fun setup() {
-        socketDelegator = SocketDelegator(mockSocketResponseParser).apply {
+        socketDelegator = SocketDelegator(mockSocketResponseParser, mockSocketDispatcher).apply {
             socketDispatcher = mockSocketDispatcher
         }
     }
@@ -64,11 +64,6 @@ class SocketDelegatorTest {
         val reason = "¯\\_(ツ)_/¯"
         socketDelegator.onClosed(mockWebSocket, code, reason)
         verify(mockSocketDispatcher, times(1)).dispatchOnClosed(code, reason)
-    }
-
-    @Test
-    fun `retrievesWebSocketListener should return the SocketDelegator instance`() {
-        socketDelegator.retrievesWebSocketListener() shouldBe socketDelegator
     }
 
     @Test

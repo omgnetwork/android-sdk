@@ -13,7 +13,6 @@ import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketConnectionListener
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketStatusCode
-import okhttp3.WebSocketListener
 
 interface SocketChannelContract {
     /* Channel Package */
@@ -103,10 +102,5 @@ interface SocketChannelContract {
          * Set the socket custom events listener to be used for dispatch the custom events.
          */
         fun setSocketCustomEventListener(customEventListener: SocketCustomEventListener?)
-
-        /**
-         * Retrieves the [WebSocketListener] to be used for initializing the [Websocket] in the [SocketClient].
-         */
-        fun retrieveWebSocketListener(): WebSocketListener
     }
 }

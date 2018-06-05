@@ -87,13 +87,6 @@ class SocketChannelTest {
     }
 
     @Test
-    fun `retrieveWebSocketListener should call socket dispatcher's retrieveWebsocketListener`() {
-        socketChannel.retrieveWebSocketListener()
-
-        verify(mockSocketDispatcher, times(1)).retrieveWebSocketListener()
-    }
-
-    @Test
     fun `joined should return false if the channel set does not contain the specify channel`() {
         socketChannel.joined(socketTopic.name) shouldEqual false
     }

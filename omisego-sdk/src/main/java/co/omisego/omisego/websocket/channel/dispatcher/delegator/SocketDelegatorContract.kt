@@ -22,7 +22,7 @@ interface SocketDelegatorContract {
         /**
          * A socketDispatcher is responsible for the further handling the raw response from the OkHttp's [WebSocketListener].
          */
-        var socketDispatcher: Dispatcher?
+        val socketDispatcher: Dispatcher
     }
 
     interface PayloadReceiveParser {

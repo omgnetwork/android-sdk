@@ -12,7 +12,6 @@ import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketConnectionListener
 import co.omisego.omisego.websocket.SocketCustomEventListener
-import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
 import okhttp3.Response
@@ -22,10 +21,6 @@ interface SocketDispatcherContract {
 
     /* Dispatcher Package */
     interface Dispatcher {
-        /**
-         * A socketDelegator is responsible for delegate a raw [WebSocketListener] event to be processed in the [Dispatcher].
-         */
-        val socketDelegator: Delegator
 
         /**
          * A systemEventDispatcher is responsible for handling the [SocketSystemEvent] and dispatch the [SocketConnectionListener] or the [SocketChannelListener].
@@ -159,17 +154,6 @@ interface SocketDispatcherContract {
         fun SocketCustomEventListener.AnyEventListener.handleAnyEvent(
             socketReceive: SocketReceive
         )
-    }
-
-    /* Delegator Package */
-    interface Delegator {
-
-        /**
-         * Retrieves the [WebSocketListener]  to be used for initializing the [Websocket] in the [SocketClient].
-         *
-         * @return [WebSocketListener]
-         */
-        fun retrievesWebSocketListener(): WebSocketListener
     }
 
     /* Channel Package */

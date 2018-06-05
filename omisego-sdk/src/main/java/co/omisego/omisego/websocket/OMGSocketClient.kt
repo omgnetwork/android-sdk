@@ -57,7 +57,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 class OMGSocketClient internal constructor(
     internal val okHttpClient: OkHttpClient,
     internal var request: Request,
-    internal val socketSendParser: SocketClientContract.PayloadSendParser
+    internal val socketSendParser: SocketClientContract.PayloadSendParser,
+    internal val webSocketListenerProvider: WebSocketListenerProvider
 ) : SocketClientContract.Client, SocketChannelContract.SocketClient {
     internal var wsClient: WebSocket? = null
     override lateinit var socketChannel: SocketClientContract.Channel
@@ -172,7 +173,7 @@ class OMGSocketClient internal constructor(
      * @return A boolean indicating if the message was sent successfully.
      */
     override fun send(message: SocketSend): Boolean {
-        wsClient = wsClient ?: okHttpClient.newWebSocket(request, socketChannel.retrieveWebSocketListener())
+        wsClient = wsClient ?: okHttpClient.newWebSocket(request, webSocketListenerProvider.webSocketListener)
         val payload = socketSendParser.parse(message)
         return wsClient?.send(payload) ?: false
     }
@@ -234,14 +235,16 @@ class OMGSocketClient internal constructor(
 
             val gson = GsonProvider.create()
 
+            val socketDispatcher = SocketDispatcher(SystemEventDispatcher(), CustomEventDispatcher())
+            val socketDelegator = SocketDelegator(SocketReceiveParser(gson), socketDispatcher)
+
             val socketClient = OMGSocketClient(
                 okHttpClient,
                 request,
-                SocketSendParser(gson)
+                SocketSendParser(gson),
+                socketDelegator
             )
 
-            val socketDelegator = SocketDelegator(SocketReceiveParser(gson))
-            val socketDispatcher = SocketDispatcher(socketDelegator, SystemEventDispatcher(), CustomEventDispatcher())
             socketDelegator talksTo socketDispatcher
 
             val socketChannel = SocketChannel(socketDispatcher, socketClient)

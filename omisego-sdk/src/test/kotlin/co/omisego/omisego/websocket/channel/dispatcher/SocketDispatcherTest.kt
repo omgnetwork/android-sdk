@@ -7,7 +7,6 @@ package co.omisego.omisego.websocket.channel.dispatcher
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.utils.Either
 import co.omisego.omisego.websocket.SocketChannelListener
@@ -33,17 +32,15 @@ import java.net.SocketException
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [21])
 class SocketDispatcherTest {
-    private val mockDelegator: SocketDispatcherContract.Delegator = mock()
     private val mockSystemEventDispatcher: SocketDispatcherContract.SystemEventDispatcher = mock()
     private val mockCustomEventDispatcher: SocketDispatcherContract.CustomEventDispatcher = mock()
     private val mockSocketConnectionListener: SocketConnectionListener = mock()
     private val mockSocketChannel: SocketDispatcherContract.SocketChannel = mock()
-    private val mockMainThreadExecutor: MainThreadExecutor = mock()
     private lateinit var socketDispatcher: SocketDispatcher
 
     @Before
     fun setup() {
-        socketDispatcher = SocketDispatcher(mockDelegator, mockSystemEventDispatcher, mockCustomEventDispatcher)
+        socketDispatcher = SocketDispatcher(mockSystemEventDispatcher, mockCustomEventDispatcher)
     }
 
     @Test
@@ -80,14 +77,6 @@ class SocketDispatcherTest {
 
         verify(mockCustomEventDispatcher).socketCustomEventListener = mockCustomEventListener
         verifyNoMoreInteractions(mockCustomEventListener)
-    }
-
-    @Test
-    fun `retrieveWebSocketListener should be retrieved from the socketDelegator`() {
-        socketDispatcher.retrieveWebSocketListener()
-
-        verify(mockDelegator, times(1)).retrievesWebSocketListener()
-        verifyNoMoreInteractions(mockDelegator)
     }
 
     @Test

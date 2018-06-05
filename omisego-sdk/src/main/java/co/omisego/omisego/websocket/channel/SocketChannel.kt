@@ -17,7 +17,6 @@ import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
-import okhttp3.WebSocketListener
 
 /**
  * A SocketChannel is responsible for handling join or leave from the socket channel.
@@ -54,8 +53,6 @@ internal class SocketChannel(
     }
 
     override fun retrieveChannels(): Set<String> = channelSet.toSet()
-
-    override fun retrieveWebSocketListener(): WebSocketListener = socketDispatcher.retrieveWebSocketListener()
 
     override fun joined(topic: String) = channelSet.contains(topic)
 
