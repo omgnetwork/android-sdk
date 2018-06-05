@@ -18,6 +18,7 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
+import com.nhaarman.mockito_kotlin.whenever
 import org.amshove.kluent.any
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
@@ -41,6 +42,7 @@ class SocketDispatcherTest {
     @Before
     fun setup() {
         socketDispatcher = SocketDispatcher(mockSystemEventDispatcher, mockCustomEventDispatcher)
+        whenever(mockCustomEventDispatcher.customEventListenerMap).thenReturn(mock())
     }
 
     @Test
@@ -71,11 +73,11 @@ class SocketDispatcherTest {
     }
 
     @Test
-    fun `setSocketCustomEventListener should be delegated customEventListener correctly`() {
+    fun `addCustomEventListener should be delegated customEventListener correctly`() {
         val mockCustomEventListener: SocketCustomEventListener = mock()
-        socketDispatcher.setSocketCustomEventListener(mockCustomEventListener)
+        socketDispatcher.addCustomEventListener("topic", mockCustomEventListener)
 
-        verify(mockCustomEventDispatcher).socketCustomEventListener = mockCustomEventListener
+        verify(mockCustomEventDispatcher.customEventListenerMap)["topic"] = mockCustomEventListener
         verifyNoMoreInteractions(mockCustomEventListener)
     }
 

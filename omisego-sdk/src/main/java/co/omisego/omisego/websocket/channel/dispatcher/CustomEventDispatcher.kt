@@ -24,7 +24,9 @@ import co.omisego.omisego.websocket.enum.SocketCustomEvent.TRANSACTION_CONSUMPTI
  * A listener for dispatch the [SocketCustomEventListener] events.
  */
 class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
-    override var socketCustomEventListener: SocketCustomEventListener? = null
+    override val customEventListenerMap: MutableMap<String, SocketCustomEventListener> by lazy {
+        mutableMapOf<String, SocketCustomEventListener>()
+    }
 
     override var socketReceive: SocketReceive? = null
 
@@ -32,7 +34,7 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
 
     override fun handleEvent(customEvent: SocketCustomEvent) {
         val response = socketReceive ?: return
-        val listener = socketCustomEventListener ?: return
+        val listener = customEventListenerMap[response.topic] ?: return
 
         when (listener) {
             is TransactionRequestListener ->

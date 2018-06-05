@@ -3,6 +3,7 @@ package co.omisego.omisego.websocket.interval
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.websocket.channel.SocketChannelContract
 import com.nhaarman.mockito_kotlin.spy
+import com.nhaarman.mockito_kotlin.timeout
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.amshove.kluent.any
@@ -32,7 +33,7 @@ class SocketHeartbeatTest {
     fun `startInterval should be a thread-safe function`() {
         val allThreads = mutableListOf<Thread>()
         val task = mock<(SocketSend) -> Unit>()
-        for (i in 1..1_000) {
+        for (i in 1..100) {
             val t = thread {
                 socketHeartbeat.startInterval(task)
             }
@@ -40,12 +41,9 @@ class SocketHeartbeatTest {
         }
 
         // Wait all threads finish their worked.
-        for (i in 0..999) {
+        for (i in 0..99) {
             allThreads[i].join()
         }
-
-        // Wait task to be called for short period.
-        Thread.sleep(1000)
 
         /**
          * Ensure the following situation will not happen.
@@ -56,6 +54,7 @@ class SocketHeartbeatTest {
          *
          * Because of that, this expression will verify that all tasks should be invoked.
          */
-        verify(task, times(1_000)).invoke(any())
+        timeout(3000)
+        verify(task, times(100)).invoke(any())
     }
 }

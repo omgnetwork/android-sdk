@@ -64,7 +64,7 @@ class CustomEventDispatcherTest {
     @Test
     fun `handleEvent should call handleTransactionRequestEvent to handle TransactionRequestListener`() {
         customEventDispatcher.socketReceive = dataTxRequest
-        customEventDispatcher.socketCustomEventListener = txRequestCb
+        customEventDispatcher.customEventListenerMap["topic"] = txRequestCb
 
         customEventDispatcher.handleEvent(SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST)
 
@@ -77,7 +77,7 @@ class CustomEventDispatcherTest {
     @Test
     fun `handleEvent should call handleTransactionConsumptionEvent to handle TransactionConsumptionListener`() {
         customEventDispatcher.socketReceive = dataTxFinalizedSuccess
-        customEventDispatcher.socketCustomEventListener = txConsumptionCb
+        customEventDispatcher.customEventListenerMap["topic"] = txConsumptionCb
 
         customEventDispatcher.handleEvent(SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
 
@@ -89,7 +89,7 @@ class CustomEventDispatcherTest {
 
     @Test
     fun `transactionRequestListener's onTransactionConsumptionRequest should be invoked correctly`() {
-        customEventDispatcher.socketCustomEventListener = txRequestCb
+        customEventDispatcher.customEventListenerMap["topic"] = txRequestCb
         with(customEventDispatcher) {
             txRequestCb.handleTransactionRequestEvent(dataTxRequest, SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST)
         }
@@ -100,7 +100,7 @@ class CustomEventDispatcherTest {
 
     @Test
     fun `transactionRequestListener's onTransactionConsumptionFinalizedSuccess should be invoked correctly`() {
-        customEventDispatcher.socketCustomEventListener = txRequestCb
+        customEventDispatcher.customEventListenerMap["topic"] = txRequestCb
         with(customEventDispatcher) {
             txRequestCb.handleTransactionRequestEvent(dataTxFinalizedSuccess, SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
         }
@@ -111,7 +111,7 @@ class CustomEventDispatcherTest {
 
     @Test
     fun `transactionRequestListener's onTransactionConsumptionFinalizedFail should be invoked correctly`() {
-        customEventDispatcher.socketCustomEventListener = txRequestCb
+        customEventDispatcher.customEventListenerMap["topic"] = txRequestCb
         with(customEventDispatcher) {
             txRequestCb.handleTransactionRequestEvent(dataTxFinalizedFail, SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
         }
@@ -122,7 +122,7 @@ class CustomEventDispatcherTest {
 
     @Test
     fun `transactionConsumptionListener's onTransactionConsumptionFinalizedSuccess should be invoked correctly`() {
-        customEventDispatcher.socketCustomEventListener = txConsumptionCb
+        customEventDispatcher.customEventListenerMap["topic"] = txConsumptionCb
         with(customEventDispatcher) {
             txConsumptionCb.handleTransactionConsumptionEvent(dataTxFinalizedSuccess, SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
         }
@@ -133,7 +133,7 @@ class CustomEventDispatcherTest {
 
     @Test
     fun `transactionConsumptionListener's onTransactionConsumptionFinalizedFail should be invoked correctly`() {
-        customEventDispatcher.socketCustomEventListener = txConsumptionCb
+        customEventDispatcher.customEventListenerMap["topic"] = txConsumptionCb
         with(customEventDispatcher) {
             txConsumptionCb.handleTransactionConsumptionEvent(dataTxFinalizedFail, SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
         }
@@ -144,7 +144,7 @@ class CustomEventDispatcherTest {
 
     @Test
     fun `anyEventListener should be invoked all custom event`() {
-        customEventDispatcher.socketCustomEventListener = txAnyCb
+        customEventDispatcher.customEventListenerMap["topic"] = txAnyCb
         with(customEventDispatcher) {
             txAnyCb.handleAnyEvent(dataTxFinalizedFail)
             txAnyCb.handleAnyEvent(dataTxFinalizedSuccess)

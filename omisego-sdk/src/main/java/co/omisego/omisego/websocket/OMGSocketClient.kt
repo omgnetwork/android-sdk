@@ -103,7 +103,7 @@ class OMGSocketClient internal constructor(
         listener: T
     ) {
         with(socketChannel) {
-            setCustomEventListener(listener)
+            addCustomEventListener(topic.name, listener)
             join(topic.name, payload)
         }
     }

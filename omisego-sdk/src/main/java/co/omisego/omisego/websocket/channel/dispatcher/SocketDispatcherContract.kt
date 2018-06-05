@@ -102,7 +102,7 @@ interface SocketDispatcherContract {
         /**
          * For dispatching the [SocketCustomEventListener] event.
          */
-        var socketCustomEventListener: SocketCustomEventListener?
+        val customEventListenerMap: MutableMap<String, SocketCustomEventListener>
 
         /**
          * For dispatching the [SocketChannelListener] event.

@@ -101,6 +101,6 @@ interface SocketChannelContract {
         /**
          * Set the socket custom events listener to be used for dispatch the custom events.
          */
-        fun setSocketCustomEventListener(customEventListener: SocketCustomEventListener?)
+        fun addCustomEventListener(topic: String, customEventListener: SocketCustomEventListener)
     }
 }

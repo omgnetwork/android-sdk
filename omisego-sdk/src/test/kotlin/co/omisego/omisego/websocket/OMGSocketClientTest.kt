@@ -77,7 +77,7 @@ class OMGSocketClientTest {
     }
 
     @Test
-    fun `joinChannel should call the socket channel join and setCustomEventListener correctly`() {
+    fun `joinChannel should call the socket channel join and addCustomEventListener correctly`() {
         val socketTopic = SocketTopic<SocketCustomEventListener.TransactionRequestListener>("topic")
         val payload = mapOf<String, Any>()
 
@@ -85,7 +85,7 @@ class OMGSocketClientTest {
         socketClient.joinChannel(socketTopic, payload, mockCustomEventListener)
 
         verify(mockSocketChannel, times(1)).join(socketTopic.name, payload)
-        verify(mockSocketChannel, times(1)).setCustomEventListener(mockCustomEventListener)
+        verify(mockSocketChannel, times(1)).addCustomEventListener("topic", mockCustomEventListener)
         verifyNoMoreInteractions(mockSocketChannel)
     }
 

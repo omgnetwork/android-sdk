@@ -90,8 +90,8 @@ internal class SocketChannel(
         socketDispatcher.setSocketChannelListener(channelListener)
     }
 
-    override fun setCustomEventListener(customEventListener: SocketCustomEventListener?) {
-        socketDispatcher.setSocketCustomEventListener(customEventListener)
+    override fun addCustomEventListener(topic: String, customEventListener: SocketCustomEventListener) {
+        socketDispatcher.addCustomEventListener(topic, customEventListener)
     }
 
     private inline fun runIfEmptyChannel(doSomething: () -> Unit) {

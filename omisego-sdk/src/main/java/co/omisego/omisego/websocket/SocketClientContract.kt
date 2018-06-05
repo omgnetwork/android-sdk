@@ -204,7 +204,7 @@ interface SocketClientContract {
          *
          * @param customEventListener The [SocketCustomEventListener] to be invoked when the [CustomEvent] event happened.
          */
-        fun setCustomEventListener(customEventListener: SocketCustomEventListener?)
+        fun addCustomEventListener(topic: String, customEventListener: SocketCustomEventListener)
     }
 
     /* Interval Package */

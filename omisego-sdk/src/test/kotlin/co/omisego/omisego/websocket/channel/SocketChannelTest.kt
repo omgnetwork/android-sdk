@@ -180,12 +180,12 @@ class SocketChannelTest {
     }
 
     @Test
-    fun `setCustomEventListener should bind the customEventListener to the dispatcher correctly`() {
+    fun `addCustomEventListener should bind the customEventListener to the dispatcher correctly`() {
         val mockCustomEventListener: SocketCustomEventListener = mock()
 
-        socketChannel.setCustomEventListener(mockCustomEventListener)
+        socketChannel.addCustomEventListener("", mockCustomEventListener)
 
-        verify(mockSocketDispatcher, times(1)).setSocketCustomEventListener(mockCustomEventListener)
+        verify(mockSocketDispatcher, times(1)).addCustomEventListener("", mockCustomEventListener)
     }
 
     @Test
