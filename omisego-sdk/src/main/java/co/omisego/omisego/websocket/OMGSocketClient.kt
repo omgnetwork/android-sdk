@@ -84,7 +84,7 @@ class OMGSocketClient internal constructor(
      * @return true, if all messages have been sent, otherwise false.
      */
     override fun hasSentAllMessages(): Boolean =
-        (wsClient?.queueSize() ?: 0L) == 0L
+        socketChannel.hasSentAllPendingJoinChannel() && (wsClient?.queueSize() ?: 0L) == 0L
 
     /**
      * Joining a channel by the given [SocketTopic].

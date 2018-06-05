@@ -32,6 +32,10 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
 
     override var socketChannelListener: SocketChannelListener? = null
 
+    override fun clearCustomEventListenerMap() {
+        customEventListenerMap.clear()
+    }
+
     override fun handleEvent(customEvent: SocketCustomEvent) {
         val response = socketReceive ?: return
         val listener = customEventListenerMap[response.topic] ?: return

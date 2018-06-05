@@ -115,6 +115,11 @@ interface SocketDispatcherContract {
         var socketReceive: SocketReceive?
 
         /**
+         * Clear all callbacks in the customEventListenerMap
+         */
+        fun clearCustomEventListenerMap()
+
+        /**
          * Handles the [SocketCustomEvent] and dispatch the [SocketCustomEventListener] to the client.
          *
          * @param customEvent To indicate the actual type of generic [SocketCustomEvent]
@@ -179,5 +184,7 @@ interface SocketDispatcherContract {
          * @return A boolean indicating if the channel is joined.
          */
         fun joined(topic: String): Boolean
+
+        fun onSocketOpened()
     }
 }

@@ -57,15 +57,19 @@ class SocketDispatcher(
         customEventDispatcher.customEventListenerMap[topic] = customEventListener
     }
 
+    override fun clearCustomEventListenerMap() {
+        customEventDispatcher.clearCustomEventListenerMap()
+    }
+
     override fun dispatchOnOpen(response: Response) {
         mainThreadExecutor.execute {
+            socketChannel?.onSocketOpened()
             connectionListener?.onConnected()
         }
     }
 
     override fun dispatchOnClosed(code: Int, reason: String) {
         mainThreadExecutor.execute {
-            customEventDispatcher.customEventListenerMap.clear()
             if (code == SocketStatusCode.NORMAL.code)
                 connectionListener?.onDisconnected(null)
             else {

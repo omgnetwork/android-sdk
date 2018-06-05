@@ -13,10 +13,18 @@ import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketConnectionListener
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketStatusCode
+import java.util.concurrent.BlockingQueue
+import java.util.concurrent.atomic.AtomicBoolean
 
 interface SocketChannelContract {
     /* Channel Package */
     interface Channel {
+        val pendingChannelsQueue: BlockingQueue<SocketSend>
+
+        /**
+         * A boolean indicating channels are currently leaving or not
+         */
+        val leavingChannels: AtomicBoolean
 
         /**
          * A [Dispatcher] is responsible dispatch all events to the client.
@@ -52,6 +60,13 @@ interface SocketChannelContract {
          * @return A [SocketSend] instance used for leaving the channel.
          */
         fun createLeaveMessage(topic: String, payload: Map<String, Any>): SocketSend
+
+        /**
+         * Check if we're currently leaving all channels or not.
+         *
+         * @return true, if we're currently leaving all channels, otherwise false.
+         */
+        fun joinable(): Boolean
     }
 
     /**
@@ -102,5 +117,10 @@ interface SocketChannelContract {
          * Set the socket custom events listener to be used for dispatch the custom events.
          */
         fun addCustomEventListener(topic: String, customEventListener: SocketCustomEventListener)
+
+        /**
+         * Clear all callbacks in the customEventListenerMap
+         */
+        fun clearCustomEventListenerMap()
     }
 }

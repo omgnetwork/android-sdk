@@ -179,6 +179,18 @@ interface SocketClientContract {
         fun leaveAll()
 
         /**
+         * Join all pending channels.
+         */
+        fun executePendingJoinChannel()
+
+        /**
+         * A boolean indicating if all pending join channel messages have been sent to the server.
+         *
+         * @return true, if all messages have been sent, otherwise false.
+         */
+        fun hasSentAllPendingJoinChannel(): Boolean
+
+        /**
          * Retrieves a set of active [SocketTopic].
          *
          * @return A set of active [SocketTopic].

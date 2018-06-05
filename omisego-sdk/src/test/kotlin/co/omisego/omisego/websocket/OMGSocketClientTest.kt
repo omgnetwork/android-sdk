@@ -69,10 +69,13 @@ class OMGSocketClientTest {
     }
 
     @Test
-    fun `hasSentAllMessages should call the web socket client's queue size correctly`() {
+    fun `hasSentAllMessages should call the web socket client's queue size and check pending channels correctly`() {
+        socketClient.socketChannel = mockSocketChannel
+        whenever(mockSocketChannel.hasSentAllPendingJoinChannel()).thenReturn(true)
         socketClient.hasSentAllMessages()
 
         verify(mockWebSocket, times(1)).queueSize()
+        verify(mockSocketChannel, times(1)).hasSentAllPendingJoinChannel()
         verifyNoMoreInteractions(mockWebSocket)
     }
 

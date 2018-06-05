@@ -8,5 +8,19 @@ package co.omisego.omisego.model.socket
  */
 
 import co.omisego.omisego.websocket.enum.SocketEventSend
+import java.util.Objects
 
-data class SocketSend(val topic: String, val event: SocketEventSend, val ref: String?, val data: Map<String, Any>)
+data class SocketSend(val topic: String, val event: SocketEventSend, val ref: String?, val data: Map<String, Any>) {
+
+    override fun hashCode(): Int {
+        return Objects.hash(topic, event)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is SocketSend) {
+            topic == other.topic && event == other.event
+        } else {
+            false
+        }
+    }
+}

@@ -18,6 +18,7 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import org.amshove.kluent.mock
+import org.amshove.kluent.shouldEqualTo
 import org.junit.Before
 import org.junit.Test
 
@@ -155,5 +156,14 @@ class CustomEventDispatcherTest {
         verify(txAnyCb, times(1)).onEventReceived(dataTxFinalizedSuccess)
         verify(txAnyCb, times(1)).onEventReceived(dataTxRequest)
         verifyNoMoreInteractions(txAnyCb)
+    }
+
+    @Test
+    fun `clearCustomEventListenerMap should be cleared all listeners`(){
+        customEventDispatcher.customEventListenerMap["test"] = mock()
+
+        customEventDispatcher.clearCustomEventListenerMap()
+
+        customEventDispatcher.customEventListenerMap.size shouldEqualTo 0
     }
 }

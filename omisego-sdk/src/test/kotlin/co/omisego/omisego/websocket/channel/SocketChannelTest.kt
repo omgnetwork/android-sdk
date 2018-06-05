@@ -23,6 +23,7 @@ import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import org.amshove.kluent.mock
+import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldEqualTo
 import org.junit.Before
@@ -201,5 +202,67 @@ class SocketChannelTest {
         for (topic in 1..5) {
             verify(mockSocketClient, times(1)).send(SocketSend("$topic", SocketEventSend.LEAVE, null, mapOf()))
         }
+    }
+
+    @Test
+    fun `join channel should be added to pending channels if joinable is false`() {
+        whenever(socketChannel.joinable()).thenReturn(false)
+
+        socketChannel.join("topic", mapOf())
+
+        socketChannel.pendingChannelsQueue.contains(SocketSend("topic", SocketEventSend.JOIN, "join:1", mapOf())) shouldEqualTo true
+        verifyZeroInteractions(mockSocketClient)
+    }
+
+    @Test
+    fun `join channel should not be added to pending channels if joinable is true`() {
+        whenever(socketChannel.joinable()).thenReturn(true)
+
+        socketChannel.join("topic", mapOf())
+
+        socketChannel.pendingChannelsQueue.isEmpty() shouldEqualTo true
+        verify(mockSocketClient).send(SocketSend("topic", SocketEventSend.JOIN, "join:1", mapOf()))
+    }
+
+    @Test
+    fun `executePendingJoinChannel should execute join function for every pending channels`() {
+        socketChannel.pendingChannelsQueue += SocketSend("topic", SocketEventSend.JOIN, null, mapOf())
+        socketChannel.pendingChannelsQueue += SocketSend("topic2", SocketEventSend.JOIN, null, mapOf())
+        socketChannel.pendingChannelsQueue += SocketSend("topic3", SocketEventSend.JOIN, null, mapOf())
+
+        socketChannel.executePendingJoinChannel()
+
+        verify(socketChannel).join("topic", mapOf())
+        verify(socketChannel).join("topic2", mapOf())
+        verify(socketChannel).join("topic3", mapOf())
+    }
+
+    @Test
+    fun `onJoinedChannel should remove the SocketTopic from the pendingChannels if it has`() {
+        socketChannel.pendingChannelsQueue += SocketSend("topic", SocketEventSend.JOIN, null, mapOf())
+        socketChannel.pendingChannelsQueue.size shouldEqualTo 1
+
+        socketChannel.onJoinedChannel("topic")
+
+        socketChannel.pendingChannelsQueue.size shouldEqualTo 0
+    }
+
+    @Test
+    fun `When left the last channel should be clear holding data correctly`() {
+        socketChannel.pendingChannelsQueue += SocketSend("topic", SocketEventSend.JOIN, null, mapOf())
+        socketChannel.pendingChannelsQueue += SocketSend("topic2", SocketEventSend.JOIN, null, mapOf())
+
+        socketChannel.onLeftChannel("topic")
+
+        socketChannel.pendingChannelsQueue.isEmpty() shouldBe true
+        verify(mockSocketDispatcher, times(1)).clearCustomEventListenerMap()
+        socketChannel.leavingChannels.get() shouldEqualTo false
+        verify(mockSocketClient, times(1)).closeConnection(SocketStatusCode.NORMAL, "Disconnected successfully")
+    }
+
+    @Test
+    fun `When socket opened, leaving channels flag should be set to false`() {
+        socketChannel.onSocketOpened()
+        socketChannel.leavingChannels.get() shouldEqualTo false
     }
 }
