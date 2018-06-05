@@ -57,7 +57,7 @@ internal class SocketChannel(
 
     override fun leaveAll() {
         leavingChannels.set(true)
-        for (channel in channelSet) {
+        for (channel in channelSet.toList()) {
             leave(channel, mapOf())
         }
     }

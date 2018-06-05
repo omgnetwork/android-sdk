@@ -159,7 +159,7 @@ class CustomEventDispatcherTest {
     }
 
     @Test
-    fun `clearCustomEventListenerMap should be cleared all listeners`(){
+    fun `clearCustomEventListenerMap should be cleared all listeners`() {
         customEventDispatcher.customEventListenerMap["test"] = mock()
 
         customEventDispatcher.clearCustomEventListenerMap()

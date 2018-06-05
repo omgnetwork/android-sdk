@@ -49,7 +49,6 @@ class SocketDelegator(
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
         socketDispatcher.dispatchOnClosed(code, reason)
     }
-
 }
 
 internal infix fun SocketDelegator.talksTo(socketDispatcher: SocketDelegatorContract.Dispatcher) {
