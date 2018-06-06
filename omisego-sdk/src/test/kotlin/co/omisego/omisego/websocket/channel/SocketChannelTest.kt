@@ -271,7 +271,7 @@ class SocketChannelTest {
 
     @Test
     fun `Pending channels should be cached maximum 10 elements properly`() {
-        Timer().schedule(object: TimerTask(){
+        Timer().schedule(object : TimerTask() {
             override fun run() {
                 socketChannel.pendingChannelsQueue.take()
                 socketChannel.pendingChannelsQueue.take()
@@ -299,5 +299,36 @@ class SocketChannelTest {
         socketChannel.pendingChannelsQueue.last().topic shouldEqualTo "topic13"
 
         println(socketChannel.pendingChannelsQueue)
+    }
+
+    @Test
+    fun `The client send a join message during leaving the channels, then it should be kept in the queue instead`() {
+        socketChannel.join("topic", mapOf()) // the queue should not put this one in the queue.
+
+        verify(mockSocketClient).send(SocketSend("topic", SocketEventSend.JOIN, "join:1", mapOf()))
+
+        socketChannel.leaveAll()
+
+        socketChannel.join("topic1", mapOf()) // the queue should put this one in the queue
+
+        socketChannel.pendingChannelsQueue.size shouldEqualTo 1
+        verify(mockSocketClient, times(0)).send(SocketSend("topic1", SocketEventSend.JOIN, "join:1", mapOf()))
+    }
+
+    @Test
+    fun `The queue should remove a message from the queue when it has already joined`() {
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic", SocketEventSend.JOIN, null, mapOf()))
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic2", SocketEventSend.JOIN, null, mapOf()))
+
+        // The non-existed topic `topic1` has been joined, so the topic `topic` should not be removed from the queue.
+        socketChannel.onJoinedChannel("topic1")
+
+        socketChannel.pendingChannelsQueue.size shouldEqualTo 2
+
+        // The existed topic `topic2` has been joined, so the topic `topic2` should be removed from the queue.
+        socketChannel.onJoinedChannel("topic2")
+
+        socketChannel.pendingChannelsQueue.size shouldEqualTo 1
+        socketChannel.pendingChannelsQueue.take() shouldEqual SocketSend("topic", SocketEventSend.JOIN, null, mapOf())
     }
 }
