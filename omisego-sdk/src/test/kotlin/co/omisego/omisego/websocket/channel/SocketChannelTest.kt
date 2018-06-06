@@ -28,6 +28,9 @@ import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldEqualTo
 import org.junit.Before
 import org.junit.Test
+import java.util.Timer
+import java.util.TimerTask
+import java.util.concurrent.TimeUnit
 
 class SocketChannelTest {
     private val mockSocketDispatcher: SocketChannelContract.Dispatcher = mock()
@@ -264,5 +267,37 @@ class SocketChannelTest {
     fun `When socket opened, leaving channels flag should be set to false`() {
         socketChannel.onSocketOpened()
         socketChannel.leavingChannels.get() shouldEqualTo false
+    }
+
+    @Test
+    fun `Pending channels should be cached maximum 10 elements properly`() {
+        Timer().schedule(object: TimerTask(){
+            override fun run() {
+                socketChannel.pendingChannelsQueue.take()
+                socketChannel.pendingChannelsQueue.take()
+                socketChannel.pendingChannelsQueue.take()
+                socketChannel.pendingChannelsQueue.take()
+            }
+        }, 3000)
+
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic", SocketEventSend.JOIN, null, mapOf()), 5, TimeUnit.SECONDS)
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic1", SocketEventSend.JOIN, null, mapOf()), 5, TimeUnit.SECONDS)
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic2", SocketEventSend.JOIN, null, mapOf()), 5, TimeUnit.SECONDS)
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic3", SocketEventSend.JOIN, null, mapOf()), 5, TimeUnit.SECONDS)
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic4", SocketEventSend.JOIN, null, mapOf()), 5, TimeUnit.SECONDS)
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic5", SocketEventSend.JOIN, null, mapOf()), 5, TimeUnit.SECONDS)
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic6", SocketEventSend.JOIN, null, mapOf()), 5, TimeUnit.SECONDS)
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic7", SocketEventSend.JOIN, null, mapOf()), 5, TimeUnit.SECONDS)
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic8", SocketEventSend.JOIN, null, mapOf()), 5, TimeUnit.SECONDS)
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic9", SocketEventSend.JOIN, null, mapOf()), 5, TimeUnit.SECONDS)
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic10", SocketEventSend.JOIN, null, mapOf()), 5, TimeUnit.SECONDS)
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic11", SocketEventSend.JOIN, null, mapOf()), 5, TimeUnit.SECONDS)
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic12", SocketEventSend.JOIN, null, mapOf()), 5, TimeUnit.SECONDS)
+        socketChannel.pendingChannelsQueue.offer(SocketSend("topic13", SocketEventSend.JOIN, null, mapOf()), 5, TimeUnit.SECONDS)
+
+        socketChannel.pendingChannelsQueue.size shouldEqualTo 10
+        socketChannel.pendingChannelsQueue.last().topic shouldEqualTo "topic13"
+
+        println(socketChannel.pendingChannelsQueue)
     }
 }

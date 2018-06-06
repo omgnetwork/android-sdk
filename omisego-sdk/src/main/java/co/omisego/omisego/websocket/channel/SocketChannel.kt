@@ -19,6 +19,7 @@ import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.BlockingQueue
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -31,20 +32,30 @@ internal class SocketChannel(
     override val socketDispatcher: SocketChannelContract.Dispatcher,
     override val socketClient: SocketChannelContract.SocketClient
 ) : SocketClientContract.Channel, SocketChannelContract.Channel, SocketDispatcherContract.SocketChannel {
-    override val pendingChannelsQueue: BlockingQueue<SocketSend> = ArrayBlockingQueue<SocketSend>(1000, true)
     private val channelSet: MutableSet<String> by lazy { mutableSetOf<String>() }
-
     override val leavingChannels: AtomicBoolean by lazy { AtomicBoolean(false) }
+    override val pendingChannelsQueue: BlockingQueue<SocketSend> by lazy {
+        ArrayBlockingQueue<SocketSend>(10, true)
+    }
+    override val socketMessageRef: SocketChannelContract.MessageRef by lazy {
+        SocketMessageRef(scheme = SocketMessageRef.SCHEME_JOIN)
+    }
     override var period: Long = 5000
-    override val socketMessageRef: SocketChannelContract.MessageRef = SocketMessageRef(scheme = SocketMessageRef.SCHEME_JOIN)
 
     override fun join(topic: String, payload: Map<String, Any>) {
         whenNeverJoinedTopic(topic) {
             val socketSend = createJoinMessage(topic, payload)
             whenNotAbleToJoinChannel {
-                pendingChannelsQueue.add(socketSend)
+                // If the queue capacity is full, then the next join message will wait to add to the queue for maximum 5 seconds
+                pendingChannelsQueue.offer(socketSend, period, TimeUnit.MILLISECONDS)
                 return
             }
+
+            // Send all pending join channels if left
+            if (pendingChannelsQueue.isNotEmpty()) {
+                executePendingJoinChannel()
+            }
+
             socketClient.send(socketSend)
         }
     }
