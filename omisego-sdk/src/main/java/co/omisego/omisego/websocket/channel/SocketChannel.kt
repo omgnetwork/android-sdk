@@ -51,11 +51,6 @@ internal class SocketChannel(
                 return
             }
 
-            // Send all pending join channels if left
-            if (pendingChannelsQueue.isNotEmpty()) {
-                executePendingJoinChannel()
-            }
-
             socketClient.send(socketSend)
         }
     }
@@ -120,6 +115,7 @@ internal class SocketChannel(
 
     override fun onSocketOpened() {
         leavingChannels.set(false)
+        executePendingJoinChannel()
     }
 
     override fun setConnectionListener(connectionListener: SocketConnectionListener?) {

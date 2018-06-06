@@ -47,9 +47,10 @@ class ErrorCodeTest {
                 "sdk:unknown_error" -> ErrorCode.SDK_UNEXPECTED_ERROR
                 "token:token_not_found" -> ErrorCode.TOKEN_NOT_FOUND
                 "sdk:socket_error" -> ErrorCode.SDK_SOCKET_ERROR
+                "token:token_not_found" -> ErrorCode.TOKEN_NOT_FOUND
                 "transaction_request:transaction_request_not_found" -> ErrorCode.TRANSACTION_REQUEST_NOT_FOUND
                 "transaction_consumption:not_owner" -> ErrorCode.TRANSACTION_CONSUMPTION_NOT_OWNER
-                "transaction_consumption:invalid_minted_token" -> ErrorCode.TRANSACTION_CONSUMPTION_INVALID_TOKEN
+                "transaction_consumption:invalid_token" -> ErrorCode.TRANSACTION_CONSUMPTION_INVALID_TOKEN
                 "transaction_consumption:expired" -> ErrorCode.TRANSACTION_CONSUMPTION_EXPIRED
                 "transaction_consumption:unfinalized" -> ErrorCode.TRANSACTION_CONSUMPTION_UNFINALIZED
                 "websocket:forbidden_channel" -> ErrorCode.WEBSOCKET_FORBIDDEN_CHANNEL
