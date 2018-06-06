@@ -11,7 +11,7 @@ import android.accounts.Account
 import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.constant.enums.OMGEnum
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
-import co.omisego.omisego.model.MintedToken
+import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.transaction.list.Transaction
 import co.omisego.omisego.model.transaction.request.TransactionRequest
@@ -48,16 +48,16 @@ data class TransactionConsumption(
     val status: TransactionConsumptionStatus,
 
     /**
-     * The amount of minted token to transfer (down to subunit to unit)
+     * The amount of token to transfer (down to subunit to unit)
      */
     val amount: BigDecimal,
 
     /**
-     * The minted token for the request
+     * The token for the request
      * In the case of a type "send", this will be the token that the consumer will receive
      * In the case of a type "receive" this will be the token that the consumer will send
      */
-    val mintedToken: MintedToken,
+    val token: Token,
 
     /**
      * An id that can uniquely identify a transaction. Typically an order id from a provider.

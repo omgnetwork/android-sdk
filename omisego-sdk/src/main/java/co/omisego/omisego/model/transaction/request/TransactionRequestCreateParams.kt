@@ -22,14 +22,14 @@ data class TransactionRequestCreateParams(
     val type: TransactionRequestType = TransactionRequestType.RECEIVE,
 
     /**
-     * The unique identifier of the minted token to use for the request
+     * The unique identifier of the token to use for the request
      * In the case of a type "send", this will be the token taken from the requester
      * In the case of a type "receive" this will be the token received by the requester
      */
     val tokenId: String,
 
     /**
-     * The amount of minted token to use for the transaction (down to subunit to unit)
+     * The amount of token to use for the transaction (down to subunit to unit)
      * This amount can be either inputted when generating or consuming a transaction request.
      */
     val amount: BigDecimal? = null,

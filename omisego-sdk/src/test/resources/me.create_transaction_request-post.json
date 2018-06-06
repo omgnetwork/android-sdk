@@ -6,12 +6,12 @@
     "type": "receive",
     "status": "valid",
     "object": "transaction_request",
-    "minted_token_id": "OMG:20f18fe9-3354-4ef8-9853-226f633a4ef2",
-    "minted_token": {
+    "token_id": "OMG:20f18fe9-3354-4ef8-9853-226f633a4ef2",
+    "token": {
       "updated_at": "2018-03-14T09:42:17.267266Z",
       "symbol": "OMG",
       "subunit_to_unit": 10000,
-      "object": "minted_token",
+      "object": "token",
       "name": "OmiseGO",
       "metadata": {},
       "id": "OMG:20f18fe9-3354-4ef8-9853-226f633a4ef2",
