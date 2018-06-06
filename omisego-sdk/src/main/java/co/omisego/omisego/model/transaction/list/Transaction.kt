@@ -27,6 +27,6 @@ data class Transaction(
     val to: TransactionSource,
     val exchange: TransactionExchange,
     val metadata: Map<String, Any>,
-    val createdAt: Date,
-    val updatedAt: Date
+    val encryptedMetadata: Map<String, Any>,
+    val createdAt: Date
 ) : Paginable.Transaction()
