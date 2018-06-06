@@ -17,10 +17,6 @@ data class SocketSend(val topic: String, val event: SocketEventSend, val ref: St
     }
 
     override fun equals(other: Any?): Boolean {
-        return if (other is SocketSend) {
-            topic == other.topic && event == other.event
-        } else {
-            false
-        }
+        return other is SocketSend && topic == other.topic && event == other.event
     }
 }
