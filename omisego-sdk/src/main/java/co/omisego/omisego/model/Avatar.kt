@@ -1,5 +1,8 @@
 package co.omisego.omisego.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /*
  * OmiseGO
  *
@@ -15,9 +18,10 @@ package co.omisego.omisego.model
  * @param small The url of the small image.
  * @param thumbnail The url of the thumbnail image.
  */
+@Parcelize
 data class Avatar(
     val original: String,
     val large: String,
     val small: String,
     val thumbnail: String
-)
+) : Parcelable

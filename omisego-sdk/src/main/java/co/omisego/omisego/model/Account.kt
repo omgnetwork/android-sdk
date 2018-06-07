@@ -7,6 +7,9 @@ package co.omisego.omisego.model
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 import java.util.Date
 
 /**
@@ -23,6 +26,7 @@ import java.util.Date
  * @param createdAt The creation date of the account.
  * @param updatedAt The date when the account was last updated.
  */
+@Parcelize
 data class Account(
     val id: String,
     val parentId: String,
@@ -30,8 +34,8 @@ data class Account(
     val description: String,
     val isMaster: Boolean,
     val avatar: Avatar,
-    val metadata: Map<String, Any>,
-    val encryptedMetadata: Map<String, Any>,
+    val metadata: @RawValue Map<String, Any>,
+    val encryptedMetadata: @RawValue Map<String, Any>,
     val createdAt: Date,
     val updatedAt: Date
-)
+) : Parcelable
