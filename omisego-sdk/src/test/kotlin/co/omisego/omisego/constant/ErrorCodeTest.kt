@@ -40,6 +40,8 @@ class ErrorCodeTest {
                 "server:unknown_error" -> ErrorCode.SERVER_UNKNOWN_ERROR
                 "user:access_token_not_found" -> ErrorCode.USER_ACCESS_TOKEN_NOT_FOUND
                 "user:access_token_expired" -> ErrorCode.USER_ACCESS_TOKEN_EXPIRED
+                "user:from_address_not_found" -> ErrorCode.USER_FROM_ADDRESS_NOT_FOUND
+                "user:from_address_mismatch" -> ErrorCode.USER_FROM_ADDRESS_MISMATCH
                 "sdk:network_error" -> ErrorCode.SDK_NETWORK_ERROR
                 "sdk:parse_error" -> ErrorCode.SDK_PARSE_ERROR
                 "sdk:unknown_error" -> ErrorCode.SDK_UNEXPECTED_ERROR

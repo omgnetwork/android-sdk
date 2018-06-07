@@ -53,6 +53,7 @@ class OMGAPIClientTest {
     private val consumeTransactionRequestFile: File by ResourceFile("me.consume_transaction-post.json")
     private val retrieveTransactionRequestFile: File by ResourceFile("me.create_transaction_request-post.json")
     private val getSettingFile: File by ResourceFile("me.get_settings-post.json")
+    private val transactionFile: File by ResourceFile("transaction.json")
     private val errorFile: File by ResourceFile("fail.client-invalid_auth_scheme.json")
     private val gson by lazy { GsonProvider.provide() }
     private lateinit var eWalletClient: EWalletClient
@@ -162,6 +163,40 @@ class OMGAPIClientTest {
             Versions.EWALLET_API,
             true,
             transactionConsumption
+        )
+
+        Thread.sleep(100)
+
+        verify(callback, times(1)).success(expected)
+    }
+
+    @Test
+    fun `OMGAPIClient should call transfer and parse successfully`() {
+        val element = gson.fromJson(transactionFile.readText(), JsonElement::class.java)
+        val result = Response.success(element)
+        transactionFile.mockEnqueueWithHttpCode(mockWebServer)
+
+        val callback: OMGCallback<Transaction> = mock()
+
+        omgAPIClient.transfer(mock()).enqueue(callback)
+
+        val data = result.body()!!.asJsonObject.getAsJsonObject("data")
+        val transaction = gson.fromJson<Transaction>(data, object : TypeToken<Transaction>() {}.type)
+
+        omgAPIClient.transfer(mock()).enqueue(object : OMGCallback<Transaction> {
+            override fun success(response: OMGResponse<Transaction>) {
+                // Do something
+            }
+
+            override fun fail(response: OMGResponse<APIError>) {
+                // Do something
+            }
+        })
+
+        val expected = OMGResponse(
+            Versions.EWALLET_API,
+            true,
+            transaction
         )
 
         Thread.sleep(100)
