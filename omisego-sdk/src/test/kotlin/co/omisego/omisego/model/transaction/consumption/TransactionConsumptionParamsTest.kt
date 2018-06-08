@@ -36,7 +36,7 @@ class TransactionConsumptionParamsTest {
     fun `TransactionConsumptionParams should be use amount null if transactionRequest amount equals the amount`() {
         val transactionRequest: TransactionRequest = mock()
 
-        whenever(transactionRequest.id).thenReturn("omg-test1234")
+        whenever(transactionRequest.formattedId).thenReturn("omg-test1234")
         whenever(transactionRequest.amount).thenReturn(1234.bd)
 
         val tx = TransactionConsumptionParams.create(transactionRequest, amount = 1234.bd)
@@ -47,7 +47,7 @@ class TransactionConsumptionParamsTest {
     fun `TransactionConsumptionParams should use amount as the sending amount if transactionRequest amount and the sending amount are not the same`() {
         val transactionRequest: TransactionRequest = mock()
 
-        whenever(transactionRequest.id).thenReturn("omg-test1234")
+        whenever(transactionRequest.formattedId).thenReturn("omg-test1234")
         whenever(transactionRequest.amount).thenReturn(1234.bd)
 
         val tx = TransactionConsumptionParams.create(transactionRequest, amount = 100.bd)
@@ -58,7 +58,7 @@ class TransactionConsumptionParamsTest {
     fun `TransactionConsumptionParams call function multiple times should produce unique idempotencyToken`() {
         val transactionRequest: TransactionRequest = mock()
 
-        whenever(transactionRequest.id).thenReturn("omg-test1234")
+        whenever(transactionRequest.formattedId).thenReturn("omg-test1234")
         whenever(transactionRequest.amount).thenReturn(1234.bd)
 
         val idempotencyTokenSet = mutableSetOf<String>()

@@ -15,9 +15,9 @@ import java.math.BigDecimal
  */
 data class TransactionConsumptionParams internal constructor(
     /**
-     * The id of the transaction request to be consumed
+     * The formattedTransactionRequestId of the transaction request to be consumed
      */
-    private val transactionRequestId: String,
+    private val formattedTransactionRequestId: String,
 
     /**
      * The amount of token to transfer (down to subunit to unit)
@@ -39,7 +39,7 @@ data class TransactionConsumptionParams internal constructor(
     /**
      * The idempotency token to use for the consumption
      */
-    val idempotencyToken: String = "$transactionRequestId-${System.nanoTime()}",
+    val idempotencyToken: String = "$formattedTransactionRequestId-${System.nanoTime()}",
 
     /**
      *  An id that can uniquely identify a transaction. Typically an order id from a provider.
@@ -90,7 +90,7 @@ data class TransactionConsumptionParams internal constructor(
             }
 
             return TransactionConsumptionParams(
-                transactionRequest.id,
+                transactionRequest.formattedId,
                 if (transactionRequest.amount == amount) null else amount,
                 address,
                 tokenId,

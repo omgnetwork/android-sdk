@@ -146,7 +146,7 @@ interface OMGQRScannerContract {
         /**
          * Verify if the given [txId] has already failed with code [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] yet
          *
-         * @param txId The transaction id which is created by EWallet backend
+         * @param txId The transaction formattedId which is created by EWallet backend
          * @return true if the given [txId] has already failed with code [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND], otherwise false.
          */
         fun hasTransactionAlreadyFailed(txId: String): Boolean
@@ -163,9 +163,9 @@ interface OMGQRScannerContract {
             var callback: OMGCallback<TransactionRequest>?
 
             /**
-             * Make request to the EWallet API to verify if the QR code has a valid transaction id
+             * Make request to the EWallet API to verify if the QR code has a valid transaction formattedId
              *
-             * @param txId The transaction id which is created by EWallet backend
+             * @param txId The transaction formattedId which is created by EWallet backend
              * @param fail A lambda that will be invoked when the verification pass
              * @param success A lambda that will be invoked when the verification fail
              */

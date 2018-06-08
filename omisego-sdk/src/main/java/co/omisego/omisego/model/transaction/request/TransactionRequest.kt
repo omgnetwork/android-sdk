@@ -16,6 +16,7 @@ import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionPa
 import kotlinx.android.parcel.Parcelize
 import co.omisego.omisego.operation.Listenable
 import co.omisego.omisego.websocket.SocketCustomEventListener
+import kotlinx.android.parcel.RawValue
 import java.math.BigDecimal
 import java.util.Date
 
@@ -68,6 +69,9 @@ enum class TransactionRequestStatus constructor(override val value: String) : OM
  * @param consumptionLifetime The amount of time in millisecond during which a consumption is valid
  * @param createdAt The creation date of the request
  * @param expiredAt The date when the request expired
+ * @param formattedId An id that can be encoded in a QR code and be used to retrieve the request later
+ * @param metadata Additional metadata for the transaction request
+ * @param encryptedMetadata Additional encrypted metadata for the transaction request
  */
 @Parcelize
 data class TransactionRequest(
@@ -86,7 +90,10 @@ data class TransactionRequest(
     val expirationReason: String?,
     val consumptionLifetime: Int?,
     val createdAt: Date?,
-    val expiredAt: Date?
+    val expiredAt: Date?,
+    val formattedId: String,
+    val metadata: @RawValue Map<String, Any>,
+    val encryptedMetadata: @RawValue Map<String, Any>
 ) : Parcelable, Listenable<SocketCustomEventListener.TransactionRequestListener>
 
 /**
