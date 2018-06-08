@@ -11,7 +11,7 @@ package co.omisego.omisego.model.transaction.send
  * Represents a structure used to create a transaction
  *
  * @param from The address from which to take the tokens (which must belong to the user).
- * If not specified, the user's primary balance will be used.
+ * If not specified, the user's primary address will be used.
  * @param to The address where to send the tokens.
  * @param amount The amount of minted token to transfer (down to subunit to unit).
  * @param tokenId The id of the minted token to send.
