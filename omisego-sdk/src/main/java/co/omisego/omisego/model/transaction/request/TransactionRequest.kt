@@ -8,7 +8,7 @@ package co.omisego.omisego.model.transaction.request
  */
 
 import co.omisego.omisego.constant.enums.OMGEnum
-import co.omisego.omisego.model.MintedToken
+import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
 import java.math.BigDecimal
@@ -54,20 +54,20 @@ data class TransactionRequest(
     val type: TransactionRequestType,
 
     /**
-     * The minted token for the request
+     * The token for the request
      * In the case of a type "send", this will be the token taken from the requester
      * In the case of a type "receive" this will be the token received by the requester
      */
-    val mintedToken: MintedToken,
+    val token: Token,
 
     /**
-     * The amount of minted token to use for the transaction (down to subunit to unit)
+     * The amount of token to use for the transaction (down to subunit to unit)
      * This amount needs to be either specified by the requester or the consumer
      */
     val amount: BigDecimal?,
 
     /**
-     * The address from which to send or receive the minted tokens
+     * The address from which to send or receive the tokens
      */
     val address: String?,
 
@@ -130,9 +130,9 @@ data class TransactionRequest(
 /**
  * An extension function that converts the [TransactionRequest] to the [TransactionConsumptionParams] easily
  *
- * @param amount The amount of minted token to transfer (down to subunit to unit)
+ * @param amount The amount of token to transfer (down to subunit to unit)
  * @param address The address to use for the consumption
- * @param tokenId The id of the minted token to use for the request
+ * @param tokenId The id of the token to use for the request
  * In the case of a type "send", this will be the token that the consumer will receive
  * In the case of a type "receive" this will be the token that the consumer will send
  * @param idempotencyToken The idempotency token to use for the consumption

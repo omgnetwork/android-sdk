@@ -20,7 +20,7 @@ data class TransactionConsumptionParams internal constructor(
     private val transactionRequestId: String,
 
     /**
-     * The amount of minted token to transfer (down to subunit to unit)
+     * The amount of token to transfer (down to subunit to unit)
      */
     var amount: BigDecimal? = null,
 
@@ -30,7 +30,7 @@ data class TransactionConsumptionParams internal constructor(
     val address: String? = null,
 
     /**
-     * The id of the minted token to use for the request
+     * The id of the token to use for the request
      * In the case of a type "send", this will be the token that the consumer will receive
      * In the case of a type "receive" this will be the token that the consumer will send
      */
@@ -63,9 +63,9 @@ data class TransactionConsumptionParams internal constructor(
          * Throws [IllegalArgumentException] if the amount is null and was not specified in the transaction request
          *
          * @param transactionRequest The transaction request to consume
-         * @param amount The amount of minted token to transfer (down to subunit to unit)
+         * @param amount The amount of token to transfer (down to subunit to unit)
          * @param address The address to use for the consumption
-         * @param tokenId The id of the minted token to use for the request
+         * @param tokenId The id of the token to use for the request
          * In the case of a type "send", this will be the token that the consumer will receive
          * In the case of a type "receive" this will be the token that the consumer will send
          * @param idempotencyToken The idempotency token to use for the consumption
@@ -86,7 +86,7 @@ data class TransactionConsumptionParams internal constructor(
             encryptedMetadata: Map<String, Any> = mapOf()
         ): TransactionConsumptionParams {
             require(transactionRequest.amount != null || amount != null) {
-                "The transactionRequest amount or the amount of minted token to transfer should be provided"
+                "The transactionRequest amount or the amount of token to transfer should be provided"
             }
 
             return TransactionConsumptionParams(

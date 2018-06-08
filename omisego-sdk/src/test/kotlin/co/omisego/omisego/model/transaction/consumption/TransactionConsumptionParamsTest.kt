@@ -29,7 +29,7 @@ class TransactionConsumptionParamsTest {
         val result = { TransactionConsumptionParams.create(transactionRequest) }
 
         result shouldThrow IllegalArgumentException::class withMessage
-            "The transactionRequest amount or the amount of minted token to transfer should be provided"
+            "The transactionRequest amount or the amount of token to transfer should be provided"
     }
 
     @Test

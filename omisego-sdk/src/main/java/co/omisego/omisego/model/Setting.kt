@@ -10,6 +10,6 @@ package co.omisego.omisego.model
 /**
  * Represents the global settings of the provider
  *
- * @param mintedTokens A list of minted tokens available for the provider
+ * @param tokens A list of tokens available for the provider
  */
-data class Setting(val mintedTokens: List<MintedToken>)
+data class Setting(val tokens: List<Token>)

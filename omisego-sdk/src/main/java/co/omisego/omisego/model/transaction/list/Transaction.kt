@@ -7,7 +7,7 @@ package co.omisego.omisego.model.transaction.list
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.MintedToken
+import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.pagination.Paginable
 import java.math.BigDecimal
 import java.util.Date
@@ -17,7 +17,7 @@ data class TransactionExchange(val rate: Double)
 data class TransactionSource(
     val address: String,
     val amount: BigDecimal,
-    val mintedToken: MintedToken
+    val token: Token
 )
 
 data class Transaction(

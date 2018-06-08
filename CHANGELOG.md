@@ -14,6 +14,7 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Renamed `EncryptionHelper` to `OMGEncryption`. Now, it can be only used for create an authorization header for connecting to the eWallet API.
 - Changed the initialization steps of the `EWalletClient` from passing the base64 encrypted of "apiKey:authorizationToken" to pass both `apiKey` and `authenticationToken` to prevent misconfiguration.
 - Removed `updatedAt` field from the `Transaction`
+- Rename `MintedToken` to `Token`.
 
 ## [0.9.3] - 2018-05-11
 ### Added

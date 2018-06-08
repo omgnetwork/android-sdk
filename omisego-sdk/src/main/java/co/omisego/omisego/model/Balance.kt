@@ -11,12 +11,12 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 /**
- * Represents a balance of a minted token
+ * Represents a balance of a token
  *
- * @param mintedToken The minted token corresponding to the balance
- * @param amount The total amount of minted token available for the current user.
+ * @param token The token corresponding to the balance
+ * @param amount The total amount of token available for the current user.
  */
-data class Balance(val amount: BigDecimal, val mintedToken: MintedToken) {
+data class Balance(val amount: BigDecimal, val token: Token) {
 
     /**
      * Helper method that returns an easily readable value of the amount
@@ -26,7 +26,7 @@ data class Balance(val amount: BigDecimal, val mintedToken: MintedToken) {
      * @return The formatted balance amount with thousand separator
      */
     fun displayAmount(precision: Int = 2): String {
-        return "%,.${precision}f".format(amount.divide(mintedToken.subunitToUnit, precision, RoundingMode.FLOOR))
+        return "%,.${precision}f".format(amount.divide(token.subunitToUnit, precision, RoundingMode.FLOOR))
     }
 
     /**
@@ -34,14 +34,14 @@ data class Balance(val amount: BigDecimal, val mintedToken: MintedToken) {
      *
      * @param augend balance to be added to this Balance
      * @return An added Balance whose amount is this.amount + augend.amount
-     * @throws UnsupportedOperationException if [MintedToken]'s compatWith is return false
+     * @throws UnsupportedOperationException if [Token]'s compatWith is return false
      */
     operator fun plus(augend: Balance): Balance {
-        if (this.mintedToken compatWith augend.mintedToken) {
+        if (this.token compatWith augend.token) {
             val newAmount = this.amount.plus(augend.amount)
-            return Balance(newAmount, this.mintedToken.copy())
+            return Balance(newAmount, this.token.copy())
         }
-        throw UnsupportedOperationException("Balances are not compatible. Make sure MintedTokens have the same symbol and subunitToUnit.")
+        throw UnsupportedOperationException("Balances are not compatible. Make sure Tokens have the same symbol and subunitToUnit.")
     }
 
     /**
@@ -49,13 +49,13 @@ data class Balance(val amount: BigDecimal, val mintedToken: MintedToken) {
      *
      * @param subtrahend balance to be subracted to this Balance
      * @return An added Balance whose amount is this.amount - subtrahend.amount
-     * @throws UnsupportedOperationException if [MintedToken]'s compatWith is return false
+     * @throws UnsupportedOperationException if [Token]'s compatWith is return false
      */
     operator fun minus(subtrahend: Balance): Balance {
-        if (this.mintedToken compatWith subtrahend.mintedToken) {
+        if (this.token compatWith subtrahend.token) {
             val newAmount = this.amount.subtract(subtrahend.amount)
-            return Balance(newAmount, this.mintedToken.copy())
+            return Balance(newAmount, this.token.copy())
         }
-        throw UnsupportedOperationException("Balances are not compatible. Make sure MintedTokens have the same symbol and subunitToUnit.")
+        throw UnsupportedOperationException("Balances are not compatible. Make sure Tokens have the same symbol and subunitToUnit.")
     }
 }
