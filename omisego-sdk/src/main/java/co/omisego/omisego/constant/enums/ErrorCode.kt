@@ -33,6 +33,8 @@ enum class ErrorCode constructor(private val code: String) {
     //Error code from OmiseGO user API
     USER_ACCESS_TOKEN_EXPIRED("user:access_token_expired"),
     USER_ACCESS_TOKEN_NOT_FOUND("user:access_token_not_found"),
+    USER_FROM_ADDRESS_NOT_FOUND("user:from_address_not_found"),
+    USER_FROM_ADDRESS_MISMATCH("user:from_address_mismatch"),
 
     // Error code from OmiseGO SDK itself
     SDK_NETWORK_ERROR("sdk:network_error"),

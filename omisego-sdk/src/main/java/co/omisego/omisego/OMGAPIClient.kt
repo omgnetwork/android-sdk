@@ -15,6 +15,7 @@ import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionPa
 import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
 import co.omisego.omisego.model.transaction.request.TransactionRequestParams
+import co.omisego.omisego.model.transaction.send.TransactionSendParam
 import co.omisego.omisego.network.ewallet.EWalletClient
 
 /**
@@ -139,10 +140,19 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      * Asynchronously reject the transaction consumption from the given [TransactionConsumptionActionParams] object
      * if *success* the [OMGCallback<TransactionConsumption>] will be invoked with the [co.omisego.omisego.model.transaction.consumption.TransactionConsumption] parameter,
      * if *fail* the [OMGCallback<TransactionConsumption>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
+     *
      * @param request The TransactionConsumptionActionParams object containing the transaction consumption id to be rejected.
      */
     fun rejectTransactionConsumption(request: TransactionConsumptionActionParams) =
         eWalletAPI.rejectTransactionConsumption(request)
+
+    /**
+     * Send tokens to an address
+     *
+     * @param request The TransactionSendParams object to customize the transaction
+     */
+    fun transfer(request: TransactionSendParam) =
+        eWalletAPI.transfer(request)
 
     /**
      * Set new [authenticationToken].

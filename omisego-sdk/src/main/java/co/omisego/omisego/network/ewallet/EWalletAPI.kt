@@ -17,6 +17,7 @@ import co.omisego.omisego.constant.Endpoints.LIST_WALLETS
 import co.omisego.omisego.constant.Endpoints.LOGOUT
 import co.omisego.omisego.constant.Endpoints.REJECT_TRANSACTION
 import co.omisego.omisego.constant.Endpoints.RETRIEVE_TRANSACTION_REQUEST
+import co.omisego.omisego.constant.Endpoints.TRANSFER
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
 import co.omisego.omisego.model.Logout
 import co.omisego.omisego.model.Setting
@@ -31,6 +32,7 @@ import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
 import co.omisego.omisego.model.transaction.request.TransactionRequestParams
+import co.omisego.omisego.model.transaction.send.TransactionSendParam
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -72,4 +74,9 @@ interface EWalletAPI {
     fun rejectTransactionConsumption(
         @Body request: TransactionConsumptionActionParams
     ): OMGCall<TransactionConsumption>
+
+    @POST(TRANSFER)
+    fun transfer(
+        @Body request: TransactionSendParam
+    ): OMGCall<Transaction>
 }

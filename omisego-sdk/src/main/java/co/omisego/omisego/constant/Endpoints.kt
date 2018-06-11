@@ -17,5 +17,6 @@ object Endpoints {
     const val CONSUME_TRANSACTION_REQUEST = "me.consume_transaction_request"
     const val APPROVE_TRANSACTION = "me.approve_transaction_consumption"
     const val REJECT_TRANSACTION = "me.reject_transaction_consumption"
+    const val TRANSFER = "me.transfer"
     const val GET_SETTINGS = "me.get_settings"
 }
