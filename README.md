@@ -11,7 +11,7 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
   - [Initialization](#initialization)
   - [Retrieving resources](#retrieving-resources)
     - [Get the current user](#get-the-current-user)
-    - [Get the addresses of the current user](#get-the-addresses-of-the-current-user)
+    - [Get the wallets of the current user](#get-the-wallets-of-the-current-user)
     - [Get the provider settings](#get-the-provider-settings)
     - [Get the current user's transactions](#get-the-current-users-transactions)
   - [Transferring tokens](#transferring-tokens)
@@ -104,21 +104,21 @@ omgAPIClient.getCurrentUser().enqueue(object: OMGCallback<User>{
 })
 ```
 
-### Get the addresses of the current user
+### Get the wallets of the current user
 
 ```kotlin
-omgAPIClient.listBalances().enqueue(object: OMGCallback<BalanceList>{
+omgAPIClient.listWallets().enqueue(object: OMGCallback<WalletList>{
     override fun fail(response: OMGResponse<APIError>) {
         
     }
 
-    override fun success(response: OMGResponse<BalanceList>) {
+    override fun success(response: OMGResponse<WalletList>) {
         
     }
 })
 ```
 
-> Note: For now a user will have only one address.
+> Note: For now a user will have only one wallet.
 
 ### Get the provider settings
 
@@ -180,7 +180,7 @@ Where
     mapOf(FROM to "some_address", ID to "some_id")
     ```
 
-* `address` *(optional)* is an optional address that belongs to the current user (primary address by default)
+* `address` *(optional)* is an optional address that belongs to the current user (primary wallet address by default)
 
 Then you can call:
 
@@ -255,7 +255,7 @@ Where:
     * `type`: The QR code type, only supports `TransactionRequestType.RECEIVE` for now.
     * `tokenId`: The id of the desired token.
     * `amount`: (optional) The amount of token to receive. This amount can be either inputted when generating or consuming a transaction request.
-    * `address`: (optional) The address specifying where the transaction should be sent to. If not specified, the current user's primary address will be used.
+    * `address`: (optional) The address specifying where the transaction should be sent to. If not specified, the current user's primary wallet address will be used.
     * `correlationId`: (optional) An id that can uniquely identify a transaction. Typically an order id from a provider.
     * `requireConfirmation`: A boolean indicating if the request needs a confirmation from the requester before being proceeded
     * `maxConsumptions`: (optional) The maximum number of time that this request can be consumed
@@ -303,7 +303,7 @@ omgAPIClient.consumeTransactionRequest(request).enqueue(object : OMGCallback<Tra
 Where 
 * `request` is a `TransactionConsumptionParams` data class constructed using:
     * `transactionRequest`: The transactionRequest obtained from the QR scanner.
-    * `address`: (optional) The address from which to take the funds. If not specified, the current user's primary address will be used.
+    * `address`: (optional) The address from which to take the funds. If not specified, the current user's primary wallet address will be used.
     * `tokenId`: (optional) The token id to use for the consumption.
     * `amount`: (optional) The amount of token to send. This amount can be either inputted when generating or consuming a transaction request.
     

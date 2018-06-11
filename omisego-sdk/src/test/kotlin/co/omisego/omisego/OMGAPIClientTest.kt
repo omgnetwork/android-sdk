@@ -14,10 +14,10 @@ import co.omisego.omisego.exception.OMGAPIErrorException
 import co.omisego.omisego.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.APIError
-import co.omisego.omisego.model.BalanceList
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
+import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.pagination.Pagination
 import co.omisego.omisego.model.pagination.PaginationList
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
@@ -39,15 +39,20 @@ import org.amshove.kluent.withMessage
 import org.json.JSONObject
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import retrofit2.Response
 import java.io.File
 import java.util.concurrent.Executor
 
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [23])
 class OMGAPIClientTest {
     private val secretFileName: String = "secret.json" // Replace your secret file here
     private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
     private val userFile: File by ResourceFile("user.me-post.json")
-    private val listBalanceFile: File by ResourceFile("me.list_balances-post.json")
+    private val listWalletsFile: File by ResourceFile("list_wallets.json")
     private val listTransactionsFile: File by ResourceFile("me.list_transactions-post.json")
     private val createTransactionRequestFile: File by ResourceFile("me.create_transaction_request-post.json")
     private val consumeTransactionRequestFile: File by ResourceFile("me.consume_transaction-post.json")
@@ -80,15 +85,15 @@ class OMGAPIClientTest {
     }
 
     @Test
-    fun `OMGAPIClient call list_balance and success callback should be invoked successfully`() {
-        val element = gson.fromJson(listBalanceFile.readText(), JsonElement::class.java)
+    fun `OMGAPIClient call list_wallets and success callback should be invoked successfully`() {
+        val element = gson.fromJson(listWalletsFile.readText(), JsonElement::class.java)
         val result = Response.success(element)
-        listBalanceFile.mockEnqueueWithHttpCode(mockWebServer)
+        listWalletsFile.mockEnqueueWithHttpCode(mockWebServer)
 
-        val callback: OMGCallback<BalanceList> = mock()
-        omgAPIClient.listBalances().enqueue(callback)
+        val callback: OMGCallback<WalletList> = mock()
+        omgAPIClient.listWallets().enqueue(callback)
 
-        val expected = gson.fromJson<OMGResponse<BalanceList>>(result.body(), object : TypeToken<OMGResponse<BalanceList>>() {}.type)
+        val expected = gson.fromJson<OMGResponse<WalletList>>(result.body(), object : TypeToken<OMGResponse<WalletList>>() {}.type)
 
         Thread.sleep(100)
 
@@ -171,9 +176,9 @@ class OMGAPIClientTest {
 
     @Test
     fun `OMGAPIClient should call get_transaction_request successfully`() {
-        val element = gson.fromJson(retrieveTransactionRequestFile.readText(), JsonElement::class.java)
+        val element = gson.fromJson(createTransactionRequestFile.readText(), JsonElement::class.java)
         val result = Response.success(element)
-        retrieveTransactionRequestFile.mockEnqueueWithHttpCode(mockWebServer)
+        createTransactionRequestFile.mockEnqueueWithHttpCode(mockWebServer)
 
         val callback: OMGCallback<TransactionRequest> = mock()
 
@@ -204,7 +209,7 @@ class OMGAPIClientTest {
 
         val expected = gson.fromJson<OMGResponse<User>>(result.body(), object : TypeToken<OMGResponse<User>>() {}.type)
 
-        Thread.sleep(100)
+        Thread.sleep(1000)
 
         verify(callback, times(1)).success(expected)
     }

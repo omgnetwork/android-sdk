@@ -14,10 +14,10 @@ import co.omisego.omisego.constant.HTTPHeaders
 import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
-import co.omisego.omisego.model.BalanceList
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
+import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.testUtils.GsonProvider
 import co.omisego.omisego.utils.OMGEncryptionHelper
@@ -30,16 +30,21 @@ import org.amshove.kluent.withMessage
 import org.json.JSONObject
 import org.junit.After
 import org.junit.Before
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import java.io.File
 import java.util.concurrent.Executor
 import kotlin.test.Test
 
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [23])
 class EWalletClientTest {
     private val secretFileName: String = "secret.json" // Replace your secret file here
     private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
+    private val listWalletsFile: File by ResourceFile("list_wallets.json")
     private val userFile: File by ResourceFile("user.me-post.json")
     private val listTransactionsFile: File by ResourceFile("me.list_transactions-post.json")
-    private val listBalanceFile: File by ResourceFile("me.list_balances-post.json")
     private val getSettingFile: File by ResourceFile("me.get_settings-post.json")
     private var mockWebServer: MockWebServer = MockWebServer()
     private var mockUrl: HttpUrl = mockWebServer.url("/api/")
@@ -84,39 +89,12 @@ class EWalletClientTest {
     }
 
     @Test
-    fun `Calls list_balances should be match with the expected response`() {
-        listBalanceFile.mockEnqueueWithHttpCode(mockWebServer)
+    fun `Calls list_wallets should be match with the expected response`() {
+        listWalletsFile.mockEnqueueWithHttpCode(mockWebServer)
 
-        val actualResponse = eWalletClient.eWalletAPI.listBalances().execute().body()!!
-        val expectedResponse = buildResponse<BalanceList>(listBalanceFile.readText())
+        val actualResponse = eWalletClient.eWalletAPI.listWallets().execute().body()!!
+        val expectedResponse = buildResponse<WalletList>(listWalletsFile.readText())
         actualResponse shouldEqual expectedResponse
-    }
-
-    @Test
-    fun `Empty base_url should throw IllegalStateException`() {
-        val errorFun = {
-            EWalletClient.Builder {
-                authenticationToken = secret.getString("auth_token")
-                callbackExecutor = Executor { it.run() }
-                debug = false
-            }.build()
-        }
-
-        errorFun shouldThrow Exceptions.emptyBaseURL::class withMessage
-                Exceptions.emptyBaseURL.message!!
-    }
-
-    @Test
-    fun `Empty auth_token should throw IllegalStateException`() {
-        val errorFun = {
-            EWalletClient.Builder {
-                debugUrl = mockUrl
-                callbackExecutor = Executor { it.run() }
-                debug = false
-            }.build()
-        }
-        errorFun shouldThrow Exceptions.emptyAuthenticationToken::class withMessage
-                Exceptions.emptyAuthenticationToken.message!!
     }
 
     @Test
@@ -153,12 +131,12 @@ class EWalletClientTest {
     }
 
     @Test
-    fun `EWalletClient request to list_balance with the correct path`() {
-        listBalanceFile.mockEnqueueWithHttpCode(mockWebServer)
+    fun `EWalletClient request to list_wallets with the correct path`() {
+        listWalletsFile.mockEnqueueWithHttpCode(mockWebServer)
 
-        eWalletClient.eWalletAPI.listBalances().execute()
+        eWalletClient.eWalletAPI.listWallets().execute()
         val request = mockWebServer.takeRequest()
-        request.path shouldEqual "/api/${Endpoints.LIST_BALANCE}"
+        request.path shouldEqual "/api/${Endpoints.LIST_WALLETS}"
     }
 
     @Test
@@ -180,6 +158,12 @@ class EWalletClientTest {
         val request = mockWebServer.takeRequest()
 
         request.path shouldEqual "/api/${Endpoints.LOGOUT}"
+    }
+
+    @Test
+    fun `EWalletClient should throws an IllegalStateException if the clientConfiguration is not set`() {
+        val error = { EWalletClient.Builder { }.build() }
+        error shouldThrow IllegalStateException::class withMessage Exceptions.emptyAuthenticationToken.message!!
     }
 
     private fun loadSecretFile(filename: String): JSONObject {

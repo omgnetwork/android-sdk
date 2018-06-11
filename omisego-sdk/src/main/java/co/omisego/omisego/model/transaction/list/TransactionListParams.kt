@@ -33,7 +33,6 @@ data class TransactionListParams internal constructor(
      * - [Paginable.Transaction.SortableFields.STATUS]
      * - [Paginable.Transaction.SortableFields.FROM]
      * - [Paginable.Transaction.SortableFields.CREATED_AT]
-     * - [Paginable.Transaction.SortableFields.UPDATED_AT]
      */
     val sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
 
@@ -62,7 +61,7 @@ data class TransactionListParams internal constructor(
     val searchTerms: Map<Paginable.Transaction.SearchableFields, Any>? = null,
 
     /**
-     * An optional address that belongs to the current user (primary address by default)
+     * An optional wallet address that belongs to the current user (primary address by default)
      */
     val address: String? = null
 ) {
