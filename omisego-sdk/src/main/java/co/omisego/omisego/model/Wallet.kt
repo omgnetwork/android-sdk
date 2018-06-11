@@ -1,5 +1,9 @@
 package co.omisego.omisego.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
+
 /*
  * OmiseGO
  *
@@ -21,6 +25,7 @@ package co.omisego.omisego.model
  * @param metadata Any additional metadata that need to be stored as a dictionary
  * @param encryptedMetadata Any additional encrypted metadata that need to be stored as a dictionary
  */
+@Parcelize
 data class Wallet(
     val address: String,
     val balances: List<Balance>,
@@ -30,6 +35,6 @@ data class Wallet(
     val user: User?,
     val accountId: String?,
     val account: Account?,
-    val metadata: Map<String, Any>,
-    val encryptedMetadata: Map<String, Any>
-)
+    val metadata: @RawValue Map<String, Any>,
+    val encryptedMetadata: @RawValue Map<String, Any>
+) : Parcelable

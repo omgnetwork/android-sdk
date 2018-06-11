@@ -109,7 +109,7 @@ class BalanceTest {
 
     @Test
     fun `Balance should be parcelized correctly`() {
-        val balance1 = Balance(1_999_000_000_000.0.bd, MintedToken("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd))
+        val balance1 = Balance(1_999_000_000_000.0.bd, Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd))
         balance1.validateParcel().apply {
             this shouldEqual balance1
             this shouldNotBe balance1

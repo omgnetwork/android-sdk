@@ -19,7 +19,7 @@ import java.math.RoundingMode
  * @param amount The total amount of token available for the current user.
  */
 @Parcelize
-data class Balance(val amount: BigDecimal, val token: Token): Parcelable {
+data class Balance(val amount: BigDecimal, val token: Token) : Parcelable {
 
     /**
      * Helper method that returns an easily readable value of the amount

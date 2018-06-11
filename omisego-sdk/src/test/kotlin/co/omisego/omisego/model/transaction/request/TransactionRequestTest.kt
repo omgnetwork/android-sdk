@@ -9,7 +9,7 @@ package co.omisego.omisego.model.transaction.request
 
 import android.support.test.runner.AndroidJUnit4
 import co.omisego.omisego.extension.bd
-import co.omisego.omisego.model.MintedToken
+import co.omisego.omisego.model.Token
 import co.omisego.omisego.utils.validateParcel
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
@@ -29,7 +29,7 @@ class TransactionRequestTest {
         transactionRequest = TransactionRequest(
             "1234",
             TransactionRequestType.RECEIVE,
-            MintedToken("1234", "OMG", "OmiseGO", 1000.bd),
+            Token("1234", "OMG", "OmiseGO", 1000.bd),
             100.bd,
             expirationDate = Date(),
             requireConfirmation = false,

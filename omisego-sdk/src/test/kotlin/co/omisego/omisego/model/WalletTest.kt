@@ -19,22 +19,33 @@ import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [23])
-class AddressTest {
-    private lateinit var address: Address
+class WalletTest {
+    private lateinit var address: Wallet
 
     @Before
     fun setup() {
-        address = Address("1234-1234-1234", listOf(
-            Balance(100.bd, MintedToken("1234", "OMG", "OmiseGO", 100.bd)),
-            Balance(100000000.bd, MintedToken("1234-1234-1235-12345", "ETH", "Ether", 100000000.bd))
-        ))
+        address = Wallet(
+            "1234-1234-1234",
+            listOf(
+                Balance(100.bd, Token("1234", "OMG", "OmiseGO", 100.bd)),
+                Balance(100000000.bd, Token("1234-1234-1235-12345", "ETH", "Ether", 100000000.bd))
+            ),
+            "",
+            "",
+            null,
+            null,
+            null,
+            null,
+            mapOf(),
+            mapOf()
+        )
     }
 
     @Test
-    fun `Address should be parcelized correctly`() {
+    fun `Wallet should be parcelized correctly`() {
         address.validateParcel().apply {
-            this shouldEqual this@AddressTest.address
-            this shouldNotBe this@AddressTest.address
+            this shouldEqual this@WalletTest.address
+            this shouldNotBe this@WalletTest.address
         }
     }
 }
