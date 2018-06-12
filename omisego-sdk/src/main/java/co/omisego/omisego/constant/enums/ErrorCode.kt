@@ -22,6 +22,11 @@ enum class ErrorCode constructor(private val code: String) {
     SERVER_INTERNAL_SERVER_ERROR("server:internal_server_error"),
     SERVER_UNKNOWN_ERROR("server:unknown_error"),
     TOKEN_NOT_FOUND("token:token_not_found"),
+    TRANSACTION_SAME_ADDRESS("transaction:same_address"),
+    TRANSACTION_INSUFFICIENT_FUNDS("transaction:insufficient_funds"),
+    TRANSACTION_REQUEST_EXPIRED("transaction_request:expired"),
+    TRANSACTION_REQUEST_MAX_CONSUMPTIONS_REACHED("transaction_request:max_consumptions_reached"),
+    TRANSACTION_REQUEST_MAX_CONSUMPTIONS_PER_USER_REACHED("transaction_request:max_consumptions_per_user_reached"),
     TRANSACTION_REQUEST_NOT_FOUND("transaction_request:transaction_request_not_found"),
     TRANSACTION_CONSUMPTION_NOT_OWNER("transaction_consumption:not_owner"),
     TRANSACTION_CONSUMPTION_INVALID_TOKEN("transaction_consumption:invalid_token"),
@@ -29,6 +34,7 @@ enum class ErrorCode constructor(private val code: String) {
     TRANSACTION_CONSUMPTION_UNFINALIZED("transaction_consumption:unfinalized"),
     WEBSOCKET_FORBIDDEN_CHANNEL("websocket:forbidden_channel"),
     WEBSOCKET_CHANNEL_NOT_FOUND("websocket:channel_not_found"),
+    WEB_SOCKET_CONNECT_ERROR("websocket:connect_error"),
 
     //Error code from OmiseGO user API
     USER_ACCESS_TOKEN_EXPIRED("user:access_token_expired"),
