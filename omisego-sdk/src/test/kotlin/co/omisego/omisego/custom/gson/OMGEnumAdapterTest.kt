@@ -8,7 +8,7 @@ package co.omisego.omisego.custom.gson
  */
 
 import co.omisego.omisego.constant.enums.OMGEnum
-import co.omisego.omisego.testUtils.GsonProvider
+import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.Gson
 import org.amshove.kluent.shouldEqual
 import org.junit.Before
@@ -18,7 +18,7 @@ class OMGEnumAdapterTest {
     private lateinit var gson: Gson
     @Before
     fun setUp() {
-        gson = GsonProvider.provide()
+        gson = GsonProvider.create()
     }
 
     enum class TestEnum constructor(override val value: String) : OMGEnum {

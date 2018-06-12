@@ -10,7 +10,10 @@ package co.omisego.omisego.model.transaction.request
 import co.omisego.omisego.constant.enums.OMGEnum
 import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.User
+import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
+import co.omisego.omisego.operation.Listenable
+import co.omisego.omisego.websocket.SocketCustomEventListener
 import java.math.BigDecimal
 import java.util.Date
 
@@ -20,7 +23,10 @@ import java.util.Date
 enum class TransactionRequestType constructor(override val value: String) : OMGEnum {
 
     /* The initiator wants to receive a specified token */
-    RECEIVE("receive");
+    RECEIVE("receive"),
+
+    /* The initiator wants to send a specified token */
+    SEND("send");
 
     override fun toString(): String = value
 }
@@ -79,7 +85,7 @@ data class TransactionRequest(
     /**
      * The topic which can be listened in order to receive events regarding this request
      */
-    val socketTopic: String,
+    override val socketTopic: SocketTopic<SocketCustomEventListener.TransactionRequestListener>,
 
     /**
      * The maximum number of time that this request can be consumed
@@ -125,7 +131,7 @@ data class TransactionRequest(
      * The date when the request expired
      */
     val expiredAt: Date?
-)
+) : Listenable<SocketCustomEventListener.TransactionRequestListener>
 
 /**
  * An extension function that converts the [TransactionRequest] to the [TransactionConsumptionParams] easily

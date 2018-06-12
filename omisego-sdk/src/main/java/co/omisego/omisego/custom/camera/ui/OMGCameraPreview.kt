@@ -7,6 +7,7 @@ package co.omisego.omisego.custom.camera.ui
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.hardware.Camera
 import android.util.AttributeSet
@@ -20,6 +21,7 @@ import co.omisego.omisego.custom.camera.AutoFocusManager
 import co.omisego.omisego.custom.camera.CameraWrapper
 import java.lang.Exception
 
+@SuppressLint("ViewConstructor")
 @Suppress("DEPRECATION")
 class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
     private var mPreviewCallback: Camera.PreviewCallback? = null

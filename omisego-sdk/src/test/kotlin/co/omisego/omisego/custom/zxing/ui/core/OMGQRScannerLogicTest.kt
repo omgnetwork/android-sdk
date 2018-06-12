@@ -13,6 +13,7 @@ import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.custom.camera.utils.CameraUtils
 import co.omisego.omisego.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
+import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerLogic
@@ -40,7 +41,7 @@ import java.util.concurrent.Executor
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
 class OMGQRScannerLogicTest {
-    private val retrieveTransactionRequestFile: File by ResourceFile("me.create_transaction_request-post.json")
+    private val retrieveTransactionRequestFile: File by ResourceFile("transaction_request.json")
     private val omgQRScannerView: OMGQRScannerContract.View = mock()
     private val multiFormatReader: Reader = mock()
     private val sampleByteArray = byteArrayOf(0x00, 0x01, 0x02, 0x03)
@@ -55,11 +56,16 @@ class OMGQRScannerLogicTest {
         mockWebServer.start()
         val mockUrl = mockWebServer.url("/api/")
 
+        val config = ClientConfiguration(
+            "base_url",
+            "apiKey",
+            "authToken"
+        )
+
         val eWalletClient = EWalletClient.Builder {
             debugUrl = mockUrl
-            authenticationToken = "test"
+            clientConfiguration = config
             callbackExecutor = Executor { it.run() }
-            debug = false
         }.build()
 
         omgAPIClient = OMGAPIClient(eWalletClient)

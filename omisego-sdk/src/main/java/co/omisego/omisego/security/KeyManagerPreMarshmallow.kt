@@ -1,5 +1,6 @@
 package co.omisego.omisego.security
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.security.KeyPairGeneratorSpec
 import android.util.Base64
@@ -17,6 +18,7 @@ import javax.security.auth.x500.X500Principal
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+@SuppressLint("GetInstance")
 internal class KeyManagerPreMarshmallow(
     keyHolder: KeyHolder,
     private val keyManagerPreference: KeyManagerPreference
@@ -42,12 +44,12 @@ internal class KeyManagerPreMarshmallow(
         }
 
         val spec = KeyPairGeneratorSpec.Builder(context)
-                .setAlias(keyAlias)
-                .setSubject(X500Principal("CN=$keyAlias"))
-                .setSerialNumber(BigInteger.TEN)
-                .setStartDate(start.time)
-                .setEndDate(end.time)
-                .build()
+            .setAlias(keyAlias)
+            .setSubject(X500Principal("CN=$keyAlias"))
+            .setSerialNumber(BigInteger.TEN)
+            .setStartDate(start.time)
+            .setEndDate(end.time)
+            .build()
 
         with(KeyPairGenerator.getInstance("RSA", ANDROID_KEY_STORE)) {
             initialize(spec)

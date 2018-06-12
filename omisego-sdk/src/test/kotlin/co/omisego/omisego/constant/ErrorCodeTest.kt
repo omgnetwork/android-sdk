@@ -46,6 +46,8 @@ class ErrorCodeTest {
                 "sdk:parse_error" -> ErrorCode.SDK_PARSE_ERROR
                 "sdk:unknown_error" -> ErrorCode.SDK_UNEXPECTED_ERROR
                 "token:token_not_found" -> ErrorCode.TOKEN_NOT_FOUND
+                "sdk:socket_error" -> ErrorCode.SDK_SOCKET_ERROR
+                "token:token_not_found" -> ErrorCode.TOKEN_NOT_FOUND
                 "transaction_request:transaction_request_not_found" -> ErrorCode.TRANSACTION_REQUEST_NOT_FOUND
                 "transaction_consumption:not_owner" -> ErrorCode.TRANSACTION_CONSUMPTION_NOT_OWNER
                 "transaction_consumption:invalid_token" -> ErrorCode.TRANSACTION_CONSUMPTION_INVALID_TOKEN

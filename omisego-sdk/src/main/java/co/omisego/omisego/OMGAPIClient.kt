@@ -29,6 +29,7 @@ import co.omisego.omisego.network.ewallet.EWalletClient
  * <code>
  * val eWalletClient = EWalletClient.Builder {
  *      authenticationToken = YOUR_TOKEN
+ *      apiKey = YOUR_API_KEY
  *      baseUrl = YOUR_BASE_URL
  * }.build()
  * </code>

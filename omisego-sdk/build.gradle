@@ -13,6 +13,7 @@ android {
         versionCode 1
         versionName versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-proguard-rules.pro'
     }
 
     buildTypes {
@@ -70,16 +71,17 @@ tasks.withType(Javadoc) {
 }
 
 dependencies {
-    // Core dependencies
+    // Client dependencies
     api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     // Used for the QRCode generator and the QRCode scanner.
-    api 'com.google.zxing:core:3.3.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
-    implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support:support-v4:27.1.0'
+    implementation 'com.google.zxing:core:3.3.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+
+    // For networking stuff
+    api 'com.squareup.retrofit2:retrofit:2.4.0'
+    api 'com.squareup.retrofit2:converter-gson:2.4.0'
+    api 'com.squareup.okhttp3:logging-interceptor:3.9.1'
 
     // Testing dependencies
     testImplementation 'org.json:json:20160810'
@@ -92,9 +94,9 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:3.4.2'
     testImplementation 'com.squareup.okhttp3:mockwebserver:3.9.1'
     testImplementation 'com.squareup.retrofit2:retrofit-mock:2.3.0'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    androidTestImplementation 'com.android.support.test:rules:1.0.1'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
 }
 
 repositories {

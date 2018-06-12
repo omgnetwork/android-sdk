@@ -1,3 +1,4 @@
+
 # OmiseGO Android SDK
 
 The [OmiseGO](https://omisego.network) Android SDK allows developers to easily interact with a node of the OmiseGO eWallet.
@@ -21,6 +22,16 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
   - [QR codes](#qr-codes)
     - [Generate a QR code](#generate-qr-code-bitmap-representation-of-a-transaction-request)
     - [Scan a QR code](#scan-a-qr-code)
+  - [Websocket](#websocket)
+    - [Initialization](#websocket-initialization)
+    - [Listen for the system event](#listen-for-the-system-event)
+        - [Connection Event](#connection-event)
+        - [Channel Event](#channel-event)
+    - [Listen for the custom event](#listen-for-the-custom-event)
+        - [TransactionRequest Event](#transactionrequest-event)
+        - [TransactionConsumption Event](#transactionconsumption-event)  
+    - [Stop listen for the custom event](#stop-listening-for-the-custom-event)
+    - [Stop listen for the system event](#stop-listening-for-the-system-event)
 - [Run Kotlin Lint](#run-kotlin-lint)
 - [Test](#test)
 - [Contributing](#contributing)
@@ -33,7 +44,7 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
 
 ## Installation
 
-To use the OmiseGO SDK in your android project, simply add the following line in the module's build.gradle
+To use the OmiseGO SDK in your android project, simply add the following line in the module's `build.gradle`
  
 ```groovy
 dependencies {
@@ -45,50 +56,60 @@ dependencies {
 
 ### Initialization
 
-Before using the SDK to retrieve a resource, you need to initialize the client (`OMGApiClient`) with a builder (`OMGApiClient.builder`).
-You should to this as soon as you obtain a valid authentication token corresponding to the current user from the Wallet API.
+Before using the SDK to retrieve a resource, you need to initialize the client (`EWalletClient`) with a `ClientConfiguration` object.
 
+You should do this as soon as you obtain a valid authentication token corresponding to the current user from the Wallet API.
+
+Then you need to pass it to the `EWalletClient.Builder` and call `build()` to get the `EWalletClient` instance.
+
+Lastly, you will need to pass the instance that you got from the previous step to the `OMGAPIClient`'s constructor.
+
+For example,
 ```kotlin
- val token = EncryptionHelper.encryptBase64(apiKey, authToken)
- 
+ val config = ClientConfiguration(
+     baseURL = "YOUR_BASE_URL",
+     apiKey = "YOUR_API_KEY",
+     authenticationToken = "YOUR_AUTH_TOKEN"
+ )
+
  val eWalletClient = EWalletClient.Builder {
-     baseURL = baseURL
-     authenticationToken = token
-     debug = true // Print request and response log
+     clientConfiguration = config
+     debug = false
  }.build()
  
- val omgAPIClient = OMGApiClient(eWalletClient)
+ val omgAPIClient = OMGAPIClient(eWalletClient)
 ```
 
 Where:
-`apiKey` is the api key generated from your OmiseGO admin panel.
-`authenticationToken` is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
-`baseURL` is the URL of the OmiseGO Wallet API.
-> You can find more info on how to retrieve this token in the OmiseGO server SDK documentations.
+* `apiKey` is the api key generated from your OmiseGO admin panel.
+* `authenticationToken` is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
+> You can find more info on how to retrieve this token in the [OmiseGO server SDK documentations](https://github.com/omisego/ruby-sdk#login).
+* `baseURL` is the URL of the OmiseGO Wallet API. **Note**: This need to be ended with '/'.
+* `debug` *(Optional)* is a boolean indicating if the SDK should print logs in the console. default: `false`. 
 
 ## Retrieving resources
 
-Once you have an initialized client, you can retrieve different resources.
-Each call takes a `OMGCallback` interface that returns a `OMGResponse` object:
+Once you have a client object in the [initialization section](#initialization), you can retrieve different resources.
+Every call takes an `OMGCallback` interface that returns a `OMGResponse` object:
 
 ```kotlin
 interface OMGCallback<in T> {
     fun success(response: OMGResponse<T>)
-    fun fail(response: OMGResponse<ApiError>)
+    fun fail(response: OMGResponse<APIError>)
 }
 ```
 
 ```kotlin
 data class OMGResponse<out T>(val version: String, val success: Boolean, val data: T)
 
-data class ApiError(val code: ErrorCode, val description: String)
+data class APIError(val code: ErrorCode, val description: String)
 ```
 
 Where:
 
 `success` is the function invoked when the `success` boolean in the response is `true`. This function will provide the corresponding data model to an API endpoint.
 
-`fail` is the function invoked when the `success` boolean in the response is `false`. This function will provide the `ApiError` object which contains informations about the failure.
+`fail` is the function invoked when the `success` boolean in the response is `false`. This function will provide the `APIError` object which contains information about the failure.
 
 ### Get the current user
 
@@ -447,7 +468,7 @@ class QRScannerActivity : AppCompatActivity(), OMGQRScannerContract.Callback {
     override fun onPause() {
         super.onPause()
         scannerView.stopCamera()
-    }
+    } 
 
     override fun onResume() {
         super.onResume()
@@ -503,22 +524,203 @@ When the scanner successfully decodes a `TransactionRequest` it will call its de
 </manifest>
 ```
 
+# Websocket
+
+The transaction request flow is as follow:
+
+1. Create a `TransactionRequest` successfully.
+2. Consume that `TransactionRequest` which will generate a TransactionConsumption.
+3. Approve or reject the `TransactionConsumption` generated in step 2.
+
+This section describes the use of the `OMGSocketClient` in order to listen for events which happens after step 2 or step 3.
+
+## Websocket Initialization
+
+Similarly to the `OMGAPIClient`, the `OMGSocketClient` needs to be first initialized with a `ClientConfiguration` before using it.
+
+```kotlin
+val config = ClientConfiguration(
+     baseURL = "YOUR_BASE_URL",
+     apiKey = "YOUR_API_KEY",
+     authenticationToken = "YOUR_AUTH_TOKEN"
+ )
+ 
+val socketClient = OMGSocketClient.Builder {
+    clientConfiguration = config
+    debug = false
+}.build()
+```
+
+Where:
+* `apiKey` is the API key (typically generated on the admin panel).
+* `authenticationToken` is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
+> You can find more info on how to retrieve this token in the [OmiseGO server SDK documentations](https://github.com/omisego/ruby-sdk#login). 
+* `baseURL` is the URL of the OmiseGO Wallet API, this needs to be an ws(s) url. **Note**: This need to be ended with '/'.
+* `debug` *(Optional)* is a boolean indicating if the SDK should print logs in the console. default: `false`.
+
+## Listen for system events
+
+The system event is giving general information related to the status of the web socket connection.
+All listenable system events are the **Connection status** and the **Channel status**. 
+
+### Connection Event
+
+`SocketConnectionListener` *(optional)* is the listener that listens for a **web socket's server connection status**. The possible events are:
+
+* `onConnected()`: Invoked when the web socket client has connected to the eWallet web socket API successfully.
+* `onDisconnected(throwable: Throwable)`: Invoked when the web socket client has disconnected from the eWallet web socket API.
+Throws an exception if the web socket was not disconnected successfully.
+
+**Usage**
+```kotlin
+socketClient.setConnectionListener(object : SocketConnectionListener {
+    override fun onConnected() {
+        // Do something
+    }
+
+    override fun onDisconnected(throwable: Throwable?) {
+        // Do something
+    }
+})
+```
+### Channel Event
+
+`SocketChannelListener` *(optional)* is the listener that listens for a **channel connection status**. The possible events are:
+
+* `onJoinedChannel(topic: String)`: Invoked when the client have been joined the channel successfully.
+* `onLeftChannel(topic: String)`: Invoked when the client have been left the channel successfully.
+* `onError(apiError: APIError)`: Invoked when something goes wrong while connecting to a channel.
+    
+**Usage**
+```kotlin
+socketClient.setChannelListener(object : SocketChannelListener {
+    override fun onJoinedChannel(topic: String) {
+        // Do something
+    }
+
+    override fun onLeftChannel(topic: String) {
+        // Do something
+    }
+
+    override fun onError(apiError: APIError) {
+        // Handle an error
+    }
+})
+```
+
+## Listen for custom events
+
+Custom event are special events that are currently limited to the `TransactionRequest` and the `TransactionConsumption` event.
+All custom events will be a sub-class of the `SocketCustomEventListener`. `SocketCustomEventListener` is a **required** generic listener that you will need to pass its sub-class when joining to the channel for listening to the events.
+All possible listeners are the following:
+
+### TransactionRequest Event
+
+When creating a `TransactionRequest` that requires a confirmation it is possible to listen for all incoming events using the `TransactionRequestListener`.
+The possible events are: 
+* `onTransactionConsumptionRequest(TransactionConsumption)`: Invoked when a `TransactionConsumption` is trying to consume the `TransactionRequest`. 
+This allows the requester to [confirm](https://github.com/omisego/ios-sdk#confirm-a-transaction-consumption) or not the consumption if legitimate. 
+* `onTransactionConsumptionFinalizedSuccess(TransactionConsumption)`: Invoked if a `TransactionConsumption` has been finalized successfully, and the transfer was made between the 2 addresses.
+* `onTransactionConsumptionFinalizedFail(TransactionConsumption, APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
+        
+### TransactionConsumption Event
+ 
+Similarly to the `TransactionRequestListener`, a `TransactionConsumption` can be listened for incoming confirmations using the `TransactionConsumptionListener`.
+The possible events are:
+* `onTransactionConsumptionFinalizedSuccess(TransactionConsumption)`: Invoked if a `TransactionConsumption` has been finalized successfully, and the transfer was made between the 2 addresses.
+* `onTransactionConsumptionFinalizedFail(TransactionConsumption, APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
+
+**Usage**
+```kotlin
+// The transaction requestor listen for the event 
+transactionRequest.startListeningEvents(socketClient, object: SocketCustomEventListener.TransactionRequestListener() {
+   override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
+       // Do something
+   }
+
+   override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
+       // Do something
+   }
+
+   override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
+       // Do something
+   }
+})
+
+// The transaction consumer listen for the event
+transactionConsumption.startListeningEvents(socketClient, object: SocketCustomEventListener.TransactionConsumptionListener() {
+  override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
+      // Do something
+  }
+
+  override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
+      // Do something
+  }
+})
+```
+
+> Note: You might want to listen for the event later after you got the `TransactionRequest` or `TransactionConsumption` object, but you might not want to pass the object around.
+In this case, it is possible to keep only the `SocketTopic` directly. Then you can alternatively listening for custom events by using `joinChannel` method of the `OMGSocketClient` instance.
+This implementation will provide the exactly same result as the implementation above ☝️. For example,
+
+```kotlin
+// The transaction requestor listen for the event 
+// Typically, it doesn't need to create a [SocketTopic] instance. it can be retrieved from the `TransactionRequest` or `TransactionConsumption` object.
+val topic = SocketTopic<SocketCustomEventListener.TransactionRequestListener>("transaction_request:1234")
+socketClient.joinChannel(topic, listener = object: SocketCustomEventListener.TransactionRequestListener(){
+  override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
+      // Do something
+  }
+
+  override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
+      // Do something
+  }
+
+  override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
+      // Do something
+  }
+})
+
+// The transaction consumer listen for the event
+// Typically, it doesn't need to create a [SocketTopic] instance. it can be retrieved from the `TransactionRequest` or `TransactionConsumption` object.
+val topic = SocketTopic<SocketCustomEventListener.TransactionConsumptionListener>("transaction_request:1234")
+socketClient.joinChannel(topic, listener = object: SocketCustomEventListener.TransactionConsumptionListener() {
+    override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
+        // Do something
+    }
+
+    override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
+        // Do something
+    }
+})
+```
+
+## Stop listening for the custom event
+
+When you don't need to receive events anymore, you should call `stopListening(client: SocketClient)` for the corresponding `Listenable` object.
+This will leave the corresponding socket channel and close the connection if no other channel is active.
+
+For example,
+
+```kotlin
+transactionRequest.stopListening(socketClient)
+// Or
+transactionConsumption.stopListening(socketClient)
+```
+
+## Stop listening for the system event
+
+The web socket client will be disconnected automatically if no other channel is active, so you won't receive any system event after that.
+
+By the way, if you want to stop listening before that happen, you can pass `null` to both `omgSocketClient.setConnectionListener` and `omgSocketClient.setChannelListener`.
+
 # Run Kotlin Lint
+
 Simply run `./gradlew ktlintCheck` under project root directory.
 
 # Test
-In order to run the live tests (bound to a working server) you need to fill the corresponding in the file `src/test/resources/secret.json`. 
-> Note : You can see the reference in the file `secret.example.json`
 
-The variables are:
-
-* `base_url`
-* `api_key`
-* `auth_token`
-* `access_key`
-* `secret_key`
-
-You can then run the test under the `src/test` folder from the Android Studio or run the command `./gradlew test`.
+You can simply run the test under the `src/test` folder from the Android Studio or run the command `./gradlew test`.
 
 # Contributing
 

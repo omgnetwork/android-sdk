@@ -8,16 +8,13 @@ package co.omisego.omisego.network.ewallet
  */
 
 import co.omisego.omisego.constant.Exceptions
-import co.omisego.omisego.constant.enums.ErrorCode
-import co.omisego.omisego.constant.enums.OMGEnum
-import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
-import co.omisego.omisego.custom.gson.OMGEnumAdapter
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
 import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
+import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.network.InterceptorProvider
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.GsonBuilder
+import co.omisego.omisego.utils.GsonProvider
+import co.omisego.omisego.utils.OMGEncryption
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -32,9 +29,14 @@ import java.util.concurrent.Executor
  *
  * For example,
  * <code>
+ * val config = ClientConfiguration(
+ *      baseURL = "YOUR_BASE_URL",
+ *      apiKey = "YOUR_API_KEY",
+ *      authenticationToken = "YOUR_AUTH_TOKEN"
+ * )
  * val eWalletClient = EWalletClient.Builder {
- *      authenticationToken = YOUR_TOKEN
- *      baseUrl = YOUR_BASE_URL
+ *      clientConfiguration = config
+ *      debug = false
  * }.build()
  *
  * </code>
@@ -47,55 +49,41 @@ class EWalletClient {
 
     /**
      * Build a new [EWalletClient].
-     * Set [authenticationToken] and [baseUrl] are required before calling [Builder.build].
+     * Set [apiKey], [authenticationToken] and [baseUrl] are required before calling [Builder.build].
      * Set [debug] true for printing a log
      *
      * @receiver A [Builder]'s methods.
      */
     class Builder(init: Builder.() -> Unit) {
-        var debug: Boolean = false
-
-        /**
-         * Set the API [authenticationToken].
-         * The [authenticationToken] should be "Base64(api_key:authentication_token)" (without "OMGClient")
-         */
-        var authenticationToken: String = ""
-            set(value) {
-                if (value.isEmpty()) throw Exceptions.emptyAuthenticationToken
-                field = value
-            }
-
-        /**
-         * Set the URL of the OmiseGO Wallet API [baseUrl].
-         */
-        var baseUrl: String = ""
-            set(value) {
-                if (value.isEmpty()) throw Exceptions.emptyBaseURL
-                field = value
-            }
-
         /**
          * Set the callback executor (default UI thread)
          */
         var callbackExecutor: Executor? = null
 
         /**
+         * (Required) A client configuration that need to be first initialized before calling build()
+         */
+        var clientConfiguration: ClientConfiguration? = null
+
+        /**
+         * (Optional) A boolean indicating if debug info should be printed in the console. Default: false.
+         */
+        var debug: Boolean = false
+
+        /**
          * For testing purpose
          */
         internal var debugUrl: HttpUrl? = null
 
-        /**
-         * Create the [EWalletClient] instance using the configured values.
-         * Note: Set [Builder.authenticationToken] and [Builder.baseUrl] are required before calling this.
-         */
         fun build(): EWalletClient {
-            when {
-                authenticationToken.isEmpty() -> throw Exceptions.emptyAuthenticationToken
-                baseUrl.isEmpty() && debugUrl == null -> throw Exceptions.emptyBaseURL
-            }
+            val (baseURL, apiKey, authenticationToken) = clientConfiguration
+                ?: throw IllegalStateException(Exceptions.MSG_NULL_CLIENT_CONFIGURATION)
 
-            /* Initialize the header by authenticationToken */
-            val omgHeader = InterceptorProvider.Header(authenticationToken)
+            /* Encrypted base64 of apiKey:authenticationToken */
+            val authorizationHeader = OMGEncryption.createAuthorizationHeader(apiKey, authenticationToken)
+
+            /* Initialize the header by authorizationToken */
+            val omgHeader = InterceptorProvider.Header(authorizationHeader)
 
             /* Initialize the EWalletClient and delegate the header from the Builder to EWalletClient */
             val eWalletClient = EWalletClient().apply { header = omgHeader }
@@ -112,13 +100,7 @@ class EWalletClient {
                 }
             }.build()
 
-            /* Use a simple gson for now */
-            val gson = GsonBuilder()
-                    .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
-                    .registerTypeHierarchyAdapter(OMGEnum::class.java, OMGEnumAdapter<OMGEnum>())
-                    .serializeNulls()
-                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                    .create()
+            val gson = GsonProvider.create()
 
             /* Create retrofit with OMGConverter and OMGCaller */
             eWalletClient.retrofit = Retrofit.Builder().apply {
@@ -127,7 +109,7 @@ class EWalletClient {
                 callbackExecutor(callbackExecutor ?: MainThreadExecutor())
                 when {
                     debugUrl != null -> baseUrl(debugUrl!!)
-                    else -> baseUrl(this@Builder.baseUrl)
+                    else -> baseUrl(baseURL)
                 }
                 client(client)
             }.build()

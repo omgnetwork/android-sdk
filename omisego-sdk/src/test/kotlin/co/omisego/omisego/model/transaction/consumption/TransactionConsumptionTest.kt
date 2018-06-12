@@ -8,6 +8,7 @@ package co.omisego.omisego.model.transaction.consumption
  */
 
 import co.omisego.omisego.OMGAPIClient
+import co.omisego.omisego.model.socket.SocketTopic
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.amshove.kluent.mock
@@ -28,7 +29,7 @@ class TransactionConsumptionTest {
             mock(),
             mock(),
             mock(),
-            "",
+            SocketTopic(""),
             mock(),
             mock(),
             mock(),

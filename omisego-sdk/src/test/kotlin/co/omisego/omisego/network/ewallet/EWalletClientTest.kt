@@ -14,12 +14,13 @@ import co.omisego.omisego.constant.HTTPHeaders
 import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
+import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.transaction.list.TransactionListParams
-import co.omisego.omisego.testUtils.GsonProvider
+import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.utils.OMGEncryptionHelper
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
@@ -42,26 +43,28 @@ import kotlin.test.Test
 class EWalletClientTest {
     private val secretFileName: String = "secret.json" // Replace your secret file here
     private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
+    private val userFile: File by ResourceFile("user.json")
     private val listWalletsFile: File by ResourceFile("list_wallets.json")
-    private val userFile: File by ResourceFile("user.me-post.json")
-    private val listTransactionsFile: File by ResourceFile("me.list_transactions-post.json")
-    private val getSettingFile: File by ResourceFile("me.get_settings-post.json")
+    private val listTransactionsFile: File by ResourceFile("list_transactions.json")
+    private val listBalanceFile: File by ResourceFile("list_balances.json")
+    private val getSettingFile: File by ResourceFile("setting.json")
     private var mockWebServer: MockWebServer = MockWebServer()
     private var mockUrl: HttpUrl = mockWebServer.url("/api/")
     private lateinit var eWalletClient: EWalletClient
+    private lateinit var config: ClientConfiguration
 
     @Before
     fun setUp() {
-        val auth = OMGEncryptionHelper.encryptBase64(
+        config = ClientConfiguration(
+            "base_url",
             secret.getString("api_key"),
             secret.getString("auth_token")
         )
 
         eWalletClient = EWalletClient.Builder {
             debugUrl = mockUrl
-            authenticationToken = auth
+            clientConfiguration = config
             callbackExecutor = Executor { it.run() }
-            debug = false
         }.build()
     }
 
@@ -163,7 +166,7 @@ class EWalletClientTest {
     @Test
     fun `EWalletClient should throws an IllegalStateException if the clientConfiguration is not set`() {
         val error = { EWalletClient.Builder { }.build() }
-        error shouldThrow IllegalStateException::class withMessage Exceptions.emptyAuthenticationToken.message!!
+        error shouldThrow IllegalStateException::class withMessage Exceptions.MSG_NULL_CLIENT_CONFIGURATION
     }
 
     private fun loadSecretFile(filename: String): JSONObject {
@@ -181,7 +184,7 @@ class EWalletClientTest {
         val json = JSONObject(responseText)
         val success = json.getBoolean("success")
         val dataText = json.getJSONObject("data").toString()
-        val gson = GsonProvider.provide()
+        val gson = GsonProvider.create()
         val data = gson.fromJson<T>(dataText, T::class.java)
         return OMGResponse(Versions.EWALLET_API, success, data)
     }
