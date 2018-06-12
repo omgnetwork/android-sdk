@@ -1,7 +1,9 @@
 package co.omisego.omisego.model.socket
 
+import android.os.Parcelable
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.interval.SocketHeartbeat
+import kotlinx.android.parcel.Parcelize
 
 /*
  * OmiseGO
@@ -10,7 +12,8 @@ import co.omisego.omisego.websocket.interval.SocketHeartbeat
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-data class SocketTopic<T : SocketCustomEventListener>(val name: String)
+@Parcelize
+data class SocketTopic<T : SocketCustomEventListener>(val name: String) : Parcelable
 
 /**
  * Run the lambda when the topic is coming from the user (to exclude the heartbeat event).

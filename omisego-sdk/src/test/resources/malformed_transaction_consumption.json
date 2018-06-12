@@ -9,7 +9,7 @@
     "transaction": null,
     "status": "confirmed",
     "socket_topic": "transaction_consumption:e932fb80-f34c-4f7e-aab4-38b5135fe0eb",
-    "minted_token_id": "OMG:a9ef7096-4060-4155-b79d-b36c42d5d095",
+    "token_id": "OMG:a9ef7096-4060-4155-b79d-b36c42d5d095",
     "metadata": {},
     "id": "e932fb80-f34c-4f7e-aab4-38b5135fe0eb",
     "finalized_at": "2018-04-26T07:31:47.747607Z",

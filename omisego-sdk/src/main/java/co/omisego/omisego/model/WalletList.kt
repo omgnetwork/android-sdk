@@ -1,5 +1,8 @@
 package co.omisego.omisego.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /*
  * OmiseGO
  *
@@ -12,4 +15,5 @@ package co.omisego.omisego.model
  *
  * @param data The list of the addresses
  */
-data class WalletList(val data: List<Wallet>)
+@Parcelize
+data class WalletList(val data: List<Wallet>) : Parcelable

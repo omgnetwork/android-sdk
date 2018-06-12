@@ -10,6 +10,7 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ### Added
 - [Websocket](https://github.com/omisego/android-sdk#websocket)
 - [Transfer](https://github.com/omisego/android-sdk#send-tokens-to-an-address)
+- Add Parcelable supports
 
 ### Changed
 - Renamed `EncryptionHelper` to `OMGEncryption`. Now, it can be only used to create an authorization header for connecting to the eWallet API.
