@@ -10,6 +10,7 @@ package co.omisego.omisego.model.transaction.request
 import android.support.test.runner.AndroidJUnit4
 import co.omisego.omisego.extension.bd
 import co.omisego.omisego.model.Token
+import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.utils.validateParcel
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
@@ -33,7 +34,7 @@ class TransactionRequestTest {
             100.bd,
             expirationDate = Date(),
             requireConfirmation = false,
-            socketTopic = "1234",
+            socketTopic = SocketTopic("1234"),
             maxConsumption = 1234,
             allowAmountOverride = false,
             address = "1234",

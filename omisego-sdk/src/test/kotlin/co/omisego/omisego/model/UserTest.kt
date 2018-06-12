@@ -10,8 +10,8 @@ package co.omisego.omisego.model
 
 import android.support.test.runner.AndroidJUnit4
 import co.omisego.omisego.extension.bd
-import co.omisego.omisego.utils.validateParcel
 import co.omisego.omisego.model.socket.SocketTopic
+import co.omisego.omisego.utils.validateParcel
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
 import org.junit.Before
@@ -36,7 +36,7 @@ class UserTest {
             "2017-11-5",
             "OmiseGO",
             mapOf("One" to 1, "ThreeBigDecimal" to 3.bd),
-            mapOf("Word" to "Cryptocurrency", "Boolean" to false), "test",
+            mapOf("Word" to "Cryptocurrency", "Boolean" to false), SocketTopic("test"),
             createdAt,
             updatedAt
         )

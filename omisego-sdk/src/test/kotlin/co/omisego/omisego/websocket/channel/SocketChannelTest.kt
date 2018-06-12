@@ -297,8 +297,6 @@ class SocketChannelTest {
 
         socketChannel.pendingChannelsQueue.size shouldEqualTo 10
         socketChannel.pendingChannelsQueue.last().topic shouldEqualTo "topic13"
-
-        println(socketChannel.pendingChannelsQueue)
     }
 
     @Test

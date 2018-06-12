@@ -13,8 +13,8 @@ package co.omisego.omisego.model.transaction.send
  * @param from The address from which to take the tokens (which must belong to the user).
  * If not specified, the user's primary address will be used.
  * @param to The address where to send the tokens.
- * @param amount The amount of minted token to transfer (down to subunit to unit).
- * @param tokenId The id of the minted token to send.
+ * @param amount The amount of token to transfer (down to subunit to unit).
+ * @param tokenId The id of the token to send.
  * @param metadata Additional metadata for the transaction.
  * @param encryptedMetadata Additional encrypted metadata for the transaction.
  */

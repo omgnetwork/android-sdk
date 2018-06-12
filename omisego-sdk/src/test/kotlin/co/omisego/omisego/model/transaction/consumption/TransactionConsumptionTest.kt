@@ -34,22 +34,22 @@ import java.util.Date
 @Config(sdk = [23])
 class TransactionConsumptionTest {
     private val mOMGAPIClient: OMGAPIClient by lazy { mock<OMGAPIClient>() }
-    val mintedToken = Token("1234", "OMG", "OmiseGO", 10000.bd)
+    val token = Token("1234", "OMG", "OmiseGO", 10000.bd)
     private val mTransactionConsumption: TransactionConsumption by lazy {
         TransactionConsumption(
             "OMG-1234",
             TransactionConsumptionStatus.APPROVED,
             100.bd,
-            mintedToken,
+            token,
             null,
             "1234",
             Transaction(
                 "1234",
                 Paginable.Transaction.TransactionStatus.CONFIRMED,
-                TransactionSource("1234", 1234.bd, mintedToken),
-                TransactionSource("3456", 3456.bd, mintedToken),
+                TransactionSource("1234", 1234.bd, token),
+                TransactionSource("3456", 3456.bd, token),
                 TransactionExchange(2.0),
-                mapOf("Test" to 1234),
+                mapOf("Test" to "1234"),
                 mapOf(),
                 Date()
             ),
@@ -59,7 +59,7 @@ class TransactionConsumptionTest {
             TransactionRequest(
                 "1234",
                 TransactionRequestType.RECEIVE,
-                mintedToken,
+                token,
                 100.bd,
                 expirationDate = Date(),
                 requireConfirmation = false,
@@ -74,7 +74,7 @@ class TransactionConsumptionTest {
                 expirationReason = "Hello",
                 status = TransactionRequestStatus.VALID
             ),
-            mock(),
+            SocketTopic("test"),
             Date(),
             Date(),
             Date(),
@@ -82,8 +82,8 @@ class TransactionConsumptionTest {
             Date(),
             Date(),
             Date(),
-            mapOf("Test" to 1),
-            mapOf("Hello" to 100.bd)
+            mapOf("Test" to "1"),
+            mapOf("Hello" to "100.bd")
         )
     }
 
@@ -105,5 +105,6 @@ class TransactionConsumptionTest {
             this shouldEqual mTransactionConsumption
             this shouldNotBe mTransactionConsumption
         }
+        mTransactionConsumption.validateParcel()
     }
 }
