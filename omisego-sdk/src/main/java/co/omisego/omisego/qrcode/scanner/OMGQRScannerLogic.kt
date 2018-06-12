@@ -165,10 +165,10 @@ internal class OMGQRScannerLogic(
             BinaryBitmap(HybridBinarizer(source.invert()))
         )
 
-        rawResult?.text?.let { txId ->
+        rawResult?.text?.let { formattedId ->
 
-            /* Return immediately if we've already processed this [txId] and it failed with [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] */
-            if (hasTransactionAlreadyFailed(txId)) {
+            /* Return immediately if we've already processed this [formattedId] and it failed with [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] */
+            if (hasTransactionAlreadyFailed(formattedId)) {
                 scanCallback?.scannerDidFailToDecode(omgQRScannerView, errorTxNotFound)
                 return@let
             }
@@ -177,11 +177,11 @@ internal class OMGQRScannerLogic(
             omgQRScannerView.isLoading = true
 
             /* Verify transactionId with the eWallet backend */
-            omgQRVerifier.requestTransaction(txId, { errorResponse ->
+            omgQRVerifier.requestTransaction(formattedId, { errorResponse ->
 
-                /* Cache txId if error with [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] code */
+                /* Cache formattedId if error with [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] code */
                 if (errorResponse.data.code == ErrorCode.TRANSACTION_REQUEST_NOT_FOUND) {
-                    qrPayloadCache.add(txId)
+                    qrPayloadCache.add(formattedId)
                 }
 
                 /* Delegate a fail callback */
@@ -209,12 +209,12 @@ internal class OMGQRScannerLogic(
     }
 
     /**
-     * Verify if the given [txId] has already failed with code [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] yet
+     * Verify if the given [formattedId] has already failed with code [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] yet
      *
-     * @param txId The transaction id which is created by EWallet backend
-     * @return true if the given [txId] has already failed with code [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND], otherwise false.
+     * @param formattedId The transaction formattedId which is created by EWallet backend
+     * @return true if the given [formattedId] has already failed with code [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND], otherwise false.
      */
-    override fun hasTransactionAlreadyFailed(txId: String) = qrPayloadCache.contains(txId)
+    override fun hasTransactionAlreadyFailed(formattedId: String) = qrPayloadCache.contains(formattedId)
 
     /**
      * Trying to decode first, if some exception arise, then return null.

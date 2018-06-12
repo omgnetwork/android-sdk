@@ -39,9 +39,9 @@ class QRGenerator(
 }
 
 /**
- * Generates an QR bitmap containing the encoded transaction request id
+ * Generates an QR bitmap containing the encoded transaction request formattedId
  *
  * @param size the desired image size
  * @return An QR image if the transaction request was successfully encoded
  */
-fun TransactionRequest.generateQRCode(size: Int = QRGenerator.DEFAULT_SIZE): Bitmap = QRGenerator().generate(id, size)
+fun TransactionRequest.generateQRCode(size: Int = QRGenerator.DEFAULT_SIZE): Bitmap = QRGenerator().generate(formattedId, size)

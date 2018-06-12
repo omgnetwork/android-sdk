@@ -31,18 +31,18 @@ internal class OMGQRVerifier(
     override var callback: OMGCallback<TransactionRequest>? = null
 
     /**
-     * Make request to the EWallet API to verify if the QR code has a valid transaction id
+     * Make request to the EWallet API to verify if the QR code has a valid transaction formattedId
      *
-     * @param txId The transaction id which is created by EWallet backend
+     * @param formattedId The transaction formattedId which is created by EWallet backend
      * @param fail A lambda that will be invoked when the verification pass
      * @param success A lambda that will be invoked when the verification fail
      */
     override inline fun requestTransaction(
-        txId: String,
+        formattedId: String,
         crossinline fail: (response: OMGResponse<APIError>) -> Unit,
         crossinline success: (response: OMGResponse<TransactionRequest>) -> Unit
     ) {
-        callable = omgAPIClient.retrieveTransactionRequest(TransactionRequestParams(txId))
+        callable = omgAPIClient.retrieveTransactionRequest(TransactionRequestParams(formattedId))
         callback = callback ?: object : OMGCallback<TransactionRequest> {
             override fun success(response: OMGResponse<TransactionRequest>) = success(response)
             override fun fail(response: OMGResponse<APIError>) = fail(response)

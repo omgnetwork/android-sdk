@@ -8,7 +8,7 @@ package co.omisego.omisego.model.transaction.request
  */
 data class TransactionRequestParams(
     /**
-     * The id of the TransactionRequest to be retrieved.
+     * The formattedId of the TransactionRequest to be retrieved.
      */
-    val id: String
+    val formattedId: String
 )

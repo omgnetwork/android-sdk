@@ -108,11 +108,11 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
         eWalletAPI.createTransactionRequest(request)
 
     /**
-     * Asynchronously retrieve a transaction request from its id
+     * Asynchronously retrieve a transaction request from its formattedId
      * if *success* the [OMGCallback<TransactionRequest>] will be invoked with the [co.omisego.omisego.model.transaction.request.TransactionRequest] parameter,
      * if *fail* the [OMGCallback<TransactionRequest>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
      *
-     * @param request The id of the TransactionRequest to be retrieved
+     * @param request The formattedId of the TransactionRequest to be retrieved
      */
     fun retrieveTransactionRequest(request: TransactionRequestParams) =
         eWalletAPI.retrieveTransactionRequest(request)
