@@ -13,73 +13,39 @@ import java.util.Date
 /**
  * Represents a structure used to generate a transaction request
  *
+ * @param type The type of transaction to be generated (send of receive)
+ * @param tokenId The unique identifier of the token to use for the request
+ * In the case of a type "send", this will be the token taken from the requester
+ * In the case of a type "receive" this will be the token received by the requester
+ * @param amount The amount of token to use for the transaction (down to subunit to unit)
+ * This amount can be either inputted when generating or consuming a transaction request.
+ * @param address The address specifying where the transaction should be sent to.
+ * If not specified, the current user's primary wallet address will be used.
+ * @param requireConfirmation A boolean indicating if the request needs a confirmation from the requester before being proceeded. Default true.
+ * @param allowAmountOverride Allow or not the consumer to override the amount specified in the request
+ * This needs to be true if the amount is not specified. Default true.
+ * @param correlationId An id that can uniquely identify a transaction. Typically an order id from a provider.
+ * @param maxConsumptions The maximum number of time that this request can be consumed. Default null (unlimited).
+ * @param maxConsumptionsPerUser The maximum number of consumptions allowed per unique user. Default null (unlimited).
+ * @param consumptionLifetime The amount of time in millisecond during which a consumption is valid. Default null (forever).
+ * @param expirationDate The date when the request will expire and not be consumable anymore. Default null (forever).
+ * @param metadata Additional metadata embedded with the request
+ * @param encryptedMetadata Additional encrypted metadata embedded with the request
  */
 data class TransactionRequestCreateParams(
-
-    /**
-     * The type of transaction to be generated (send of receive)
-     */
     val type: TransactionRequestType = TransactionRequestType.RECEIVE,
-
-    /**
-     * The unique identifier of the token to use for the request
-     * In the case of a type "send", this will be the token taken from the requester
-     * In the case of a type "receive" this will be the token received by the requester
-     */
     val tokenId: String,
-
-    /**
-     * The amount of token to use for the transaction (down to subunit to unit)
-     * This amount can be either inputted when generating or consuming a transaction request.
-     */
     val amount: BigDecimal? = null,
-
-    /**
-     * The address specifying where the transaction should be sent to.
-     * If not specified, the current user's primary wallet address will be used.
-     */
     val address: String? = null,
-
-    /**
-     * A boolean indicating if the request needs a confirmation from the requester before being proceeded
-     */
     val requireConfirmation: Boolean = true,
-
-    /**
-     * Allow or not the consumer to override the amount specified in the request
-     * This needs to be true if the amount is not specified
-     */
     val allowAmountOverride: Boolean = true,
-
-    /**
-     * Additional metadata embedded with the request
-     */
-    val metadata: Map<String, Any> = mapOf(),
-
-    /**
-     * Additional encrypted metadata embedded with the request
-     */
-    val encryptedMetadata: Map<String, Any> = mapOf(),
-
-    /**
-     * An id that can uniquely identify a transaction. Typically an order id from a provider.
-     */
     val correlationId: String? = null,
-
-    /**
-     * The maximum number of time that this request can be consumed
-     */
     val maxConsumptions: Int? = null,
-
-    /**
-     * The amount of time in millisecond during which a consumption is valid
-     */
+    val maxConsumptionsPerUser: Int? = null,
     val consumptionLifetime: Int? = null,
-
-    /**
-     * The date when the request will expire and not be consumable anymore
-     */
-    val expirationDate: Date? = null
+    val expirationDate: Date? = null,
+    val metadata: Map<String, Any> = mapOf(),
+    val encryptedMetadata: Map<String, Any> = mapOf()
 ) {
 
     init {
