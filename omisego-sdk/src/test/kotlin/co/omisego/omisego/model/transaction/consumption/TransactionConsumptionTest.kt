@@ -72,7 +72,10 @@ class TransactionConsumptionTest {
                 expiredAt = Date(),
                 createdAt = Date(),
                 expirationReason = "Hello",
-                status = TransactionRequestStatus.VALID
+                status = TransactionRequestStatus.VALID,
+                formattedId = "1234",
+                metadata = mapOf(),
+                encryptedMetadata = mapOf()
             ),
             SocketTopic("test"),
             Date(),
