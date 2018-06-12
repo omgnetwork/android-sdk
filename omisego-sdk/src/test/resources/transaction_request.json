@@ -23,6 +23,7 @@
     "correlation_id": null,
     "amount": 100,
     "address": "dec1342d-d76b-4f78-bfe6-3f9aa984a822",
+    "maxConsumptionsPerUser": 5,
     "account_id": null
   }
 }

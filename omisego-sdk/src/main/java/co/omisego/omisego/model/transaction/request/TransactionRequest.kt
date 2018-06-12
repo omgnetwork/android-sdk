@@ -60,13 +60,15 @@ enum class TransactionRequestStatus constructor(override val value: String) : OM
  * @param address The address from which to send or receive the tokens
  * @param user The user that initiated the request
  * @param socketTopic The topic which can be listened in order to receive events regarding this request
- * @param maxConsumption The maximum number of time that this request can be consumed
+ * @param maxConsumption The maximum number of time that this request can be consumed. Default null (unlimited).
  * @param status The status of the request (valid or expired)
  * @param allowAmountOverride Allow or not the consumer to override the amount specified in the request
+ * Note that if amount is nil and allowAmountOverride is false the init will fail and return null.
+ * @param maxConsumptionsPerUser The maximum number of consumptions allowed per unique user. Default null (unlimited).
  * @param requireConfirmation A boolean indicating if the request needs a confirmation from the requester before being proceeded
- * @param expirationDate The date when the request will expire and not be consumable anymore
+ * @param expirationDate The date when the request will expire and not be consumable anymore. Default null (never expired).
  * @param expirationReason The reason why the request expired
- * @param consumptionLifetime The amount of time in millisecond during which a consumption is valid
+ * @param consumptionLifetime The amount of time in millisecond during which a consumption is valid. Default null (forever).
  * @param createdAt The creation date of the request
  * @param expiredAt The date when the request expired
  * @param formattedId An id that can be encoded in a QR code and be used to retrieve the request later
@@ -85,6 +87,7 @@ data class TransactionRequest(
     val maxConsumption: Int?,
     val status: TransactionRequestStatus,
     val allowAmountOverride: Boolean,
+    val maxConsumptionsPerUser: Int?,
     val requireConfirmation: Boolean,
     val expirationDate: Date,
     val expirationReason: String?,
