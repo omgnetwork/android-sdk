@@ -40,8 +40,9 @@ before_script:
     -f $SECRET_FILE_LOCATION/secret.template.jq > $SECRET_FILE_LOCATION/secret.json
 
 script:
-  - ./gradlew ktlintCheck
-  - ./gradlew test
+  - ./gradlew lint # android lint
+  - ./gradlew ktlintCheck # kotlin lint
+  - ./gradlew test # unit test
 
 after_script:
-  rm $SECRET_FILE_LOCATION/secret.json
+  - rm $SECRET_FILE_LOCATION/secret.json
