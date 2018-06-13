@@ -42,7 +42,7 @@ before_script:
 script:
   - ./gradlew lint # android lint
   - ./gradlew ktlintCheck # kotlin lint
-  - ./gradlew test # unit test
+  - ./gradlew clean test # unit test
 
 after_script:
   - rm $SECRET_FILE_LOCATION/secret.json

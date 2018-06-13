@@ -15,7 +15,7 @@ import java.lang.RuntimeException
 
 internal class AutoFocusManager(private val camera: Camera?, val safe: () -> Boolean) {
     private val mAutoFocusHandler: Handler by lazy { Handler() }
-    private var autoFocusCB: Camera.AutoFocusCallback = Camera.AutoFocusCallback { _, _-> scheduleAutoFocus() }
+    private var autoFocusCB: Camera.AutoFocusCallback = Camera.AutoFocusCallback { _, _ -> scheduleAutoFocus() }
 
     fun safeAutoFocus() {
         try {
