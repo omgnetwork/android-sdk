@@ -17,6 +17,7 @@ import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.interval.SocketHeartbeat
 import com.nhaarman.mockito_kotlin.spy
+import com.nhaarman.mockito_kotlin.timeout
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -131,8 +132,7 @@ class SocketChannelTest {
     fun `onJoinedChannel should start sending a periodic heartbeat event and add it to the channel set if the channel set is empty`() {
         socketChannel.onJoinedChannel(socketTopic.name)
 
-        Thread.sleep(15)
-        verify(mockSocketClient, times(1)).send(
+        verify(mockSocketClient, timeout(1_000).times(1)).send(
             SocketSend("phoenix", SocketEventSend.HEARTBEAT, "${SocketMessageRef.SCHEME_HEARTBEAT}:1", mapOf())
         )
         socketChannel.retrieveChannels().contains(socketTopic.name) shouldEqualTo true

@@ -23,6 +23,7 @@ import co.omisego.omisego.qrcode.scanner.OMGQRVerifier
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.Reader
 import com.google.zxing.Result
+import com.nhaarman.mockito_kotlin.timeout
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -160,10 +161,8 @@ class OMGQRScannerLogicTest {
             }
         )
 
-        Thread.sleep(150)
-
         verify(omgQRScannerView, times(1)).isLoading = true
-        verify(mockTransactionRequestCb, times(1)).success(any())
+        verify(mockTransactionRequestCb, timeout(3000).times(1)).success(any())
     }
 
     @Test

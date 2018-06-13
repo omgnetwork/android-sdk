@@ -28,7 +28,7 @@ import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
-import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.timeout
 import com.nhaarman.mockito_kotlin.verify
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
@@ -60,6 +60,7 @@ class OMGAPIClientTest {
     private val getSettingFile: File by ResourceFile("setting.json")
     private val errorFile: File by ResourceFile("error-invalid_auth.json")
     private val gson by lazy { GsonProvider.create() }
+    private val connectionTimeout = 1_000L // ms
     private lateinit var eWalletClient: EWalletClient
     private lateinit var mockWebServer: MockWebServer
     private lateinit var mockUrl: HttpUrl
@@ -94,9 +95,7 @@ class OMGAPIClientTest {
 
         val expected = gson.fromJson<OMGResponse<WalletList>>(result.body(), object : TypeToken<OMGResponse<WalletList>>() {}.type)
 
-        Thread.sleep(100)
-
-        verify(callback, times(1)).success(expected)
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
     }
 
     @Test
@@ -120,9 +119,7 @@ class OMGAPIClientTest {
             )
         )
 
-        Thread.sleep(100)
-
-        verify(callback, times(1)).success(expected)
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
     }
 
     @Test
@@ -144,9 +141,7 @@ class OMGAPIClientTest {
             transactionRequest
         )
 
-        Thread.sleep(100)
-
-        verify(callback, times(1)).success(expected)
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
     }
 
     @Test
@@ -168,9 +163,7 @@ class OMGAPIClientTest {
             transactionConsumption
         )
 
-        Thread.sleep(100)
-
-        verify(callback, times(1)).success(expected)
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
     }
 
     @Test
@@ -202,9 +195,7 @@ class OMGAPIClientTest {
             transaction
         )
 
-        Thread.sleep(100)
-
-        verify(callback, times(1)).success(expected)
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
     }
 
     @Test
@@ -226,9 +217,7 @@ class OMGAPIClientTest {
             transactionRequest
         )
 
-        Thread.sleep(100)
-
-        verify(callback, times(1)).success(expected)
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
     }
 
     @Test
@@ -242,9 +231,7 @@ class OMGAPIClientTest {
 
         val expected = gson.fromJson<OMGResponse<User>>(result.body(), object : TypeToken<OMGResponse<User>>() {}.type)
 
-        Thread.sleep(1000)
-
-        verify(callback, times(1)).success(expected)
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
     }
 
     @Test
@@ -258,9 +245,7 @@ class OMGAPIClientTest {
 
         val expected = gson.fromJson<OMGResponse<Setting>>(result.body(), object : TypeToken<OMGResponse<Setting>>() {}.type)
 
-        Thread.sleep(100)
-
-        verify(callback, times(1)).success(expected)
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
     }
 
     @Test
@@ -275,8 +260,7 @@ class OMGAPIClientTest {
         val apiError = APIError(ErrorCode.from(data.asJsonObject.get("code").asString), data.asJsonObject.get("description").asString)
         val expected = OMGResponse(Versions.EWALLET_API, false, apiError)
 
-        Thread.sleep(100)
-        verify(callback, times(1)).fail(expected)
+        verify(callback, timeout(connectionTimeout).times(1)).fail(expected)
     }
 
     @Test
@@ -316,9 +300,7 @@ class OMGAPIClientTest {
 
         val expected = gson.fromJson<OMGResponse<User>>(result.body(), object : TypeToken<OMGResponse<User>>() {}.type)
 
-        Thread.sleep(1000)
-
-        verify(callback, times(1)).success(expected)
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
     }
 
     @Test
@@ -331,8 +313,7 @@ class OMGAPIClientTest {
         val apiError = APIError(ErrorCode.SERVER_INTERNAL_SERVER_ERROR, "The EWallet API was 500 Internal Server Error")
         val expected = OMGResponse(Versions.EWALLET_API, false, apiError)
 
-        Thread.sleep(100)
-        verify(callback, times(1)).fail(expected)
+        verify(callback, timeout(connectionTimeout).times(1)).fail(expected)
     }
 
     private fun loadSecretFile(filename: String): JSONObject {

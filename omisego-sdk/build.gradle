@@ -32,6 +32,10 @@ android {
             includeAndroidResources = true
         }
     }
+
+    lintOptions {
+        disable 'ParcelCreator'
+    }
 }
 
 androidExtensions {

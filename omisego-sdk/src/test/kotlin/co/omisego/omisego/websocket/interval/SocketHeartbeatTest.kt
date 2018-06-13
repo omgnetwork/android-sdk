@@ -29,18 +29,21 @@ class SocketHeartbeatTest {
 
     @Test
     fun `startInterval should be a thread-safe function`() {
+        var countFinishedThread = 0
         val allThreads = mutableListOf<Thread>()
         val task = mock<(SocketSend) -> Unit>()
         for (i in 1..100) {
-            val t = thread {
+            val t = thread(start = false) {
                 socketHeartbeat.startInterval(task)
             }
             allThreads.add(t)
         }
 
         // Wait all threads finish their worked.
-        for (i in 0..99) {
-            allThreads[i].join()
+        allThreads.forEach {
+            it.start()
+            it.join()
+            if (!it.isAlive && !it.isInterrupted) countFinishedThread++
         }
 
         /**
@@ -52,6 +55,6 @@ class SocketHeartbeatTest {
          *
          * Because of that, this expression will verify that all tasks should be invoked.
          */
-        Mockito.mockingDetails(task).invocations.size shouldBeInRange 99..100
+        Mockito.mockingDetails(task).invocations.size shouldBeInRange (countFinishedThread - 3)..100 // approximately
     }
 }

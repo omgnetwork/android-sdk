@@ -44,4 +44,4 @@ script:
   - ./gradlew test
 
 after_script:
-  rm secret.json
+  rm $SECRET_FILE_LOCATION/secret.json
