@@ -284,6 +284,7 @@ val request = TransactionRequestCreateParams(
     consumptionLifetime = 60000,
     expirationDate = null,
     allowAmountOverride = true,
+    maxConsumptionsPerUser = null,
     metadata = mapof<String, Any>(),
     encryptedMetadata = mapOf<String, Any>()
 )
@@ -308,12 +309,13 @@ Where:
     * `amount`: (optional) The amount of token to receive. This amount can be either inputted when generating or consuming a transaction request.
     * `address`: (optional) The address specifying where the transaction should be sent to. If not specified, the current user's primary wallet address will be used.
     * `correlationId`: (optional) An id that can uniquely identify a transaction. Typically an order id from a provider.
-    * `requireConfirmation`: A boolean indicating if the request needs a confirmation from the requester before being proceeded
-    * `maxConsumptions`: (optional) The maximum number of time that this request can be consumed
-    * `consumptionLifetime`: (optional) The amount of time in millisecond during which a consumption is valid
-    * `expirationDate`: (optional) The date when the request will expire and not be consumable anymore
+    * `requireConfirmation`: A boolean indicating if the request needs a confirmation from the requester before being proceeded.
+    * `maxConsumptions`: (optional) The maximum number of time that this request can be consumed. Default `null` (unlimited).
+    * `consumptionLifetime`: (optional) The amount of time in millisecond during which a consumption is valid. Default `null` (forever).
+    * `expirationDate`: (optional) The date when the request will expire and not be consumable anymore. Default `null` (never expired).
     * `allowAmountOverride`: (optional) Allow or not the consumer to override the amount specified in the request. This needs to be true if the amount is not specified
     > Note that if amount is nil and allowAmountOverride is false the init will fail and return null.
+    * `maxConsumptionsPerUser`: (optional) The maximum number of consumptions allowed per unique user. Default `null` (unlimited).
     * `metadata`: Additional metadata embedded with the request
     * `encryptedMetadata`: Additional encrypted metadata embedded with the request
 
@@ -659,8 +661,10 @@ transactionConsumption.startListeningEvents(socketClient, object: SocketCustomEv
 })
 ```
 
-> Note: You might want to listen for the event later after you got the `TransactionRequest` or `TransactionConsumption` object, but you might not want to pass the object around.
-In this case, it is possible to keep only the `SocketTopic` directly. Then you can alternatively listening for custom events by using `joinChannel` method of the `OMGSocketClient` instance.
+You might want to listen for the event later after you got the `TransactionRequest` or `TransactionConsumption` object, but you might not want to pass the object around.
+In this case, it is possible to keep only the `SocketTopic` directly. 
+
+Then you can alternatively listening for custom events by using `joinChannel` method of the `OMGSocketClient` instance.
 This implementation will provide the exactly same result as the implementation above ☝️. For example,
 
 ```kotlin

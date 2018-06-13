@@ -37,6 +37,7 @@ class TransactionRequestTest {
             socketTopic = SocketTopic("1234"),
             maxConsumption = 1234,
             allowAmountOverride = false,
+            maxConsumptionsPerUser = null,
             address = "1234",
             user = null,
             consumptionLifetime = 10,

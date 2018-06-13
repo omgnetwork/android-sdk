@@ -48,6 +48,11 @@ class ErrorCodeTest {
                 "token:token_not_found" -> ErrorCode.TOKEN_NOT_FOUND
                 "sdk:socket_error" -> ErrorCode.SDK_SOCKET_ERROR
                 "token:token_not_found" -> ErrorCode.TOKEN_NOT_FOUND
+                "transaction:same_address" -> ErrorCode.TRANSACTION_SAME_ADDRESS
+                "transaction:insufficient_funds" -> ErrorCode.TRANSACTION_INSUFFICIENT_FUNDS
+                "transaction_request:expired" -> ErrorCode.TRANSACTION_REQUEST_EXPIRED
+                "transaction_request:max_consumptions_reached" -> ErrorCode.TRANSACTION_REQUEST_MAX_CONSUMPTIONS_REACHED
+                "transaction_request:max_consumptions_per_user_reached" -> ErrorCode.TRANSACTION_REQUEST_MAX_CONSUMPTIONS_PER_USER_REACHED
                 "transaction_request:transaction_request_not_found" -> ErrorCode.TRANSACTION_REQUEST_NOT_FOUND
                 "transaction_consumption:not_owner" -> ErrorCode.TRANSACTION_CONSUMPTION_NOT_OWNER
                 "transaction_consumption:invalid_token" -> ErrorCode.TRANSACTION_CONSUMPTION_INVALID_TOKEN
@@ -55,6 +60,7 @@ class ErrorCodeTest {
                 "transaction_consumption:unfinalized" -> ErrorCode.TRANSACTION_CONSUMPTION_UNFINALIZED
                 "websocket:forbidden_channel" -> ErrorCode.WEBSOCKET_FORBIDDEN_CHANNEL
                 "websocket:channel_not_found" -> ErrorCode.WEBSOCKET_CHANNEL_NOT_FOUND
+                "websocket:connect_error" -> ErrorCode.WEB_SOCKET_CONNECT_ERROR
                 else -> ErrorCode.SDK_UNEXPECTED_ERROR
             }
             actual shouldEqual expected

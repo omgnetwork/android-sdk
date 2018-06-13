@@ -66,6 +66,7 @@ class TransactionConsumptionTest {
                 socketTopic = SocketTopic("1234"),
                 maxConsumption = 1234,
                 allowAmountOverride = false,
+                maxConsumptionsPerUser = 5,
                 address = "1234",
                 user = null,
                 consumptionLifetime = 10,
