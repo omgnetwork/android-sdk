@@ -1,11 +1,11 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'org.jetbrains.dokka-android'
 apply plugin: 'checkstyle'
 apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply plugin: 'com.adarshr.test-logger'
+apply from: 'dokka.gradle'
 
 android {
     compileSdkVersion 27
@@ -54,11 +54,6 @@ publish {
 
 checkstyle {
     configFile = rootProject.file('config/checkstyle/checkstyle.xml')
-}
-
-dokka {
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc"
 }
 
 testlogger {
