@@ -3,13 +3,11 @@ package co.omisego.omisego.websocket.interval
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.websocket.channel.SocketChannelContract
 import com.nhaarman.mockito_kotlin.spy
-import com.nhaarman.mockito_kotlin.timeout
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
-import org.amshove.kluent.any
 import org.amshove.kluent.mock
+import org.amshove.kluent.shouldBeInRange
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito
 import kotlin.concurrent.thread
 
 /*
@@ -54,7 +52,6 @@ class SocketHeartbeatTest {
          *
          * Because of that, this expression will verify that all tasks should be invoked.
          */
-        timeout(3000)
-        verify(task, times(100)).invoke(any())
+        Mockito.mockingDetails(task).invocations.size shouldBeInRange 99..100
     }
 }

@@ -31,17 +31,17 @@ android:
    - google-gdk-license-.+
 
 before_script:
-  echo "{
-\"base_url\":$OMG_BASE_URL,
-\"api_key\": $OMG_API_KEY,
-\"auth_token\": $OMG_AUTH_TOKEN,
-\"access_key\": $OMG_ACCESS_KEY,
-\"secret_key\": $OMG_SECRET_KEY
-}" > secret.json
+  - SECRET_FILE_LOCATION=omisego-sdk/src/test/resources
+  - jq -n --arg BASE_URL $OMG_BASE_URL
+    --arg API_KEY $OMG_API_KEY
+    --arg AUTH_TOKEN $OMG_AUTH_TOKEN
+    --arg ACCESS_KEY $OMG_ACCESS_KEY
+    --arg SECRET_KEY $OMG_SECRET_KEY
+    -f $SECRET_FILE_LOCATION/secret.template.jq > $SECRET_FILE_LOCATION/secret.json
 
 script:
-  ./gradlew ktlintCheck && \
-  ./gradlew test
+  - ./gradlew ktlintCheck
+  - ./gradlew test
 
 after_script:
   rm secret.json
