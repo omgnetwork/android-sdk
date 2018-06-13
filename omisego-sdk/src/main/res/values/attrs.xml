@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <declare-styleable name="OMGQRScannerView">
-        <attr name="borderColor" format="color" />
-        <attr name="borderColorLoading" format="color" />
-    </declare-styleable>
-</resources>
