@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package co.omisego.omisego.custom.camera.ui
 
 /*
