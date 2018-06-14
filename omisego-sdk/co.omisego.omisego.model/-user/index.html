@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>User - omisego-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">omisego-sdk</a>&nbsp;/&nbsp;<a href="../index.html">co.omisego.omisego.model</a>&nbsp;/&nbsp;<a href="./index.html">User</a><br/>
+<br/>
+<h1>User</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">User</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a><span class="symbol">, </span><a href="../../co.omisego.omisego.operation/-listenable/index.html"><span class="identifier">Listenable</span></a><span class="symbol">&lt;</span><span class="identifier">SocketCustomEventListener</span><span class="symbol">&gt;</span></code>
+<p>Represents the current user</p>
+<h3>Parameters</h3>
+<p><a name="id"></a>
+<code>id</code> - The unique identifier on the wallet server side.</p>
+<p><a name="providerUserId"></a>
+<code>providerUserId</code> - The user identifier on the provider server side.</p>
+<p><a name="username"></a>
+<code>username</code> - The user's username, it can be an email or any name describing this user.</p>
+<p><a name="metaData"></a>
+<code>metaData</code> - Any additional metadata that need to be stored as a <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-hash-map/index.html">HashMap</a>.</p>
+<p><a name="encryptedMetadata"></a>
+<code>encryptedMetadata</code> - Any additional encrypted metadata that need to be stored as a dictionary.</p>
+<p><a name="socketTopic"></a>
+<code>socketTopic</code> - The socket URL from where to receive from.</p>
+<p><a name="createdAt"></a>
+<code>createdAt</code> - The creation date of the user.</p>
+<p><a name="updatedAt"></a>
+<code>updatedAt</code> - The last update date of the user.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">User</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.model.User$<init>(kotlin.String, kotlin.String, kotlin.String, kotlin.collections.Map((kotlin.String, kotlin.Any)), kotlin.collections.Map((kotlin.String, kotlin.Any)), co.omisego.omisego.model.socket.SocketTopic((co.omisego.omisego.websocket.SocketCustomEventListener)), java.util.Date, java.util.Date)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.model.User$<init>(kotlin.String, kotlin.String, kotlin.String, kotlin.collections.Map((kotlin.String, kotlin.Any)), kotlin.collections.Map((kotlin.String, kotlin.Any)), co.omisego.omisego.model.socket.SocketTopic((co.omisego.omisego.websocket.SocketCustomEventListener)), java.util.Date, java.util.Date)/providerUserId">providerUserId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.model.User$<init>(kotlin.String, kotlin.String, kotlin.String, kotlin.collections.Map((kotlin.String, kotlin.Any)), kotlin.collections.Map((kotlin.String, kotlin.Any)), co.omisego.omisego.model.socket.SocketTopic((co.omisego.omisego.websocket.SocketCustomEventListener)), java.util.Date, java.util.Date)/username">username</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.model.User$<init>(kotlin.String, kotlin.String, kotlin.String, kotlin.collections.Map((kotlin.String, kotlin.Any)), kotlin.collections.Map((kotlin.String, kotlin.Any)), co.omisego.omisego.model.socket.SocketTopic((co.omisego.omisego.websocket.SocketCustomEventListener)), java.util.Date, java.util.Date)/metaData">metaData</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.model.User$<init>(kotlin.String, kotlin.String, kotlin.String, kotlin.collections.Map((kotlin.String, kotlin.Any)), kotlin.collections.Map((kotlin.String, kotlin.Any)), co.omisego.omisego.model.socket.SocketTopic((co.omisego.omisego.websocket.SocketCustomEventListener)), java.util.Date, java.util.Date)/encryptedMetadata">encryptedMetadata</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.model.User$<init>(kotlin.String, kotlin.String, kotlin.String, kotlin.collections.Map((kotlin.String, kotlin.Any)), kotlin.collections.Map((kotlin.String, kotlin.Any)), co.omisego.omisego.model.socket.SocketTopic((co.omisego.omisego.websocket.SocketCustomEventListener)), java.util.Date, java.util.Date)/socketTopic">socketTopic</span><span class="symbol">:</span>&nbsp;<a href="../../co.omisego.omisego.model.socket/-socket-topic/index.html"><span class="identifier">SocketTopic</span></a><span class="symbol">&lt;</span><span class="identifier">SocketCustomEventListener</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.model.User$<init>(kotlin.String, kotlin.String, kotlin.String, kotlin.collections.Map((kotlin.String, kotlin.Any)), kotlin.collections.Map((kotlin.String, kotlin.Any)), co.omisego.omisego.model.socket.SocketTopic((co.omisego.omisego.websocket.SocketCustomEventListener)), java.util.Date, java.util.Date)/createdAt">createdAt</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/java/util/Date.html"><span class="identifier">Date</span></a><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.model.User$<init>(kotlin.String, kotlin.String, kotlin.String, kotlin.collections.Map((kotlin.String, kotlin.Any)), kotlin.collections.Map((kotlin.String, kotlin.Any)), co.omisego.omisego.model.socket.SocketTopic((co.omisego.omisego.websocket.SocketCustomEventListener)), java.util.Date, java.util.Date)/updatedAt">updatedAt</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/java/util/Date.html"><span class="identifier">Date</span></a><span class="symbol">)</span></code>
+<p>Represents the current user</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="created-at.html">createdAt</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">createdAt</span><span class="symbol">: </span><a href="https://developer.android.com/reference/java/util/Date.html"><span class="identifier">Date</span></a></code>
+<p>The creation date of the user.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="encrypted-metadata.html">encryptedMetadata</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">encryptedMetadata</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span></code>
+<p>Any additional encrypted metadata that need to be stored as a dictionary.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="id.html">id</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">id</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>The unique identifier on the wallet server side.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="meta-data.html">metaData</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">metaData</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span></code>
+<p>Any additional metadata that need to be stored as a <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-hash-map/index.html">HashMap</a>.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="provider-user-id.html">providerUserId</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">providerUserId</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>The user identifier on the provider server side.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="socket-topic.html">socketTopic</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">socketTopic</span><span class="symbol">: </span><a href="../../co.omisego.omisego.model.socket/-socket-topic/index.html"><span class="identifier">SocketTopic</span></a><span class="symbol">&lt;</span><span class="identifier">SocketCustomEventListener</span><span class="symbol">&gt;</span></code>
+<p>The socket URL from where to receive from.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="updated-at.html">updatedAt</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">updatedAt</span><span class="symbol">: </span><a href="https://developer.android.com/reference/java/util/Date.html"><span class="identifier">Date</span></a></code>
+<p>The last update date of the user.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="username.html">username</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">username</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>The user's username, it can be an email or any name describing this user.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../../co.omisego.omisego.operation/-listenable/stop-listening.html">stopListening</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">stopListening</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.operation.Listenable$stopListening(co.omisego.omisego.websocket.SocketClientContract.Client)/client">client</span><span class="symbol">:</span>&nbsp;<span class="identifier">Client</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Stop listening for events</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

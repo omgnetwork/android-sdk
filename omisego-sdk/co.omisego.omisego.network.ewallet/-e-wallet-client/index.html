@@ -1,0 +1,57 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>EWalletClient - omisego-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">omisego-sdk</a>&nbsp;/&nbsp;<a href="../index.html">co.omisego.omisego.network.ewallet</a>&nbsp;/&nbsp;<a href="./index.html">EWalletClient</a><br/>
+<br/>
+<h1>EWalletClient</h1>
+<code><span class="keyword">class </span><span class="identifier">EWalletClient</span></code>
+<p>The class EWalletClient represents an object that knows how to interact with OmiseGO API.</p>
+<p>Create instances using <a href="-builder/index.html">EWalletClient.Builder</a> and pass your implementation of <a href="#">OMGCallback</a> interface
+to generate an implementation</p>
+<p>For example,
+
+val config = ClientConfiguration(
+    baseURL = "YOUR_BASE_URL",
+    apiKey = "YOUR_API_KEY",
+    authenticationToken = "YOUR_AUTH_TOKEN"
+)
+val eWalletClient = EWalletClient.Builder {
+    clientConfiguration = config
+    debug = false
+}.build()</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-builder/index.html">Builder</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">Builder</span></code>
+<p>Build a new <a href="./index.html">EWalletClient</a>.
+Set <a href="#">apiKey</a>, <a href="#">authenticationToken</a> and <a href="#">baseUrl</a> are required before calling <a href="-builder/build.html">Builder.build</a>.
+Set <a href="-builder/debug.html">debug</a> true for printing a log</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">EWalletClient</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>The class EWalletClient represents an object that knows how to interact with OmiseGO API.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

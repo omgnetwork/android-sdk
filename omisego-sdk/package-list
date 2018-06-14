@@ -1,0 +1,17 @@
+$dokka.format:html
+$dokka.linkExtension:html
+
+co.omisego.omisego
+co.omisego.omisego.custom
+co.omisego.omisego.model
+co.omisego.omisego.model.pagination
+co.omisego.omisego.model.socket
+co.omisego.omisego.model.transaction.consumption
+co.omisego.omisego.model.transaction.list
+co.omisego.omisego.model.transaction.request
+co.omisego.omisego.model.transaction.send
+co.omisego.omisego.network.ewallet
+co.omisego.omisego.operation
+co.omisego.omisego.qrcode.scanner
+co.omisego.omisego.security
+co.omisego.omisego.websocket

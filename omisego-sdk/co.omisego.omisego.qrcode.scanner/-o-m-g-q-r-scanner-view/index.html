@@ -1,0 +1,192 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>OMGQRScannerView - omisego-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">omisego-sdk</a>&nbsp;/&nbsp;<a href="../index.html">co.omisego.omisego.qrcode.scanner</a>&nbsp;/&nbsp;<a href="./index.html">OMGQRScannerView</a><br/>
+<br/>
+<h1>OMGQRScannerView</h1>
+<code><span class="keyword">class </span><span class="identifier">OMGQRScannerView</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/widget/FrameLayout.html"><span class="identifier">FrameLayout</span></a><span class="symbol">, </span><span class="identifier">View</span></code>
+<p><a href="./index.html">OMGQRScannerView</a> is responsible for scanning the QRCode with customizable border color and loading view</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-camera-handler-thread/index.html">CameraHandlerThread</a></p>
+</td>
+<td>
+<code><span class="keyword">inner</span> <span class="keyword">class </span><span class="identifier">CameraHandlerThread</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/os/HandlerThread.html"><span class="identifier">HandlerThread</span></a></code>
+<p>This class is responsible for control the thread for <a href="on-preview-frame.html">onPreviewFrame</a>
+Note: https://developer.android.com/reference/android/hardware/Camera.PreviewCallback.html
+TL;DR The <a href="on-preview-frame.html">onPreviewFrame</a> callback is invoked on the event thread <a href="https://developer.android.com/reference/android/hardware/Camera.html#open(int)">Camera.open</a> was called from</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">OMGQRScannerView</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.qrcode.scanner.OMGQRScannerView$<init>(android.content.Context)/context">context</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Context.html"><span class="identifier">Context</span></a><span class="symbol">)</span></code><br/>
+<code><span class="identifier">OMGQRScannerView</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.qrcode.scanner.OMGQRScannerView$<init>(android.content.Context, android.util.AttributeSet, kotlin.Int)/context">context</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Context.html"><span class="identifier">Context</span></a><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.qrcode.scanner.OMGQRScannerView$<init>(android.content.Context, android.util.AttributeSet, kotlin.Int)/attrs">attrs</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/util/AttributeSet.html"><span class="identifier">AttributeSet</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.qrcode.scanner.OMGQRScannerView$<init>(android.content.Context, android.util.AttributeSet, kotlin.Int)/defStyleAttr">defStyleAttr</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span></code><br/>
+<code><span class="identifier">OMGQRScannerView</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.qrcode.scanner.OMGQRScannerView$<init>(android.content.Context, android.util.AttributeSet)/context">context</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Context.html"><span class="identifier">Context</span></a><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.qrcode.scanner.OMGQRScannerView$<init>(android.content.Context, android.util.AttributeSet)/attrs">attrs</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/util/AttributeSet.html"><span class="identifier">AttributeSet</span></a><span class="symbol">?</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="border-color.html">borderColor</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">borderColor</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code>
+<p>The border of the QRCode frame</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="border-color-loading.html">borderColorLoading</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">borderColorLoading</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code>
+<p>The border of the QRCode frame when checking if the QRCode is valid</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="camera-handler-thread.html">cameraHandlerThread</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">cameraHandlerThread</span><span class="symbol">: </span><a href="-camera-handler-thread/index.html"><span class="identifier">CameraHandlerThread</span></a><span class="symbol">?</span></code>
+<p>Set the <a href="https://developer.android.com/reference/android/os/HandlerThread.html">HandlerThread</a> responsible for control the thread for <a href="on-preview-frame.html">onPreviewFrame</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="camera-preview.html">cameraPreview</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">cameraPreview</span><span class="symbol">: </span><span class="identifier">OMGCameraPreview</span><span class="symbol">?</span></code>
+<p>A view that handle the preview image that streaming from the camera</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="camera-wrapper.html">cameraWrapper</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">cameraWrapper</span><span class="symbol">: </span><span class="identifier">CameraWrapper</span><span class="symbol">?</span></code>
+<p>A wrapper for <a href="https://developer.android.com/reference/android/hardware/Camera.html">Camera</a> and the cameraId <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="debug-image-view.html">debugImageView</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">debugImageView</span><span class="symbol">: </span><a href="https://developer.android.com/reference/android/widget/ImageView.html"><span class="identifier">ImageView</span></a><span class="symbol">?</span></code>
+<p>A debugging image view for display the preview image with the QR frame from the camera</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="debugging.html">debugging</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">debugging</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>A debugging flag to see how the QR code processor actually see the preview image from the camera.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="is-loading.html">isLoading</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">isLoading</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>A flag to indicate that the QR code is currently processing or not</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="loading-view.html">loadingView</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">loadingView</span><span class="symbol">: </span><a href="https://developer.android.com/reference/android/view/View.html"><span class="identifier">View</span></a><span class="symbol">?</span></code>
+<p>A loading view for display when validating the QR code with the backend side</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="omg-scanner-u-i.html">omgScannerUI</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">omgScannerUI</span><span class="symbol">: </span><span class="identifier">OMGScannerUI</span></code>
+<p>A <a href="https://developer.android.com/reference/android/view/View.html">View</a> for drawing the QR code frame, mask, and the hint text</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="orientation.html">orientation</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">orientation</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code>
+<p>An orientation of the device</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="on-preview-frame.html">onPreviewFrame</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onPreviewFrame</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.qrcode.scanner.OMGQRScannerView$onPreviewFrame(kotlin.ByteArray, android.hardware.Camera)/data">data</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.qrcode.scanner.OMGQRScannerView$onPreviewFrame(kotlin.ByteArray, android.hardware.Camera)/camera">camera</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/hardware/Camera.html"><span class="identifier">Camera</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="on-restore-instance-state.html">onRestoreInstanceState</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onRestoreInstanceState</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.qrcode.scanner.OMGQRScannerView$onRestoreInstanceState(android.os.Parcelable)/state">state</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="on-save-instance-state.html">onSaveInstanceState</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onSaveInstanceState</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="start-camera.html">startCamera</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">startCamera</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.qrcode.scanner.OMGQRScannerView$startCamera(co.omisego.omisego.OMGAPIClient, co.omisego.omisego.qrcode.scanner.OMGQRScannerContract.Callback)/client">client</span><span class="symbol">:</span>&nbsp;<a href="../../co.omisego.omisego/-o-m-g-a-p-i-client/index.html"><span class="identifier">OMGAPIClient</span></a><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.qrcode.scanner.OMGQRScannerView$startCamera(co.omisego.omisego.OMGAPIClient, co.omisego.omisego.qrcode.scanner.OMGQRScannerContract.Callback)/callback">callback</span><span class="symbol">:</span>&nbsp;<span class="identifier">Callback</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Start stream the camera preview</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="stop-camera.html">stopCamera</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">stopCamera</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Stop the camera to stream the image preview</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

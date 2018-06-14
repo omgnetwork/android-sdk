@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Balance - omisego-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">omisego-sdk</a>&nbsp;/&nbsp;<a href="../index.html">co.omisego.omisego.model</a>&nbsp;/&nbsp;<a href="./index.html">Balance</a><br/>
+<br/>
+<h1>Balance</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Balance</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a></code>
+<p>Represents a balance of a token</p>
+<h3>Parameters</h3>
+<p><a name="token"></a>
+<code>token</code> - The token corresponding to the balance</p>
+<p><a name="amount"></a>
+<code>amount</code> - The total amount of token available for the current user.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">Balance</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.model.Balance$<init>(java.math.BigDecimal, co.omisego.omisego.model.Token)/amount">amount</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/java/math/BigDecimal.html"><span class="identifier">BigDecimal</span></a><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.model.Balance$<init>(java.math.BigDecimal, co.omisego.omisego.model.Token)/token">token</span><span class="symbol">:</span>&nbsp;<a href="../-token/index.html"><span class="identifier">Token</span></a><span class="symbol">)</span></code>
+<p>Represents a balance of a token</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="amount.html">amount</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">amount</span><span class="symbol">: </span><a href="https://developer.android.com/reference/java/math/BigDecimal.html"><span class="identifier">BigDecimal</span></a></code>
+<p>The total amount of token available for the current user.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="token.html">token</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">token</span><span class="symbol">: </span><a href="../-token/index.html"><span class="identifier">Token</span></a></code>
+<p>The token corresponding to the balance</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="display-amount.html">displayAmount</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">displayAmount</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.model.Balance$displayAmount(kotlin.Int)/precision">precision</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;2<span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>Helper method that returns an easily readable value of the amount</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="minus.html">minus</a></p>
+</td>
+<td>
+<code><span class="keyword">operator</span> <span class="keyword">fun </span><span class="identifier">minus</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.model.Balance$minus(co.omisego.omisego.model.Balance)/subtrahend">subtrahend</span><span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">Balance</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">Balance</span></a></code>
+<p>Returns a <a href="./index.html">Balance</a> whose amount is (this.amount - subtrahend.amount)</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="plus.html">plus</a></p>
+</td>
+<td>
+<code><span class="keyword">operator</span> <span class="keyword">fun </span><span class="identifier">plus</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.model.Balance$plus(co.omisego.omisego.model.Balance)/augend">augend</span><span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">Balance</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">Balance</span></a></code>
+<p>Returns a <a href="./index.html">Balance</a> whose amount is (this.amount + augend.amount)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

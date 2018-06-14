@@ -1,0 +1,64 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>OMGKeyManager - omisego-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">omisego-sdk</a>&nbsp;/&nbsp;<a href="../index.html">co.omisego.omisego.security</a>&nbsp;/&nbsp;<a href="./index.html">OMGKeyManager</a><br/>
+<br/>
+<h1>OMGKeyManager</h1>
+<code><span class="keyword">class </span><span class="identifier">OMGKeyManager</span></code>
+<p>A utility class that makes encryption and decryption process easier.
+The implementation follows android security best practice using <a href="https://developer.android.com/reference/java/security/KeyStore.html">java.security.KeyStore</a> pattern.</p>
+<p>The implementation is quite different between API level lower than 23 and API level 23 or higher.
+For API level 23 and higher, the implementation is relatively easy because the API generates random AES keys for us.
+For Android API versions lower than 23, The <a href="#">KeyGenParameterSpec</a> isn't available.
+Instead, we will use the <a href="#">KeyPairGeneratorSpec</a> API.
+Read more : <a href="https//developer.android.com/training/articles/keystore.html">https//developer.android.com/training/articles/keystore.html</a></p>
+<p>Create instances using <a href="-builder/index.html">OMGKeyManager.Builder</a>, pass <a href="https://developer.android.com/reference/android/content/Context.html">Context</a> and <a href="#">keyAlias</a> to generate an implementation.</p>
+<p>For example,</p>
+<p>val sensitiveData = "OmiseGOKey"</p>
+<p>val encrypted: String = omgApiClient.encrypt(sensitiveData)
+val decrypted: String = omgApiClient.decrypt(encrypted.toByteArray())</p>
+<p>println(decrypted) // OmiseGOKey
+</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-builder/index.html">Builder</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">Builder</span></code>
+<p>Build a new <a href="./index.html">OMGKeyManager</a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="decrypt.html">decrypt</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">decrypt</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.security.OMGKeyManager$decrypt(kotlin.ByteArray)/encrypted">encrypted</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>Decrypt the data</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="encrypt.html">encrypt</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">encrypt</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.security.OMGKeyManager$encrypt(kotlin.ByteArray)/input">input</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>Encrypt the data</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
