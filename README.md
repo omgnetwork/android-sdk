@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/omisego/android-sdk.svg?branch=master)](https://travis-ci.org/omisego/android-sdk)
 
 # OmiseGO Android SDK
 

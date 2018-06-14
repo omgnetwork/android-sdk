@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package co.omisego.omisego.custom.camera.ui
 
 /*
@@ -22,7 +24,6 @@ import co.omisego.omisego.custom.camera.CameraWrapper
 import java.lang.Exception
 
 @SuppressLint("ViewConstructor")
-@Suppress("DEPRECATION")
 class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
     private var mPreviewCallback: Camera.PreviewCallback? = null
     private var mPreviewing: Boolean = true

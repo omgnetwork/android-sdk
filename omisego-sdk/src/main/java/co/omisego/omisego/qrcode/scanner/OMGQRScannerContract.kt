@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package co.omisego.omisego.qrcode.scanner
 
 /*
@@ -144,12 +146,12 @@ interface OMGQRScannerContract {
         fun cancelLoading()
 
         /**
-         * Verify if the given [txId] has already failed with code [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] yet
+         * Verify if the given [formattedId] has already failed with code [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] yet
          *
-         * @param txId The transaction formattedId which is created by EWallet backend
-         * @return true if the given [txId] has already failed with code [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND], otherwise false.
+         * @param formattedId The transaction formattedId which is created by EWallet backend
+         * @return true if the given [formattedId] has already failed with code [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND], otherwise false.
          */
-        fun hasTransactionAlreadyFailed(txId: String): Boolean
+        fun hasTransactionAlreadyFailed(formattedId: String): Boolean
 
         interface QRVerifier {
             /**
@@ -165,12 +167,12 @@ interface OMGQRScannerContract {
             /**
              * Make request to the EWallet API to verify if the QR code has a valid transaction formattedId
              *
-             * @param txId The transaction formattedId which is created by EWallet backend
+             * @param formattedId The transaction formattedId which is created by EWallet backend
              * @param fail A lambda that will be invoked when the verification pass
              * @param success A lambda that will be invoked when the verification fail
              */
             fun requestTransaction(
-                txId: String,
+                formattedId: String,
                 fail: (response: OMGResponse<APIError>) -> Unit,
                 success: (response: OMGResponse<TransactionRequest>) -> Unit
             )

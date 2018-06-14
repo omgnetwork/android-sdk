@@ -1,0 +1,63 @@
+os: linux
+language: android
+jdk: oraclejdk8
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+env:
+  global:
+    - ANDROID_API=27
+    - ANDROID_BUILD_TOOLS=27.0.3
+    - ADB_INSTALL_TIMEOUT=5 # minutes
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - tools
+    - build-tools-$ANDROID_BUILD_TOOLS
+    - android-$ANDROID_API
+
+  licenses:
+   - android-sdk-preview-license-.+
+   - android-sdk-license-.+
+   - google-gdk-license-.+
+
+before_script:
+  - SECRET_FILE_LOCATION=omisego-sdk/src/test/resources
+  - CODE_DOCUMENTATION_LOCATION=omisego-sdk/build/dokka
+  - jq -n --arg BASE_URL $OMG_BASE_URL
+    --arg API_KEY $OMG_API_KEY
+    --arg AUTH_TOKEN $OMG_AUTH_TOKEN
+    --arg ACCESS_KEY $OMG_ACCESS_KEY
+    --arg SECRET_KEY $OMG_SECRET_KEY
+    -f $SECRET_FILE_LOCATION/secret.template.jq > $SECRET_FILE_LOCATION/secret.json
+
+script:
+  - ./gradlew lint # android lint
+  - ./gradlew ktlintCheck # kotlin lint
+  - ./gradlew clean test # unit test
+  - ./gradlew dokka > /dev/null # generate kotlin doc
+
+before_deploy:
+  - touch $CODE_DOCUMENTATION_LOCATION/.nojekyll
+  - ./generate_redirected_html.sh > $CODE_DOCUMENTATION_LOCATION/index.html
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  local-dir: $CODE_DOCUMENTATION_LOCATION
+  on:
+    branch: master
+
+after_script:
+  - rm $SECRET_FILE_LOCATION/secret.json

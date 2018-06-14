@@ -1,10 +1,11 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'org.jetbrains.dokka-android'
 apply plugin: 'checkstyle'
 apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
+apply plugin: 'com.adarshr.test-logger'
+apply from: 'dokka.gradle'
 
 android {
     compileSdkVersion 27
@@ -16,23 +17,25 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-proguard-rules.pro'
     }
-
+    buildToolsVersion '27.0.3'
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     sourceSets {
         test.java.srcDirs += 'src/test/kotlin'
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
-
     testOptions {
         unitTests {
             includeAndroidResources = true
         }
+    }
+
+    lintOptions {
+        disable 'ParcelCreator'
     }
 }
 
@@ -53,9 +56,9 @@ checkstyle {
     configFile = rootProject.file('config/checkstyle/checkstyle.xml')
 }
 
-dokka {
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc"
+testlogger {
+    showSummary true
+    theme 'mocha'
 }
 
 task checkstyle(type: Checkstyle) {
@@ -78,16 +81,15 @@ tasks.withType(Javadoc) {
 dependencies {
     // Client dependencies
     api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     // Used for the QRCode generator and the QRCode scanner.
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'com.android.support:appcompat-v7:27.1.1'
-
     // For networking stuff
     api 'com.squareup.retrofit2:retrofit:2.4.0'
     api 'com.squareup.retrofit2:converter-gson:2.4.0'
     api 'com.squareup.okhttp3:logging-interceptor:3.9.1'
-
     // Testing dependencies
     testImplementation 'org.json:json:20160810'
     testImplementation 'junit:junit:4.12'

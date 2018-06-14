@@ -10,10 +10,12 @@ package co.omisego.omisego.custom.zxing.ui.core
 import android.content.res.Configuration
 import android.graphics.Rect
 import co.omisego.omisego.OMGAPIClient
+import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.custom.camera.utils.CameraUtils
 import co.omisego.omisego.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.ClientConfiguration
+import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerLogic
@@ -21,6 +23,7 @@ import co.omisego.omisego.qrcode.scanner.OMGQRVerifier
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.Reader
 import com.google.zxing.Result
+import com.nhaarman.mockito_kotlin.timeout
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -49,6 +52,7 @@ class OMGQRScannerLogicTest {
     private lateinit var mockWebServer: MockWebServer
     private lateinit var omgAPIClient: OMGAPIClient
     private lateinit var omgQRVerifier: OMGQRVerifier
+    private val mockTransactionRequestCb: OMGCallback<TransactionRequest> = mock()
 
     @Before
     fun setup() {
@@ -70,7 +74,7 @@ class OMGQRScannerLogicTest {
 
         omgAPIClient = OMGAPIClient(eWalletClient)
         omgQRVerifier = OMGQRVerifier(omgAPIClient).apply {
-            callback = mock()
+            callback = mockTransactionRequestCb
         }
         omgQRScannerPresenter = OMGQRScannerLogic(omgQRScannerView, omgQRVerifier, qrReader = multiFormatReader)
     }
@@ -157,10 +161,8 @@ class OMGQRScannerLogicTest {
             }
         )
 
-        Thread.sleep(150)
-
         verify(omgQRScannerView, times(1)).isLoading = true
-        verify(omgQRVerifier.callback, times(1))?.success(any())
+        verify(mockTransactionRequestCb, timeout(3000).times(1)).success(any())
     }
 
     @Test

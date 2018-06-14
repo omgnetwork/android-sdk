@@ -47,7 +47,6 @@ class ErrorCodeTest {
                 "sdk:unknown_error" -> ErrorCode.SDK_UNEXPECTED_ERROR
                 "token:token_not_found" -> ErrorCode.TOKEN_NOT_FOUND
                 "sdk:socket_error" -> ErrorCode.SDK_SOCKET_ERROR
-                "token:token_not_found" -> ErrorCode.TOKEN_NOT_FOUND
                 "transaction:same_address" -> ErrorCode.TRANSACTION_SAME_ADDRESS
                 "transaction:insufficient_funds" -> ErrorCode.TRANSACTION_INSUFFICIENT_FUNDS
                 "transaction_request:expired" -> ErrorCode.TRANSACTION_REQUEST_EXPIRED
