@@ -2,7 +2,6 @@ apply plugin: 'org.jetbrains.dokka-android'
 
 dokka {
     outputFormat = 'html'
-    outputDirectory = "$buildDir/kdocs"
     packageOptions {
         prefix = "co.omisego.omisego"
         suppress = true

@@ -55,6 +55,6 @@ class SocketHeartbeatTest {
          *
          * Because of that, this expression will verify that all tasks should be invoked.
          */
-        Mockito.mockingDetails(task).invocations.size shouldBeInRange (countFinishedThread - 3)..100 // approximately
+        Mockito.mockingDetails(task).invocations.size shouldBeInRange (countFinishedThread - 5)..100 // approximately
     }
 }

@@ -32,6 +32,7 @@ android:
 
 before_script:
   - SECRET_FILE_LOCATION=omisego-sdk/src/test/resources
+  - CODE_DOCUMENTATION_LOCATION=omisego-sdk/build/dokka
   - jq -n --arg BASE_URL $OMG_BASE_URL
     --arg API_KEY $OMG_API_KEY
     --arg AUTH_TOKEN $OMG_AUTH_TOKEN
@@ -43,6 +44,20 @@ script:
   - ./gradlew lint # android lint
   - ./gradlew ktlintCheck # kotlin lint
   - ./gradlew clean test # unit test
+  - ./gradlew dokka > /dev/null # generate kotlin doc
+
+before_deploy:
+  - touch $CODE_DOCUMENTATION_LOCATION/.nojekyll
+  - ./generate_redirected_html.sh > $CODE_DOCUMENTATION_LOCATION/index.html
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  local-dir: $CODE_DOCUMENTATION_LOCATION
+  on:
+    branch: master
 
 after_script:
   - rm $SECRET_FILE_LOCATION/secret.json

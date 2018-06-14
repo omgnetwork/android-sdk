@@ -179,15 +179,7 @@ class OMGAPIClientTest {
         val data = result.body()!!.asJsonObject.getAsJsonObject("data")
         val transaction = gson.fromJson<Transaction>(data, object : TypeToken<Transaction>() {}.type)
 
-        omgAPIClient.transfer(mock()).enqueue(object : OMGCallback<Transaction> {
-            override fun success(response: OMGResponse<Transaction>) {
-                // Do something
-            }
-
-            override fun fail(response: OMGResponse<APIError>) {
-                // Do something
-            }
-        })
+        omgAPIClient.transfer(mock()).enqueue(callback)
 
         val expected = OMGResponse(
             Versions.EWALLET_API,
