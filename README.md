@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/omisego/android-sdk.svg?branch=master)](https://travis-ci.org/omisego/android-sdk)
+[![Download](https://api.bintray.com/packages/omise-go/maven/omisego-sdk/images/download.svg) ](https://bintray.com/omise-go/maven/omisego-sdk/_latestVersion)
 
 # OmiseGO Android SDK
 
