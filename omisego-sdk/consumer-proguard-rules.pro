@@ -1,6 +1,4 @@
-# OMG
--keep class co.omisego.omisego.model.** { *; }
--keep class co.omisego.omisego.websocket.enum.** { *; }
+-keep public class co.omisego.omisego.** { *; }
 
 # Save the obfuscation mapping to a file, so we can de-obfuscate any stack
 # traces later on. Keep a fixed source file attribute and all line number
