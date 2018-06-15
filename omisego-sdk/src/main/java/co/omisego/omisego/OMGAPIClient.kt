@@ -40,7 +40,7 @@ import co.omisego.omisego.network.ewallet.EWalletClient
  * <code>
  * val omgAPIClient = OMGAPIClient(eWalletClient)
  *
- * omgApiClient.listWallets().enqueue(object : OMGCallback<WalletList> {
+ * omgApiClient.getWallets().enqueue(object : OMGCallback<WalletList> {
  *      override fun success(response: OMGResponse<WalletList>) {
  *          // Handle success
  *      }
@@ -85,7 +85,7 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      * if *success* the [OMGCallback<WalletList>] will be invoked with the list of [Wallet] parameter,
      * if *fail* [OMGCallback<WalletList>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
      */
-    fun listWallets() = eWalletAPI.listWallets()
+    fun getWallets() = eWalletAPI.getWallets()
 
     /**
      * Asynchronously get a paginated list of transactions of a user corresponding to the provided authentication token.
@@ -94,8 +94,8 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      *
      * @param request A structure used to query a list of transactions for the current user
      */
-    fun listTransactions(request: TransactionListParams) =
-        eWalletAPI.listTransactions(request)
+    fun getTransactions(request: TransactionListParams) =
+        eWalletAPI.getTransactions(request)
 
     /**
      * Asynchronously create a transaction request from the given [TransactionRequestCreateParams] object

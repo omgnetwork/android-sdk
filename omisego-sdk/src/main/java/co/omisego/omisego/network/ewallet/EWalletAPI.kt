@@ -12,8 +12,8 @@ import co.omisego.omisego.constant.Endpoints.CONSUME_TRANSACTION_REQUEST
 import co.omisego.omisego.constant.Endpoints.CREATE_TRANSACTION_REQUEST
 import co.omisego.omisego.constant.Endpoints.GET_CURRENT_USER
 import co.omisego.omisego.constant.Endpoints.GET_SETTINGS
-import co.omisego.omisego.constant.Endpoints.LIST_TRANSACTIONS
-import co.omisego.omisego.constant.Endpoints.LIST_WALLETS
+import co.omisego.omisego.constant.Endpoints.GET_TRANSACTIONS
+import co.omisego.omisego.constant.Endpoints.GET_WALLETS
 import co.omisego.omisego.constant.Endpoints.LOGOUT
 import co.omisego.omisego.constant.Endpoints.REJECT_TRANSACTION
 import co.omisego.omisego.constant.Endpoints.RETRIEVE_TRANSACTION_REQUEST
@@ -44,14 +44,14 @@ interface EWalletAPI {
     @POST(LOGOUT)
     fun logout(): OMGCall<Logout>
 
-    @POST(LIST_WALLETS)
-    fun listWallets(): OMGCall<WalletList>
+    @POST(GET_WALLETS)
+    fun getWallets(): OMGCall<WalletList>
 
     @POST(GET_SETTINGS)
     fun getSettings(): OMGCall<Setting>
 
-    @POST(LIST_TRANSACTIONS)
-    fun listTransactions(@Body request: TransactionListParams): OMGCall<PaginationList<Transaction>>
+    @POST(GET_TRANSACTIONS)
+    fun getTransactions(@Body request: TransactionListParams): OMGCall<PaginationList<Transaction>>
 
     @POST(CREATE_TRANSACTION_REQUEST)
     fun createTransactionRequest(@Body request: TransactionRequestCreateParams): OMGCall<TransactionRequest>

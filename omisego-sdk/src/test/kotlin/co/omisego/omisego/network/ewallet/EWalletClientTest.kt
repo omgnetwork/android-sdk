@@ -44,9 +44,8 @@ class EWalletClientTest {
     private val secretFileName: String = "secret.json" // Replace your secret file here
     private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
     private val userFile: File by ResourceFile("user.json")
-    private val listWalletsFile: File by ResourceFile("list_wallets.json")
-    private val listTransactionsFile: File by ResourceFile("list_transactions.json")
-    private val listBalanceFile: File by ResourceFile("list_balances.json")
+    private val getWalletsFile: File by ResourceFile("get_wallets.json")
+    private val getTransactionsFile: File by ResourceFile("get_transactions.json")
     private val getSettingFile: File by ResourceFile("setting.json")
     private var mockWebServer: MockWebServer = MockWebServer()
     private var mockUrl: HttpUrl = mockWebServer.url("/api/")
@@ -93,10 +92,10 @@ class EWalletClientTest {
 
     @Test
     fun `Calls list_wallets should be match with the expected response`() {
-        listWalletsFile.mockEnqueueWithHttpCode(mockWebServer)
+        getWalletsFile.mockEnqueueWithHttpCode(mockWebServer)
 
-        val actualResponse = eWalletClient.eWalletAPI.listWallets().execute().body()!!
-        val expectedResponse = buildResponse<WalletList>(listWalletsFile.readText())
+        val actualResponse = eWalletClient.eWalletAPI.getWallets().execute().body()!!
+        val expectedResponse = buildResponse<WalletList>(getWalletsFile.readText())
         actualResponse shouldEqual expectedResponse
     }
 
@@ -135,22 +134,22 @@ class EWalletClientTest {
 
     @Test
     fun `EWalletClient request to list_wallets with the correct path`() {
-        listWalletsFile.mockEnqueueWithHttpCode(mockWebServer)
+        getWalletsFile.mockEnqueueWithHttpCode(mockWebServer)
 
-        eWalletClient.eWalletAPI.listWallets().execute()
+        eWalletClient.eWalletAPI.getWallets().execute()
         val request = mockWebServer.takeRequest()
-        request.path shouldEqual "/api/${Endpoints.LIST_WALLETS}"
+        request.path shouldEqual "/api/${Endpoints.GET_WALLETS}"
     }
 
     @Test
-    fun `EWalletClient request to list_transactions with the correct path`() {
-        listTransactionsFile.mockEnqueueWithHttpCode(mockWebServer)
+    fun `EWalletClient request to get_transactions with the correct path`() {
+        getTransactionsFile.mockEnqueueWithHttpCode(mockWebServer)
 
         val listTransactionParams: TransactionListParams = mock()
 
-        eWalletClient.eWalletAPI.listTransactions(listTransactionParams).execute()
+        eWalletClient.eWalletAPI.getTransactions(listTransactionParams).execute()
         val request = mockWebServer.takeRequest()
-        request.path shouldEqual "/api/${Endpoints.LIST_TRANSACTIONS}"
+        request.path shouldEqual "/api/${Endpoints.GET_TRANSACTIONS}"
     }
 
     @Test

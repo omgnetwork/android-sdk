@@ -130,7 +130,7 @@ omgAPIClient.getCurrentUser().enqueue(object: OMGCallback<User>{
 ### Get the wallets of the current user
 
 ```kotlin
-omgAPIClient.listWallets().enqueue(object: OMGCallback<WalletList>{
+omgAPIClient.getWallets().enqueue(object: OMGCallback<WalletList>{
     override fun fail(response: OMGResponse<APIError>) {
         
     }
@@ -208,7 +208,7 @@ Where
 Then you can call:
 
 ```kotlin
-omgAPIClient.listTransactions(request).enqueue(object: OMGCallback<PaginationList<Transaction>>{
+omgAPIClient.getTransactions(request).enqueue(object: OMGCallback<PaginationList<Transaction>>{
     override fun fail(response: OMGResponse<APIError>) {
         //TODO: Handle the error
     }
