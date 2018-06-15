@@ -8,6 +8,7 @@ apply plugin: 'com.adarshr.test-logger'
 apply from: 'dokka.gradle'
 
 android {
+    buildToolsVersion '27.0.3'
     compileSdkVersion 27
     defaultConfig {
         minSdkVersion 19
@@ -16,13 +17,6 @@ android {
         versionName versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-proguard-rules.pro'
-    }
-    buildToolsVersion '27.0.3'
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
     }
     sourceSets {
         test.java.srcDirs += 'src/test/kotlin'

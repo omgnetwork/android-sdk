@@ -6,7 +6,11 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
-## [0.9.4] - 2018-05-xx
+## [0.9.42] - 2018-06-15
+### Fixed
+- [SDK package version `0.9.4` doesn't contain any class](https://github.com/omisego/android-sdk/issues/36)
+
+## [0.9.4] - 2018-06-14
 ### Added
 - [Websocket](https://github.com/omisego/android-sdk#websocket)
 - [Transfer](https://github.com/omisego/android-sdk#send-tokens-to-an-address)
@@ -44,7 +48,8 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Logout the current user
 - [OMGKeyManager - encryption and decryption helpers](https://github.com/omisego/android-sdk/pull/11)
 
-[Unreleased]: https://github.com/omisego/android-sdk/compare/v0.9.4...HEAD
-[0.9.4]: https://github.com/omisego/android-sdk/compare/v0.9.4...v0.9.3
+[Unreleased]: https://github.com/omisego/android-sdk/compare/v0.9.42...HEAD
+[0.9.42]: https://github.com/omisego/android-sdk/compare/v0.9.4...0.9.42
+[0.9.4]: https://github.com/omisego/android-sdk/compare/v0.9.3...v0.9.4
 [0.9.3]: https://github.com/omisego/android-sdk/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/omisego/android-sdk/compare/v0.9.1...v0.9.2
