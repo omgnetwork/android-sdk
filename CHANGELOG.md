@@ -10,6 +10,10 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ### Fixed
 - [SDK package version `0.9.4` doesn't contain any class](https://github.com/omisego/android-sdk/issues/36)
 
+### Changed
+- Renamed endpoint `listTransactions` to `getTransactions`
+- Renamed endpoint `listWallets` to `getWallets`
+
 ## [0.9.4] - 2018-06-14
 ### Added
 - [Websocket](https://github.com/omisego/android-sdk#websocket)
