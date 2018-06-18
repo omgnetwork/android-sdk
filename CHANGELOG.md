@@ -7,8 +7,12 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ## [Unreleased]
 
 ## [0.9.42] - 2018-06-15
+### Added
+- Added `metadata` and `encryptedMetadata` params to `Token` class. 
+
 ### Fixed
 - [SDK package version `0.9.4` doesn't contain any class](https://github.com/omisego/android-sdk/issues/36)
+- [Cannot get metadata of the user](https://github.com/omisego/android-sdk/issues/40)
 
 ### Changed
 - Renamed endpoint `listTransactions` to `getTransactions`
