@@ -30,7 +30,7 @@ class TransactionRequestTest {
         transactionRequest = TransactionRequest(
             "1234",
             TransactionRequestType.RECEIVE,
-            Token("1234", "OMG", "OmiseGO", 1000.bd),
+            Token("1234", "OMG", "OmiseGO", 1000.bd, mapOf(), mapOf()),
             100.bd,
             expirationDate = Date(),
             requireConfirmation = false,

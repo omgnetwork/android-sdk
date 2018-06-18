@@ -27,8 +27,8 @@ class WalletTest {
         address = Wallet(
             "1234-1234-1234",
             listOf(
-                Balance(100.bd, Token("1234", "OMG", "OmiseGO", 100.bd)),
-                Balance(100000000.bd, Token("1234-1234-1235-12345", "ETH", "Ether", 100000000.bd))
+                Balance(100.bd, Token("1234", "OMG", "OmiseGO", 100.bd, mapOf(), mapOf())),
+                Balance(100000000.bd, Token("1234-1234-1235-12345", "ETH", "Ether", 100000000.bd, mapOf(), mapOf()))
             ),
             "",
             "",
