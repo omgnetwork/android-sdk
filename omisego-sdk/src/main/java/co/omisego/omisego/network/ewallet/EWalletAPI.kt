@@ -34,7 +34,6 @@ import co.omisego.omisego.model.transaction.request.TransactionRequestCreatePara
 import co.omisego.omisego.model.transaction.request.TransactionRequestParams
 import co.omisego.omisego.model.transaction.send.TransactionSendParam
 import retrofit2.http.Body
-import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface EWalletAPI {
@@ -61,8 +60,7 @@ interface EWalletAPI {
 
     @POST(CONSUME_TRANSACTION_REQUEST)
     fun consumeTransactionRequest(
-        @Body request: TransactionConsumptionParams,
-        @Header("Idempotency-Token") idempotencyToken: String = request.idempotencyToken
+        @Body request: TransactionConsumptionParams
     ): OMGCall<TransactionConsumption>
 
     @POST(APPROVE_TRANSACTION)
