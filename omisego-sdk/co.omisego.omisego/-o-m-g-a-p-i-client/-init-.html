@@ -27,7 +27,7 @@ val eWalletClient = EWalletClient.Builder {
 <p>For example,
 
 val omgAPIClient = OMGAPIClient(eWalletClient)</p>
-<p>omgApiClient.listWallets().enqueue(object : OMGCallback {
+<p>omgApiClient.getWallets().enqueue(object : OMGCallback {
     override fun success(response: OMGResponse) {
         // Handle success
     }</p>
