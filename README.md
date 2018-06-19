@@ -50,10 +50,9 @@ To use the OmiseGO SDK in your android project, simply add the following line in
  
 ```groovy
 dependencies {
-    implementation 'co.omisego:omisego-sdk:0.9.3'
+    implementation 'co.omisego:omisego-sdk:<latest-sdk-version>'
 }
 ```
-
 ## Usage
 
 ### Initialization

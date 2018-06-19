@@ -34,7 +34,7 @@ import java.util.Date
 @Config(sdk = [23])
 class TransactionConsumptionTest {
     private val mOMGAPIClient: OMGAPIClient by lazy { mock<OMGAPIClient>() }
-    val token = Token("1234", "OMG", "OmiseGO", 10000.bd)
+    val token = Token("1234", "OMG", "OmiseGO", 10000.bd, mapOf(), mapOf())
     private val mTransactionConsumption: TransactionConsumption by lazy {
         TransactionConsumption(
             "OMG-1234",

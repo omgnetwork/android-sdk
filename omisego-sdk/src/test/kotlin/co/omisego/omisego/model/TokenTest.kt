@@ -13,10 +13,10 @@ import org.amshove.kluent.shouldEqualTo
 import org.junit.Test
 
 class TokenTest {
-    val token1 = Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd)
-    val token2 = Token("ETH:8bcda572-9411-43c8-baae-cd56eb0155f3", "ETH", "Ethereum", 10000.0.bd)
-    val token3 = Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10.0.bd)
-    val token4 = Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd)
+    val token1 = Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, mapOf(), mapOf())
+    val token2 = Token("ETH:8bcda572-9411-43c8-baae-cd56eb0155f3", "ETH", "Ethereum", 10000.0.bd, mapOf(), mapOf())
+    val token3 = Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10.0.bd, mapOf(), mapOf())
+    val token4 = Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, mapOf(), mapOf())
 
     @Test
     fun `token1 should be not compatible with token2`() {

@@ -25,8 +25,8 @@ class SettingTest {
     @Before
     fun setup() {
         setting = Setting(listOf(
-            Token("1", "OMG", "OmiseGO", 10000.bd),
-            Token("2", "ETH", "Ether", 10000000000000.bd)
+            Token("1", "OMG", "OmiseGO", 10000.bd, mapOf(), mapOf()),
+            Token("2", "ETH", "Ether", 10000000000000.bd, mapOf(), mapOf())
         ))
     }
 
