@@ -58,7 +58,7 @@ class OMGQRScannerLogicTest {
     fun setup() {
         mockWebServer = MockWebServer()
         mockWebServer.start()
-        val mockUrl = mockWebServer.url("/api/")
+        val mockUrl = mockWebServer.url("/api/client/")
 
         val config = ClientConfiguration(
             "base_url",

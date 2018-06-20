@@ -48,7 +48,7 @@ class EWalletClientTest {
     private val getTransactionsFile: File by ResourceFile("get_transactions.json")
     private val getSettingFile: File by ResourceFile("setting.json")
     private var mockWebServer: MockWebServer = MockWebServer()
-    private var mockUrl: HttpUrl = mockWebServer.url("/api/")
+    private var mockUrl: HttpUrl = mockWebServer.url("/api/client/")
     private lateinit var eWalletClient: EWalletClient
     private lateinit var config: ClientConfiguration
 
@@ -120,7 +120,7 @@ class EWalletClientTest {
         eWalletClient.eWalletAPI.getCurrentUser().execute()
         val request = mockWebServer.takeRequest()
 
-        request.path shouldEqual "/api/${Endpoints.GET_CURRENT_USER}"
+        request.path shouldEqual "/api/client/${Endpoints.GET_CURRENT_USER}"
     }
 
     @Test
@@ -129,7 +129,7 @@ class EWalletClientTest {
 
         eWalletClient.eWalletAPI.getSettings().execute()
         val request = mockWebServer.takeRequest()
-        request.path shouldEqual "/api/${Endpoints.GET_SETTINGS}"
+        request.path shouldEqual "/api/client/${Endpoints.GET_SETTINGS}"
     }
 
     @Test
@@ -138,7 +138,7 @@ class EWalletClientTest {
 
         eWalletClient.eWalletAPI.getWallets().execute()
         val request = mockWebServer.takeRequest()
-        request.path shouldEqual "/api/${Endpoints.GET_WALLETS}"
+        request.path shouldEqual "/api/client/${Endpoints.GET_WALLETS}"
     }
 
     @Test
@@ -149,7 +149,7 @@ class EWalletClientTest {
 
         eWalletClient.eWalletAPI.getTransactions(listTransactionParams).execute()
         val request = mockWebServer.takeRequest()
-        request.path shouldEqual "/api/${Endpoints.GET_TRANSACTIONS}"
+        request.path shouldEqual "/api/client/${Endpoints.GET_TRANSACTIONS}"
     }
 
     @Test
@@ -159,7 +159,7 @@ class EWalletClientTest {
         eWalletClient.eWalletAPI.logout().execute()
         val request = mockWebServer.takeRequest()
 
-        request.path shouldEqual "/api/${Endpoints.LOGOUT}"
+        request.path shouldEqual "/api/client/${Endpoints.LOGOUT}"
     }
 
     @Test

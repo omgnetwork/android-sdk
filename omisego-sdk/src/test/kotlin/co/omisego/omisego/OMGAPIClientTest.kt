@@ -322,6 +322,6 @@ class OMGAPIClientTest {
     private fun initMockWebServer() {
         mockWebServer = MockWebServer()
         mockWebServer.start()
-        mockUrl = mockWebServer.url("/api/")
+        mockUrl = mockWebServer.url("/api/client/")
     }
 }

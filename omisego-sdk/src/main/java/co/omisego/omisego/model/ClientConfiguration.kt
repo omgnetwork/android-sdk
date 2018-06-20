@@ -19,7 +19,7 @@ import co.omisego.omisego.constant.Exceptions
  *
  * For example,
  * for [OMGSocketClient], the [baseURL] should be ended with '/api/socket/'
- * for [EWalletClient], the [baseURL] should be ended with '/api/'
+ * for [EWalletClient], the [baseURL] should be ended with '/api/client/'
  *
  * @param apiKey An apiKey is the API key (typically generated on the admin panel)
  * @param authenticationToken An authenticationToken is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
