@@ -89,7 +89,7 @@ data class TransactionRequest(
     val allowAmountOverride: Boolean,
     val maxConsumptionsPerUser: Int?,
     val requireConfirmation: Boolean,
-    val expirationDate: Date,
+    val expirationDate: Date?,
     val expirationReason: String?,
     val consumptionLifetime: Int?,
     val createdAt: Date?,
