@@ -734,8 +734,10 @@ fun handleSocketCustomEvent(customEvent: SocketCustomEvent){
 }
 ```
 
-The method `onEventReceived` will be called when any event regarding to the user is received.
-The `SocketReceive` object is a raw object which directly receive from the eWallet API.
+Where:
+* `onEventReceived`: An event callback. This method will be called when any event regarding to the user is received.
+* `SocketReceive`:  A raw object which is a response from the eWallet socket API.
+
 For more information can be found [here](https://github.com/omisego/ewallet/blob/develop/docs/websockets/ewallet_api.md).
 
 ## Stop listening for the custom event
