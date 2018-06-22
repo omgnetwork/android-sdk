@@ -6,6 +6,10 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [0.9.51] - 2018-06-22
+### Changed
+- Renamed `sortDirection` to `sortDir`
+
 ## [0.9.5] - 2018-06-22
 ### Changed
 - [Changed some non-nullable variable to nullable variables](https://github.com/omisego/android-sdk/pull/43)
