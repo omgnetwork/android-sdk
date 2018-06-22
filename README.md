@@ -636,7 +636,7 @@ The possible events are:
 **Usage**
 ```kotlin
 // The transaction requestor listen for the event 
-transactionRequest.startListeningEvents(socketClient, object: SocketCustomEventListener.TransactionRequestListener() {
+transactionRequest.startListeningEvents(socketClient, listener = object: SocketCustomEventListener.TransactionRequestListener() {
    override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
        // Do something
    }
@@ -651,7 +651,7 @@ transactionRequest.startListeningEvents(socketClient, object: SocketCustomEventL
 })
 
 // The transaction consumer listen for the event
-transactionConsumption.startListeningEvents(socketClient, object: SocketCustomEventListener.TransactionConsumptionListener() {
+transactionConsumption.startListeningEvents(socketClient, listener = object: SocketCustomEventListener.TransactionConsumptionListener() {
   override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
       // Do something
   }
@@ -699,6 +699,44 @@ socketClient.joinChannel(topic, listener = object: SocketCustomEventListener.Tra
     }
 })
 ```
+
+## User events
+A `user` can also be listened and will receive all events that are related to him:
+
+```kotlin
+user.startListeningEvents(socketClient, listener = object: SocketCustomEventListener.AnyEventListener() {
+   override fun onEventReceived(data: SocketReceive) {
+        // Do something
+        data.event.either(this::handleSocketSystemEvent, this::handleSocketCustomEvent)
+   }
+})
+
+fun handleSocketSystemEvent(systemEvent: SocketSystemEvent){
+        when(systemEvent){
+            SocketSystemEvent.CLOSE -> {
+                // Do something
+            }
+            SocketSystemEvent.ERROR -> {
+                // Do something
+            }
+        }
+    }
+
+fun handleSocketCustomEvent(customEvent: SocketCustomEvent){
+    when(customEvent){
+        SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED -> {
+            // Do something
+        }
+        SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST -> {
+            // Do something
+        }
+    }
+}
+```
+
+The method `onEventReceived` will be called when any event regarding to the user is received.
+The `SocketReceive` object is a raw object which directly receive from the eWallet API.
+For more information can be found [here](https://github.com/omisego/ewallet/blob/develop/docs/websockets/ewallet_api.md).
 
 ## Stop listening for the custom event
 
