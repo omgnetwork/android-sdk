@@ -167,7 +167,7 @@ val request = ListTransactionParams.create(
     page = 1,
     perPage = 10,
     sortBy = Paginable.Transaction.SortableFields.CREATE_AT,
-    sortDirection = SortDirection.ASCENDING,
+    sortDir = SortDirection.ASCENDING,
     searchTerm = "confirmed", // or searchTerms = mapOf(STATUS to "completed")
     address = null
 )
@@ -183,7 +183,7 @@ Where
     
     > `import co.omisego.omisego.model.pagination.Paginable.Transaction.SortableFields.*`
     
-* `sortDirection` is the sorting direction. The available values are:
+* `sortDir` is the sorting direction. The available values are:
     
     `ASCENDING`, `DESCENDING`
     

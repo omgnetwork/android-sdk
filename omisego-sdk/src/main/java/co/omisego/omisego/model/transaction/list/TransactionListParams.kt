@@ -43,7 +43,7 @@ data class TransactionListParams internal constructor(
      * - [SortDirection.ASCENDING]
      * - [SortDirection.DESCENDING]
      */
-    val sortDirection: SortDirection = SortDirection.DESCENDING,
+    val sortDir: SortDirection = SortDirection.DESCENDING,
 
     /**
      * A term to search for in all of the searchable fields.
@@ -70,14 +70,14 @@ data class TransactionListParams internal constructor(
             page: Int = 1,
             perPage: Int = 10,
             sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
-            sortDirection: SortDirection = SortDirection.DESCENDING,
+            sortDir: SortDirection = SortDirection.DESCENDING,
             searchTerm: String? = null,
             address: String? = null
         ) = TransactionListParams(
             page = page,
             perPage = perPage,
             sortBy = sortBy,
-            sortDirection = sortDirection,
+            sortDir = sortDir,
             searchTerm = searchTerm,
             address = address
         )
@@ -86,14 +86,14 @@ data class TransactionListParams internal constructor(
             page: Int = 1,
             perPage: Int = 10,
             sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
-            sortDirection: SortDirection = SortDirection.DESCENDING,
+            sortDir: SortDirection = SortDirection.DESCENDING,
             searchTerms: Map<Paginable.Transaction.SearchableFields, Any>? = null,
             address: String? = null
         ) = TransactionListParams(
             page = page,
             perPage = perPage,
             sortBy = sortBy,
-            sortDirection = sortDirection,
+            sortDir = sortDir,
             searchTerms = searchTerms,
             address = address
         )
