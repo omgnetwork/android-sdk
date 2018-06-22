@@ -26,12 +26,13 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
     - [Scan a QR code](#scan-a-qr-code)
   - [Websocket](#websocket)
     - [Initialization](#websocket-initialization)
-    - [Listen for the system event](#listen-for-the-system-event)
+    - [Listen for the system event](#listen-for-system-events)
         - [Connection Event](#connection-event)
         - [Channel Event](#channel-event)
-    - [Listen for the custom event](#listen-for-the-custom-event)
+    - [Listen for the custom event](#listen-for-custom-events)
         - [TransactionRequest Event](#transactionrequest-event)
-        - [TransactionConsumption Event](#transactionconsumption-event)  
+        - [TransactionConsumption Event](#transactionconsumption-event)
+        - [User Event](#user-events)
     - [Stop listen for the custom event](#stop-listening-for-the-custom-event)
     - [Stop listen for the system event](#stop-listening-for-the-system-event)
 - [Run Kotlin Lint](#run-kotlin-lint)
@@ -636,7 +637,7 @@ The possible events are:
 **Usage**
 ```kotlin
 // The transaction requestor listen for the event 
-transactionRequest.startListeningEvents(socketClient, object: SocketCustomEventListener.TransactionRequestListener() {
+transactionRequest.startListeningEvents(socketClient, listener = object: SocketCustomEventListener.TransactionRequestListener() {
    override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
        // Do something
    }
@@ -651,7 +652,7 @@ transactionRequest.startListeningEvents(socketClient, object: SocketCustomEventL
 })
 
 // The transaction consumer listen for the event
-transactionConsumption.startListeningEvents(socketClient, object: SocketCustomEventListener.TransactionConsumptionListener() {
+transactionConsumption.startListeningEvents(socketClient, listener = object: SocketCustomEventListener.TransactionConsumptionListener() {
   override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
       // Do something
   }
@@ -699,6 +700,45 @@ socketClient.joinChannel(topic, listener = object: SocketCustomEventListener.Tra
     }
 })
 ```
+
+## User events
+A `user` can also be listened and will receive all events that are related to him:
+
+```kotlin
+user.startListeningEvents(socketClient, listener = object: SocketCustomEventListener.AnyEventListener() {
+   override fun onEventReceived(data: SocketReceive) {
+        data.event.either(this::handleSocketSystemEvent, this::handleSocketCustomEvent)
+   }
+})
+
+fun handleSocketSystemEvent(systemEvent: SocketSystemEvent){
+    when(systemEvent){
+        SocketSystemEvent.CLOSE -> {
+            // Do something
+        }
+        SocketSystemEvent.ERROR -> {
+            // Do something
+        }
+    }
+}
+
+fun handleSocketCustomEvent(customEvent: SocketCustomEvent){
+    when(customEvent){
+        SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED -> {
+            // Do something
+        }
+        SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST -> {
+            // Do something
+        }
+    }
+}
+```
+
+Where:
+* `onEventReceived`: An event callback. This method will be called when any event regarding to the user is received.
+* `SocketReceive`:  A raw object which is a response from the eWallet socket API.
+
+For more information can be found [here](https://github.com/omisego/ewallet/blob/develop/docs/websockets/ewallet_api.md).
 
 ## Stop listening for the custom event
 

@@ -38,14 +38,14 @@ interface Listenable<T : SocketCustomEventListener> {
  *
  * @param client The correctly initialised client to use for the websocket connection.
  * @param payload The additional metadata for the consumption
- * @param callback The delegate that will receive events.
+ * @param listener The delegate that will receive events.
  */
 fun TransactionRequest.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    callback: TransactionRequestListener
+    listener: TransactionRequestListener
 ) {
-    client.joinChannel(socketTopic, payload, callback)
+    client.joinChannel(socketTopic, payload, listener)
 }
 
 /**
@@ -54,14 +54,14 @@ fun TransactionRequest.startListeningEvents(
  *
  * @param client The correctly initialised client to use for the websocket connection.
  * @param payload The additional metadata for the consumption
- * @param callback The delegate that will receive events.
+ * @param listener The delegate that will receive events.
  */
 fun TransactionConsumption.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    callback: TransactionConsumptionListener
+    listener: TransactionConsumptionListener
 ) {
-    client.joinChannel(socketTopic, payload, callback)
+    client.joinChannel(socketTopic, payload, listener)
 }
 
 /**
@@ -69,12 +69,12 @@ fun TransactionConsumption.startListeningEvents(
  *
  * @param client The correctly initialised client to use for the websocket connection.
  * @param payload The additional metadata for the consumption
- * @param callback The delegate that will receive events.
+ * @param listener The delegate that will receive events.
  */
 fun <T : SocketCustomEventListener> User.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    callback: T
+    listener: T
 ) {
-    client.joinChannel(socketTopic, payload, callback)
+    client.joinChannel(socketTopic, payload, listener)
 }
