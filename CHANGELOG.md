@@ -9,6 +9,7 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ## [0.9.5] - 2018-06-22
 ### Changed
 - [Changed some non-nullable variable to nullable variables](https://github.com/omisego/android-sdk/pull/43)
+- Renamed an error code from `ErrorCode.USER_ACCESS_TOKEN_NOT_FOUND` to `ErrorCode.USER_AUTH_TOKEN_NOT_FOUND`
 
 ## [0.9.42] - 2018-06-15
 ### Added

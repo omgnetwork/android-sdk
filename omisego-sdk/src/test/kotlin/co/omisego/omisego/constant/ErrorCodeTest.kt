@@ -38,7 +38,7 @@ class ErrorCodeTest {
                 "client:invalid_auth_scheme" -> ErrorCode.CLIENT_INVALID_AUTH_SCHEME
                 "server:internal_server_error" -> ErrorCode.SERVER_INTERNAL_SERVER_ERROR
                 "server:unknown_error" -> ErrorCode.SERVER_UNKNOWN_ERROR
-                "user:access_token_not_found" -> ErrorCode.USER_ACCESS_TOKEN_NOT_FOUND
+                "user:auth_token_not_found" -> ErrorCode.USER_AUTH_TOKEN_NOT_FOUND
                 "user:access_token_expired" -> ErrorCode.USER_ACCESS_TOKEN_EXPIRED
                 "user:from_address_not_found" -> ErrorCode.USER_FROM_ADDRESS_NOT_FOUND
                 "user:from_address_mismatch" -> ErrorCode.USER_FROM_ADDRESS_MISMATCH
