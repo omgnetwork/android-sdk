@@ -707,7 +707,6 @@ A `user` can also be listened and will receive all events that are related to hi
 ```kotlin
 user.startListeningEvents(socketClient, listener = object: SocketCustomEventListener.AnyEventListener() {
    override fun onEventReceived(data: SocketReceive) {
-        // Do something
         data.event.either(this::handleSocketSystemEvent, this::handleSocketCustomEvent)
    }
 })
