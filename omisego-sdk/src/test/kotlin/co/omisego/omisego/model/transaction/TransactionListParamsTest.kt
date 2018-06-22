@@ -36,7 +36,7 @@ class TransactionListParamsTest {
         )
 
         val expected = """
-            {"page":1,"per_page":10,"sort_by":"from","sort_direction":"asc","search_term":"test","search_terms":{"status":"completed","id":"1234"},"address":"address:1234"}
+            {"page":1,"per_page":10,"sort_by":"from","sort_dir":"asc","search_term":"test","search_terms":{"status":"completed","id":"1234"},"address":"address:1234"}
         """.trimIndent()
 
         val actual = gson.toJson(transactionListParams)
