@@ -712,15 +712,15 @@ user.startListeningEvents(socketClient, listener = object: SocketCustomEventList
 })
 
 fun handleSocketSystemEvent(systemEvent: SocketSystemEvent){
-        when(systemEvent){
-            SocketSystemEvent.CLOSE -> {
-                // Do something
-            }
-            SocketSystemEvent.ERROR -> {
-                // Do something
-            }
+    when(systemEvent){
+        SocketSystemEvent.CLOSE -> {
+            // Do something
+        }
+        SocketSystemEvent.ERROR -> {
+            // Do something
         }
     }
+}
 
 fun handleSocketCustomEvent(customEvent: SocketCustomEvent){
     when(customEvent){
