@@ -36,6 +36,6 @@ data class Account(
     val avatar: Avatar,
     val metadata: @RawValue Map<String, Any>,
     val encryptedMetadata: @RawValue Map<String, Any>,
-    val createdAt: Date,
-    val updatedAt: Date
+    val createdAt: Date?,
+    val updatedAt: Date?
 ) : Parcelable
