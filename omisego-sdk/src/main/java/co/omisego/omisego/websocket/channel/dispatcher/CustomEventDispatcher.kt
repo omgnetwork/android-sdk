@@ -28,16 +28,13 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
         mutableMapOf<String, SocketCustomEventListener>()
     }
 
-    override var socketReceive: SocketReceive? = null
-
     override var socketChannelListener: SocketChannelListener? = null
 
     override fun clearCustomEventListenerMap() {
         customEventListenerMap.clear()
     }
 
-    override fun handleEvent(customEvent: SocketCustomEvent) {
-        val response = socketReceive ?: return
+    override fun handleEvent(customEvent: SocketCustomEvent, response: SocketReceive) {
         val listener = customEventListenerMap[response.topic] ?: return
 
         when (listener) {

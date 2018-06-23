@@ -23,7 +23,7 @@ import okhttp3.WebSocketListener
  */
 class SocketDelegator(
     override val socketResponseParser: SocketDelegatorContract.PayloadReceiveParser,
-    override var socketDispatcher: SocketDelegatorContract.Dispatcher
+    override val socketDispatcher: SocketDelegatorContract.Dispatcher
 ) : SocketDelegatorContract.Delegator,
     WebSocketListenerProvider,
     WebSocketListener() {
@@ -49,8 +49,4 @@ class SocketDelegator(
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
         socketDispatcher.dispatchOnClosed(code, reason)
     }
-}
-
-internal infix fun SocketDelegator.talksTo(socketDispatcher: SocketDelegatorContract.Dispatcher) {
-    this.socketDispatcher = socketDispatcher
 }
