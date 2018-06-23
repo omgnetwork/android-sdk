@@ -29,21 +29,15 @@ import java.util.concurrent.Executor
 class SocketDispatcher(
     override val systemEventDispatcher: SocketDispatcherContract.SystemEventDispatcher,
     override val customEventDispatcher: SocketDispatcherContract.CustomEventDispatcher,
+    override val connectionListener: SocketConnectionListener,
     override val executor: Executor
 ) : SocketChannelContract.Dispatcher, SocketDispatcherContract.Dispatcher, SocketDelegatorContract.Dispatcher {
-
-    override var connectionListener: SocketConnectionListener? = null
 
     override var socketChannel: SocketDispatcherContract.SocketChannel? = null
         set(value) {
             systemEventDispatcher.socketChannel = value
             field = value
         }
-
-    override fun setSocketConnectionListener(connectionListener: SocketConnectionListener?) {
-        this.connectionListener = connectionListener
-        systemEventDispatcher.socketConnectionListener = connectionListener
-    }
 
     override fun setSocketChannelListener(channelListener: SocketChannelListener?) {
         systemEventDispatcher.socketChannelListener = channelListener
@@ -60,8 +54,7 @@ class SocketDispatcher(
 
     override fun dispatchOnOpen(response: Response) {
         executor.execute {
-            socketChannel?.onSocketOpened()
-            connectionListener?.onConnected()
+            connectionListener.onConnected()
         }
     }
 
@@ -74,7 +67,7 @@ class SocketDispatcher(
                     SocketException("$code $reason")
                 }
 
-            connectionListener?.onDisconnected(exception)
+            connectionListener.onDisconnected(exception)
         }
     }
 
@@ -89,7 +82,7 @@ class SocketDispatcher(
 
     override fun dispatchOnFailure(throwable: Throwable, response: Response?) {
         executor.execute {
-            connectionListener?.onDisconnected(throwable)
+            connectionListener.onDisconnected(throwable)
         }
     }
 }

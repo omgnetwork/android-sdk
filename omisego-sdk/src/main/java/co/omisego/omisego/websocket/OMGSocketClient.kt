@@ -24,7 +24,6 @@ import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.SystemEventDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegator
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketReceiveParser
-import co.omisego.omisego.websocket.channel.dispatcher.delegator.talksTo
 import co.omisego.omisego.websocket.channel.dispatcher.talksTo
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.interval.SocketHeartbeat
@@ -149,14 +148,12 @@ class OMGSocketClient internal constructor(
         socketChannel.period = period
     }
 
-    /**
-     * Subscribe to the [SocketConnectionListener] event.
-     *
-     * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected.
-     * @see SocketConnectionListener for the event detail.
-     */
-    override fun setConnectionListener(connectionListener: SocketConnectionListener?) {
-        socketChannel.setConnectionListener(connectionListener)
+    override fun addConnectionListener(connectionListener: SocketConnectionListener) {
+        socketChannel.addConnectionListener(connectionListener)
+    }
+
+    override fun removeConnectionListener(connectionListener: SocketConnectionListener) {
+        socketChannel.removeConnectionListener(connectionListener)
     }
 
     /**
@@ -242,12 +239,13 @@ class OMGSocketClient internal constructor(
 
             val gson = GsonProvider.create()
 
+            val compositeSocketConnectionListener = CompositeSocketConnectionListener()
             val socketDispatcher = SocketDispatcher(
                 SystemEventDispatcher(),
                 CustomEventDispatcher(),
+                compositeSocketConnectionListener,
                 executor
             )
-
             val socketDelegator = SocketDelegator(SocketReceiveParser(gson), socketDispatcher)
 
             val socketClient = OMGSocketClient(
@@ -257,11 +255,10 @@ class OMGSocketClient internal constructor(
                 socketDelegator
             )
 
-            socketDelegator talksTo socketDispatcher
-
-            val socketChannel = SocketChannel(socketDispatcher, socketClient)
+            val socketChannel = SocketChannel(socketDispatcher, socketClient, compositeSocketConnectionListener)
             socketClient talksTo socketChannel
             socketDispatcher talksTo socketChannel
+            compositeSocketConnectionListener.add(socketChannel)
 
             socketClient.wsClient = null
 

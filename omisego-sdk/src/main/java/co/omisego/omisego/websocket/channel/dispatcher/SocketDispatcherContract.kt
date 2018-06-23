@@ -13,8 +13,6 @@ import co.omisego.omisego.websocket.SocketConnectionListener
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
-import okhttp3.Response
-import okhttp3.WebSocketListener
 import java.util.concurrent.Executor
 
 interface SocketDispatcherContract {
@@ -33,9 +31,9 @@ interface SocketDispatcherContract {
         val customEventDispatcher: CustomEventDispatcher
 
         /**
-         * A socketChannel is used to receive some event for further handling in the [SocketChannel]
+         * A connectionListener will be passed to the [systemEventDispatcher] for further handling.
          */
-        val socketChannel: SocketChannel?
+        val connectionListener: SocketConnectionListener
 
         /**
          * An executor used when invoking the listener.
@@ -43,16 +41,12 @@ interface SocketDispatcherContract {
         val executor: Executor
 
         /**
-         * A connectionListener will be passed to the [systemEventDispatcher] for further handling.
+         * A socketChannel is used to receive some event for further handling in the [SocketChannel]
          */
-        var connectionListener: SocketConnectionListener?
+        val socketChannel: SocketChannel?
     }
 
     interface SystemEventDispatcher {
-        /**
-         * A connection listener that will be used for dispatch the [SocketConnectionListener] events.
-         */
-        var socketConnectionListener: SocketConnectionListener?
 
         /**
          * A channel listener that be used for dispatch the [SocketChannelListener] events.
@@ -70,27 +64,6 @@ interface SocketDispatcherContract {
          * @param systemEvent To indicate which event of the [SocketSystemEvent]
          */
         fun handleEvent(systemEvent: SocketSystemEvent, response: SocketReceive)
-
-        /**
-         * the Websocket's [onFailure] will be delegated to this function
-         *
-         * @see [WebSocketListener]
-         */
-        fun handleSocketFailure(throwable: Throwable, response: Response?)
-
-        /**
-         * the Websocket's [onOpened] will be delegated to this function
-         *
-         * @see [WebSocketListener]
-         */
-        fun handleSocketOpened(response: Response)
-
-        /**
-         * the Websocket's [onClosed] will be delegated to this function
-         *
-         * @see [WebSocketListener]
-         */
-        fun handleSocketClosed(code: Int, reason: String)
     }
 
     interface CustomEventDispatcher {
@@ -174,7 +147,5 @@ interface SocketDispatcherContract {
          * @return A boolean indicating if the channel is joined.
          */
         fun joined(topic: String): Boolean
-
-        fun onSocketOpened()
     }
 }

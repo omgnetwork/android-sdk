@@ -8,6 +8,7 @@ package co.omisego.omisego.websocket.channel
  */
 
 import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.websocket.CompositeSocketConnectionListener
 import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketConnectionListener
@@ -35,6 +36,8 @@ interface SocketChannelContract {
          * A [SocketClient] for sending a message to the eWallet web socket API and close the web socket connection.
          */
         val socketClient: SocketClient
+
+        val compositeSocketConnectionListener: CompositeSocketConnectionListener
 
         /**
          * A [SocketMessageRef] is responsible for create unique ref value to be included in the [SocketSend] request.
@@ -103,11 +106,6 @@ interface SocketChannelContract {
 
     /* Dispatcher Package */
     interface Dispatcher {
-        /**
-         * Set the socket connection listener to be used for dispatch the connection status event.
-         */
-        fun setSocketConnectionListener(connectionListener: SocketConnectionListener?)
-
         /**
          * Set the socket channel listener to be used for dispatch the channel status event.
          */

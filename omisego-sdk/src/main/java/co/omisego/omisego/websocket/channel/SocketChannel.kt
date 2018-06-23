@@ -8,6 +8,7 @@ package co.omisego.omisego.websocket.channel
  */
 
 import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.websocket.CompositeSocketConnectionListener
 import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketConnectionListener
@@ -30,8 +31,11 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 internal class SocketChannel(
     override val socketDispatcher: SocketChannelContract.Dispatcher,
-    override val socketClient: SocketChannelContract.SocketClient
-) : SocketClientContract.Channel, SocketChannelContract.Channel, SocketDispatcherContract.SocketChannel {
+    override val socketClient: SocketChannelContract.SocketClient,
+    override val compositeSocketConnectionListener: CompositeSocketConnectionListener
+) : SocketClientContract.Channel, SocketChannelContract.Channel, SocketDispatcherContract.SocketChannel,
+    SocketConnectionListener {
+
     private val channelSet: MutableSet<String> by lazy { mutableSetOf<String>() }
     override val leavingChannels: AtomicBoolean by lazy { AtomicBoolean(false) }
     override val pendingChannelsQueue: BlockingQueue<SocketSend> by lazy {
@@ -113,13 +117,21 @@ internal class SocketChannel(
         }
     }
 
-    override fun onSocketOpened() {
+    override fun onConnected() {
         leavingChannels.set(false)
         executePendingJoinChannel()
     }
 
-    override fun setConnectionListener(connectionListener: SocketConnectionListener?) {
-        socketDispatcher.setSocketConnectionListener(connectionListener)
+    override fun onDisconnected(throwable: Throwable?) {
+        // no-op
+    }
+
+    override fun addConnectionListener(connectionListener: SocketConnectionListener) {
+        compositeSocketConnectionListener.add(connectionListener)
+    }
+
+    override fun removeConnectionListener(connectionListener: SocketConnectionListener) {
+        compositeSocketConnectionListener.remove(connectionListener)
     }
 
     override fun setChannelListener(channelListener: SocketChannelListener?) {

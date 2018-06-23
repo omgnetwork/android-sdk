@@ -126,10 +126,16 @@ interface SocketClientContract {
         /**
          * Subscribe to the [SocketConnectionListener] event.
          *
-         * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected.
-         * @see SocketConnectionListener for the event detail.
+         * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected
          */
-        fun setConnectionListener(connectionListener: SocketConnectionListener?)
+        fun addConnectionListener(connectionListener: SocketConnectionListener)
+
+        /**
+         * Subscribe to the [SocketConnectionListener] event.
+         *
+         * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected
+         */
+        fun removeConnectionListener(connectionListener: SocketConnectionListener)
 
         /**
          * Subscribe to the [SocketChannelListener] event.
@@ -208,7 +214,14 @@ interface SocketClientContract {
          *
          * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected
          */
-        fun setConnectionListener(connectionListener: SocketConnectionListener?)
+        fun addConnectionListener(connectionListener: SocketConnectionListener)
+
+        /**
+         * Subscribe to the [SocketConnectionListener] event.
+         *
+         * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected
+         */
+        fun removeConnectionListener(connectionListener: SocketConnectionListener)
 
         /**
          * Subscribe to the [SocketChannelListener] event.
