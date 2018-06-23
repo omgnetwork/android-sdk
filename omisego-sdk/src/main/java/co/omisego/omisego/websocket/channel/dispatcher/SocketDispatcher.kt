@@ -12,21 +12,19 @@ import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketConnectionListener
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.channel.SocketChannelContract
-import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract.Dispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegatorContract
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
 import okhttp3.Response
-import okhttp3.WebSocketListener
 import java.net.SocketException
 import java.util.concurrent.Executor
 
 /**
  * A listener dispatcher for events related to the web socket.
  *
- * @param socketDelegator responsible for delegate value raw [WebSocketListener] event to be processed in the [Dispatcher].
  * @param systemEventDispatcher responsible for handling the [SocketSystemEvent] and dispatch the [SocketConnectionListener] or the [SocketChannelListener]
  * @param customEventDispatcher responsible for handling the [SocketSystemEvent] and dispatch the [SocketCustomEventListener].
+ * @param executor used to invoke listener
  */
 class SocketDispatcher(
     override val systemEventDispatcher: SocketDispatcherContract.SystemEventDispatcher,
@@ -69,26 +67,30 @@ class SocketDispatcher(
 
     override fun dispatchOnClosed(code: Int, reason: String) {
         executor.execute {
-            if (code == SocketStatusCode.NORMAL.code)
-                connectionListener?.onDisconnected(null)
-            else {
-                connectionListener?.onDisconnected(SocketException("$code $reason"))
-            }
+            val exception =
+                if (code == SocketStatusCode.NORMAL.code) {
+                    null
+                } else {
+                    SocketException("$code $reason")
+                }
+
+            connectionListener?.onDisconnected(exception)
         }
     }
 
     override fun dispatchOnMessage(response: SocketReceive) {
         executor.execute {
-            when {
-                response.event.isLeft -> systemEventDispatcher.socketReceive = response
-                else -> customEventDispatcher.socketReceive = response
-            }
-            response.event.either(systemEventDispatcher::handleEvent, customEventDispatcher::handleEvent)
+            response.event.either(
+                doOnLeft = { systemEventDispatcher.handleEvent(it, response) },
+                doOnRight = { customEventDispatcher.handleEvent(it, response) }
+            )
         }
     }
 
     override fun dispatchOnFailure(throwable: Throwable, response: Response?) {
-        connectionListener?.onDisconnected(throwable)
+        executor.execute {
+            connectionListener?.onDisconnected(throwable)
+        }
     }
 }
 

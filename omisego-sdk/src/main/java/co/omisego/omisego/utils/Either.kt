@@ -22,9 +22,9 @@ sealed class Either<out L, out R> {
     val isRight get() = this is Right<R>
     val isLeft get() = this is Left<L>
 
-    inline fun either(fnL: (L) -> Any, fnR: (R) -> Any): Any =
+    inline fun either(doOnLeft: (L) -> Any, doOnRight: (R) -> Any): Any =
         when (this) {
-            is Either.Left -> fnL(value)
-            is Either.Right -> fnR(value)
+            is Either.Left -> doOnLeft(value)
+            is Either.Right -> doOnRight(value)
         }
 }

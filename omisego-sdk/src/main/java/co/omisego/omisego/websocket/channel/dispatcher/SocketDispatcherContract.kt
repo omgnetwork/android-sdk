@@ -38,7 +38,7 @@ interface SocketDispatcherContract {
         val socketChannel: SocketChannel?
 
         /**
-         * An executor used for invoking the listener.
+         * An executor used when invoking the listener.
          */
         val executor: Executor
 
@@ -60,11 +60,6 @@ interface SocketDispatcherContract {
         var socketChannelListener: SocketChannelListener?
 
         /**
-         * The web socket replied object from eWallet API.
-         */
-        var socketReceive: SocketReceive?
-
-        /**
          * A socketChannel for delegate the event to the [SocketChannel] internally for further handling the event.
          */
         var socketChannel: SocketChannel?
@@ -74,7 +69,7 @@ interface SocketDispatcherContract {
          *
          * @param systemEvent To indicate which event of the [SocketSystemEvent]
          */
-        fun handleEvent(systemEvent: SocketSystemEvent)
+        fun handleEvent(systemEvent: SocketSystemEvent, response: SocketReceive)
 
         /**
          * the Websocket's [onFailure] will be delegated to this function
@@ -110,11 +105,6 @@ interface SocketDispatcherContract {
         var socketChannelListener: SocketChannelListener?
 
         /**
-         * The web socket replied object from eWallet API.
-         */
-        var socketReceive: SocketReceive?
-
-        /**
          * Clear all callbacks in the customEventListenerMap
          */
         fun clearCustomEventListenerMap()
@@ -124,7 +114,7 @@ interface SocketDispatcherContract {
          *
          * @param customEvent To indicate the actual type of generic [SocketCustomEvent]
          */
-        fun handleEvent(customEvent: SocketCustomEvent)
+        fun handleEvent(customEvent: SocketCustomEvent, response: SocketReceive)
 
         /**
          * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.TransactionRequestListener].
