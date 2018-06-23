@@ -12,7 +12,6 @@ package co.omisego.omisego.custom.camera.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.hardware.Camera
-import android.os.Handler
 import android.util.AttributeSet
 import android.util.Log
 import android.view.SurfaceHolder
@@ -123,7 +122,7 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
                 it.setPreviewDisplay(holder)
                 it.setDisplayOrientation(mOMGCameraLogic.getDisplayOrientation(cameraWrapper != null))
                 it.setPreviewCallback(mPreviewCallback)
-                Handler().postDelayed({
+                postDelayed({
                     it.startPreview()
                 }, 200)
             }
