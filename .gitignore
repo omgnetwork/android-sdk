@@ -11,3 +11,6 @@ settings.gradle
 .externalNativeBuild
 /androidsdk/src/test/resources/secret.json
 myapplication
+/.idea/gradle.xml
+/.idea/modules.xml
+/.idea/misc.xml
