@@ -156,14 +156,12 @@ class OMGSocketClient internal constructor(
         socketChannel.removeConnectionListener(connectionListener)
     }
 
-    /**
-     * Subscribe to the [SocketChannelListener] event.
-     *
-     * @param channelListener The [SocketChannelListener] to be invoked when the channel has been joined, left, or got an error.
-     * @see SocketChannelListener for the event detail.
-     */
-    override fun setChannelListener(channelListener: SocketChannelListener?) {
-        socketChannel.setChannelListener(channelListener)
+    override fun addChannelListener(channelListener: SocketChannelListener) {
+        socketChannel.addChannelListener(channelListener)
+    }
+
+    override fun removeChannelListener(channelListener: SocketChannelListener) {
+        socketChannel.removeChannelListener(channelListener)
     }
 
     /**
@@ -240,9 +238,13 @@ class OMGSocketClient internal constructor(
             val gson = GsonProvider.create()
 
             val compositeSocketConnectionListener = CompositeSocketConnectionListener()
+            val compositeSocketChannelListener = CompositeSocketChannelListener()
+
+            val systemEventDispatcher = SystemEventDispatcher(compositeSocketChannelListener)
+            val customEventDispatcher = CustomEventDispatcher(compositeSocketChannelListener)
             val socketDispatcher = SocketDispatcher(
-                SystemEventDispatcher(),
-                CustomEventDispatcher(),
+                systemEventDispatcher,
+                customEventDispatcher,
                 compositeSocketConnectionListener,
                 executor
             )
@@ -255,10 +257,14 @@ class OMGSocketClient internal constructor(
                 socketDelegator
             )
 
-            val socketChannel = SocketChannel(socketDispatcher, socketClient, compositeSocketConnectionListener)
+            val socketChannel = SocketChannel(
+                socketDispatcher,
+                socketClient,
+                compositeSocketConnectionListener,
+                compositeSocketChannelListener
+            )
             socketClient talksTo socketChannel
             socketDispatcher talksTo socketChannel
-            compositeSocketConnectionListener.add(socketChannel)
 
             socketClient.wsClient = null
 

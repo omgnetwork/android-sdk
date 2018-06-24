@@ -23,12 +23,13 @@ import co.omisego.omisego.websocket.enum.SocketCustomEvent.TRANSACTION_CONSUMPTI
 /**
  * A listener for dispatch the [SocketCustomEventListener] events.
  */
-class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
+class CustomEventDispatcher(
+    override val socketChannelListener: SocketChannelListener
+) : SocketDispatcherContract.CustomEventDispatcher {
+
     override val customEventListenerMap: MutableMap<String, SocketCustomEventListener> by lazy {
         mutableMapOf<String, SocketCustomEventListener>()
     }
-
-    override var socketChannelListener: SocketChannelListener? = null
 
     override fun clearCustomEventListenerMap() {
         customEventListenerMap.clear()
@@ -64,12 +65,12 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
                 )
 
                 if (!judge && socketReceive.error != null) {
-                    socketChannelListener?.onError(socketReceive.error)
+                    socketChannelListener.onError(socketReceive.error)
                 }
             }
             OTHER -> {
                 if (socketReceive.error != null) {
-                    socketChannelListener?.onError(socketReceive.error)
+                    socketChannelListener.onError(socketReceive.error)
                 }
             }
         }
@@ -86,10 +87,10 @@ class CustomEventDispatcher : SocketDispatcherContract.CustomEventDispatcher {
             )
 
             if (!judge && socketReceive.error != null) {
-                socketChannelListener?.onError(socketReceive.error)
+                socketChannelListener.onError(socketReceive.error)
             }
         } else if (customEvent == OTHER && socketReceive.error != null) {
-            socketChannelListener?.onError(socketReceive.error)
+            socketChannelListener.onError(socketReceive.error)
         }
     }
 

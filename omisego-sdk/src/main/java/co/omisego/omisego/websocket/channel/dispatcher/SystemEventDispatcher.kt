@@ -20,31 +20,30 @@ import co.omisego.omisego.websocket.enum.SocketSystemEvent
 /**
  * A listener for dispatcher the [SocketConnectionListener] and [SocketChannelListener] events.
  */
-class SystemEventDispatcher : SocketDispatcherContract.SystemEventDispatcher {
+class SystemEventDispatcher(
+    override val socketChannelListener: SocketChannelListener
+) : SocketDispatcherContract.SystemEventDispatcher {
 
-    override var socketChannelListener: SocketChannelListener? = null
-
+    // TODO: find a way to remove this dependency
     override var socketChannel: SocketDispatcherContract.SocketChannel? = null
 
     override fun handleEvent(systemEvent: SocketSystemEvent, response: SocketReceive) {
         when (systemEvent) {
             SocketSystemEvent.CLOSE -> {
                 response.runIfRefSchemeIsJoined {
-                    socketChannel?.onLeftChannel(response.topic)
-                    socketChannelListener?.onLeftChannel(response.topic)
+                    socketChannelListener.onLeftChannel(response.topic)
                 }
             }
             SocketSystemEvent.REPLY -> {
                 val topic = SocketTopic<SocketCustomEventListener>(response.topic)
                 response.runIfRefSchemeIsJoined {
                     topic.runIfFirstJoined {
-                        socketChannel?.onJoinedChannel(topic.name)
-                        socketChannelListener?.onJoinedChannel(topic.name)
+                        socketChannelListener.onJoinedChannel(topic.name)
                     }
                 }
             }
             SocketSystemEvent.ERROR -> {
-                socketChannelListener?.onError(APIError(ErrorCode.SDK_SOCKET_ERROR, "Something goes wrong while connecting to the channel"))
+                socketChannelListener.onError(APIError(ErrorCode.SDK_SOCKET_ERROR, "Something goes wrong while connecting to the channel"))
             }
         }
     }

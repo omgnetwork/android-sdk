@@ -21,6 +21,7 @@ import java.util.concurrent.Executor
 
 /**
  * A listener dispatcher for events related to the web socket.
+ * This class responsibility is mainly to split events between system events and user events.
  *
  * @param systemEventDispatcher responsible for handling the [SocketSystemEvent] and dispatch the [SocketConnectionListener] or the [SocketChannelListener]
  * @param customEventDispatcher responsible for handling the [SocketSystemEvent] and dispatch the [SocketCustomEventListener].
@@ -33,16 +34,12 @@ class SocketDispatcher(
     override val executor: Executor
 ) : SocketChannelContract.Dispatcher, SocketDispatcherContract.Dispatcher, SocketDelegatorContract.Dispatcher {
 
+    // TODO: remove this once we removed it from systemEventDispatcher
     override var socketChannel: SocketDispatcherContract.SocketChannel? = null
         set(value) {
             systemEventDispatcher.socketChannel = value
             field = value
         }
-
-    override fun setSocketChannelListener(channelListener: SocketChannelListener?) {
-        systemEventDispatcher.socketChannelListener = channelListener
-        customEventDispatcher.socketChannelListener = channelListener
-    }
 
     override fun addCustomEventListener(topic: String, customEventListener: SocketCustomEventListener) {
         customEventDispatcher.customEventListenerMap[topic] = customEventListener
@@ -87,6 +84,7 @@ class SocketDispatcher(
     }
 }
 
+// TODO: remove once not needed anymore
 internal infix fun SocketDispatcher.talksTo(socketChannel: SocketDispatcherContract.SocketChannel) {
     this.socketChannel = socketChannel
 }

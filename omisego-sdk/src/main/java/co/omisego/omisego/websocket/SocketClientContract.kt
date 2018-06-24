@@ -123,27 +123,11 @@ interface SocketClientContract {
          */
         fun setIntervalPeriod(period: Long)
 
-        /**
-         * Subscribe to the [SocketConnectionListener] event.
-         *
-         * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected
-         */
         fun addConnectionListener(connectionListener: SocketConnectionListener)
-
-        /**
-         * Subscribe to the [SocketConnectionListener] event.
-         *
-         * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected
-         */
         fun removeConnectionListener(connectionListener: SocketConnectionListener)
 
-        /**
-         * Subscribe to the [SocketChannelListener] event.
-         *
-         * @param channelListener The [SocketChannelListener] to be invoked when the channel has been joined, left, or got an error.
-         * @see SocketChannelListener for the event detail.
-         */
-        fun setChannelListener(channelListener: SocketChannelListener?)
+        fun addChannelListener(channelListener: SocketChannelListener)
+        fun removeChannelListener(channelListener: SocketChannelListener)
     }
 
     interface PayloadSendParser {
@@ -209,26 +193,11 @@ interface SocketClientContract {
          */
         fun retrieveChannels(): Set<String>
 
-        /**
-         * Subscribe to the [SocketConnectionListener] event.
-         *
-         * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected
-         */
         fun addConnectionListener(connectionListener: SocketConnectionListener)
-
-        /**
-         * Subscribe to the [SocketConnectionListener] event.
-         *
-         * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected
-         */
         fun removeConnectionListener(connectionListener: SocketConnectionListener)
 
-        /**
-         * Subscribe to the [SocketChannelListener] event.
-         *
-         * @param channelListener The [SocketChannelListener] to be invoked when the web socket channel has been joined, left or got an error.
-         */
-        fun setChannelListener(channelListener: SocketChannelListener?)
+        fun addChannelListener(channelListener: SocketChannelListener)
+        fun removeChannelListener(channelListener: SocketChannelListener)
 
         /**
          * Subscribe to the [SocketCustomEventListener] event.

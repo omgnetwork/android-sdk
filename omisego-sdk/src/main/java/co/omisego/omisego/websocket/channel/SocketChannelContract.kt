@@ -8,6 +8,7 @@ package co.omisego.omisego.websocket.channel
  */
 
 import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.websocket.CompositeSocketChannelListener
 import co.omisego.omisego.websocket.CompositeSocketConnectionListener
 import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketClientContract
@@ -38,6 +39,7 @@ interface SocketChannelContract {
         val socketClient: SocketClient
 
         val compositeSocketConnectionListener: CompositeSocketConnectionListener
+        val compositeSocketChannelListener: CompositeSocketChannelListener
 
         /**
          * A [SocketMessageRef] is responsible for create unique ref value to be included in the [SocketSend] request.
@@ -106,11 +108,6 @@ interface SocketChannelContract {
 
     /* Dispatcher Package */
     interface Dispatcher {
-        /**
-         * Set the socket channel listener to be used for dispatch the channel status event.
-         */
-        fun setSocketChannelListener(channelListener: SocketChannelListener?)
-
         /**
          * Set the socket custom events listener to be used for dispatch the custom events.
          */

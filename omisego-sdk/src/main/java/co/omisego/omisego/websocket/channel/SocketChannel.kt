@@ -7,7 +7,9 @@ package co.omisego.omisego.websocket.channel
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.websocket.CompositeSocketChannelListener
 import co.omisego.omisego.websocket.CompositeSocketConnectionListener
 import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketClientContract
@@ -32,9 +34,10 @@ import java.util.concurrent.atomic.AtomicBoolean
 internal class SocketChannel(
     override val socketDispatcher: SocketChannelContract.Dispatcher,
     override val socketClient: SocketChannelContract.SocketClient,
-    override val compositeSocketConnectionListener: CompositeSocketConnectionListener
+    override val compositeSocketConnectionListener: CompositeSocketConnectionListener,
+    override val compositeSocketChannelListener: CompositeSocketChannelListener
 ) : SocketClientContract.Channel, SocketChannelContract.Channel, SocketDispatcherContract.SocketChannel,
-    SocketConnectionListener {
+    SocketConnectionListener, SocketChannelListener {
 
     private val channelSet: MutableSet<String> by lazy { mutableSetOf<String>() }
     override val leavingChannels: AtomicBoolean by lazy { AtomicBoolean(false) }
@@ -45,6 +48,11 @@ internal class SocketChannel(
         SocketMessageRef(scheme = SocketMessageRef.SCHEME_JOIN)
     }
     override var period: Long = 5000
+
+    init {
+        compositeSocketConnectionListener.add(this)
+        compositeSocketChannelListener.add(this)
+    }
 
     override fun join(topic: String, payload: Map<String, Any>) {
         whenNeverJoinedTopic(topic) {
@@ -117,6 +125,10 @@ internal class SocketChannel(
         }
     }
 
+    override fun onError(apiError: APIError) {
+        // no-op
+    }
+
     override fun onConnected() {
         leavingChannels.set(false)
         executePendingJoinChannel()
@@ -134,8 +146,12 @@ internal class SocketChannel(
         compositeSocketConnectionListener.remove(connectionListener)
     }
 
-    override fun setChannelListener(channelListener: SocketChannelListener?) {
-        socketDispatcher.setSocketChannelListener(channelListener)
+    override fun addChannelListener(channelListener: SocketChannelListener) {
+        compositeSocketChannelListener.add(channelListener)
+    }
+
+    override fun removeChannelListener(channelListener: SocketChannelListener) {
+        compositeSocketChannelListener.remove(channelListener)
     }
 
     override fun addCustomEventListener(topic: String, customEventListener: SocketCustomEventListener) {

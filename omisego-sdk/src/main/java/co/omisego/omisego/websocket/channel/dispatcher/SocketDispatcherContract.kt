@@ -51,7 +51,7 @@ interface SocketDispatcherContract {
         /**
          * A channel listener that be used for dispatch the [SocketChannelListener] events.
          */
-        var socketChannelListener: SocketChannelListener?
+        val socketChannelListener: SocketChannelListener
 
         /**
          * A socketChannel for delegate the event to the [SocketChannel] internally for further handling the event.
@@ -75,7 +75,7 @@ interface SocketDispatcherContract {
         /**
          * For dispatching the [SocketChannelListener] event.
          */
-        var socketChannelListener: SocketChannelListener?
+        val socketChannelListener: SocketChannelListener
 
         /**
          * Clear all callbacks in the customEventListenerMap
@@ -125,21 +125,8 @@ interface SocketDispatcherContract {
     }
 
     /* Channel Package */
+    // TODO: remove this dependency
     interface SocketChannel {
-        /**
-         * Executes when the client have been left the channel successfully.
-         *
-         * @param topic A topic indicating which channel will be joined.
-         */
-        fun onLeftChannel(topic: String)
-
-        /**
-         * Executes when the client have been joined the channel successfully.
-         *
-         * @param topic A topic indicating which channel will be joined.
-         */
-        fun onJoinedChannel(topic: String)
-
         /**
          * Returns a boolean indicating if the channel is joined.
          *
