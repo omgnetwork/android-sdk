@@ -78,11 +78,6 @@ interface SocketDispatcherContract {
         val socketChannelListener: SocketChannelListener
 
         /**
-         * Clear all callbacks in the customEventListenerMap
-         */
-        fun clearCustomEventListenerMap()
-
-        /**
          * Handles the [SocketCustomEvent] and dispatch the [SocketCustomEventListener] to the client.
          *
          * @param customEvent To indicate the actual type of generic [SocketCustomEvent]

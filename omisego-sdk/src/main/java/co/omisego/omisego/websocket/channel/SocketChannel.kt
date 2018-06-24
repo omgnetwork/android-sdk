@@ -118,7 +118,7 @@ internal class SocketChannel(
                 socketClient.socketHeartbeat.period = period
                 socketClient.socketHeartbeat.stopInterval()
                 pendingChannelsQueue.clear()
-                socketDispatcher.clearCustomEventListenerMap()
+                socketDispatcher.clearCustomEventListeners()
                 leavingChannels.set(false)
                 socketClient.closeConnection(SocketStatusCode.NORMAL, "Disconnected successfully")
             }

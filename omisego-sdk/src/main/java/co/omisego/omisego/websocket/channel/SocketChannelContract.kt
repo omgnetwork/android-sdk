@@ -116,6 +116,6 @@ interface SocketChannelContract {
         /**
          * Clear all callbacks in the customEventListenerMap
          */
-        fun clearCustomEventListenerMap()
+        fun clearCustomEventListeners()
     }
 }

@@ -45,8 +45,8 @@ class SocketDispatcher(
         customEventDispatcher.customEventListenerMap[topic] = customEventListener
     }
 
-    override fun clearCustomEventListenerMap() {
-        customEventDispatcher.clearCustomEventListenerMap()
+    override fun clearCustomEventListeners() {
+        customEventDispatcher.customEventListenerMap.clear()
     }
 
     override fun dispatchOnOpen(response: Response) {
