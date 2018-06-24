@@ -5,10 +5,10 @@ class CompositeSocketConnectionListener(
 ) : SocketConnectionListener, MutableSet<SocketConnectionListener> by listeners {
 
     override fun onConnected() {
-        listeners.forEach { it.onConnected() }
+        forEach { it.onConnected() }
     }
 
     override fun onDisconnected(throwable: Throwable?) {
-        listeners.forEach { it.onDisconnected(throwable) }
+        forEach { it.onDisconnected(throwable) }
     }
 }

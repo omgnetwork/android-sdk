@@ -6,24 +6,9 @@ class CompositeSocketChannelListener(
     private val listeners: MutableSet<SocketChannelListener> = linkedSetOf()
 ) : SocketChannelListener, MutableSet<SocketChannelListener> by listeners {
 
-    override fun onJoinedChannel(topic: String): Boolean {
-        listeners.forEach {
-            if (it.onJoinedChannel(topic)) return true
-        }
-        return false
-    }
+    override fun onJoinedChannel(topic: String) = any { it.onJoinedChannel(topic) }
 
-    override fun onLeftChannel(topic: String): Boolean {
-        listeners.forEach {
-            if (it.onLeftChannel(topic)) return true
-        }
-        return false
-    }
+    override fun onLeftChannel(topic: String) = any { it.onLeftChannel(topic) }
 
-    override fun onError(apiError: APIError): Boolean {
-        listeners.forEach {
-            if (it.onError(apiError)) return true
-        }
-        return false
-    }
+    override fun onError(apiError: APIError) = any { it.onError(apiError) }
 }
