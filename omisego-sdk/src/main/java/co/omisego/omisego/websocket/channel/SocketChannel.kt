@@ -36,7 +36,7 @@ internal class SocketChannel(
     override val socketClient: SocketChannelContract.SocketClient,
     override val compositeSocketConnectionListener: CompositeSocketConnectionListener,
     override val compositeSocketChannelListener: CompositeSocketChannelListener
-) : SocketClientContract.Channel, SocketChannelContract.Channel, SocketDispatcherContract.SocketChannel,
+) : SocketClientContract.Channel, SocketChannelContract.Channel,
     SocketConnectionListener, SocketChannelListener {
 
     private val channelSet: MutableSet<String> by lazy { mutableSetOf<String>() }
@@ -90,7 +90,7 @@ internal class SocketChannel(
 
     override fun joinable(): Boolean = !leavingChannels.get()
 
-    override fun joined(topic: String) = channelSet.contains(topic)
+    fun joined(topic: String) = channelSet.contains(topic)
 
     override fun createJoinMessage(topic: String, payload: Map<String, Any>): SocketSend =
         SocketSend(topic, SocketEventSend.JOIN, socketMessageRef.value, payload)
@@ -100,18 +100,24 @@ internal class SocketChannel(
 
     override fun retrieveChannels(): Set<String> = channelSet.toSet()
 
-    override fun onJoinedChannel(topic: String) {
+    override fun onJoinedChannel(topic: String): Boolean {
+        // We may already have received the event for the given topic
+        if (joined(topic)) return true
+
         runIfEmptyChannel {
             socketClient.socketHeartbeat.startInterval {
                 socketClient.send(it)
             }
         }
         channelSet.add(topic)
-        val socketSend = pendingChannelsQueue.findLast { it.topic == topic } ?: return
-        pendingChannelsQueue.remove(socketSend)
+        pendingChannelsQueue.findLast { it.topic == topic }?.let {
+            pendingChannelsQueue.remove(it)
+        }
+
+        return false
     }
 
-    override fun onLeftChannel(topic: String) {
+    override fun onLeftChannel(topic: String): Boolean {
         with(topic) {
             channelSet.remove(this)
             runIfEmptyChannel {
@@ -123,11 +129,10 @@ internal class SocketChannel(
                 socketClient.closeConnection(SocketStatusCode.NORMAL, "Disconnected successfully")
             }
         }
+        return false
     }
 
-    override fun onError(apiError: APIError) {
-        // no-op
-    }
+    override fun onError(apiError: APIError) = false
 
     override fun onConnected() {
         leavingChannels.set(false)

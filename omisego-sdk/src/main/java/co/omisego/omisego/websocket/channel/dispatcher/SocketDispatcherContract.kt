@@ -39,11 +39,6 @@ interface SocketDispatcherContract {
          * An executor used when invoking the listener.
          */
         val executor: Executor
-
-        /**
-         * A socketChannel is used to receive some event for further handling in the [SocketChannel]
-         */
-        val socketChannel: SocketChannel?
     }
 
     interface SystemEventDispatcher {
@@ -52,11 +47,6 @@ interface SocketDispatcherContract {
          * A channel listener that be used for dispatch the [SocketChannelListener] events.
          */
         val socketChannelListener: SocketChannelListener
-
-        /**
-         * A socketChannel for delegate the event to the [SocketChannel] internally for further handling the event.
-         */
-        var socketChannel: SocketChannel?
 
         /**
          * Handles the [SocketSystemEvent] and may dispatch the [SocketChannelListener] or [SocketConnectionListener] to the client.
@@ -117,17 +107,5 @@ interface SocketDispatcherContract {
         fun SocketCustomEventListener.AnyEventListener.handleAnyEvent(
             socketReceive: SocketReceive
         )
-    }
-
-    /* Channel Package */
-    // TODO: remove this dependency
-    interface SocketChannel {
-        /**
-         * Returns a boolean indicating if the channel is joined.
-         *
-         * @param topic A topic indicating which channel will be joined.
-         * @return A boolean indicating if the channel is joined.
-         */
-        fun joined(topic: String): Boolean
     }
 }

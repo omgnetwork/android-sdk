@@ -24,22 +24,16 @@ class SystemEventDispatcher(
     override val socketChannelListener: SocketChannelListener
 ) : SocketDispatcherContract.SystemEventDispatcher {
 
-    // TODO: find a way to remove this dependency
-    override var socketChannel: SocketDispatcherContract.SocketChannel? = null
-
     override fun handleEvent(systemEvent: SocketSystemEvent, response: SocketReceive) {
         when (systemEvent) {
             SocketSystemEvent.CLOSE -> {
-                response.runIfRefSchemeIsJoined {
+                response.runIfRefSchemeIs(SocketMessageRef.SCHEME_JOIN) {
                     socketChannelListener.onLeftChannel(response.topic)
                 }
             }
             SocketSystemEvent.REPLY -> {
-                val topic = SocketTopic<SocketCustomEventListener>(response.topic)
-                response.runIfRefSchemeIsJoined {
-                    topic.runIfFirstJoined {
-                        socketChannelListener.onJoinedChannel(topic.name)
-                    }
+                response.runIfRefSchemeIs(SocketMessageRef.SCHEME_JOIN) {
+                    socketChannelListener.onJoinedChannel(response.topic)
                 }
             }
             SocketSystemEvent.ERROR -> {
@@ -48,15 +42,9 @@ class SystemEventDispatcher(
         }
     }
 
-    private inline fun SocketTopic<*>.runIfFirstJoined(lambda: () -> Unit) {
-        if (socketChannel?.joined(this.name) == false) {
-            lambda()
-        }
-    }
-
-    private inline fun SocketReceive.runIfRefSchemeIsJoined(lambda: () -> Unit) {
+    private inline fun SocketReceive.runIfRefSchemeIs(scheme: String, lambda: () -> Unit) {
         val ref = this.ref ?: return
-        if (ref.startsWith(SocketMessageRef.SCHEME_JOIN)) {
+        if (ref.startsWith(scheme)) {
             lambda()
         }
     }

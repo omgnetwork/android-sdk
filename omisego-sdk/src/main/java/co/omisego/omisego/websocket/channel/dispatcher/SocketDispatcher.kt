@@ -34,13 +34,6 @@ class SocketDispatcher(
     override val executor: Executor
 ) : SocketChannelContract.Dispatcher, SocketDispatcherContract.Dispatcher, SocketDelegatorContract.Dispatcher {
 
-    // TODO: remove this once we removed it from systemEventDispatcher
-    override var socketChannel: SocketDispatcherContract.SocketChannel? = null
-        set(value) {
-            systemEventDispatcher.socketChannel = value
-            field = value
-        }
-
     override fun addCustomEventListener(topic: String, customEventListener: SocketCustomEventListener) {
         customEventDispatcher.customEventListenerMap[topic] = customEventListener
     }
@@ -82,9 +75,4 @@ class SocketDispatcher(
             connectionListener.onDisconnected(throwable)
         }
     }
-}
-
-// TODO: remove once not needed anymore
-internal infix fun SocketDispatcher.talksTo(socketChannel: SocketDispatcherContract.SocketChannel) {
-    this.socketChannel = socketChannel
 }
