@@ -122,7 +122,7 @@ fun TransactionRequest.toTransactionConsumptionParams(
     correlationId: String? = null,
     metadata: Map<String, Any> = mapOf(),
     encryptedMetadata: Map<String, Any> = mapOf()
-): TransactionConsumptionParams? =
+): TransactionConsumptionParams =
     TransactionConsumptionParams.create(
         this,
         amount,
