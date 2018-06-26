@@ -26,6 +26,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowCamera
+import org.robolectric.shadows.ShadowLooper
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [21])
@@ -108,6 +109,7 @@ class OMGCameraPreviewTest {
         whenever(spyOMGCameraPreview.setupCameraParameters()).thenReturn(null)
 
         spyOMGCameraPreview.showCameraPreview()
+        ShadowLooper.runUiThreadTasksIncludingDelayedTasks()
 
         verify(camera, times(1)).setPreviewDisplay(any())
         verify(camera, times(1)).setDisplayOrientation(any())

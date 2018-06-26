@@ -26,7 +26,7 @@ import java.lang.Exception
 @SuppressLint("ViewConstructor")
 class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
     private var mPreviewCallback: Camera.PreviewCallback? = null
-    private var mPreviewing: Boolean = true
+    private var mPreviewing: Boolean = false
     private var mSafeFocus: Boolean = false
         get() = mSurfaceCreated && mPreviewing
     private var mSurfaceCreated = false
@@ -122,7 +122,9 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
                 it.setPreviewDisplay(holder)
                 it.setDisplayOrientation(mOMGCameraLogic.getDisplayOrientation(cameraWrapper != null))
                 it.setPreviewCallback(mPreviewCallback)
-                it.startPreview()
+                postDelayed({
+                    it.startPreview()
+                }, 200)
             }
 
             when {
