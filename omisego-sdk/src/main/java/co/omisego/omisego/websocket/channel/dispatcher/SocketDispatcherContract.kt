@@ -53,14 +53,14 @@ interface SocketDispatcherContract {
          *
          * @param systemEvent To indicate which event of the [SocketSystemEvent]
          */
-        fun handleEvent(systemEvent: SocketSystemEvent, response: SocketReceive)
+        fun handleEvent(systemEvent: SocketSystemEvent, response: SocketReceive<*>)
     }
 
     interface CustomEventDispatcher {
         /**
          * For dispatching the [SocketCustomEventListener] event.
          */
-        val customEventListenerMap: MutableMap<String, SocketCustomEventListener>
+        val customEventListeners: MutableSet<SocketCustomEventListener>
 
         /**
          * For dispatching the [SocketChannelListener] event.
@@ -72,40 +72,6 @@ interface SocketDispatcherContract {
          *
          * @param customEvent To indicate the actual type of generic [SocketCustomEvent]
          */
-        fun handleEvent(customEvent: SocketCustomEvent, response: SocketReceive)
-
-        /**
-         * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.TransactionRequestListener].
-         * This method will be invoked by the [handleEvent] method.
-         *
-         * @param socketReceive The web socket replied object from eWallet API.
-         * @param customEvent The custom event used for decide the event to be dispatched
-         */
-        fun SocketCustomEventListener.TransactionRequestListener.handleTransactionRequestEvent(
-            socketReceive: SocketReceive,
-            customEvent: SocketCustomEvent
-        )
-
-        /**
-         * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.TransactionConsumptionListener].
-         * This method will be invoked by the [handleEvent] method.
-         *
-         * @param socketReceive The web socket replied object from eWallet API.
-         * @param customEvent The custom event used for decide the event to be dispatched
-         */
-        fun SocketCustomEventListener.TransactionConsumptionListener.handleTransactionConsumptionEvent(
-            socketReceive: SocketReceive,
-            customEvent: SocketCustomEvent
-        )
-
-        /**
-         * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.AnyEventListener].
-         * This method will be invoked by the [handleEvent] method.
-         *
-         * @param socketReceive The web socket replied object from eWallet API.
-         */
-        fun SocketCustomEventListener.AnyEventListener.handleAnyEvent(
-            socketReceive: SocketReceive
-        )
+        fun handleEvent(customEvent: SocketCustomEvent, response: SocketReceive<*>)
     }
 }

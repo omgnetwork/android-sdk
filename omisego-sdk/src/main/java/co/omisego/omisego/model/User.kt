@@ -35,7 +35,7 @@ data class User(
     val username: String,
     val metadata: @RawValue Map<String, Any>,
     val encryptedMetadata: @RawValue Map<String, Any>,
-    override val socketTopic: SocketTopic<SocketCustomEventListener>,
+    override val socketTopic: SocketTopic,
     val createdAt: Date,
     val updatedAt: Date
-) : Parcelable, Listenable<SocketCustomEventListener>
+) : Parcelable, Listenable

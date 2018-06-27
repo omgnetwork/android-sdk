@@ -15,12 +15,15 @@ import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionConsumptionListener
 import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionRequestListener
+import co.omisego.omisego.websocket.TransactionConsumptionFinalizedFailEvent
+import co.omisego.omisego.websocket.TransactionConsumptionFinalizedSuccessEvent
+import co.omisego.omisego.websocket.TransactionConsumptionRequestEvent
 
 /**
  * Represents an object that can be listened with websocket
  */
-interface Listenable<T : SocketCustomEventListener> {
-    val socketTopic: SocketTopic<T>
+interface Listenable {
+    val socketTopic: SocketTopic
 
     /**
      * Stop listening for events
@@ -44,9 +47,16 @@ interface Listenable<T : SocketCustomEventListener> {
 fun TransactionRequest.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    listener: TransactionRequestListener
+    listener: SocketCustomEventListener
 ) {
-    client.joinChannel(socketTopic, payload, listener)
+    with(client) {
+        addCustomEventListener(SocketCustomEventListener.forEvents(listener, listOf(
+            TransactionConsumptionRequestEvent::class.java,
+            TransactionConsumptionFinalizedSuccessEvent::class.java,
+            TransactionConsumptionFinalizedFailEvent::class.java
+        )))
+        joinChannel(socketTopic, payload)
+    }
 }
 
 /**
@@ -60,9 +70,15 @@ fun TransactionRequest.startListeningEvents(
 fun TransactionConsumption.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    listener: TransactionConsumptionListener
+    listener: SocketCustomEventListener
 ) {
-    client.joinChannel(socketTopic, payload, listener)
+    with(client) {
+        addCustomEventListener(SocketCustomEventListener.forEvents(listener, listOf(
+            TransactionConsumptionFinalizedSuccessEvent::class.java,
+            TransactionConsumptionFinalizedFailEvent::class.java
+        )))
+        joinChannel(socketTopic, payload)
+    }
 }
 
 /**
@@ -72,10 +88,11 @@ fun TransactionConsumption.startListeningEvents(
  * @param payload The additional metadata for the consumption
  * @param listener The delegate that will receive events.
  */
-fun <T : SocketCustomEventListener> User.startListeningEvents(
+fun User.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    listener: T
+    listener: SocketCustomEventListener
 ) {
-    client.joinChannel(socketTopic, payload, listener)
+    client.addCustomEventListener(listener)
+    client.joinChannel(socketTopic, payload)
 }

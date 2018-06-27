@@ -22,7 +22,7 @@ class SystemEventDispatcher(
     override val socketChannelListener: SocketChannelListener
 ) : SocketDispatcherContract.SystemEventDispatcher {
 
-    override fun handleEvent(systemEvent: SocketSystemEvent, response: SocketReceive) {
+    override fun handleEvent(systemEvent: SocketSystemEvent, response: SocketReceive<*>) {
         when (systemEvent) {
             SocketSystemEvent.CLOSE -> {
                 response.runIfRefSchemeIs(SocketMessageRef.SCHEME_JOIN) {
@@ -40,7 +40,7 @@ class SystemEventDispatcher(
         }
     }
 
-    private inline fun SocketReceive.runIfRefSchemeIs(scheme: String, lambda: () -> Unit) {
+    private inline fun SocketReceive<*>.runIfRefSchemeIs(scheme: String, lambda: () -> Unit) {
         val ref = this.ref ?: return
         if (ref.startsWith(scheme)) {
             lambda()

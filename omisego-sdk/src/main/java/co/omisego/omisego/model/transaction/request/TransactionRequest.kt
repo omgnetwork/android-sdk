@@ -88,7 +88,7 @@ data class TransactionRequest(
     val user: User?,
     val account: Account?,
     val correlationId: String?,
-    override val socketTopic: SocketTopic<SocketCustomEventListener.TransactionRequestListener>,
+    override val socketTopic: SocketTopic,
     val maxConsumptions: Int?,
     val status: TransactionRequestStatus,
     val allowAmountOverride: Boolean,
@@ -102,7 +102,7 @@ data class TransactionRequest(
     val formattedId: String,
     val metadata: @RawValue Map<String, Any>,
     val encryptedMetadata: @RawValue Map<String, Any>
-) : Parcelable, Listenable<SocketCustomEventListener.TransactionRequestListener>
+) : Parcelable, Listenable
 
 /**
  * An extension function that converts the [TransactionRequest] to the [TransactionConsumptionParams] easily

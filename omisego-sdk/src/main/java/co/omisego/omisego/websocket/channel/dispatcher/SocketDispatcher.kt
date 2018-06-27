@@ -34,12 +34,16 @@ class SocketDispatcher(
     override val executor: Executor
 ) : SocketChannelContract.Dispatcher, SocketDispatcherContract.Dispatcher, SocketDelegatorContract.Dispatcher {
 
-    override fun addCustomEventListener(topic: String, customEventListener: SocketCustomEventListener) {
-        customEventDispatcher.customEventListenerMap[topic] = customEventListener
+    override fun addCustomEventListener(customEventListener: SocketCustomEventListener) {
+        customEventDispatcher.customEventListeners.add(customEventListener)
+    }
+
+    override fun removeCustomEventListener(customEventListener: SocketCustomEventListener) {
+        customEventDispatcher.customEventListeners.remove(customEventListener)
     }
 
     override fun clearCustomEventListeners() {
-        customEventDispatcher.customEventListenerMap.clear()
+        customEventDispatcher.customEventListeners.clear()
     }
 
     override fun dispatchOnOpen(response: Response) {
@@ -61,7 +65,7 @@ class SocketDispatcher(
         }
     }
 
-    override fun dispatchOnMessage(response: SocketReceive) {
+    override fun dispatchOnMessage(response: SocketReceive<*>) {
         executor.execute {
             response.event.either(
                 doOnLeft = { systemEventDispatcher.handleEvent(it, response) },

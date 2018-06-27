@@ -87,16 +87,14 @@ interface SocketClientContract {
          *
          * @param topic The topic (channel) to which the event to be sent.
          * @param payload (Optional) the additional data you might want to send bundled with the request.
-         * @param listener The event you want to receive for the specified [Channel].
          * Be careful, the listener should be related to the topic, otherwise you won't receive any message.
          * For example, if you are sending the topic begins with "transaction_request", then the listener must be the [SocketCustomEventListener.TransactionRequestListener] event.
          *
          * @see SocketCustomEventListener
          */
-        fun <T : SocketCustomEventListener> joinChannel(
-            topic: SocketTopic<T>,
-            payload: Map<String, Any> = mapOf(),
-            listener: T
+        fun joinChannel(
+            topic: SocketTopic,
+            payload: Map<String, Any> = mapOf()
         )
 
         /**
@@ -106,7 +104,7 @@ interface SocketClientContract {
          * @param topic The topic (channel) to be left.
          * @param payload (Optional) the additional data you might want to send bundled with the request.
          */
-        fun <T : SocketCustomEventListener> leaveChannel(topic: SocketTopic<T>, payload: Map<String, Any>)
+        fun leaveChannel(topic: SocketTopic, payload: Map<String, Any>)
 
         /**
          * Set new authentication header
@@ -164,6 +162,9 @@ interface SocketClientContract {
          * @param channelListener The [SocketChannelListener] to be unsubscribed.
          */
         fun removeChannelListener(channelListener: SocketChannelListener)
+
+        fun addCustomEventListener(customEventListener: SocketCustomEventListener)
+        fun removeCustomEventListener(customEventListener: SocketCustomEventListener)
     }
 
     interface PayloadSendParser {
@@ -240,7 +241,8 @@ interface SocketClientContract {
          *
          * @param customEventListener The [SocketCustomEventListener] to be invoked when the [CustomEvent] event happened.
          */
-        fun addCustomEventListener(topic: String, customEventListener: SocketCustomEventListener)
+        fun addCustomEventListener(customEventListener: SocketCustomEventListener)
+        fun removeCustomEventListener(customEventListener: SocketCustomEventListener)
     }
 
     /* Interval Package */

@@ -1,7 +1,6 @@
 package co.omisego.omisego.model.socket
 
 import android.os.Parcelable
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.interval.SocketHeartbeat
 import kotlinx.android.parcel.Parcelize
 
@@ -13,12 +12,12 @@ import kotlinx.android.parcel.Parcelize
  */
 
 @Parcelize
-data class SocketTopic<T : SocketCustomEventListener>(val name: String) : Parcelable
+data class SocketTopic(val name: String) : Parcelable
 
 /**
  * Run the lambda when the topic is coming from the user (to exclude the heartbeat event).
  */
-internal inline fun <T : SocketCustomEventListener> SocketTopic<T>.runIfNotInternalTopic(lambda: SocketTopic<T>.() -> Unit) {
+internal inline fun SocketTopic.runIfNotInternalTopic(lambda: SocketTopic.() -> Unit) {
     if (this.name != SocketHeartbeat.TOPIC) {
         lambda()
     }

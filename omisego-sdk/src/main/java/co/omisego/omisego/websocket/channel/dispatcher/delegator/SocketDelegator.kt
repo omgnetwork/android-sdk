@@ -41,7 +41,7 @@ class SocketDelegator(
 
     override fun onMessage(webSocket: WebSocket, text: String) {
         val socketReceive = socketResponseParser.parse(text)
-        SocketTopic<SocketCustomEventListener>(socketReceive.topic).runIfNotInternalTopic {
+        SocketTopic(socketReceive.topic).runIfNotInternalTopic {
             socketDispatcher.dispatchOnMessage(socketReceive)
         }
     }

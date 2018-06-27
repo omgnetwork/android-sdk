@@ -158,8 +158,12 @@ internal class SocketChannel(
         compositeSocketChannelListener.remove(channelListener)
     }
 
-    override fun addCustomEventListener(topic: String, customEventListener: SocketCustomEventListener) {
-        socketDispatcher.addCustomEventListener(topic, customEventListener)
+    override fun addCustomEventListener(customEventListener: SocketCustomEventListener) {
+        socketDispatcher.addCustomEventListener(customEventListener)
+    }
+
+    override fun removeCustomEventListener(customEventListener: SocketCustomEventListener) {
+        socketDispatcher.removeCustomEventListener(customEventListener)
     }
 
     private inline fun runIfEmptyChannel(doSomething: () -> Unit) {

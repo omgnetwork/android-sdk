@@ -1,5 +1,7 @@
 package co.omisego.omisego.websocket
 
+import co.omisego.omisego.model.socket.SocketReceive
+
 /*
  * OmiseGO
  *
@@ -7,32 +9,68 @@ package co.omisego.omisego.websocket
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.APIError
-import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
+interface SocketCustomEventListener {
 
-sealed class SocketCustomEventListener {
-    /**
-     * A listener for every event in the SocketCustomEvent (see SocketEvent.kt, CustomEventDispatcher.kt ).
-     */
-    abstract class AnyEventListener : SocketCustomEventListener() {
-        abstract fun onEventReceived(data: SocketReceive)
+    fun onEvent(event: SocketEvent<*>)
+
+    companion object {
+        inline fun <reified Event : SocketEvent<*>> forEvent(
+            crossinline lambda: (Event) -> Unit
+        ): SocketCustomEventListener {
+            return object : SimpleSocketCustomEventListener<Event>(Event::class.java) {
+                override fun onSpecificEvent(event: Event) {
+                    lambda(event)
+                }
+            }
+        }
+
+        /**
+         * Wrap a [SocketCustomEventListener] by making sure it's called only for events matching the given list
+         */
+        fun forEvents(
+            listener: SocketCustomEventListener,
+            events: List<Class<out SocketEvent<*>>>
+        ): SocketCustomEventListener {
+            return object : SimpleSocketCustomEventListener<SocketEvent<*>>(events) {
+                override fun onSpecificEvent(event: SocketEvent<*>) {
+                    listener.onEvent(event)
+                }
+            }
+        }
+
+        /**
+         * Wrap a [SocketCustomEventListener] by making sure it's called only for events matching the given list
+         */
+        inline fun forEvents(
+            crossinline lambda: (SocketEvent<out SocketReceive.SocketData>) -> Unit,
+            events: List<Class<out SocketEvent<*>>>
+        ): SocketCustomEventListener {
+            return object : SimpleSocketCustomEventListener<SocketEvent<*>>(events) {
+                override fun onSpecificEvent(event: SocketEvent<*>) {
+                    lambda(event)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * A [SocketCustomEventListener] than can be filtered for a specific type of event.
+ */
+// We don't specify the type argument for SocketEvent to have a nicer syntax, because of this, you won't be able to use
+// supertypes with this (i.e have a SocketErrorEvent listener).
+abstract class SimpleSocketCustomEventListener<Event : SocketEvent<*>>(
+    private val allowedEvents: List<Class<out Event>>
+) : SocketCustomEventListener {
+
+    constructor(allowedEvent: Class<Event>) : this(listOf(allowedEvent))
+
+    @Suppress("UNCHECKED_CAST")
+    final override fun onEvent(event: SocketEvent<*>) {
+        if (allowedEvents.any { it.isAssignableFrom(event::class.java) }) {
+            onSpecificEvent(event as Event)
+        }
     }
 
-    /**
-     * A listener for TransactionRequest
-     */
-    abstract class TransactionRequestListener : SocketCustomEventListener() {
-        abstract fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption)
-        abstract fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
-        abstract fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
-    }
-
-    /**
-     * A listener for the TransactionConsumption
-     */
-    abstract class TransactionConsumptionListener : SocketCustomEventListener() {
-        abstract fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
-        abstract fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
-    }
+    abstract fun onSpecificEvent(event: Event)
 }

@@ -60,6 +60,7 @@ class OMGSocketClient internal constructor(
     internal val socketSendParser: SocketClientContract.PayloadSendParser,
     internal val webSocketListenerProvider: WebSocketListenerProvider
 ) : SocketClientContract.Client, SocketChannelContract.SocketClient {
+
     internal var wsClient: WebSocket? = null
     override lateinit var socketChannel: SocketClientContract.Channel
 
@@ -97,15 +98,11 @@ class OMGSocketClient internal constructor(
      *
      * @see SocketCustomEventListener
      */
-    override fun <T : SocketCustomEventListener> joinChannel(
-        topic: SocketTopic<T>,
-        payload: Map<String, Any>,
-        listener: T
+    override fun joinChannel(
+        topic: SocketTopic,
+        payload: Map<String, Any>
     ) {
-        with(socketChannel) {
-            addCustomEventListener(topic.name, listener)
-            join(topic.name, payload)
-        }
+        socketChannel.join(topic.name, payload)
     }
 
     /**
@@ -115,7 +112,7 @@ class OMGSocketClient internal constructor(
      * @param topic The topic (channel) to be left.
      * @param payload (Optional) the additional data you might want to send bundled with the request.
      */
-    override fun <T : SocketCustomEventListener> leaveChannel(topic: SocketTopic<T>, payload: Map<String, Any>) {
+    override fun leaveChannel(topic: SocketTopic, payload: Map<String, Any>) {
         socketChannel.leave(topic.name, payload)
     }
 
@@ -195,6 +192,14 @@ class OMGSocketClient internal constructor(
      */
     override fun removeChannelListener(channelListener: SocketChannelListener) {
         socketChannel.removeChannelListener(channelListener)
+    }
+
+    override fun addCustomEventListener(customEventListener: SocketCustomEventListener) {
+        socketChannel.addCustomEventListener(customEventListener)
+    }
+
+    override fun removeCustomEventListener(customEventListener: SocketCustomEventListener) {
+        socketChannel.removeCustomEventListener(customEventListener)
     }
 
     /**

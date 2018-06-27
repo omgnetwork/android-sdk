@@ -12,9 +12,11 @@ import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketCustomEventListener
-import co.omisego.omisego.websocket.SocketCustomEventListener.AnyEventListener
-import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionConsumptionListener
-import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionRequestListener
+import co.omisego.omisego.websocket.SocketErrorEvent
+import co.omisego.omisego.websocket.SocketEvent
+import co.omisego.omisego.websocket.TransactionConsumptionFinalizedFailEvent
+import co.omisego.omisego.websocket.TransactionConsumptionFinalizedSuccessEvent
+import co.omisego.omisego.websocket.TransactionConsumptionRequestEvent
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketCustomEvent.OTHER
 import co.omisego.omisego.websocket.enum.SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED
@@ -27,82 +29,48 @@ class CustomEventDispatcher(
     override val socketChannelListener: SocketChannelListener
 ) : SocketDispatcherContract.CustomEventDispatcher {
 
-    override val customEventListenerMap: MutableMap<String, SocketCustomEventListener> by lazy {
-        mutableMapOf<String, SocketCustomEventListener>()
+    override val customEventListeners: MutableSet<SocketCustomEventListener> = linkedSetOf()
+
+    override fun handleEvent(customEvent: SocketCustomEvent, response: SocketReceive<*>) {
+        val event = response.mapToEvent(customEvent) ?: return
+        customEventListeners.forEach { it.onEvent(event) }
     }
 
-    override fun handleEvent(customEvent: SocketCustomEvent, response: SocketReceive) {
-        val listener = customEventListenerMap[response.topic] ?: return
-
-        when (listener) {
-            is TransactionRequestListener ->
-                listener.handleTransactionRequestEvent(response, customEvent)
-            is TransactionConsumptionListener ->
-                listener.handleTransactionConsumptionEvent(response, customEvent)
-            is AnyEventListener ->
-                listener.handleAnyEvent(response)
-        }
-    }
-
-    override fun SocketCustomEventListener.TransactionRequestListener.handleTransactionRequestEvent(
-        socketReceive: SocketReceive,
-        customEvent: SocketCustomEvent
-    ) {
-        when (customEvent) {
-            TRANSACTION_CONSUMPTION_REQUEST -> {
-                if (socketReceive.data is TransactionConsumption) {
-                    onTransactionConsumptionRequest(socketReceive.data)
-                }
-            }
-            TRANSACTION_CONSUMPTION_FINALIZED -> {
-                val judge = socketReceive.judgeCustomEventListener(
-                    this::onTransactionConsumptionFinalizedFail,
-                    this::onTransactionConsumptionFinalizedSuccess
-                )
-
-                if (!judge && socketReceive.error != null) {
-                    socketChannelListener.onError(socketReceive.error)
-                }
-            }
-            OTHER -> {
-                if (socketReceive.error != null) {
-                    socketChannelListener.onError(socketReceive.error)
-                }
-            }
-        }
-    }
-
-    override fun SocketCustomEventListener.TransactionConsumptionListener.handleTransactionConsumptionEvent(
-        socketReceive: SocketReceive,
-        customEvent: SocketCustomEvent
-    ) {
-        if (customEvent == TRANSACTION_CONSUMPTION_FINALIZED) {
-            val judge = socketReceive.judgeCustomEventListener(
-                this::onTransactionConsumptionFinalizedFail,
-                this::onTransactionConsumptionFinalizedSuccess
+    private fun SocketReceive<*>.mapToEvent(customEvent: SocketCustomEvent): SocketEvent<*>? {
+        return when (customEvent) {
+            TRANSACTION_CONSUMPTION_REQUEST -> buildEvent<TransactionConsumption>(
+                eventProvider = { data -> TransactionConsumptionRequestEvent(data) },
+                errorEventProvider = { _, _ -> null },
+                errorFallback = { error -> socketChannelListener.onError(error) }
             )
-
-            if (!judge && socketReceive.error != null) {
-                socketChannelListener.onError(socketReceive.error)
+            TRANSACTION_CONSUMPTION_FINALIZED -> buildEvent<TransactionConsumption>(
+                eventProvider = { data -> TransactionConsumptionFinalizedSuccessEvent(data) },
+                errorEventProvider = { data, error -> TransactionConsumptionFinalizedFailEvent(data, error) },
+                errorFallback = { error -> socketChannelListener.onError(error) }
+            )
+            OTHER -> {
+                error?.let { socketChannelListener.onError(it) }
+                null
             }
-        } else if (customEvent == OTHER && socketReceive.error != null) {
-            socketChannelListener.onError(socketReceive.error)
         }
     }
 
-    override fun SocketCustomEventListener.AnyEventListener.handleAnyEvent(
-        socketReceive: SocketReceive
-    ) = onEventReceived(socketReceive)
-
-    internal inline fun <reified T : SocketReceive.SocketData> SocketReceive.judgeCustomEventListener(
-        matchedTypeWithErrorLambda: (T, APIError) -> Unit,
-        matchedTypeLambda: (T) -> Unit
-    ): Boolean {
-        when {
-            this.data is T && this.error != null -> matchedTypeWithErrorLambda(this.data, this.error)
-            this.data is T -> matchedTypeLambda(this.data)
-            else -> return false
+    @Suppress("UNCHECKED_CAST")
+    private inline fun <reified T : SocketReceive.SocketData> SocketReceive<*>.buildEvent(
+        eventProvider: (SocketReceive<T>) -> SocketEvent<T>?,
+        errorEventProvider: (SocketReceive<T>, APIError) -> SocketErrorEvent<T>?,
+        errorFallback: (APIError) -> Unit = {}
+    ): SocketEvent<T>? {
+        val event = when {
+            data is T && error != null -> errorEventProvider(this as SocketReceive<T>, error)
+            data is T -> eventProvider(this as SocketReceive<T>)
+            else -> null
         }
-        return true
+
+        if (event == null) {
+            error?.let(errorFallback)
+        }
+
+        return event
     }
 }
