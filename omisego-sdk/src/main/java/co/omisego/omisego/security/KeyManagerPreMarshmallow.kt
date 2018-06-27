@@ -26,8 +26,12 @@ internal class KeyManagerPreMarshmallow(
     private val keyManagerPreference: KeyManagerPreference
 ) : KeyManager(keyHolder) {
 
-    override val encryptCipher: Cipher by lazy { Cipher.getInstance(AES_MODE) }
-    override val decryptCipher: Cipher by lazy { Cipher.getInstance(AES_MODE, "BC") }
+    override val encryptCipher: Cipher by lazy {
+        Cipher.getInstance(AES_MODE).also { initCipher(it, Cipher.ENCRYPT_MODE) }
+    }
+    override val decryptCipher: Cipher by lazy {
+        Cipher.getInstance(AES_MODE, "BC").also { initCipher(it, Cipher.DECRYPT_MODE) }
+    }
 
     override val b64Mode: Int
         get() = Base64.NO_WRAP

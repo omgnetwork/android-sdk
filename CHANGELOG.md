@@ -6,6 +6,10 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [0.9.6] - 2018-06-27
+### Fixed
+- [OMGKeyManager throws an exception during the initialization steps on Android 5.1.1](https://github.com/omisego/android-sdk/issues/49)
+
 ## [0.9.52] - 2018-06-26
 ### Changed
 - Improved `OMGCameraPreview` performance

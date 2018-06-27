@@ -50,6 +50,7 @@ class OMGKeyManager private constructor(private var keyManager: KeyManager) {
      */
     class Builder(init: Builder.() -> Unit) {
         private lateinit var keyManager: KeyManager
+        private lateinit var keyManagerPreference: KeyManagerPreference
 
         var keyAlias: String = ""
         /**
@@ -81,16 +82,18 @@ class OMGKeyManager private constructor(private var keyManager: KeyManager) {
             val keyHolder = KeyHolder(keyStore, keyAlias)
 
             keyManager =
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                        val rsaCipher = RSACipher(keyHolder)
-                        val keyManagerPreference = KeyManagerPreference(context, rsaCipher)
-                        keyManagerPreference.saveAESKeyIfAbsent()
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                    val rsaCipher = RSACipher(keyHolder)
+                    keyManagerPreference = KeyManagerPreference(context, rsaCipher)
+                    KeyManagerPreMarshmallow(keyHolder, keyManagerPreference)
+                } else {
+                    KeyManagerMarshmallow(keyHolder, iv)
+                }
 
-                        KeyManagerPreMarshmallow(keyHolder, keyManagerPreference)
-                    } else {
-                        KeyManagerMarshmallow(keyHolder, iv)
-                    }
             keyManager.create(context)
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+                keyManagerPreference.saveAESKeyIfAbsent()
 
             return OMGKeyManager(keyManager)
         }
