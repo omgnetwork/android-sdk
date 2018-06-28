@@ -9,16 +9,18 @@ package co.omisego.omisego.websocket.channel
 
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketSend
-import co.omisego.omisego.websocket.CompositeSocketChannelListener
-import co.omisego.omisego.websocket.CompositeSocketConnectionListener
 import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketConnectionListener
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.channel.SocketChannelContract.Dispatcher
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
+import co.omisego.omisego.websocket.listener.CompositeSocketChannelListener
+import co.omisego.omisego.websocket.listener.CompositeSocketConnectionListener
+import co.omisego.omisego.websocket.listener.SocketChannelListenerSet
+import co.omisego.omisego.websocket.listener.SocketConnectionListenerSet
+import co.omisego.omisego.websocket.listener.SocketCustomEventListenerSet
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.TimeUnit
@@ -36,6 +38,9 @@ internal class SocketChannel(
     override val compositeSocketConnectionListener: CompositeSocketConnectionListener,
     override val compositeSocketChannelListener: CompositeSocketChannelListener
 ) : SocketClientContract.Channel, SocketChannelContract.Channel,
+    SocketConnectionListenerSet,
+    SocketChannelListenerSet,
+    SocketCustomEventListenerSet by socketDispatcher,
     SocketConnectionListener, SocketChannelListener {
 
     private val channelSet: MutableSet<String> by lazy { mutableSetOf<String>() }
@@ -156,14 +161,6 @@ internal class SocketChannel(
 
     override fun removeChannelListener(channelListener: SocketChannelListener) {
         compositeSocketChannelListener.remove(channelListener)
-    }
-
-    override fun addCustomEventListener(customEventListener: SocketCustomEventListener) {
-        socketDispatcher.addCustomEventListener(customEventListener)
-    }
-
-    override fun removeCustomEventListener(customEventListener: SocketCustomEventListener) {
-        socketDispatcher.removeCustomEventListener(customEventListener)
     }
 
     private inline fun runIfEmptyChannel(doSomething: () -> Unit) {

@@ -13,6 +13,9 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.channel.SocketMessageRef
+import co.omisego.omisego.websocket.listener.SocketChannelListenerSet
+import co.omisego.omisego.websocket.listener.SocketConnectionListenerSet
+import co.omisego.omisego.websocket.listener.SocketCustomEventListenerSet
 import com.google.gson.Gson
 import java.util.Timer
 import java.util.concurrent.Executor
@@ -63,7 +66,7 @@ interface SocketClientContract {
      * 1. The client will be automatically connected before you've joined the first channel.
      * 2. The client will be automatically disconnected after you've left all the channels you've joined.
      */
-    interface Client {
+    interface Client : SocketConnectionListenerSet, SocketChannelListenerSet, SocketCustomEventListenerSet {
         /**
          * A [Channel] responsible for join and leave the web socket channel.
          */
@@ -120,51 +123,6 @@ interface SocketClientContract {
          * @param period an interval of milliseconds
          */
         fun setIntervalPeriod(period: Long)
-
-        @Deprecated(
-            message = "Use \'addConnectionListener\' or \'removeConnectionListener\' instead",
-            level = DeprecationLevel.ERROR
-        )
-        fun setConnectionListener(connectionListener: SocketConnectionListener?)
-
-        @Deprecated(
-            "Use \'addChannelListener\' or \'removeChannelListener\' instead",
-            level = DeprecationLevel.ERROR
-        )
-        fun setChannelListener(channelListener: SocketChannelListener?)
-
-        /**
-         * Add listener for subscribing to the [SocketConnectionListener] event.
-         *
-         * @param connectionListener The [SocketConnectionListener] to be invoked when the channel has been joined, left, or got an error.
-         * @see SocketConnectionListener for the event detail.
-         */
-        fun addConnectionListener(connectionListener: SocketConnectionListener)
-
-        /**
-         * Remove the listener for unsubscribing from the [SocketConnectionListener] event.
-         *
-         * @param connectionListener The [SocketConnectionListener] to be unsubscribed.
-         */
-        fun removeConnectionListener(connectionListener: SocketConnectionListener)
-
-        /**
-         * Subscribe to the [SocketChannelListener] event.
-         *
-         * @param channelListener The [SocketChannelListener] to be invoked when the channel has been joined, left, or got an error.
-         * @see SocketChannelListener for the event detail.
-         */
-        fun addChannelListener(channelListener: SocketChannelListener)
-
-        /**
-         * Remove the listener for unsubscribing from the [SocketChannelListener] event.
-         *
-         * @param channelListener The [SocketChannelListener] to be unsubscribed.
-         */
-        fun removeChannelListener(channelListener: SocketChannelListener)
-
-        fun addCustomEventListener(customEventListener: SocketCustomEventListener)
-        fun removeCustomEventListener(customEventListener: SocketCustomEventListener)
     }
 
     interface PayloadSendParser {
@@ -183,7 +141,7 @@ interface SocketClientContract {
     }
 
     /* Channel Package */
-    interface Channel {
+    interface Channel : SocketConnectionListenerSet, SocketChannelListenerSet, SocketCustomEventListenerSet {
         /**
          * An interval of milliseconds for scheduling the interval event such as the heartbeat event which used for keeping the connection alive.
          * Default 5,000 milliseconds.
@@ -229,20 +187,6 @@ interface SocketClientContract {
          * @return A set of active [SocketTopic].
          */
         fun retrieveChannels(): Set<String>
-
-        fun addConnectionListener(connectionListener: SocketConnectionListener)
-        fun removeConnectionListener(connectionListener: SocketConnectionListener)
-
-        fun addChannelListener(channelListener: SocketChannelListener)
-        fun removeChannelListener(channelListener: SocketChannelListener)
-
-        /**
-         * Subscribe to the [SocketCustomEventListener] event.
-         *
-         * @param customEventListener The [SocketCustomEventListener] to be invoked when the [CustomEvent] event happened.
-         */
-        fun addCustomEventListener(customEventListener: SocketCustomEventListener)
-        fun removeCustomEventListener(customEventListener: SocketCustomEventListener)
     }
 
     /* Interval Package */

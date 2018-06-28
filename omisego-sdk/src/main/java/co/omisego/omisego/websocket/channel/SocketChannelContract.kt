@@ -8,11 +8,12 @@ package co.omisego.omisego.websocket.channel
  */
 
 import co.omisego.omisego.model.socket.SocketSend
-import co.omisego.omisego.websocket.CompositeSocketChannelListener
-import co.omisego.omisego.websocket.CompositeSocketConnectionListener
+import co.omisego.omisego.websocket.listener.CompositeSocketChannelListener
+import co.omisego.omisego.websocket.listener.CompositeSocketConnectionListener
 import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketStatusCode
+import co.omisego.omisego.websocket.listener.SocketCustomEventListenerSet
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -105,13 +106,7 @@ interface SocketChannelContract {
     }
 
     /* Dispatcher Package */
-    interface Dispatcher {
-        /**
-         * Set the socket custom events listener to be used for dispatch the custom events.
-         */
-        fun addCustomEventListener(customEventListener: SocketCustomEventListener)
-        fun removeCustomEventListener(customEventListener: SocketCustomEventListener)
-
+    interface Dispatcher : SocketCustomEventListenerSet {
         /**
          * Clear all callbacks in the customEventListeners
          */

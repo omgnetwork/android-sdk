@@ -1,4 +1,6 @@
-package co.omisego.omisego.websocket
+package co.omisego.omisego.websocket.listener
+
+import co.omisego.omisego.websocket.SocketConnectionListener
 
 /**
  * OmiseGO

@@ -26,6 +26,11 @@ import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegator
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketReceiveParser
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.interval.SocketHeartbeat
+import co.omisego.omisego.websocket.listener.CompositeSocketChannelListener
+import co.omisego.omisego.websocket.listener.CompositeSocketConnectionListener
+import co.omisego.omisego.websocket.listener.SocketChannelListenerSet
+import co.omisego.omisego.websocket.listener.SocketConnectionListenerSet
+import co.omisego.omisego.websocket.listener.SocketCustomEventListenerSet
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
@@ -59,7 +64,10 @@ class OMGSocketClient internal constructor(
     internal var request: Request,
     internal val socketSendParser: SocketClientContract.PayloadSendParser,
     internal val webSocketListenerProvider: WebSocketListenerProvider
-) : SocketClientContract.Client, SocketChannelContract.SocketClient {
+) : SocketClientContract.Client, SocketChannelContract.SocketClient,
+    SocketConnectionListenerSet,
+    SocketChannelListenerSet,
+    SocketCustomEventListenerSet {
 
     internal var wsClient: WebSocket? = null
     override lateinit var socketChannel: SocketClientContract.Channel
