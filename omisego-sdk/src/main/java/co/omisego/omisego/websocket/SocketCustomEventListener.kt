@@ -1,5 +1,6 @@
 package co.omisego.omisego.websocket
 
+import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.websocket.event.SocketEvent
 
@@ -59,7 +60,7 @@ interface SocketCustomEventListener {
  * A [SocketCustomEventListener] than can be filtered for a specific type of event.
  */
 // We don't specify the type argument for SocketEvent to have a nicer syntax, because of this, you won't be able to use
-// supertypes with this (i.e have a SocketErrorEvent listener).
+// supertypes with this
 abstract class SimpleSocketCustomEventListener<Event : SocketEvent<*>>(
     private val allowedEvents: List<Class<out Event>>
 ) : SocketCustomEventListener {
@@ -74,4 +75,19 @@ abstract class SimpleSocketCustomEventListener<Event : SocketEvent<*>>(
     }
 
     abstract fun onSpecificEvent(event: Event)
+
+    companion object {
+        @Suppress("UNCHECKED_CAST")
+        internal inline fun <T : SocketReceive.SocketData> SocketReceive<T>.dispatch(
+            onSuccess: (T) -> Any,
+            onError: (T, APIError) -> Any
+        ) {
+            when {
+            // TODO @ripzery Is data supposed to be null in case of error?
+                data is T && error != null -> onError(data, error)
+                data is T -> onSuccess(data)
+                else -> Unit
+            }
+        }
+    }
 }
