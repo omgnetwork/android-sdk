@@ -9,6 +9,7 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ## [0.9.6] - 2018-06-27
 ### Fixed
 - [OMGKeyManager throws an exception during the initialization steps on Android 5.1.1](https://github.com/omisego/android-sdk/issues/49)
+- [Fix bug QR scanner doesn't cache invalid transaction id correctly](https://github.com/omisego/android-sdk/issues/51)
 
 ## [0.9.52] - 2018-06-26
 ### Changed
@@ -74,11 +75,12 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Logout the current user
 - [OMGKeyManager - encryption and decryption helpers](https://github.com/omisego/android-sdk/pull/11)
 
-[Unreleased]: https://github.com/omisego/android-sdk/compare/v0.9.52...HEAD
-[0.9.52]: https://github.com/omisego/android-sdk/compare/v0.9.51...0.9.52
-[0.9.51]: https://github.com/omisego/android-sdk/compare/v0.9.5...0.9.51
-[0.9.5]: https://github.com/omisego/android-sdk/compare/v0.9.42...0.9.5
-[0.9.42]: https://github.com/omisego/android-sdk/compare/v0.9.4...0.9.42
+[Unreleased]: https://github.com/omisego/android-sdk/compare/v0.9.6...HEAD
+[0.9.6]: https://github.com/omisego/android-sdk/compare/v0.9.52...v0.9.6
+[0.9.52]: https://github.com/omisego/android-sdk/compare/v0.9.51...v0.9.52
+[0.9.51]: https://github.com/omisego/android-sdk/compare/v0.9.5...v0.9.51
+[0.9.5]: https://github.com/omisego/android-sdk/compare/v0.9.42...v0.9.5
+[0.9.42]: https://github.com/omisego/android-sdk/compare/v0.9.4...v0.9.42
 [0.9.4]: https://github.com/omisego/android-sdk/compare/v0.9.3...v0.9.4
 [0.9.3]: https://github.com/omisego/android-sdk/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/omisego/android-sdk/compare/v0.9.1...v0.9.2
