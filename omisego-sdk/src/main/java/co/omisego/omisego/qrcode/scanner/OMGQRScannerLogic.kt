@@ -15,10 +15,7 @@ import android.graphics.ImageFormat
 import android.graphics.Rect
 import android.graphics.YuvImage
 import android.hardware.Camera
-import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.constant.enums.ErrorCode
-import co.omisego.omisego.model.APIError
-import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract.Logic.Rotation
 import co.omisego.omisego.qrcode.scanner.utils.QRFrameExtractor
 import co.omisego.omisego.qrcode.scanner.utils.Rotater
@@ -46,16 +43,6 @@ internal class OMGQRScannerLogic(
 ) : OMGQRScannerContract.Logic {
     private var mQRFrameExtractor: QRFrameExtractor? = null
     private var mPreviewSize: Camera.Size? = null
-    private val errorTxNotFound: OMGResponse<APIError> by lazy {
-        OMGResponse(
-            Versions.EWALLET_API,
-            false,
-            APIError(
-                ErrorCode.TRANSACTION_REQUEST_NOT_FOUND,
-                "There is no transaction request corresponding to the provided address"
-            )
-        )
-    }
 
     override var scanCallback: OMGQRScannerContract.Callback? = null
 
@@ -168,12 +155,12 @@ internal class OMGQRScannerLogic(
         )
 
         rawResult?.text?.let { formattedId ->
-
             /* Return immediately if we've already processed this [formattedId] and it failed with [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] */
             if (hasTransactionAlreadyFailed(formattedId)) {
-                scanCallback?.scannerDidFailToDecode(omgQRScannerView, errorTxNotFound)
                 return@let
             }
+
+            qrPayloadCache.add(formattedId)
 
             /* Show loading */
             omgQRScannerView.isLoading = true
@@ -181,8 +168,8 @@ internal class OMGQRScannerLogic(
             /* Verify transactionId with the eWallet backend */
             omgQRVerifier.requestTransaction(formattedId, { errorResponse ->
                 /* Cache formattedId if error with [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] code */
-                if (errorResponse.data.code == ErrorCode.TRANSACTION_REQUEST_NOT_FOUND) {
-                    qrPayloadCache.add(formattedId)
+                if (errorResponse.data.code != ErrorCode.TRANSACTION_REQUEST_NOT_FOUND) {
+                    qrPayloadCache.remove(formattedId)
                 }
 
                 /* Delegate a fail callback */
@@ -191,6 +178,7 @@ internal class OMGQRScannerLogic(
                 /* Hide loading */
                 omgQRScannerView.isLoading = false
             }) { successResponse ->
+                qrPayloadCache.remove(formattedId)
 
                 /* Delegate a success callback */
                 scanCallback?.scannerDidDecode(omgQRScannerView, successResponse)

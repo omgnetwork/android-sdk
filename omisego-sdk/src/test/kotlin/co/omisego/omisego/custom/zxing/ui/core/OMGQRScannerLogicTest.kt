@@ -54,7 +54,6 @@ class OMGQRScannerLogicTest {
     private lateinit var mockWebServer: MockWebServer
     private lateinit var omgAPIClient: OMGAPIClient
     private lateinit var omgQRVerifier: OMGQRVerifier
-    private var mockQRPayloadCache: MutableSet<String> = mock()
     private val mockTransactionRequestCb: OMGCallback<TransactionRequest> = mock()
 
     @Before
@@ -80,7 +79,6 @@ class OMGQRScannerLogicTest {
             callback = mockTransactionRequestCb
         }
         omgQRScannerLogic = spy(OMGQRScannerLogic(omgQRScannerView, omgQRVerifier, qrReader = multiFormatReader))
-        whenever(omgQRScannerLogic.qrPayloadCache).thenReturn(mockQRPayloadCache)
     }
 
     @Test
@@ -139,7 +137,7 @@ class OMGQRScannerLogicTest {
     }
 
     @Test
-    fun `OMGQRScannerLogic should be invoked the callback scannerDidDecode when the QR image format is correct`() {
+    fun `OMGQRScannerLogic should invoke the callback scannerDidDecode when the QR image format is correct`() {
         transactionRequestSuccessFile.mockEnqueueWithHttpCode(mockWebServer)
         mockOnPreviewFrameDeps()
         mockTransactionIdThenPreview("transaction_id_01")
@@ -149,7 +147,7 @@ class OMGQRScannerLogicTest {
     }
 
     @Test
-    fun `OMGQRScannerLogic should be invoked the callback scannerDidFailToDecode when the QR image format is incorrect`() {
+    fun `OMGQRScannerLogic should invoke the callback scannerDidFailToDecode when the QR image format is incorrect`() {
         transactionRequestFailedFile.mockEnqueueWithHttpCode(mockWebServer)
         mockOnPreviewFrameDeps()
         mockTransactionIdThenPreview("transaction_id_01")
@@ -159,21 +157,38 @@ class OMGQRScannerLogicTest {
     }
 
     @Test
-    fun `OMGQRScannerLogic should cache the transaction formatted_id properly if it is an invalid transaction`() {
-        for (i in 0..2) {
+    fun `OMGQRScannerLogic should not call scannerDidFailToDecode twice on the non-existed transaction id`() {
+        for (i in 0..6) {
             transactionRequestFailedFile.mockEnqueueWithHttpCode(mockWebServer)
         }
-        mockOnPreviewFrameDeps()
+        val mockScanQRCallback = mockOnPreviewFrameDeps()
 
         mockTransactionIdThenPreview("transaction_id_01")
         mockTransactionIdThenPreview("transaction_id_02")
-        verify(mockQRPayloadCache, timeout(3000).times(1)).add("transaction_id_02")
-
         mockTransactionIdThenPreview("transaction_id_01")
-        verify(mockQRPayloadCache, timeout(3000).times(1)).add("transaction_id_01")
+        mockTransactionIdThenPreview("transaction_id_01")
+        mockTransactionIdThenPreview("transaction_id_01")
+        mockTransactionIdThenPreview("transaction_id_03")
+        mockTransactionIdThenPreview("transaction_id_03")
+        verify(mockScanQRCallback, timeout(3000).times(3)).scannerDidFailToDecode(any(), any())
     }
 
-    private fun mockOnPreviewFrameDeps() {
+    @Test
+    fun `OMGQRScannerLogic should always call scannerDidFailToDecode on unique failed transaction id`() {
+        for (i in 0..5) {
+            transactionRequestFailedFile.mockEnqueueWithHttpCode(mockWebServer)
+        }
+        val mockScanQRCallback = mockOnPreviewFrameDeps()
+
+        mockTransactionIdThenPreview("transaction_id_01")
+        mockTransactionIdThenPreview("transaction_id_02")
+        mockTransactionIdThenPreview("transaction_id_03")
+        mockTransactionIdThenPreview("transaction_id_04")
+        mockTransactionIdThenPreview("transaction_id_05")
+        verify(mockScanQRCallback, timeout(3000).times(5)).scannerDidFailToDecode(any(), any())
+    }
+
+    private fun mockOnPreviewFrameDeps(): OMGQRScannerContract.Callback {
         val mockScanQRCallback = mock<OMGQRScannerContract.Callback>()
         whenever(omgQRScannerView.isLoading).thenReturn(false)
         whenever(omgQRScannerView.debugging).thenReturn(false)
@@ -188,6 +203,7 @@ class OMGQRScannerLogicTest {
         )
 
         omgQRScannerLogic.scanCallback = mockScanQRCallback
+        return mockScanQRCallback
     }
 
     private fun mockTransactionIdThenPreview(transactionId: String) {
