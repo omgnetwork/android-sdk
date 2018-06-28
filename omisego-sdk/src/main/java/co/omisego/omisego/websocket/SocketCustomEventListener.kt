@@ -1,6 +1,7 @@
 package co.omisego.omisego.websocket
 
 import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.websocket.event.SocketEvent
 
 /*
  * OmiseGO

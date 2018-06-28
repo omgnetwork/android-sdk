@@ -1,4 +1,4 @@
-package co.omisego.omisego.websocket
+package co.omisego.omisego.websocket.event
 
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive

@@ -15,9 +15,9 @@ import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionConsumptionListener
 import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionRequestListener
-import co.omisego.omisego.websocket.TransactionConsumptionFinalizedFailEvent
-import co.omisego.omisego.websocket.TransactionConsumptionFinalizedSuccessEvent
-import co.omisego.omisego.websocket.TransactionConsumptionRequestEvent
+import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedFailEvent
+import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedSuccessEvent
+import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
 
 /**
  * Represents an object that can be listened with websocket

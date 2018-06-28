@@ -12,11 +12,11 @@ import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketCustomEventListener
-import co.omisego.omisego.websocket.SocketErrorEvent
-import co.omisego.omisego.websocket.SocketEvent
-import co.omisego.omisego.websocket.TransactionConsumptionFinalizedFailEvent
-import co.omisego.omisego.websocket.TransactionConsumptionFinalizedSuccessEvent
-import co.omisego.omisego.websocket.TransactionConsumptionRequestEvent
+import co.omisego.omisego.websocket.event.SocketErrorEvent
+import co.omisego.omisego.websocket.event.SocketEvent
+import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedFailEvent
+import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedSuccessEvent
+import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketCustomEvent.OTHER
 import co.omisego.omisego.websocket.enum.SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED
