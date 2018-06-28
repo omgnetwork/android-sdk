@@ -76,13 +76,43 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
         mOMGCameraLogic = OMGCameraLogic(this)
     }
 
+    override fun startCameraPreview() {
+        try {
+            holder.addCallback(this@OMGCameraPreview)
+            mPreviewing = true
+
+            setupCameraParameters()
+
+            /* Setup camera display */
+            cameraWrapper?.camera?.let {
+                it.setPreviewDisplay(holder)
+                it.setDisplayOrientation(mOMGCameraLogic.getDisplayOrientation(cameraWrapper != null))
+                it.setPreviewCallback(mPreviewCallback)
+                postDelayed({
+                    try {
+                        it.startPreview()
+                    } catch (e: Exception) {
+                        Log.e("OMGCameraPreview", e.message)
+                    }
+                }, 200)
+            }
+
+            when {
+                mSurfaceCreated -> mFocusManager.safeAutoFocus()
+                else -> mFocusManager.scheduleAutoFocus()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, e.toString(), e)
+        }
+    }
+
     override fun stopCameraPreview() {
         try {
             mPreviewing = false
             holder.removeCallback(this)
             mFocusManager.stop()
-            cameraWrapper?.camera?.setPreviewCallback(null)
             cameraWrapper?.camera?.stopPreview()
+            cameraWrapper?.camera?.setPreviewCallback(null)
         } catch (e: Exception) {
             Log.d(OMGCameraPreview.TAG, e.toString(), e)
         }
@@ -110,32 +140,6 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
         mOMGCameraLogic.adjustViewSize(optimalSize)
     }
 
-    override fun showCameraPreview() {
-        try {
-            holder.addCallback(this@OMGCameraPreview)
-            mPreviewing = true
-
-            setupCameraParameters()
-
-            /* Setup camera display */
-            cameraWrapper?.camera?.let {
-                it.setPreviewDisplay(holder)
-                it.setDisplayOrientation(mOMGCameraLogic.getDisplayOrientation(cameraWrapper != null))
-                it.setPreviewCallback(mPreviewCallback)
-                postDelayed({
-                    it.startPreview()
-                }, 200)
-            }
-
-            when {
-                mSurfaceCreated -> mFocusManager.safeAutoFocus()
-                else -> mFocusManager.scheduleAutoFocus()
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, e.toString(), e)
-        }
-    }
-
     override fun setViewSize(adjustedWidth: Int, adjustedHeight: Int) {
         val layoutWidth = if (displayOrientation % 180 != 0) adjustedHeight else adjustedWidth
         val layoutHeight = if (displayOrientation % 180 != 0) adjustedWidth else adjustedHeight
@@ -150,18 +154,21 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
 
     /* Override surface callback */
     override fun surfaceChanged(surfaceHolder: SurfaceHolder?, format: Int, width: Int, height: Int) {
+        Log.d("OMGCameraPreview", "surfaceChanged")
         surfaceHolder?.surface.let {
             stopCameraPreview()
-            showCameraPreview()
+            startCameraPreview()
         }
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
+        Log.d("OMGCameraPreview", "surfaceDestroyed")
         mSurfaceCreated = false
         stopCameraPreview()
     }
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
+        Log.d("OMGCameraPreview", "surfaceCreated")
         mSurfaceCreated = true
     }
 }

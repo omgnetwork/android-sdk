@@ -60,7 +60,7 @@ internal class OMGQRScannerLogic(
     override var scanCallback: OMGQRScannerContract.Callback? = null
 
     /* Keep the QR payload that being sent to the server to prevent spamming */
-    override val qrPayloadCache: MutableList<String> = mutableListOf()
+    override val qrPayloadCache: MutableSet<String> = mutableSetOf()
 
     /**
      * Rotate the image based on the orientation of the raw image data
@@ -180,7 +180,6 @@ internal class OMGQRScannerLogic(
 
             /* Verify transactionId with the eWallet backend */
             omgQRVerifier.requestTransaction(formattedId, { errorResponse ->
-
                 /* Cache formattedId if error with [ErrorCode.TRANSACTION_REQUEST_NOT_FOUND] code */
                 if (errorResponse.data.code == ErrorCode.TRANSACTION_REQUEST_NOT_FOUND) {
                     qrPayloadCache.add(formattedId)

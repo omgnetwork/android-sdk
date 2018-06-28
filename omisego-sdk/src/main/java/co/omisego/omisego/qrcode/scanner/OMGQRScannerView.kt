@@ -209,7 +209,7 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
         if (cameraHandlerThread == null)
             cameraHandlerThread = CameraHandlerThread(this)
         cameraHandlerThread?.startCamera()
-        omgScannerLogic = OMGQRScannerLogic(this, OMGQRVerifier(client)).apply {
+        omgScannerLogic = omgScannerLogic ?: OMGQRScannerLogic(this, OMGQRVerifier(client)).apply {
             scanCallback = callback
         }
     }
@@ -222,7 +222,6 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
         cameraWrapper?.camera?.release()
         cameraHandlerThread?.quit()
         cameraHandlerThread = null
-        omgScannerLogic = null
     }
 
     override fun onPreviewFrame(data: ByteArray, camera: Camera) {
