@@ -8,6 +8,10 @@ package co.omisego.omisego.websocket.enum
  */
 
 import co.omisego.omisego.constant.enums.OMGEnum
+import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.websocket.event.SocketEvent
+import  co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
+import  co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
 
 enum class SocketEventSend(override val value: String) : OMGEnum {
 
@@ -48,10 +52,26 @@ enum class SocketSystemEvent(override val value: String) : OMGEnum {
     override fun toString(): String = this.value
 }
 
-enum class SocketCustomEvent(override val value: String) : OMGEnum {
-    TRANSACTION_CONSUMPTION_REQUEST("transaction_consumption_request"),
-    TRANSACTION_CONSUMPTION_FINALIZED("transaction_consumption_finalized"),
-    OTHER("other");
+// TODO @ripzery sealed class might be more appropriate, we can put the eventBuilder in it
+// TODO but we will need a custom serializer/deserializer and lose the simplicity of using OMGEnum
+enum class SocketCustomEvent(
+    override val value: String,
+    val eventBuilder: (SocketReceive<*>) -> SocketEvent<*>?
+) : OMGEnum {
+
+    TRANSACTION_CONSUMPTION_REQUEST("transaction_consumption_request", eventBuilder(::TransactionConsumptionRequestEvent)),
+    TRANSACTION_CONSUMPTION_FINALIZED("transaction_consumption_finalized", eventBuilder(::TransactionConsumptionFinalizedEvent)),
+    OTHER("other", { null });
 
     override fun toString(): String = this.value
+}
+
+/**
+ * Return a lambda that can build an event of data type T if the type of the response data matches the expected type
+ */
+@Suppress("UNCHECKED_CAST")
+private inline fun <reified T : SocketReceive.SocketData> eventBuilder(
+    crossinline eventProvider: (SocketReceive<T>) -> SocketEvent<T>?
+): (SocketReceive<*>) -> SocketEvent<T>? = {
+    (it as? T)?.let { eventProvider(it as SocketReceive<T>) }
 }

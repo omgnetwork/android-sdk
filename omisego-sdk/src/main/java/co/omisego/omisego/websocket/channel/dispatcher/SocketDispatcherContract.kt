@@ -58,14 +58,14 @@ interface SocketDispatcherContract {
 
     interface CustomEventDispatcher {
         /**
-         * For dispatching the [SocketCustomEventListener] event.
-         */
-        val customEventListeners: MutableSet<SocketCustomEventListener>
-
-        /**
          * For dispatching the [SocketChannelListener] event.
          */
         val socketChannelListener: SocketChannelListener
+
+        /**
+         * For dispatching the [SocketCustomEventListener] event.
+         */
+        val customEventListeners: MutableSet<SocketCustomEventListener>
 
         /**
          * Handles the [SocketCustomEvent] and dispatch the [SocketCustomEventListener] to the client.
