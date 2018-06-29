@@ -10,6 +10,7 @@ package co.omisego.omisego.model.transaction
 import co.omisego.omisego.extension.bd
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.Token
+import co.omisego.omisego.testUtils.DateConverter
 import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.Gson
 import org.amshove.kluent.shouldBeInstanceOf
