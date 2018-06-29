@@ -15,6 +15,7 @@ package co.omisego.omisego.model.transaction.send
  * @param to The address where to send the tokens.
  * @param amount The amount of token to transfer (down to subunit to unit).
  * @param tokenId The id of the token to send.
+ * @param idempotencyToken The idempotency token to use for send the transaction.
  * @param metadata Additional metadata for the transaction.
  * @param encryptedMetadata Additional encrypted metadata for the transaction.
  */
@@ -23,6 +24,7 @@ data class TransactionSendParam(
     val to: String,
     val amount: Double,
     val tokenId: String,
+    val idempotencyToken: String = "$to-${System.nanoTime()}",
     val metadata: Map<String, Any>,
     val encryptedMetadata: Map<String, Any>
 )
