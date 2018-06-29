@@ -48,7 +48,7 @@ class TransactionConsumptionTest {
                 Paginable.Transaction.TransactionStatus.CONFIRMED,
                 TransactionSource("1234", 1234.bd, token),
                 TransactionSource("3456", 3456.bd, token),
-                TransactionExchange(2.bd, null, null, null),
+                TransactionExchange(2.bd, null, null),
                 mapOf("Test" to "1234"),
                 mapOf(),
                 Date()

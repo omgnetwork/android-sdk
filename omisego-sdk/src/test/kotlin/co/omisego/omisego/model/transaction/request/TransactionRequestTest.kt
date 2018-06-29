@@ -9,10 +9,9 @@ package co.omisego.omisego.model.transaction.request
 
 import android.support.test.runner.AndroidJUnit4
 import co.omisego.omisego.extension.bd
-import co.omisego.omisego.helpers.delegation.ResourceFile
+import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.utils.validateParcel
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
@@ -20,15 +19,12 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import java.io.File
 import java.util.Date
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [23])
-class TransactionRequestTest {
+class TransactionRequestTest : GsonDelegator() {
     private lateinit var transactionRequest: TransactionRequest
-    private val transactionRequestFile: File by ResourceFile("fixture/transaction_request.json")
-    private val gson by lazy { GsonProvider.create() }
 
     @Before
     fun setup() {

@@ -12,11 +12,11 @@ import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.exception.OMGAPIErrorException
+import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.User
-import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.reflect.TypeToken
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -35,7 +35,7 @@ import java.io.IOException
 import java.util.concurrent.Executor
 
 @RunWith(MockitoJUnitRunner::class)
-class OMGCallbackWrapperTest {
+class OMGCallbackWrapperTest : GsonDelegator() {
     private val userFile: File by ResourceFile("user.json")
     private val errorFile: File by ResourceFile("error-invalid_auth.json")
     private lateinit var sampleUser: User
@@ -44,7 +44,6 @@ class OMGCallbackWrapperTest {
     private lateinit var mockCall: Call<OMGResponse<User>>
     private lateinit var mockOMGCallback: OMGCallback<User>
     private lateinit var callback: OMGCallbackWrapper<User>
-    private val gson by lazy { GsonProvider.create() }
 
     @Before
     fun setup() {

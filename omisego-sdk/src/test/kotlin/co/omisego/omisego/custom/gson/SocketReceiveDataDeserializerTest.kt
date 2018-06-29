@@ -7,24 +7,17 @@ package co.omisego.omisego.custom.gson
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-import co.omisego.omisego.utils.GsonProvider
-import com.google.gson.Gson
 import org.amshove.kluent.shouldBeInstanceOf
-import org.junit.Before
 import java.io.File
 import kotlin.test.Test
 
-class SocketReceiveDataDeserializerTest {
+class SocketReceiveDataDeserializerTest : GsonDelegator() {
     private val transactionConsumptionFile: File by ResourceFile("transaction_consumption.json")
     private val malformedTransactionConsumptionFile: File by ResourceFile("malformed_transaction_consumption.json")
-    private lateinit var gson: Gson
-    @Before
-    fun setUp() {
-        gson = GsonProvider.create()
-    }
 
     @Test
     fun `SocketReceiveDataDeserializer should parse TransactionConsumption successfully`() {

@@ -9,7 +9,7 @@ package co.omisego.omisego.custom.gson
  */
 
 import co.omisego.omisego.constant.enums.ErrorCode
-import co.omisego.omisego.utils.GsonProvider
+import co.omisego.omisego.helpers.delegation.GsonDelegator
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
 
@@ -21,9 +21,7 @@ import org.junit.Test
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-class ErrorCodeDeserializerTest {
-    private val gson by lazy { GsonProvider.create() }
-
+class ErrorCodeDeserializerTest : GsonDelegator() {
     data class TestData(
         val code: ErrorCode
     )

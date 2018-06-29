@@ -8,6 +8,7 @@ package co.omisego.omisego.websocket.channel.dispatcher.delegator
  */
 
 import co.omisego.omisego.constant.enums.ErrorCode
+import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
@@ -15,7 +16,6 @@ import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionSt
 import co.omisego.omisego.model.transaction.request.TransactionRequestStatus
 import co.omisego.omisego.model.transaction.request.TransactionRequestType
 import co.omisego.omisego.utils.Either
-import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import org.amshove.kluent.shouldBe
@@ -27,14 +27,14 @@ import org.junit.Before
 import org.junit.Test
 import java.io.File
 
-class SocketReceiveParserTest {
+class SocketReceiveParserTest : GsonDelegator() {
     private val socketReceiveTxConsumption: File by ResourceFile("socket_receive_transaction_consumption.json", "websocket")
     private val socketReceiveError: File by ResourceFile("socket_receive_null_data_with_error.json", "websocket")
     private lateinit var socketReceiveParser: SocketReceiveParser
 
     @Before
     fun setup() {
-        socketReceiveParser = SocketReceiveParser(GsonProvider.create())
+        socketReceiveParser = SocketReceiveParser(gson)
     }
 
     @Test

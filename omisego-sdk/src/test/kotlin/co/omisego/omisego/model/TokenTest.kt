@@ -9,18 +9,17 @@ package co.omisego.omisego.model
  */
 
 import co.omisego.omisego.extension.bd
+import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.testUtils.DateConverter
-import co.omisego.omisego.utils.GsonProvider
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldEqualTo
 import org.junit.Test
 import java.util.Date
 
-class TokenTest {
+class TokenTest : GsonDelegator() {
     private val dateConverter by lazy { DateConverter() }
     val tokenFile by ResourceFile("token.json", "object")
-    val gson by lazy { GsonProvider.create() }
     val token1 = Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, Date(), Date(), mapOf(), mapOf())
     val token2 = Token("ETH:8bcda572-9411-43c8-baae-cd56eb0155f3", "ETH", "Ethereum", 10000.0.bd, Date(), Date(), mapOf(), mapOf())
     val token3 = Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10.0.bd, Date(), Date(), mapOf(), mapOf())

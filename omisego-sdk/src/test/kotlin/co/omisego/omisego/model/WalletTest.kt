@@ -9,6 +9,7 @@ package co.omisego.omisego.model
 
 import android.support.test.runner.AndroidJUnit4
 import co.omisego.omisego.extension.bd
+import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.utils.validateParcel
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
@@ -20,7 +21,7 @@ import java.util.Date
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [23])
-class WalletTest {
+class WalletTest : GsonDelegator() {
     private lateinit var address: Wallet
 
     @Before
