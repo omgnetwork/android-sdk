@@ -108,7 +108,7 @@ class OMGCameraPreviewTest {
         whenever(spyOMGCameraPreview.mOMGCameraLogic.getDisplayOrientation(true)).thenReturn(0)
         whenever(spyOMGCameraPreview.setupCameraParameters()).thenReturn(null)
 
-        spyOMGCameraPreview.showCameraPreview()
+        spyOMGCameraPreview.startCameraPreview()
         ShadowLooper.runUiThreadTasksIncludingDelayedTasks()
 
         verify(camera, times(1)).setPreviewDisplay(any())

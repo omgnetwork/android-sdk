@@ -103,7 +103,7 @@ interface OMGQRScannerContract {
         /**
          * Keep failed QR payload that being sent to the server to prevent spamming
          */
-        val qrPayloadCache: MutableList<String>
+        val qrPayloadCache: MutableSet<String>
 
         /**
          * The [Callback] for retrieve the QR validation result

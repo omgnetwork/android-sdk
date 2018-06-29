@@ -45,7 +45,7 @@ internal class OMGQRVerifier(
         crossinline success: (response: OMGResponse<TransactionRequest>) -> Unit
     ) {
         callable = omgAPIClient.retrieveTransactionRequest(TransactionRequestParams(formattedId))
-        callback = callback ?: object : OMGCallback<TransactionRequest> {
+        callback = object : OMGCallback<TransactionRequest> {
             override fun success(response: OMGResponse<TransactionRequest>) = success(response)
             override fun fail(response: OMGResponse<APIError>) = fail(response)
         }

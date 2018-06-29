@@ -27,10 +27,10 @@ interface CameraPreviewContract {
         val previewLayoutParams: ViewGroup.LayoutParams
         val windowManager: WindowManager
 
-        fun stopCameraPreview()
         fun setCamera(cameraWrapper: CameraWrapper?, previewCallback: Camera.PreviewCallback)
         fun setupCameraParameters()
-        fun showCameraPreview()
+        fun startCameraPreview()
+        fun stopCameraPreview()
         fun setViewSize(adjustedWidth: Int, adjustedHeight: Int)
     }
 
