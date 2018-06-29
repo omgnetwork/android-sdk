@@ -64,7 +64,7 @@ class TransactionConsumptionTest {
                 expirationDate = Date(),
                 requireConfirmation = false,
                 socketTopic = SocketTopic("1234"),
-                maxConsumption = 1234,
+                maxConsumptions = 1234,
                 allowAmountOverride = false,
                 maxConsumptionsPerUser = 5,
                 address = "1234",
@@ -76,7 +76,9 @@ class TransactionConsumptionTest {
                 status = TransactionRequestStatus.VALID,
                 formattedId = "1234",
                 metadata = mapOf(),
-                encryptedMetadata = mapOf()
+                encryptedMetadata = mapOf(),
+                account = null,
+                correlationId = null
             ),
             SocketTopic("test"),
             Date(),
