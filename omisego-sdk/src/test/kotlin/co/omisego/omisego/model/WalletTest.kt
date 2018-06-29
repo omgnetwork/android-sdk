@@ -8,46 +8,44 @@ package co.omisego.omisego.model
  */
 
 import android.support.test.runner.AndroidJUnit4
-import co.omisego.omisego.extension.bd
 import co.omisego.omisego.helpers.delegation.GsonDelegator
+import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.utils.validateParcel
+import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldEqualTo
 import org.amshove.kluent.shouldNotBe
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import java.util.Date
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [23])
 class WalletTest : GsonDelegator() {
-    private lateinit var address: Wallet
+    private val walletFile by ResourceFile("wallet.json", "object")
+    private val wallet by lazy { gson.fromJson(walletFile.readText(), Wallet::class.java) }
 
-    @Before
-    fun setup() {
-        address = Wallet(
-            "1234-1234-1234",
-            listOf(
-                Balance(100.bd, Token("1234", "OMG", "OmiseGO", 100.bd, Date(), Date(), mapOf(), mapOf())),
-                Balance(100000000.bd, Token("1234-1234-1235-12345", "ETH", "Ether", 100000000.bd, Date(), Date(), mapOf(), mapOf()))
-            ),
-            "",
-            "",
-            null,
-            null,
-            null,
-            null,
-            mapOf(),
-            mapOf()
-        )
+    @Test
+    fun `wallet should be parcelized correctly`() {
+        wallet.validateParcel().apply {
+            this shouldEqual wallet
+            this shouldNotBe wallet
+        }
     }
 
     @Test
-    fun `Wallet should be parcelized correctly`() {
-        address.validateParcel().apply {
-            this shouldEqual this@WalletTest.address
-            this shouldNotBe this@WalletTest.address
+    fun `wallet should be parsed correctly`() {
+        with(wallet) {
+            address shouldEqual "2c2e0f2e-fa0f-4abe-8516-9e92cf003486"
+            name shouldEqual "primary"
+            identifier shouldEqual "primary"
+            userId shouldEqual "cec34607-0761-4a59-8357-18963e42a1aa"
+            accountId shouldEqual null
+            account shouldEqual null
+            user shouldBeInstanceOf User::class.java
+            balances shouldBeInstanceOf List::class.java
+            balances.size shouldEqualTo 1
+            balances[0] shouldBeInstanceOf Balance::class.java
         }
     }
 }
