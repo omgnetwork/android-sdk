@@ -19,7 +19,7 @@ import java.util.Date
  * @param parentId The id of the parent account.
  * @param name The name of the account.
  * @param description The description of the account.
- * @param isMaster A boolean indicating if the account is a master account or not.
+ * @param master A boolean indicating if the account is a master account or not.
  * @param avatar The avatar object containing urls.
  * @param metadata Any additional metadata that need to be stored as a dictionary.
  * @param encryptedMetadata Any additional encrypted metadata that need to be stored as a dictionary.
@@ -32,7 +32,7 @@ data class Account(
     val parentId: String,
     val name: String,
     val description: String,
-    val isMaster: Boolean,
+    val master: Boolean,
     val avatar: Avatar,
     val metadata: @RawValue Map<String, Any>,
     val encryptedMetadata: @RawValue Map<String, Any>,
