@@ -9,53 +9,44 @@ package co.omisego.omisego.model
  */
 
 import android.support.test.runner.AndroidJUnit4
-import co.omisego.omisego.extension.bd
+import co.omisego.omisego.helpers.delegation.GsonDelegator
+import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.socket.SocketTopic
+import co.omisego.omisego.testUtils.DateConverter
 import co.omisego.omisego.utils.validateParcel
+import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import java.util.Date
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [23])
-class UserTest {
-    lateinit var user: User
-    private lateinit var createdAt: Date
-    private lateinit var updatedAt: Date
-
-    @Before
-    fun setUp() {
-        createdAt = Date()
-        updatedAt = Date()
-        user = User(
-            "pizza-1234",
-            "2017-11-5",
-            "OmiseGO",
-            mapOf("One" to 1, "ThreeBigDecimal" to 3.bd),
-            mapOf("Word" to "Cryptocurrency", "Boolean" to false), SocketTopic("test"),
-            createdAt,
-            updatedAt
-        )
-    }
+class UserTest : GsonDelegator() {
+    private val userFile by ResourceFile("user.json", "object")
+    private val dateConverter by lazy { DateConverter() }
+    private val user: User by lazy { gson.fromJson(userFile.readText(), User::class.java) }
 
     @Test
-    fun `User should be correctly initialized`() {
-        "pizza-1234" shouldEqual user.id
-        "2017-11-5" shouldEqual user.providerUserId
-        "OmiseGO" shouldEqual user.username
-        createdAt shouldEqual user.createdAt
-        updatedAt shouldEqual user.updatedAt
-    }
-
-    @Test
-    fun `User should be parcelled correctly`() {
+    fun `user should be parcelled correctly`() {
         user.validateParcel().apply {
             this shouldEqual user
             this shouldNotBe user
+        }
+    }
+
+    @Test
+    fun `user should be parsed correctly`() {
+        with(user) {
+            id shouldEqual "cec34607-0761-4a59-8357-18963e42a1aa"
+            providerUserId shouldEqual "wijf-fbancomw-dqwjudb"
+            username shouldEqual "john.doe@example.com"
+            socketTopic shouldBeInstanceOf SocketTopic::class.java
+            createdAt shouldEqual dateConverter.fromString("2018-01-01T00:00:00Z")
+            updatedAt shouldEqual dateConverter.fromString("2018-01-01T00:00:00Z")
+            metadata shouldEqual mapOf<String, Any>()
+            encryptedMetadata shouldEqual mapOf<String, Any>()
         }
     }
 }

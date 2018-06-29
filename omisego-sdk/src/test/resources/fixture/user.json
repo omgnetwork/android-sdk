@@ -2,10 +2,27 @@
   "version": "1",
   "success": true,
   "data": {
-    "username": "user01",
-    "provider_user_id": "provider_user_id01",
     "object": "user",
-    "metadata": {},
-    "id": "48236187-9c5c-4568-8cdf-f0233d035574"
+    "id": "cec34607-0761-4a59-8357-18963e42a1aa",
+    "provider_user_id": "wijf-fbancomw-dqwjudb",
+    "username": "john.doe@example.com",
+    "socket_topic": "user:cec34607-0761-4a59-8357-18963e42a1aa",
+    "metadata": {
+      "first_name": "John",
+      "last_name": "Doe",
+      "object": {
+        "my_key": "my_value",
+        "my_nested_object": {
+          "my_nested_key": "my_nested_value"
+        }
+      },
+      "array": [
+        "value_1",
+        "value_2"
+      ]
+    },
+    "encrypted_metadata": {},
+    "created_at": "2018-01-01T00:00:00Z",
+    "updated_at": "2018-01-01T00:00:00Z"
   }
 }
