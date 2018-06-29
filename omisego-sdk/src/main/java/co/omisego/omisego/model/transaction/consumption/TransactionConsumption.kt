@@ -52,6 +52,9 @@ enum class TransactionConsumptionStatus constructor(override val value: String) 
  * @param id The unique identifier of the consumption
  * @param status The status of the consumption (pending, confirmed or failed)
  * @param amount The amount of token to transfer (down to subunit to unit)
+ * @param estimatedRequestAmount The estimated amount in the request currency
+ * @param estimatedConsumptionAmount The estimated amount in the consumption currency
+ * @param finalizedAmount The final amount to be transferred after exchange in the consumption currency
  * @param token The token for the request
  * In the case of a type "send", this will be the token that the consumer will receive
  * In the case of a type "receive" this will be the token that the consumer will send
@@ -78,7 +81,10 @@ enum class TransactionConsumptionStatus constructor(override val value: String) 
 data class TransactionConsumption(
     val id: String,
     val status: TransactionConsumptionStatus,
-    val amount: BigDecimal,
+    val amount: BigDecimal?,
+    val estimatedRequestAmount: BigDecimal,
+    val estimatedConsumptionAmount: BigDecimal,
+    val finalizedAmount: BigDecimal,
     val token: Token,
     val correlationId: String?,
     val idempotencyToken: String?,
