@@ -30,13 +30,6 @@ data class TransactionConsumptionParams internal constructor(
     val address: String? = null,
 
     /**
-     * The id of the token to use for the request
-     * In the case of a type "send", this will be the token that the consumer will receive
-     * In the case of a type "receive" this will be the token that the consumer will send
-     */
-    val tokenId: String? = null,
-
-    /**
      * The idempotency token to use for the consumption
      */
     val idempotencyToken: String = "$formattedTransactionRequestId-${System.nanoTime()}",
@@ -79,7 +72,6 @@ data class TransactionConsumptionParams internal constructor(
             transactionRequest: TransactionRequest,
             amount: BigDecimal? = null,
             address: String? = null,
-            tokenId: String? = null,
             idempotencyToken: String = "${transactionRequest.id}-${System.nanoTime()}",
             correlationId: String? = null,
             metadata: Map<String, Any> = mapOf(),
@@ -93,7 +85,6 @@ data class TransactionConsumptionParams internal constructor(
                 transactionRequest.formattedId,
                 if (transactionRequest.amount == amount) null else amount,
                 address,
-                tokenId,
                 idempotencyToken,
                 correlationId,
                 metadata,
