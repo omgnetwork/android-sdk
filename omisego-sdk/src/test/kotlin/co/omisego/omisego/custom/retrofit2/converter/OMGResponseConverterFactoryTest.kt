@@ -10,10 +10,10 @@ package co.omisego.omisego.custom.retrofit2.converter
 
 import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.exception.OMGAPIErrorException
+import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.User
-import co.omisego.omisego.testUtils.ResourceFile
 import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

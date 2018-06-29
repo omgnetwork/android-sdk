@@ -16,6 +16,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
+import java.util.Date
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [21])
@@ -25,8 +26,8 @@ class SettingTest {
     @Before
     fun setup() {
         setting = Setting(listOf(
-            Token("1", "OMG", "OmiseGO", 10000.bd, mapOf(), mapOf()),
-            Token("2", "ETH", "Ether", 10000000000000.bd, mapOf(), mapOf())
+            Token("1", "OMG", "OmiseGO", 10000.bd, Date(), Date(), mapOf(), mapOf()),
+            Token("2", "ETH", "Ether", 10000000000000.bd, Date(), Date(), mapOf(), mapOf())
         ))
     }
 

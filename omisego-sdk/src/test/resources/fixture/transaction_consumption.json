@@ -1,10 +1,6 @@
 {
   "version": "1",
   "success": true,
-  "topic": "a_topic",
-  "ref": "1",
-  "event": "an_event",
-  "error": null,
   "data": {
     "object": "transaction_consumption",
     "id": "8eb0160e-1c96-481a-88e1-899399cc84dc",
@@ -130,9 +126,9 @@
     "accountId": null,
     "socket_topic": "transaction_consumption:8eb0160e-1c96-481a-88e1-899399cc84dc",
     "expiration_date": "2019-01-01T00:00:00Z",
-    "approved_at": "2018-01-02T00:00:00Z",
+    "approved_at": null,
     "rejected_at": null,
-    "confirmed_at": "2019-01-02T00:00:00Z",
+    "confirmed_at": null,
     "failed_at": null,
     "expired_at": null,
     "created_at": "2018-01-01T00:00:00Z",

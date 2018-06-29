@@ -28,8 +28,8 @@ import org.junit.Test
 import java.io.File
 
 class SocketReceiveParserTest {
-    private val socketReceiveTxConsumption: File by ResourceFile("websocket/socket_receive_transaction_consumption.json")
-    private val socketReceiveError: File by ResourceFile("websocket/socket_receive_null_data_with_error.json")
+    private val socketReceiveTxConsumption: File by ResourceFile("socket_receive_transaction_consumption.json", "websocket")
+    private val socketReceiveError: File by ResourceFile("socket_receive_null_data_with_error.json", "websocket")
     private lateinit var socketReceiveParser: SocketReceiveParser
 
     @Before
@@ -41,27 +41,27 @@ class SocketReceiveParserTest {
     fun `Parse raw json with a transaction consumption data and a null error successfully`() {
         val socketReceive = socketReceiveParser.parse(socketReceiveTxConsumption.readText())
         with(socketReceive) {
-            topic shouldEqualTo "transaction_request:328e61ac-9f35-4da5-a891-bd39f5442283"
-            ref!! shouldEqualTo "991238"
-            event shouldEqual Either.Right(SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST)
+            topic shouldEqualTo "a_topic"
+            ref!! shouldEqualTo "1"
+            event shouldEqual Either.Right(SocketCustomEvent.OTHER)
             data shouldBeInstanceOf TransactionConsumption::class
             error shouldBe null
 
             val transactionConsumptionData = data as TransactionConsumption
             with(transactionConsumptionData) {
-                status shouldEqual TransactionConsumptionStatus.PENDING
+                status shouldEqual TransactionConsumptionStatus.CONFIRMED
                 socketTopic shouldEqual SocketTopic<SocketCustomEventListener.TransactionConsumptionListener>(
-                    "transaction_consumption:42292c2d-2249-467b-bfd1-bb557211399b"
+                    "transaction_consumption:8eb0160e-1c96-481a-88e1-899399cc84dc"
                 )
-                user?.id shouldEqual "2b1f058c-b927-44b0-8ea0-c16cf1244ebd"
-                user?.username shouldEqual "user02"
+                user?.id shouldEqual "6f56efa1-caf9-4348-8e0f-f5af283f17ee"
+                user?.username shouldEqual "john.doe@example.com"
                 transactionRequest.type shouldEqual TransactionRequestType.RECEIVE
                 transactionRequest.status shouldEqual TransactionRequestStatus.VALID
                 transactionRequest.socketTopic shouldEqual SocketTopic<SocketCustomEventListener.TransactionConsumptionListener>(
-                    "transaction_request:328e61ac-9f35-4da5-a891-bd39f5442283"
+                    "transaction_request:8eb0160e-1c96-481a-88e1-899399cc84dc"
                 )
                 transactionRequest.requireConfirmation shouldEqualTo true
-                transactionRequest.token.id shouldEqualTo "OMG:a9ef7096-4060-4155-b79d-b36c42d5d095"
+                transactionRequest.token.id shouldEqualTo "BTC:861020af-17b6-49ee-a0cb-661a4d2d1f95"
             }
         }
     }

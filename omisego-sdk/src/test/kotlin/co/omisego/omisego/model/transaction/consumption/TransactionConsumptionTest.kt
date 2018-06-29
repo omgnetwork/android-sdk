@@ -13,9 +13,9 @@ import co.omisego.omisego.extension.bd
 import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.pagination.Paginable
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.model.transaction.list.Transaction
-import co.omisego.omisego.model.transaction.list.TransactionExchange
-import co.omisego.omisego.model.transaction.list.TransactionSource
+import co.omisego.omisego.model.transaction.Transaction
+import co.omisego.omisego.model.transaction.TransactionExchange
+import co.omisego.omisego.model.transaction.TransactionSource
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.model.transaction.request.TransactionRequestStatus
 import co.omisego.omisego.model.transaction.request.TransactionRequestType
@@ -34,7 +34,7 @@ import java.util.Date
 @Config(sdk = [23])
 class TransactionConsumptionTest {
     private val mOMGAPIClient: OMGAPIClient by lazy { mock<OMGAPIClient>() }
-    val token = Token("1234", "OMG", "OmiseGO", 10000.bd, mapOf(), mapOf())
+    val token = Token("1234", "OMG", "OmiseGO", 10000.bd, Date(), Date(), mapOf(), mapOf())
     private val mTransactionConsumption: TransactionConsumption by lazy {
         TransactionConsumption(
             "OMG-1234",
@@ -48,7 +48,7 @@ class TransactionConsumptionTest {
                 Paginable.Transaction.TransactionStatus.CONFIRMED,
                 TransactionSource("1234", 1234.bd, token),
                 TransactionSource("3456", 3456.bd, token),
-                TransactionExchange(2.0),
+                TransactionExchange(2.bd, null, null, null),
                 mapOf("Test" to "1234"),
                 mapOf(),
                 Date()
