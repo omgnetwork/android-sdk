@@ -1,0 +1,13 @@
+{
+  "version": "1",
+  "success": false,
+  "topic": "a_topic",
+  "ref": "1",
+  "event": "phx_error",
+  "error": {
+    "object": "error",
+    "code": "client:invalid_parameter",
+    "description": "Invalid parameters"
+  },
+  "data": null
+}
