@@ -18,7 +18,7 @@ class PaginationTest : GsonDelegator() {
 
     @Test
     fun `pagination should be parsed correctly`() {
-        with(pagination){
+        with(pagination) {
             isFirstPage shouldEqualTo true
             isLastPage shouldEqualTo true
             perPage shouldEqualTo 10
