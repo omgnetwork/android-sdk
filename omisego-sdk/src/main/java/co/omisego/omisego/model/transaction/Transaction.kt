@@ -19,7 +19,8 @@ import java.util.Date
 data class TransactionExchange(
     val rate: BigDecimal,
     val calculatedAt: Date?,
-    val exchangePairId: String?
+    val exchangePairId: String?,
+    val exchangePair: ExchangePair?
 ) : Parcelable
 
 @Parcelize
