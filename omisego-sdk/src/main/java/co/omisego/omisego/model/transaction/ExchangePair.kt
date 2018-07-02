@@ -13,6 +13,19 @@ import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 import java.util.Date
 
+/**
+ * Represents an ExchangePair.
+ *
+ * @param id The unique identifier of the exchange pair.
+ * @param name The name of the pair (ex: ETH/BTC).
+ * @param fromTokenId The 1st token id of the pair.
+ * @param fromToken The 1st token of the pair.
+ * @param toTokenId The 2nd token id of the pair.
+ * @param toToken The 2nd token of the pair.
+ * @param rate The rate between both tokens (token2/token1).
+ * @param createdAt The creation date of the pair.
+ * @param updatedAt The last update date of the pair.
+ */
 @Parcelize
 data class ExchangePair(
     val id: String,
