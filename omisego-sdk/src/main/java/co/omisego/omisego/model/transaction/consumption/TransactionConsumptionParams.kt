@@ -58,9 +58,6 @@ data class TransactionConsumptionParams internal constructor(
          * @param transactionRequest The transaction request to consume
          * @param amount The amount of token to transfer (down to subunit to unit)
          * @param address The address to use for the consumption
-         * @param tokenId The id of the token to use for the request
-         * In the case of a type "send", this will be the token that the consumer will receive
-         * In the case of a type "receive" this will be the token that the consumer will send
          * @param idempotencyToken The idempotency token to use for the consumption
          * @param correlationId An id that can uniquely identify a transaction. Typically an order id from a provider.
          * @param metadata Additional metadata for the consumption
