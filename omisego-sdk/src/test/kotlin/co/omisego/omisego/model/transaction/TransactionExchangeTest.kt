@@ -9,6 +9,8 @@ package co.omisego.omisego.model.transaction
 
 import co.omisego.omisego.extension.bd
 import co.omisego.omisego.helpers.delegation.ResourceFile
+import co.omisego.omisego.model.Account
+import co.omisego.omisego.model.Wallet
 import co.omisego.omisego.testUtils.DateConverter
 import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.Gson
@@ -25,10 +27,15 @@ class TransactionExchangeTest {
     fun `test transaction_exchange parsing`() {
         val exchange = gson.fromJson(transactionExchangeFile.readText(), TransactionExchange::class.java)
         with(exchange) {
-            calculatedAt shouldEqual dateConverter.fromString("2018-01-01T00:00:00Z")
             rate shouldEqual 0.017.bd
+            calculatedAt shouldEqual dateConverter.fromString("2018-01-01T00:00:00Z")
             exchangePairId shouldEqual "exg_01cgvppyrz2pprj6s0zmc26p2p"
             exchangePair shouldBeInstanceOf ExchangePair::class.java
+            exchangeAccountId shouldEqual "acc_01CA2P8JQANS5ATY5GJ5ETMJCF"
+            exchangeAccount shouldBeInstanceOf Account::class.java
+            exchangeWalletAddress shouldEqual "2c2e0f2e-fa0f-4abe-8516-9e92cf003486"
+            exchangeWallet shouldBeInstanceOf Wallet::class.java
+
         }
     }
 }
