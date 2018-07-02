@@ -10,7 +10,10 @@ package co.omisego.omisego.model
 
 import android.support.test.runner.AndroidJUnit4
 import co.omisego.omisego.extension.bd
+import co.omisego.omisego.helpers.delegation.GsonDelegator
+import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.utils.validateParcel
+import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
 import org.junit.Before
@@ -22,8 +25,10 @@ import java.util.Date
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [23])
-class BalanceTest {
+class BalanceTest : GsonDelegator() {
 
+    private val balanceFile by ResourceFile("balance.json", "object")
+    private val balance: Balance by lazy { gson.fromJson(balanceFile.readText(), Balance::class.java) }
     private var amount: BigDecimal = 0.0.bd
     private var subUnitToUnit: BigDecimal = 100_000.0.bd
     private lateinit var token: Token
@@ -109,11 +114,20 @@ class BalanceTest {
     }
 
     @Test
-    fun `Balance should be parcelized correctly`() {
+    fun `balance should be parcelized correctly`() {
         val balance1 = Balance(1_999_000_000_000.0.bd, Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, Date(), Date(), mapOf(), mapOf()))
         balance1.validateParcel().apply {
             this shouldEqual balance1
             this shouldNotBe balance1
+        }
+    }
+
+    @Test
+    fun `balance should be parsed correctly`() {
+        with(balance) {
+            amount shouldEqual 103_100.bd
+            token shouldNotBe null
+            token shouldBeInstanceOf Token::class.java
         }
     }
 }
