@@ -1,16 +1,26 @@
 *.iml
-.gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
-settings.gradle
-/.idea/caches/**
+
+# macOS
 .DS_Store
-/build
-/captures
-.externalNativeBuild
+
+# Local configuration file (sdk path, etc)
+local.properties
 /androidsdk/src/test/resources/secret.json
+
+# Android Studio
+.externalNativeBuild
+.gradle
+build/
+captures/
+projectFilesBackup/
+
+# Local project testing module
 myapplication
+
+# .idea files
+/.idea/caches/**
+/.idea/workspace.xml
 /.idea/gradle.xml
 /.idea/modules.xml
 /.idea/misc.xml
+/.idea/libraries
