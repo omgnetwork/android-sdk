@@ -22,13 +22,13 @@ package co.omisego.omisego.model.transaction.send
  * @param encryptedMetadata Additional encrypted metadata for the transaction.
  */
 data class TransactionCreateParams(
-    val fromAddress: String?,
+    val fromAddress: String? = null,
     val toAddress: String,
-    val toProviderUserId: String?,
-    val toAccountId: String?,
+    val toProviderUserId: String? = null,
+    val toAccountId: String? = null,
     val amount: Double,
     val tokenId: String,
     val idempotencyToken: String = "$toAddress-${System.nanoTime()}",
-    val metadata: Map<String, Any>,
-    val encryptedMetadata: Map<String, Any>
+    val metadata: Map<String, Any> = mapOf(),
+    val encryptedMetadata: Map<String, Any> = mapOf()
 )

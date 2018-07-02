@@ -166,19 +166,19 @@ class OMGAPIClientTest : GsonDelegator() {
     }
 
     @Test
-    fun `OMGAPIClient should call transfer and parse successfully`() {
+    fun `OMGAPIClient should call create_transaction and parse successfully`() {
         val element = gson.fromJson(transactionFile.readText(), JsonElement::class.java)
         val result = Response.success(element)
         transactionFile.mockEnqueueWithHttpCode(mockWebServer)
 
         val callback: OMGCallback<Transaction> = mock()
 
-        omgAPIClient.transfer(mock()).enqueue(callback)
+        omgAPIClient.createTransaction(mock()).enqueue(callback)
 
         val data = result.body()!!.asJsonObject.getAsJsonObject("data")
         val transaction = gson.fromJson<Transaction>(data, object : TypeToken<Transaction>() {}.type)
 
-        omgAPIClient.transfer(mock()).enqueue(callback)
+        omgAPIClient.createTransaction(mock()).enqueue(callback)
 
         val expected = OMGResponse(
             Versions.EWALLET_API,

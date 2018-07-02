@@ -17,7 +17,7 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
     - [Get the provider settings](#get-the-provider-settings)
     - [Get the current user's transactions](#get-the-current-users-transactions)
   - [Transferring tokens](#transferring-tokens)
-    - [Send tokens to an address](#send-tokens-to-an-address)
+    - [Create a transaction](#send-tokens-to-an-address)
     - [Generate a transaction request](#generate-a-transaction-request)
     - [Consume a transaction request](#consume-a-transaction-request)
     - [Approve or Reject a transaction consumption](#approve-or-reject-a-transaction-consumption)
@@ -237,19 +237,20 @@ The SDK offers 2 ways for transferring tokens between addresses:
 - A simple one way transfer from one of the current user's wallets to an address.
 - A highly configurable send/receive mechanism in 2 steps using transaction requests.
 
-#### Send tokens to an address
+#### Create a transaction
 
-The most basic way to transfer tokens is to use the `omgAPIClient.transfer()` method, which allows the current user to send tokens from one of its wallet to a specific address.
+The most basic way to transfer tokens is to use the `omgAPIClient.createTransaction()` method, which allows the current user to send tokens from one of its wallet to a specific address.
 
 ```kotlin
-val request = TransactionSendParams(
-    from = "1e3982f5-4a27-498d-a91b-7bb2e2a8d3d1",
-    to = "2e3982f5-4a27-498d-a91b-7bb2e2a8d3d1",
+val request = TransactionCreateParams(
+    fromAddress = "1e3982f5-4a27-498d-a91b-7bb2e2a8d3d1",
+    toAddress = "2e3982f5-4a27-498d-a91b-7bb2e2a8d3d1",
     amount = 1000.bd,
-    tokenId =  "BTC:xe3982f5-4a27-498d-a91b-7bb2e2a8d3d1"
+    tokenId = "BTC:xe3982f5-4a27-498d-a91b-7bb2e2a8d3d1",
+    idempotencyToken = "some token"
 )
 
-omgAPIClient.transfer(request).enqueue(object : OMGCallback<Transaction>{
+omgAPIClient.createTransaction(request).enqueue(object : OMGCallback<Transaction>{
     override fun success(response: OMGResponse<Transaction>) {
         // Do something
     }
@@ -259,6 +260,8 @@ omgAPIClient.transfer(request).enqueue(object : OMGCallback<Transaction>{
     }
 })
 ```
+
+There are different ways to initialize a `TransactionCreateParams` by specifying either `toAddress`, `toAccountId` or `toProviderUserId`.
 
 ### Generate a transaction request
 

@@ -150,9 +150,9 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
     /**
      * Send tokens to an address
      *
-     * @param request The TransactionSendParams object to customize the transaction
+     * @param request The TransactionCreateParams object to customize the transaction
      */
-    fun transfer(request: TransactionCreateParams) =
+    fun createTransaction(request: TransactionCreateParams) =
         eWalletAPI.transfer(request)
 
     /**
