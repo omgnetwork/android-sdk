@@ -72,7 +72,8 @@ class TransactionConsumptionTest : GsonDelegator() {
             amount shouldEqual 1337.bd
             estimatedRequestAmount shouldEqual 1337.bd
             estimatedConsumptionAmount shouldEqual 1337.bd
-            finalizedAmount shouldEqual 1337.bd
+            finalizedRequestAmount shouldEqual 1337.bd
+            finalizedConsumptionAmount shouldEqual 1337.bd
             token shouldBeInstanceOf Token::class.java
             correlationId shouldEqual "31009545-db10-4287-82f4-afb46d9741d8"
             idempotencyToken shouldEqual "31009545-db10-4287-82f4-afb46d9741d8"
@@ -82,9 +83,9 @@ class TransactionConsumptionTest : GsonDelegator() {
             user shouldBeInstanceOf User::class.java
             socketTopic shouldBeInstanceOf SocketTopic::class.java
             expirationDate shouldEqual dateConverter.fromString("2019-01-01T00:00:00Z")
-            approvedAt shouldEqual dateConverter.fromString("2018-01-02T00:00:00Z")
+            approvedAt shouldEqual null
             rejectedAt shouldEqual null
-            confirmedAt shouldEqual dateConverter.fromString("2019-01-02T00:00:00Z")
+            confirmedAt shouldEqual null
             failedAt shouldEqual null
             expiredAt shouldEqual null
             createdAt shouldEqual dateConverter.fromString("2018-01-01T00:00:00Z")
