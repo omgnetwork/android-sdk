@@ -1,0 +1,12 @@
+{
+  "version": "1",
+  "success": true,
+  "topic": "a_topic",
+  "ref": "1",
+  "event": "an_event",
+  "error": null,
+  "data": {
+    "object": "an unknown object",
+    "a_param": "a_value"
+  }
+}

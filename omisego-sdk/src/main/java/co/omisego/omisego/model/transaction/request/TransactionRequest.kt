@@ -9,13 +9,14 @@ package co.omisego.omisego.model.transaction.request
 
 import android.os.Parcelable
 import co.omisego.omisego.constant.enums.OMGEnum
+import co.omisego.omisego.model.Account
 import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
-import kotlinx.android.parcel.Parcelize
 import co.omisego.omisego.operation.Listenable
 import co.omisego.omisego.websocket.SocketCustomEventListener
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import java.math.BigDecimal
 import java.util.Date
@@ -83,8 +84,10 @@ data class TransactionRequest(
     val amount: BigDecimal?,
     val address: String?,
     val user: User?,
+    val account: Account?,
+    val correlationId: String?,
     override val socketTopic: SocketTopic<SocketCustomEventListener.TransactionRequestListener>,
-    val maxConsumption: Int?,
+    val maxConsumptions: Int?,
     val status: TransactionRequestStatus,
     val allowAmountOverride: Boolean,
     val maxConsumptionsPerUser: Int?,

@@ -10,7 +10,10 @@ package co.omisego.omisego.model
 
 import android.support.test.runner.AndroidJUnit4
 import co.omisego.omisego.extension.bd
+import co.omisego.omisego.helpers.delegation.GsonDelegator
+import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.utils.validateParcel
+import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
 import org.junit.Before
@@ -18,18 +21,21 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import java.math.BigDecimal
+import java.util.Date
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [23])
-class BalanceTest {
+class BalanceTest : GsonDelegator() {
 
+    private val balanceFile by ResourceFile("balance.json", "object")
+    private val balance: Balance by lazy { gson.fromJson(balanceFile.readText(), Balance::class.java) }
     private var amount: BigDecimal = 0.0.bd
     private var subUnitToUnit: BigDecimal = 100_000.0.bd
     private lateinit var token: Token
 
     @Before
     fun setup() {
-        token = Token("omg:1234", "OMG", "OmiseGO", subUnitToUnit, mapOf(), mapOf())
+        token = Token("omg:1234", "OMG", "OmiseGO", subUnitToUnit, Date(), Date(), mapOf(), mapOf())
     }
 
     @Test
@@ -80,8 +86,8 @@ class BalanceTest {
 
     @Test
     fun `test balance + another balance should be correct`() {
-        val balance1 = Balance(1_999_000_000_000.0.bd, Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, mapOf(), mapOf()))
-        val balance2 = Balance(9_999_000_000_000.0.bd, Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, mapOf(), mapOf()))
+        val balance1 = Balance(1_999_000_000_000.0.bd, Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, Date(), Date(), mapOf(), mapOf()))
+        val balance2 = Balance(9_999_000_000_000.0.bd, Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, Date(), Date(), mapOf(), mapOf()))
 
         val result = balance1 + balance2
         result.amount shouldEqual 11_998_000_000_000.0.bd
@@ -89,8 +95,8 @@ class BalanceTest {
 
     @Test
     fun `test balance - another balance should be correct`() {
-        val balance1 = Balance(11_998_000_000_000.0.bd, Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, mapOf(), mapOf()))
-        val balance2 = Balance(9_999_000_000_000.0.bd, Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, mapOf(), mapOf()))
+        val balance1 = Balance(11_998_000_000_000.0.bd, Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, Date(), Date(), mapOf(), mapOf()))
+        val balance2 = Balance(9_999_000_000_000.0.bd, Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, Date(), Date(), mapOf(), mapOf()))
 
         val result = balance1 - balance2
         result.amount shouldEqual 1_999_000_000_000.0.bd
@@ -101,18 +107,27 @@ class BalanceTest {
 
     @Test(expected = UnsupportedOperationException::class)
     fun `test balance + incompatible balance should throw UnSupportOperationException`() {
-        val balance1 = Balance(1_999_000_000_000.0.bd, Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, mapOf(), mapOf()))
-        val balance2 = Balance(9_999_000_000_000.0.bd, Token("ETH:8bcda572-9411-43c8-baae-cd56eb0155f3", "ETH", "Etherium", 10000.0.bd, mapOf(), mapOf()))
+        val balance1 = Balance(1_999_000_000_000.0.bd, Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, Date(), Date(), mapOf(), mapOf()))
+        val balance2 = Balance(9_999_000_000_000.0.bd, Token("ETH:8bcda572-9411-43c8-baae-cd56eb0155f3", "ETH", "Etherium", 10000.0.bd, Date(), Date(), mapOf(), mapOf()))
 
         balance1 + balance2
     }
 
     @Test
-    fun `Balance should be parcelized correctly`() {
-        val balance1 = Balance(1_999_000_000_000.0.bd, Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, mapOf(), mapOf()))
+    fun `balance should be parcelized correctly`() {
+        val balance1 = Balance(1_999_000_000_000.0.bd, Token("OMG:8bcda572-9411-43c8-baae-cd56eb0155f3", "OMG", "OmiseGO", 10000.0.bd, Date(), Date(), mapOf(), mapOf()))
         balance1.validateParcel().apply {
             this shouldEqual balance1
             this shouldNotBe balance1
+        }
+    }
+
+    @Test
+    fun `balance should be parsed correctly`() {
+        with(balance) {
+            amount shouldEqual 103_100.bd
+            token shouldNotBe null
+            token shouldBeInstanceOf Token::class.java
         }
     }
 }

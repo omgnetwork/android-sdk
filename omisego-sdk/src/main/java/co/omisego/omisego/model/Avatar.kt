@@ -16,12 +16,12 @@ import kotlinx.android.parcel.Parcelize
  * @param original The url of the original image.
  * @param large The url of the large image.
  * @param small The url of the small image.
- * @param thumbnail The url of the thumbnail image.
+ * @param thumb The url of the thumb image.
  */
 @Parcelize
 data class Avatar(
     val original: String,
     val large: String,
     val small: String,
-    val thumbnail: String
+    val thumb: String
 ) : Parcelable

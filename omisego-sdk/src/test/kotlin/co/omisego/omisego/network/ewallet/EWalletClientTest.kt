@@ -13,6 +13,7 @@ import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.HTTPHeaders
 import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.extension.mockEnqueueWithHttpCode
+import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.model.OMGResponse
@@ -20,7 +21,6 @@ import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.transaction.list.TransactionListParams
-import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.utils.OMGEncryptionHelper
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
@@ -40,7 +40,7 @@ import kotlin.test.Test
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class EWalletClientTest {
+class EWalletClientTest : GsonDelegator() {
     private val secretFileName: String = "secret.json" // Replace your secret file here
     private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
     private val userFile: File by ResourceFile("user.json")
@@ -183,7 +183,6 @@ class EWalletClientTest {
         val json = JSONObject(responseText)
         val success = json.getBoolean("success")
         val dataText = json.getJSONObject("data").toString()
-        val gson = GsonProvider.create()
         val data = gson.fromJson<T>(dataText, T::class.java)
         return OMGResponse(Versions.EWALLET_API, success, data)
     }

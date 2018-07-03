@@ -12,6 +12,7 @@ import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.exception.OMGAPIErrorException
 import co.omisego.omisego.extension.mockEnqueueWithHttpCode
+import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.ClientConfiguration
@@ -21,11 +22,10 @@ import co.omisego.omisego.model.User
 import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.pagination.Pagination
 import co.omisego.omisego.model.pagination.PaginationList
+import co.omisego.omisego.model.transaction.Transaction
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-import co.omisego.omisego.model.transaction.list.Transaction
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.network.ewallet.EWalletClient
-import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
 import com.nhaarman.mockito_kotlin.timeout
@@ -48,7 +48,7 @@ import java.util.concurrent.Executor
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class OMGAPIClientTest {
+class OMGAPIClientTest : GsonDelegator() {
     private val secretFileName: String = "secret.json" // Replace your secret file here
     private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
     private val getWalletsFile: File by ResourceFile("get_wallets.json")
@@ -59,7 +59,6 @@ class OMGAPIClientTest {
     private val consumeTransactionRequestFile: File by ResourceFile("transaction_consumption.json")
     private val getSettingFile: File by ResourceFile("setting.json")
     private val errorFile: File by ResourceFile("error-invalid_auth.json")
-    private val gson by lazy { GsonProvider.create() }
     private val connectionTimeout = 1_000L // ms
     private lateinit var eWalletClient: EWalletClient
     private lateinit var mockWebServer: MockWebServer

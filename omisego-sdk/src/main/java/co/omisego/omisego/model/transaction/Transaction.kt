@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.transaction.list
+package co.omisego.omisego.model.transaction
 
 /*
  * OmiseGO
@@ -16,7 +16,11 @@ import java.math.BigDecimal
 import java.util.Date
 
 @Parcelize
-data class TransactionExchange(val rate: Double) : Parcelable
+data class TransactionExchange(
+    val rate: BigDecimal,
+    val calculatedAt: Date?,
+    val exchangePairId: String?
+) : Parcelable
 
 @Parcelize
 data class TransactionSource(

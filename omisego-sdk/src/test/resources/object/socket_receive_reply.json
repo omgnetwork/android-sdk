@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "success": true,
+  "topic": "a_topic",
+  "ref": "2",
+  "error": null,
+  "event": "phx_reply",
+  "data": {}
+}

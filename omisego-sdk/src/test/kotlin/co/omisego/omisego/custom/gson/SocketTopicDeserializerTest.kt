@@ -1,7 +1,7 @@
 package co.omisego.omisego.custom.gson
 
+import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Test
@@ -13,8 +13,7 @@ import org.junit.Test
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-class SocketTopicDeserializerTest {
-    private val gson by lazy { GsonProvider.create() }
+class SocketTopicDeserializerTest : GsonDelegator() {
 
     data class TestData(
         val topic: SocketTopic<SocketCustomEventListener.TransactionRequestListener>

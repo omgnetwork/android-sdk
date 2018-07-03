@@ -20,7 +20,7 @@ import com.google.gson.GsonBuilder
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-internal class GsonProvider {
+class GsonProvider {
     companion object {
         fun create(): Gson {
             return GsonBuilder()

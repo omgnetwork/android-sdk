@@ -7,15 +7,14 @@ package co.omisego.omisego.custom.gson
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.utils.Either
-import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
 
-class EitherEnumDeserializerTest {
-    private val gson by lazy { GsonProvider.create() }
+class EitherEnumDeserializerTest : GsonDelegator() {
 
     data class TestData(
         val event: Either<SocketSystemEvent, SocketCustomEvent>

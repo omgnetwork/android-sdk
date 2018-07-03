@@ -11,6 +11,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import java.math.BigDecimal
+import java.util.Date
 
 /**
  * Represents a token
@@ -21,6 +22,8 @@ import java.math.BigDecimal
  * @param subunitToUnit The multiplier representing the value of 1 token,
  *  i.e: If I want to give or receive 13 tokens and the [subunitToUnit] is 1000,
  *  then the amount will be 13*1000 = 13000
+ * @param createdAt The creation date of the token.
+ * @param updatedAt The date when the token was last updated.
  * @param metadata Any additional metadata that need to be stored as a [HashMap].
  * @param encryptedMetadata Any additional encrypted metadata that need to be stored as a dictionary.
  */
@@ -30,6 +33,8 @@ data class Token(
     val symbol: String,
     val name: String,
     val subunitToUnit: BigDecimal,
+    val createdAt: Date,
+    val updatedAt: Date,
     val metadata: @RawValue Map<String, Any>,
     val encryptedMetadata: @RawValue Map<String, Any>
 ) : Parcelable {

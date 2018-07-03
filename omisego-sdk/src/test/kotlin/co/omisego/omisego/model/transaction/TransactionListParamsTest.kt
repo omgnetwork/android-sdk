@@ -7,22 +7,15 @@ package co.omisego.omisego.model.transaction
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.model.pagination.Paginable.Transaction.SearchableFields
 import co.omisego.omisego.model.pagination.Paginable.Transaction.SortableFields
 import co.omisego.omisego.model.pagination.SortDirection
 import co.omisego.omisego.model.transaction.list.TransactionListParams
-import co.omisego.omisego.utils.GsonProvider
-import com.google.gson.Gson
 import org.amshove.kluent.shouldEqual
-import org.junit.Before
 import kotlin.test.Test
 
-class TransactionListParamsTest {
-    private lateinit var gson: Gson
-    @Before
-    fun setUp() {
-        gson = GsonProvider.create()
-    }
+class TransactionListParamsTest : GsonDelegator() {
 
     @Test
     fun `ListTransactionParams should be added successfully`() {
