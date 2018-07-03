@@ -6,6 +6,7 @@ co.omisego.omisego.custom
 co.omisego.omisego.model
 co.omisego.omisego.model.pagination
 co.omisego.omisego.model.socket
+co.omisego.omisego.model.transaction
 co.omisego.omisego.model.transaction.consumption
 co.omisego.omisego.model.transaction.list
 co.omisego.omisego.model.transaction.request
