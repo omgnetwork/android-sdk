@@ -36,7 +36,6 @@ import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.withMessage
-import org.json.JSONObject
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -49,8 +48,6 @@ import java.util.concurrent.Executor
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
 class OMGAPIClientTest : GsonDelegator() {
-    private val secretFileName: String = "secret.json" // Replace your secret file here
-    private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
     private val getWalletsFile: File by ResourceFile("get_wallets.json")
     private val transactionFile: File by ResourceFile("transaction.json")
     private val userFile: File by ResourceFile("user.json")
@@ -70,8 +67,8 @@ class OMGAPIClientTest : GsonDelegator() {
         initMockWebServer()
         val config = ClientConfiguration(
             "base_url",
-            secret.getString("api_key"),
-            secret.getString("auth_token")
+            "api_key",
+            "auth_token"
         )
 
         eWalletClient = EWalletClient.Builder {
@@ -305,17 +302,6 @@ class OMGAPIClientTest : GsonDelegator() {
         val expected = OMGResponse(Versions.EWALLET_API, false, apiError)
 
         verify(callback, timeout(connectionTimeout).times(1)).fail(expected)
-    }
-
-    private fun loadSecretFile(filename: String): JSONObject {
-        val resourceUserURL = javaClass.classLoader.getResource(filename) // This is invisible because it's stored in local ("secret").
-
-        return try {
-            val secretFile = File(resourceUserURL.path)
-            JSONObject(secretFile.readText())
-        } catch (e: IllegalStateException) {
-            throw IllegalStateException("Please create the file $filename. See the file secret.example.json for the reference.")
-        }
     }
 
     private fun initMockWebServer() {
