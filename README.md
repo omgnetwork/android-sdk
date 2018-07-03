@@ -17,7 +17,7 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
     - [Get the provider settings](#get-the-provider-settings)
     - [Get the current user's transactions](#get-the-current-users-transactions)
   - [Transferring tokens](#transferring-tokens)
-    - [Create a transaction](#send-tokens-to-an-address)
+    - [Create a transaction](#create-a-transaction)
     - [Generate a transaction request](#generate-a-transaction-request)
     - [Consume a transaction request](#consume-a-transaction-request)
     - [Approve or Reject a transaction consumption](#approve-or-reject-a-transaction-consumption)
