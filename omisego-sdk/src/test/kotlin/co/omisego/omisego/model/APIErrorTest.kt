@@ -9,7 +9,7 @@ package co.omisego.omisego.model
 
 import android.support.test.runner.AndroidJUnit4
 import co.omisego.omisego.constant.enums.ErrorCode
-import co.omisego.omisego.utils.validateParcel
+import co.omisego.omisego.testUtils.validateParcel
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
 import org.junit.Before

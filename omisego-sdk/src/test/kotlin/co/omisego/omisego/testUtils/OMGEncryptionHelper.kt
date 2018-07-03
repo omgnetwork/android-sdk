@@ -1,4 +1,4 @@
-package co.omisego.omisego.utils
+package co.omisego.omisego.testUtils
 
 /*
  * OmiseGO

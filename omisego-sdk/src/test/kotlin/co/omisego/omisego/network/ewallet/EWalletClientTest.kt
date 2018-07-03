@@ -21,7 +21,7 @@ import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.transaction.list.TransactionListParams
-import co.omisego.omisego.utils.OMGEncryptionHelper
+import co.omisego.omisego.testUtils.OMGEncryptionHelper
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.mock
