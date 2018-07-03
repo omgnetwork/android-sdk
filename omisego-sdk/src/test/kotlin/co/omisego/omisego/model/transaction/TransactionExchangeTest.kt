@@ -35,7 +35,6 @@ class TransactionExchangeTest {
             exchangeAccount shouldBeInstanceOf Account::class.java
             exchangeWalletAddress shouldEqual "2c2e0f2e-fa0f-4abe-8516-9e92cf003486"
             exchangeWallet shouldBeInstanceOf Wallet::class.java
-
         }
     }
 }
