@@ -20,7 +20,8 @@ android {
     }
     sourceSets {
         test.java.srcDirs += 'src/test/kotlin'
-        test.java.srcDirs += 'src/integrationTests/kotlin'
+        test.java.srcDirs += 'src/liveTests/kotlin'
+        test.resources.srcDirs += 'src/liveTests/resources'
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
     testOptions {
