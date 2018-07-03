@@ -13,8 +13,8 @@ import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.testUtils.DateConverter
-import co.omisego.omisego.testUtils.validateParcel
+import co.omisego.omisego.utils.DateConverter
+import co.omisego.omisego.utils.validateParcel
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqual

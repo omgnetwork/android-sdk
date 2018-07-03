@@ -17,8 +17,8 @@ import co.omisego.omisego.model.User
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.Transaction
 import co.omisego.omisego.model.transaction.request.TransactionRequest
-import co.omisego.omisego.testUtils.DateConverter
-import co.omisego.omisego.testUtils.validateParcel
+import co.omisego.omisego.utils.DateConverter
+import co.omisego.omisego.utils.validateParcel
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.amshove.kluent.mock
