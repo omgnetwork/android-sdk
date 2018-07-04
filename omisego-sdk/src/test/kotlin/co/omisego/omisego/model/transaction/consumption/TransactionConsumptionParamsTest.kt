@@ -8,6 +8,7 @@ package co.omisego.omisego.model.transaction.consumption
  */
 
 import co.omisego.omisego.extension.bd
+import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import com.nhaarman.mockito_kotlin.whenever
 import org.amshove.kluent.mock
@@ -23,13 +24,28 @@ class TransactionConsumptionParamsTest {
     fun `TransactionConsumptionParams should be return null if the transactionRequest amount is null`() {
         val transactionRequest: TransactionRequest = mock()
 
-        whenever(transactionRequest.id).thenReturn("omg-test1234")
+        whenever(transactionRequest.formattedId).thenReturn("omg-test1234")
         whenever(transactionRequest.amount).thenReturn(null)
 
         val result = { TransactionConsumptionParams.create(transactionRequest) }
 
         result shouldThrow IllegalArgumentException::class withMessage
             "The transactionRequest amount or the amount of token to transfer should be provided"
+    }
+
+    @Test
+    fun `TransactionConsumptionParams should have amount equals null if the transaction_request_amount and amount are the same`() {
+        val transactionRequest: TransactionRequest = mock()
+        val token: Token = mock()
+
+        whenever(transactionRequest.formattedId).thenReturn("omg-test1234")
+        whenever(transactionRequest.amount).thenReturn("567".toBigDecimal())
+        whenever(transactionRequest.token).thenReturn(token)
+        whenever(token.subunitToUnit).thenReturn(100.bd)
+
+        val result = TransactionConsumptionParams.create(transactionRequest, amount = "567.0000000000".toBigDecimal())
+
+        result.amount shouldBe null
     }
 
     @Test
