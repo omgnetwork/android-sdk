@@ -1,12 +1,9 @@
-package co.omisego.omisego
+package co.omisego.omisego.live
 
+import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.utils.ResourceFileLoader
-import org.junit.Ignore
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
 /*
  * OmiseGO
@@ -15,9 +12,6 @@ import org.robolectric.annotation.Config
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-@Ignore("This live tests need to be tested manually in your local machine.")
-@RunWith(RobolectricTestRunner::class)
-@Config(sdk = [23])
 open class LiveTest : ResourceFileLoader() {
     private val secret by lazy { loadSecretFile("secret.json") }
     private val config by lazy {

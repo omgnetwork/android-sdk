@@ -1,4 +1,4 @@
-package co.omisego.omisego
+package co.omisego.omisego.live
 
 /*
  * OmiseGO
@@ -14,9 +14,13 @@ import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldNotBe
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [23])
 class SettingLiveTest : LiveTest() {
-
     @Test
     fun `get_settings should return 200 and parsed the response correctly`() {
         val setting = client.getSettings().execute()

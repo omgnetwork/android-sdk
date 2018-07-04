@@ -1,4 +1,4 @@
-package co.omisego.omisego
+package co.omisego.omisego.live
 
 /*
  * OmiseGO
@@ -12,7 +12,12 @@ import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldNotBe
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [23])
 class UserLiveTest : LiveTest() {
 
     @Test
