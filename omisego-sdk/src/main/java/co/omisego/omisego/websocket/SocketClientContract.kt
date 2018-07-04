@@ -15,6 +15,7 @@ import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.channel.SocketMessageRef
 import com.google.gson.Gson
 import java.util.Timer
+import java.util.concurrent.Executor
 
 /**
  * The _Contracts.kt files can be found in the almost web socket's sub-packages.
@@ -39,6 +40,11 @@ interface SocketClientContract {
          * (Optional) A boolean indicating if debug info should be printed in the console. Default: false.
          */
         var debug: Boolean
+
+        /**
+         * (Optional) An executor used for invoking the callback. Default to MainThreadExecutor.
+         */
+        var executor: Executor
 
         /**
          * Create a [SocketClient] instance to be used for connecting to the web socket API.

@@ -9,6 +9,7 @@ package co.omisego.omisego.websocket
 
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.HTTPHeaders
+import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
@@ -31,6 +32,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.logging.HttpLoggingInterceptor
+import java.util.concurrent.Executor
 
 @Suppress("OVERRIDE_BY_INLINE")
 /**
@@ -205,6 +207,11 @@ class OMGSocketClient internal constructor(
         override var debug: Boolean = false
 
         /**
+         * (Optional) An executor used for invoking the callback. Default to MainThreadExecutor.
+         */
+        override var executor: Executor = MainThreadExecutor()
+
+        /**
          * Create a [OMGSocketClient] instance to be used for connecting to the web socket API.
          *
          * @return An instance of the [OMGSocketClient].
@@ -235,7 +242,12 @@ class OMGSocketClient internal constructor(
 
             val gson = GsonProvider.create()
 
-            val socketDispatcher = SocketDispatcher(SystemEventDispatcher(), CustomEventDispatcher())
+            val socketDispatcher = SocketDispatcher(
+                SystemEventDispatcher(),
+                CustomEventDispatcher(),
+                executor
+            )
+
             val socketDelegator = SocketDelegator(SocketReceiveParser(gson), socketDispatcher)
 
             val socketClient = OMGSocketClient(
