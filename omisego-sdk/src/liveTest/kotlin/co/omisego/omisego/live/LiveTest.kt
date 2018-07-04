@@ -4,6 +4,8 @@ import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.utils.ResourceFileLoader
+import co.omisego.omisego.websocket.OMGSocketClient
+import java.util.concurrent.Executor
 
 /*
  * OmiseGO
@@ -28,5 +30,11 @@ open class LiveTest : ResourceFileLoader() {
     }
     val client by lazy {
         OMGAPIClient(eWalletClient)
+    }
+    val socketClient by lazy {
+        OMGSocketClient.Builder {
+            clientConfiguration = config.copy(baseURL = secret.getString("socket_base_url"))
+            executor = Executor { it.run() }
+        }.build()
     }
 }
