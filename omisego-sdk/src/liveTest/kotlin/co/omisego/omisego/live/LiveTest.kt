@@ -1,18 +1,18 @@
 package co.omisego.omisego.live
 
-import co.omisego.omisego.OMGAPIClient
-import co.omisego.omisego.model.ClientConfiguration
-import co.omisego.omisego.network.ewallet.EWalletClient
-import co.omisego.omisego.utils.ResourceFileLoader
-import co.omisego.omisego.websocket.OMGSocketClient
-import java.util.concurrent.Executor
-
 /*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 3/7/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import co.omisego.omisego.OMGAPIClient
+import co.omisego.omisego.model.ClientConfiguration
+import co.omisego.omisego.network.ewallet.EWalletClient
+import co.omisego.omisego.utils.ResourceFileLoader
+import co.omisego.omisego.websocket.OMGSocketClient
+import java.util.concurrent.Executor
 
 open class LiveTest : ResourceFileLoader() {
     private val secret by lazy { loadSecretFile("secret.json") }
