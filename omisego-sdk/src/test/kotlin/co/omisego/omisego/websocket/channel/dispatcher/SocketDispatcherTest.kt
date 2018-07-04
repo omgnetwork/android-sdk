@@ -7,6 +7,7 @@ package co.omisego.omisego.websocket.channel.dispatcher
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.utils.Either
 import co.omisego.omisego.websocket.SocketChannelListener
@@ -41,7 +42,7 @@ class SocketDispatcherTest {
 
     @Before
     fun setup() {
-        socketDispatcher = SocketDispatcher(mockSystemEventDispatcher, mockCustomEventDispatcher)
+        socketDispatcher = SocketDispatcher(mockSystemEventDispatcher, mockCustomEventDispatcher, MainThreadExecutor())
         whenever(mockCustomEventDispatcher.customEventListenerMap).thenReturn(mock())
     }
 
