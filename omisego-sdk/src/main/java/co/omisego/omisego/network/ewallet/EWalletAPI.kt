@@ -32,7 +32,7 @@ import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
 import co.omisego.omisego.model.transaction.request.TransactionRequestParams
-import co.omisego.omisego.model.transaction.send.TransactionSendParam
+import co.omisego.omisego.model.transaction.send.TransactionCreateParams
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -75,6 +75,6 @@ interface EWalletAPI {
 
     @POST(TRANSFER)
     fun transfer(
-        @Body request: TransactionSendParam
+        @Body request: TransactionCreateParams
     ): OMGCall<Transaction>
 }

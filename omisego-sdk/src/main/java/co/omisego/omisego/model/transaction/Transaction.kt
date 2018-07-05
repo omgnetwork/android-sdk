@@ -8,7 +8,9 @@ package co.omisego.omisego.model.transaction
  */
 
 import android.os.Parcelable
+import co.omisego.omisego.model.Account
 import co.omisego.omisego.model.Token
+import co.omisego.omisego.model.Wallet
 import co.omisego.omisego.model.pagination.Paginable
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
@@ -19,7 +21,12 @@ import java.util.Date
 data class TransactionExchange(
     val rate: BigDecimal,
     val calculatedAt: Date?,
-    val exchangePairId: String?
+    val exchangePairId: String?,
+    val exchangePair: ExchangePair?,
+    val exchangeAccountId: String?,
+    val exchangeAccount: Account?,
+    val exchangeWalletAddress: String?,
+    val exchangeWallet: Wallet?
 ) : Parcelable
 
 @Parcelize

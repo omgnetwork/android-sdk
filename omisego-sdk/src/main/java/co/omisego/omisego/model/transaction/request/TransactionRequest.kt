@@ -120,7 +120,6 @@ data class TransactionRequest(
 fun TransactionRequest.toTransactionConsumptionParams(
     amount: BigDecimal? = null,
     address: String? = null,
-    tokenId: String? = null,
     idempotencyToken: String = "${this.id}-${System.nanoTime()}",
     correlationId: String? = null,
     metadata: Map<String, Any> = mapOf(),
@@ -130,7 +129,6 @@ fun TransactionRequest.toTransactionConsumptionParams(
         this,
         amount,
         address,
-        tokenId,
         idempotencyToken,
         correlationId,
         metadata,

@@ -15,7 +15,7 @@ import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionPa
 import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
 import co.omisego.omisego.model.transaction.request.TransactionRequestParams
-import co.omisego.omisego.model.transaction.send.TransactionSendParam
+import co.omisego.omisego.model.transaction.send.TransactionCreateParams
 import co.omisego.omisego.network.ewallet.EWalletClient
 
 /**
@@ -150,9 +150,9 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
     /**
      * Send tokens to an address
      *
-     * @param request The TransactionSendParams object to customize the transaction
+     * @param request The TransactionCreateParams object to customize the transaction
      */
-    fun transfer(request: TransactionSendParam) =
+    fun createTransaction(request: TransactionCreateParams) =
         eWalletAPI.transfer(request)
 
     /**
