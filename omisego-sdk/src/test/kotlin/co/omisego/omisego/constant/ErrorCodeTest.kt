@@ -50,6 +50,8 @@ class ErrorCodeTest {
                 "transaction:same_address" -> ErrorCode.TRANSACTION_SAME_ADDRESS
                 "transaction:insufficient_funds" -> ErrorCode.TRANSACTION_INSUFFICIENT_FUNDS
                 "transaction_request:expired" -> ErrorCode.TRANSACTION_REQUEST_EXPIRED
+                "transaction_consumption:transaction_consumption_not_found" -> ErrorCode.TRANSACTION_CONSUMPTION_TRANSACTION_CONSUMPTION_NOT_FOUND
+                "transaction_request:unauthorized_amount_override" -> ErrorCode.TRANSACTION_UNAUTHORIZED_AMOUNT_OVERRIDE
                 "transaction_request:max_consumptions_reached" -> ErrorCode.TRANSACTION_REQUEST_MAX_CONSUMPTIONS_REACHED
                 "transaction_request:max_consumptions_per_user_reached" -> ErrorCode.TRANSACTION_REQUEST_MAX_CONSUMPTIONS_PER_USER_REACHED
                 "transaction_request:transaction_request_not_found" -> ErrorCode.TRANSACTION_REQUEST_NOT_FOUND
