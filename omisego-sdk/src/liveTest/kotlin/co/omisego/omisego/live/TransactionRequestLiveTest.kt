@@ -91,11 +91,11 @@ class TransactionRequestLiveTest : LiveTest() {
         createdTransactionRequest.startListeningEvents(socketClient, listener = object : SocketCustomEventListener.TransactionRequestListener() {
             override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
                 try {
-                    /* Approve the transaction consumption (should be thrown OMGAPIErrorException.) */
+                    /* Approve the transaction consumption (should throw OMGAPIErrorException.) */
                     client.approveTransactionConsumption(TransactionConsumptionActionParams(transactionConsumption.id)).execute()
 
                     /* The exception should be already thrown in the line before. So if it reach this line, it should be fail. */
-                    fail("It should be thrown the OMGAPIErrorException with transaction:same_address error.")
+                    fail("It should throw OMGAPIErrorException with transaction:same_address error.")
                 } catch (e: Exception) {
                     e shouldBeInstanceOf OMGAPIErrorException::class.java
 
