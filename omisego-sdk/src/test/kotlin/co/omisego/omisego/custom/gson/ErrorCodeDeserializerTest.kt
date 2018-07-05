@@ -13,14 +13,6 @@ import co.omisego.omisego.helpers.delegation.GsonDelegator
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
 
-/*
- * OmiseGO
- *
- *
- * Created by Phuchit Sirimongkolsathien on 13/3/2018 AD.
- * Copyright © 2017-2018 OmiseGO. All rights reserved.
- */
-
 class ErrorCodeDeserializerTest : GsonDelegator() {
     data class TestData(
         val code: ErrorCode
