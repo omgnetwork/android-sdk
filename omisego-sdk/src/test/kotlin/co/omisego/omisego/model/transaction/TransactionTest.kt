@@ -7,6 +7,7 @@ package co.omisego.omisego.model.transaction
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.pagination.Paginable
@@ -32,6 +33,8 @@ class TransactionTest : GsonDelegator() {
             metadata shouldEqual mapOf<String, Any>()
             metadata shouldEqual mapOf<String, Any>()
             createdAt shouldEqual dateConverter.fromString("2018-01-01T00:00:00Z")
+            errorCode shouldEqual ErrorCode.TRANSACTION_UNAUTHORIZED_AMOUNT_OVERRIDE
+            errorDescription shouldEqual "The amount for this transaction request cannot be overridden."
         }
     }
 }

@@ -24,7 +24,7 @@ class AccountTest : GsonDelegator() {
         with(account) {
             id shouldEqualTo "acc_01CA2P8JQANS5ATY5GJ5ETMJCF"
             name shouldEqualTo "Account Name"
-            parentId shouldEqualTo "acc_01CA26PKGE49AABZD6K6MSHN0Y"
+            parentId shouldEqual "acc_01CA26PKGE49AABZD6K6MSHN0Y"
             description shouldEqualTo "The account description"
             master shouldEqualTo false
             createdAt shouldEqual dateConverter.fromString("2018-01-01T00:00:00Z")
