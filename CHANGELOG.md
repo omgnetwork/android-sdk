@@ -10,7 +10,7 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ### Added
 - Added more fields to `TransactionExchange`.
 - Added `ExchangePair` model.
-- Added `errorCode` and `errorDescription` to `Transaction` model.
+- Added `error` object to `Transaction` model.
 
 ### Changed
 - Changed `parentId` type to nullable String.
