@@ -8,18 +8,16 @@ package co.omisego.omisego.model.transaction
  */
 
 import co.omisego.omisego.extension.bd
+import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.Account
 import co.omisego.omisego.model.Wallet
-import co.omisego.omisego.testUtils.DateConverter
-import co.omisego.omisego.utils.GsonProvider
-import com.google.gson.Gson
+import co.omisego.omisego.utils.DateConverter
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
 
-class TransactionExchangeTest {
-    private val gson: Gson by lazy { GsonProvider.create() }
+class TransactionExchangeTest : GsonDelegator() {
     private val dateConverter by lazy { DateConverter() }
     private val transactionExchangeFile by ResourceFile("transaction_exchange.json", "object")
 
