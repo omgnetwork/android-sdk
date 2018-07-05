@@ -8,7 +8,7 @@ package co.omisego.omisego.model.transaction
  */
 
 import android.os.Parcelable
-import co.omisego.omisego.constant.enums.ErrorCode
+import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.Account
 import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.Wallet
@@ -48,8 +48,7 @@ data class TransactionSource(
  * @param metadata Additional metadata for the consumption.
  * @param encryptedMetadata Additional encrypted metadata for the consumption.
  * @param createdAt The creation date of the transaction.
- * @param errorCode An error code if the transaction encountered an error.
- * @param errorDescription The description of the encountered error.
+ * @param error An APIError object if the transaction encountered an error
  */
 @Parcelize
 data class Transaction(
@@ -61,6 +60,5 @@ data class Transaction(
     val metadata: @RawValue Map<String, Any>,
     val encryptedMetadata: @RawValue Map<String, Any>,
     val createdAt: Date,
-    val errorCode: ErrorCode?,
-    val errorDescription: String?
+    val error: APIError?
 ) : Paginable.Transaction(), Parcelable
