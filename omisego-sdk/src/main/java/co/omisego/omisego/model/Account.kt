@@ -29,7 +29,7 @@ import java.util.Date
 @Parcelize
 data class Account(
     val id: String,
-    val parentId: String,
+    val parentId: String?,
     val name: String,
     val description: String,
     val master: Boolean,
