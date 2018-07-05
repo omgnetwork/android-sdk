@@ -6,10 +6,14 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
-## [0.9.6] - 2018-07-3
+## [0.9.6] - 2018-07-5
 ### Added
-- Added more fields to `TransactionExchange`
-- Added `ExchangePair` model
+- Added more fields to `TransactionExchange`.
+- Added `ExchangePair` model.
+- Added `errorCode` and `errorDescription` to `Transaction` model.
+
+### Changed
+- Changed `parentId` type to nullable String.
 
 ### Fixed
 - [OMGKeyManager throws an exception during the initialization steps on Android 5.1.1](https://github.com/omisego/android-sdk/issues/49)
@@ -22,7 +26,7 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [0.9.51] - 2018-06-22
 ### Changed
-- Renamed `sortDirection` to `sortDir`
+- Renamed `sortDirection` to `sortDir`.
 
 ## [0.9.5] - 2018-06-22
 ### Changed
@@ -38,8 +42,8 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - [Cannot get metadata of the user](https://github.com/omisego/android-sdk/issues/40)
 
 ### Changed
-- Renamed endpoint `listTransactions` to `getTransactions`
-- Renamed endpoint `listWallets` to `getWallets`
+- Renamed endpoint `listTransactions` to `getTransactions`.
+- Renamed endpoint `listWallets` to `getWallets`.
 
 ## [0.9.4] - 2018-06-14
 ### Added
