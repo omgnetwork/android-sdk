@@ -32,7 +32,12 @@ class TransactionDeserializer : JsonDeserializer<Transaction> {
                 context.deserialize(get("metadata"), object : TypeToken<Map<String, Any>>() {}.type),
                 context.deserialize(get("encrypted_metadata"), object : TypeToken<Map<String, Any>>() {}.type),
                 context.deserialize(get("created_at"), Date::class.java),
-                if (get("error_code").isJsonNull || get("error_description").isJsonNull) null else {
+                if (get("error_code") == null ||
+                    get("error_description") == null ||
+                    get("error_code").isJsonNull ||
+                    get("error_description").isJsonNull) {
+                    null
+                } else {
                     APIError(ErrorCode.from(get("error_code").asString), get("error_description").asString)
                 }
             )
