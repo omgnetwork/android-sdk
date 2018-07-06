@@ -60,8 +60,10 @@ enum class TransactionRequestStatus constructor(override val value: String) : OM
  * This amount needs to be either specified by the requester or the consumer
  * @param address The address from which to send or receive the tokens
  * @param user The user that initiated the request
+ * @param account The account that initiated the request
+ * @param correlationId An id that can uniquely identify a transaction. Typically an order id from a provider
  * @param socketTopic The topic which can be listened in order to receive events regarding this request
- * @param maxConsumption The maximum number of time that this request can be consumed. Default null (unlimited).
+ * @param maxConsumptions The maximum number of time that this request can be consumed. Default null (unlimited).
  * @param status The status of the request (valid or expired)
  * @param allowAmountOverride Allow or not the consumer to override the amount specified in the request
  * Note that if amount is nil and allowAmountOverride is false the init will fail and return null.
@@ -107,7 +109,6 @@ data class TransactionRequest(
  *
  * @param amount The amount of token to transfer (down to subunit to unit)
  * @param address The address to use for the consumption
- * @param tokenId The id of the token to use for the request
  * In the case of a type "send", this will be the token that the consumer will receive
  * In the case of a type "receive" this will be the token that the consumer will send
  * @param idempotencyToken The idempotency token to use for the consumption
