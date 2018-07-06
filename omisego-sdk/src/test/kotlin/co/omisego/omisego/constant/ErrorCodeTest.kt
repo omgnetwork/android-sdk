@@ -39,7 +39,7 @@ class ErrorCodeTest {
                 "server:internal_server_error" -> ErrorCode.SERVER_INTERNAL_SERVER_ERROR
                 "server:unknown_error" -> ErrorCode.SERVER_UNKNOWN_ERROR
                 "user:auth_token_not_found" -> ErrorCode.USER_AUTH_TOKEN_NOT_FOUND
-                "user:access_token_expired" -> ErrorCode.USER_ACCESS_TOKEN_EXPIRED
+                "user:auth_token_expired" -> ErrorCode.USER_AUTH_TOKEN_EXPIRED
                 "user:from_address_not_found" -> ErrorCode.USER_FROM_ADDRESS_NOT_FOUND
                 "user:from_address_mismatch" -> ErrorCode.USER_FROM_ADDRESS_MISMATCH
                 "sdk:network_error" -> ErrorCode.SDK_NETWORK_ERROR

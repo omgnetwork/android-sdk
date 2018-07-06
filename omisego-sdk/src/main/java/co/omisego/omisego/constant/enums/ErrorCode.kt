@@ -39,7 +39,7 @@ enum class ErrorCode constructor(private val code: String) {
     WEB_SOCKET_CONNECT_ERROR("websocket:connect_error"),
 
     //Error code from OmiseGO user API
-    USER_ACCESS_TOKEN_EXPIRED("user:access_token_expired"),
+    USER_AUTH_TOKEN_EXPIRED("user:auth_token_expired"),
     USER_AUTH_TOKEN_NOT_FOUND("user:auth_token_not_found"),
     USER_FROM_ADDRESS_NOT_FOUND("user:from_address_not_found"),
     USER_FROM_ADDRESS_MISMATCH("user:from_address_mismatch"),
