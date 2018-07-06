@@ -6,6 +6,13 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [1.0.0] - 2018-07-6
+### Added
+- Added documentation for missing fields in `TransactionRequest`
+
+### Changed
+- Changed kotlin version to `1.2.51`
+
 ## [0.9.6] - 2018-07-5
 ### Added
 - Added more fields to `TransactionExchange`.
@@ -84,6 +91,7 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - [OMGKeyManager - encryption and decryption helpers](https://github.com/omisego/android-sdk/pull/11)
 
 [Unreleased]: https://github.com/omisego/android-sdk/compare/v0.9.6...HEAD
+[1.0.0]: https://github.com/omisego/android-sdk/compare/v0.9.6...v1.0.0
 [0.9.6]: https://github.com/omisego/android-sdk/compare/v0.9.52...v0.9.6
 [0.9.52]: https://github.com/omisego/android-sdk/compare/v0.9.51...v0.9.52
 [0.9.51]: https://github.com/omisego/android-sdk/compare/v0.9.5...v0.9.51

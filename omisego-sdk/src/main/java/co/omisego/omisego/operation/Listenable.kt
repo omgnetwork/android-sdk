@@ -13,8 +13,8 @@ import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.SocketCustomEventListener
-import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionRequestListener
 import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionConsumptionListener
+import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionRequestListener
 
 /**
  * Represents an object that can be listened with websocket
@@ -26,9 +26,10 @@ interface Listenable<T : SocketCustomEventListener> {
      * Stop listening for events
      *
      * @param client The client used when starting to listen
+     * @param payload The additional metadata for leaving the channel.
      */
-    fun stopListening(client: SocketClientContract.Client) {
-        client.leaveChannel(socketTopic, mapOf())
+    fun stopListening(client: SocketClientContract.Client, payload: Map<String, Any> = mapOf()) {
+        client.leaveChannel(socketTopic, payload)
     }
 }
 
