@@ -20,11 +20,23 @@ android {
     }
     sourceSets {
         test.java.srcDirs += 'src/test/kotlin'
+        test.java.srcDirs += 'src/liveTest/kotlin'
+        test.resources.srcDirs += 'src/liveTest/resources'
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
     testOptions {
         unitTests {
             includeAndroidResources = true
+            all {
+                if (it.name == "testReleaseUnitTest") return
+                if (project.hasProperty('live') && project.live.toBoolean() == true) {
+                    println "Running live tests..."
+                    it.include 'co/omisego/omisego/live/**'
+                } else {
+                    println "Running unit tests..."
+                    it.exclude 'co/omisego/omisego/live/**'
+                }
+            }
         }
     }
 
@@ -62,10 +74,6 @@ task checkstyle(type: Checkstyle) {
 
     // empty classpath
     classpath = files()
-}
-
-task runUnitTests(dependsOn: [':app:testDebugUnitTest']) {
-    description 'Run all unit tests'
 }
 
 tasks.withType(Javadoc) {

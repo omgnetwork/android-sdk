@@ -7,7 +7,6 @@ package co.omisego.omisego.websocket.channel.dispatcher
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketConnectionListener
@@ -16,6 +15,7 @@ import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
 import okhttp3.Response
 import okhttp3.WebSocketListener
+import java.util.concurrent.Executor
 
 interface SocketDispatcherContract {
 
@@ -38,9 +38,9 @@ interface SocketDispatcherContract {
         val socketChannel: SocketChannel?
 
         /**
-         * A main thread executor used for change the background thread to the main thread before invoking the listener.
+         * An executor used for invoking the listener.
          */
-        val mainThreadExecutor: MainThreadExecutor
+        val executor: Executor
 
         /**
          * A connectionListener will be passed to the [systemEventDispatcher] for further handling.

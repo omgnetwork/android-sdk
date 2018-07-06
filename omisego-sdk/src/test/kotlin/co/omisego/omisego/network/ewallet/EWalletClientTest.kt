@@ -21,7 +21,7 @@ import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.transaction.list.TransactionListParams
-import co.omisego.omisego.utils.OMGEncryptionHelper
+import co.omisego.omisego.utils.Encryptor
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.mock
@@ -41,8 +41,6 @@ import kotlin.test.Test
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
 class EWalletClientTest : GsonDelegator() {
-    private val secretFileName: String = "secret.json" // Replace your secret file here
-    private val secret: JSONObject by lazy { loadSecretFile(secretFileName) }
     private val userFile: File by ResourceFile("user.json")
     private val getWalletsFile: File by ResourceFile("get_wallets.json")
     private val getTransactionsFile: File by ResourceFile("get_transactions.json")
@@ -56,8 +54,8 @@ class EWalletClientTest : GsonDelegator() {
     fun setUp() {
         config = ClientConfiguration(
             "base_url",
-            secret.getString("api_key"),
-            secret.getString("auth_token")
+            "api_key",
+            "auth_token"
         )
 
         eWalletClient = EWalletClient.Builder {
@@ -102,9 +100,9 @@ class EWalletClientTest : GsonDelegator() {
     @Test
     fun `EWalletClient should be set the header correctly`() {
         userFile.mockEnqueueWithHttpCode(mockWebServer)
-        val expectedAuth = "OMGClient ${OMGEncryptionHelper.encryptBase64(
-            secret.getString("api_key"),
-            secret.getString("auth_token")
+        val expectedAuth = "OMGClient ${Encryptor.encryptBase64(
+            "api_key",
+            "auth_token"
         )}"
 
         eWalletClient.eWalletAPI.getCurrentUser().execute()
@@ -166,17 +164,6 @@ class EWalletClientTest : GsonDelegator() {
     fun `EWalletClient should throws an IllegalStateException if the clientConfiguration is not set`() {
         val error = { EWalletClient.Builder { }.build() }
         error shouldThrow IllegalStateException::class withMessage Exceptions.MSG_NULL_CLIENT_CONFIGURATION
-    }
-
-    private fun loadSecretFile(filename: String): JSONObject {
-        val resourceUserURL = javaClass.classLoader.getResource(filename) // This is invisible because it's stored in local ("secret").
-
-        return try {
-            val secretFile = File(resourceUserURL.path)
-            JSONObject(secretFile.readText())
-        } catch (e: IllegalStateException) {
-            throw IllegalStateException("Please create the file $filename. See the file secret.example.json for the reference.")
-        }
     }
 
     private inline fun <reified T> buildResponse(responseText: String): OMGResponse<T> {

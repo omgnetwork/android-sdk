@@ -9,7 +9,7 @@ package co.omisego.omisego.model
 
 import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
-import co.omisego.omisego.testUtils.DateConverter
+import co.omisego.omisego.utils.DateConverter
 import com.google.gson.reflect.TypeToken
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe

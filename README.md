@@ -768,7 +768,32 @@ Simply run `./gradlew ktlintCheck` under project root directory.
 
 # Test
 
-You can simply run the test under the `src/test` folder from the Android Studio or run the command `./gradlew test`.
+## Unit Test
+
+```bash
+./gradlew clean test
+```
+
+## Live Test
+
+In order to run the live tests (bound to a working server), you need to create a file `secret.json` under `src/liveTest/resources/` directory (You can take a template from `secret.example.json` there).
+
+The `secret.json` file will be using the following format which is the same as the `secret.example.json` file.
+
+```json
+{
+  "base_url": "YOUR_BASE_URL",
+  "socket_base_url": "YOUR_SOCKET_BASE_URL",
+  "api_key": "YOUR_API_KEY",
+  "auth_token": "YOUR_AUTH_TOKEN"
+}
+```
+
+You will need to fill the corresponding variables, then runs the following command to execute the live test.
+
+```bash
+./gradlew clean test -Plive=true
+```
 
 # Contributing
 

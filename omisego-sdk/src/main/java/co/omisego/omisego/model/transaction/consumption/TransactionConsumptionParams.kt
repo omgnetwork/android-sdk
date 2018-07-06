@@ -80,7 +80,7 @@ data class TransactionConsumptionParams internal constructor(
 
             return TransactionConsumptionParams(
                 transactionRequest.formattedId,
-                if (transactionRequest.amount == amount) null else amount,
+                if (transactionRequest.amount?.stripTrailingZeros() == amount?.stripTrailingZeros()) null else amount,
                 address,
                 idempotencyToken,
                 correlationId,

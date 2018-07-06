@@ -10,7 +10,7 @@ package co.omisego.omisego.utils
 
 import java.util.Base64
 
-object OMGEncryptionHelper {
+object Encryptor {
     /**
      * Encrypt the string with base64
      *

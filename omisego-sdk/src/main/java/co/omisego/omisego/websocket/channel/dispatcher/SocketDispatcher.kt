@@ -7,7 +7,6 @@ package co.omisego.omisego.websocket.channel.dispatcher
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketConnectionListener
@@ -20,6 +19,7 @@ import co.omisego.omisego.websocket.enum.SocketSystemEvent
 import okhttp3.Response
 import okhttp3.WebSocketListener
 import java.net.SocketException
+import java.util.concurrent.Executor
 
 /**
  * A listener dispatcher for events related to the web socket.
@@ -30,12 +30,11 @@ import java.net.SocketException
  */
 class SocketDispatcher(
     override val systemEventDispatcher: SocketDispatcherContract.SystemEventDispatcher,
-    override val customEventDispatcher: SocketDispatcherContract.CustomEventDispatcher
+    override val customEventDispatcher: SocketDispatcherContract.CustomEventDispatcher,
+    override val executor: Executor
 ) : SocketChannelContract.Dispatcher, SocketDispatcherContract.Dispatcher, SocketDelegatorContract.Dispatcher {
 
     override var connectionListener: SocketConnectionListener? = null
-
-    override val mainThreadExecutor by lazy { MainThreadExecutor() }
 
     override var socketChannel: SocketDispatcherContract.SocketChannel? = null
         set(value) {
@@ -62,14 +61,14 @@ class SocketDispatcher(
     }
 
     override fun dispatchOnOpen(response: Response) {
-        mainThreadExecutor.execute {
+        executor.execute {
             socketChannel?.onSocketOpened()
             connectionListener?.onConnected()
         }
     }
 
     override fun dispatchOnClosed(code: Int, reason: String) {
-        mainThreadExecutor.execute {
+        executor.execute {
             if (code == SocketStatusCode.NORMAL.code)
                 connectionListener?.onDisconnected(null)
             else {
@@ -79,7 +78,7 @@ class SocketDispatcher(
     }
 
     override fun dispatchOnMessage(response: SocketReceive) {
-        mainThreadExecutor.execute {
+        executor.execute {
             when {
                 response.event.isLeft -> systemEventDispatcher.socketReceive = response
                 else -> customEventDispatcher.socketReceive = response
