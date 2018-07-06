@@ -26,10 +26,14 @@ This amount needs to be either specified by the requester or the consumer</p>
 <code>address</code> - The address from which to send or receive the tokens</p>
 <p><a name="user"></a>
 <code>user</code> - The user that initiated the request</p>
+<p><a name="account"></a>
+<code>account</code> - The account that initiated the request</p>
+<p><a name="correlationId"></a>
+<code>correlationId</code> - An id that can uniquely identify a transaction. Typically an order id from a provider</p>
 <p><a name="socketTopic"></a>
 <code>socketTopic</code> - The topic which can be listened in order to receive events regarding this request</p>
-<p><a name="maxConsumption"></a>
-<code>maxConsumption</code> - The maximum number of time that this request can be consumed. Default null (unlimited).</p>
+<p><a name="maxConsumptions"></a>
+<code>maxConsumptions</code> - The maximum number of time that this request can be consumed. Default null (unlimited).</p>
 <p><a name="status"></a>
 <code>status</code> - The status of the request (valid or expired)</p>
 <p><a name="allowAmountOverride"></a>
@@ -77,7 +81,9 @@ Note that if amount is nil and allowAmountOverride is false the init will fail a
 <p><a href="account.html">account</a></p>
 </td>
 <td>
-<code><span class="keyword">val </span><span class="identifier">account</span><span class="symbol">: </span><a href="../../co.omisego.omisego.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">?</span></code></td>
+<code><span class="keyword">val </span><span class="identifier">account</span><span class="symbol">: </span><a href="../../co.omisego.omisego.model/-account/index.html"><span class="identifier">Account</span></a><span class="symbol">?</span></code>
+<p>The account that initiated the request</p>
+</td>
 </tr>
 <tr>
 <td>
@@ -122,7 +128,9 @@ This amount needs to be either specified by the requester or the consumer</p>
 <p><a href="correlation-id.html">correlationId</a></p>
 </td>
 <td>
-<code><span class="keyword">val </span><span class="identifier">correlationId</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span></code></td>
+<code><span class="keyword">val </span><span class="identifier">correlationId</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span></code>
+<p>An id that can uniquely identify a transaction. Typically an order id from a provider</p>
+</td>
 </tr>
 <tr>
 <td>
@@ -192,7 +200,9 @@ This amount needs to be either specified by the requester or the consumer</p>
 <p><a href="max-consumptions.html">maxConsumptions</a></p>
 </td>
 <td>
-<code><span class="keyword">val </span><span class="identifier">maxConsumptions</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">?</span></code></td>
+<code><span class="keyword">val </span><span class="identifier">maxConsumptions</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">?</span></code>
+<p>The maximum number of time that this request can be consumed. Default null (unlimited).</p>
+</td>
 </tr>
 <tr>
 <td>
@@ -278,7 +288,7 @@ In the case of a type "receive" this will be the token received by the requester
 <p><a href="../../co.omisego.omisego.operation/-listenable/stop-listening.html">stopListening</a></p>
 </td>
 <td>
-<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">stopListening</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.operation.Listenable$stopListening(co.omisego.omisego.websocket.SocketClientContract.Client)/client">client</span><span class="symbol">:</span>&nbsp;<span class="identifier">Client</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">stopListening</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.operation.Listenable$stopListening(co.omisego.omisego.websocket.SocketClientContract.Client, kotlin.collections.Map((kotlin.String, kotlin.Any)))/client">client</span><span class="symbol">:</span>&nbsp;<span class="identifier">Client</span><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.operation.Listenable$stopListening(co.omisego.omisego.websocket.SocketClientContract.Client, kotlin.collections.Map((kotlin.String, kotlin.Any)))/payload">payload</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;mapOf()<span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
 <p>Stop listening for events</p>
 </td>
 </tr>

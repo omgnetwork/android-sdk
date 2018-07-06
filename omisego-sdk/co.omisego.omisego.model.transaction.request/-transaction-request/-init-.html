@@ -27,10 +27,14 @@ This amount needs to be either specified by the requester or the consumer</p>
 <code>address</code> - The address from which to send or receive the tokens</p>
 <p><a name="user"></a>
 <code>user</code> - The user that initiated the request</p>
+<p><a name="account"></a>
+<code>account</code> - The account that initiated the request</p>
+<p><a name="correlationId"></a>
+<code>correlationId</code> - An id that can uniquely identify a transaction. Typically an order id from a provider</p>
 <p><a name="socketTopic"></a>
 <code>socketTopic</code> - The topic which can be listened in order to receive events regarding this request</p>
-<p><a name="maxConsumption"></a>
-<code>maxConsumption</code> - The maximum number of time that this request can be consumed. Default null (unlimited).</p>
+<p><a name="maxConsumptions"></a>
+<code>maxConsumptions</code> - The maximum number of time that this request can be consumed. Default null (unlimited).</p>
 <p><a name="status"></a>
 <code>status</code> - The status of the request (valid or expired)</p>
 <p><a name="allowAmountOverride"></a>
