@@ -5,8 +5,8 @@
   "amount": 1337,
   "estimated_request_amount": 1337,
   "estimated_consumption_amount": 1337,
-  "finalized_request_amount": 1337,
-  "finalized_consumption_amount": 1337,
+  "finalized_request_amount": null,
+  "finalized_consumption_amount": null,
   "token": {
     "object": "token",
     "id": "BTC:861020af-17b6-49ee-a0cb-661a4d2d1f95",
@@ -69,7 +69,9 @@
     "metadata": {},
     "encrypted_metadata": {},
     "status": "confirmed",
-    "created_at": "2018-01-01T00:00:00Z"
+    "created_at": "2018-01-01T00:00:00Z",
+    "error_code": null,
+    "error_description": null
   },
   "transaction_request": {
     "object": "transaction_request",

@@ -9,7 +9,7 @@ package co.omisego.omisego.model
 
 import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
-import org.amshove.kluent.shouldEqualTo
+import org.amshove.kluent.shouldEqual
 import org.junit.Test
 
 class AvatarTest : GsonDelegator() {
@@ -19,10 +19,10 @@ class AvatarTest : GsonDelegator() {
     @Test
     fun `avatar should be parsed correctly`() {
         with(avatar) {
-            original shouldEqualTo "original_url"
-            large shouldEqualTo "large_url"
-            small shouldEqualTo "small_url"
-            thumb shouldEqualTo "thumb_url"
+            original shouldEqual "original_url"
+            large shouldEqual "large_url"
+            small shouldEqual "small_url"
+            thumb shouldEqual "thumb_url"
         }
     }
 }

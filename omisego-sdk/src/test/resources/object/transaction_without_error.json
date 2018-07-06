@@ -48,6 +48,6 @@
   "metadata": {},
   "encrypted_metadata": {},
   "created_at": "2018-01-01T00:00:00Z",
-  "error_code": "transaction_request:unauthorized_amount_override",
-  "error_description": "The amount for this transaction request cannot be overridden."
+  "error_code": null,
+  "error_description": null
 }

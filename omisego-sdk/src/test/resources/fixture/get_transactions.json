@@ -53,7 +53,9 @@
           "object": "exchange"
         },
         "encrypted_metadata": {},
-        "created_at": "2018-03-14T10:07:57.202080Z"
+        "created_at": "2018-03-14T10:07:57.202080Z",
+        "error_code": null,
+        "error_description": null
       },
       {
         "to": {
@@ -98,7 +100,9 @@
           "object": "exchange"
         },
         "encrypted_metadata": {},
-        "created_at": "2018-03-14T10:16:11.444569Z"
+        "created_at": "2018-03-14T10:16:11.444569Z",
+        "error_code": null,
+        "error_description": null
       },
       {
         "to": {
@@ -143,7 +147,9 @@
           "object": "exchange"
         },
         "encrypted_metadata": {},
-        "created_at": "2018-03-14T10:19:22.520718Z"
+        "created_at": "2018-03-14T10:19:22.520718Z",
+        "error_code": null,
+        "error_description": null
       },
       {
         "to": {
@@ -188,7 +194,9 @@
           "object": "exchange"
         },
         "encrypted_metadata": {},
-        "created_at": "2018-03-14T10:19:36.433334Z"
+        "created_at": "2018-03-14T10:19:36.433334Z",
+        "error_code": null,
+        "error_description": null
       },
       {
         "to": {
@@ -233,7 +241,9 @@
           "object": "exchange"
         },
         "encrypted_metadata": {},
-        "created_at": "2018-03-14T10:21:30.024036Z"
+        "created_at": "2018-03-14T10:21:30.024036Z",
+        "error_code": null,
+        "error_description": null
       },
       {
         "to": {
@@ -278,7 +288,9 @@
           "object": "exchange"
         },
         "encrypted_metadata": {},
-        "created_at": "2018-03-14T10:40:59.310651Z"
+        "created_at": "2018-03-14T10:40:59.310651Z",
+        "error_code": null,
+        "error_description": null
       },
       {
         "to": {
@@ -323,7 +335,9 @@
           "object": "exchange"
         },
         "encrypted_metadata": {},
-        "created_at": "2018-03-14T10:41:16.165945Z"
+        "created_at": "2018-03-14T10:41:16.165945Z",
+        "error_code": null,
+        "error_description": null
       },
       {
         "to": {
@@ -368,7 +382,9 @@
           "object": "exchange"
         },
         "encrypted_metadata": {},
-        "created_at": "2018-03-14T10:42:03.008787Z"
+        "created_at": "2018-03-14T10:42:03.008787Z",
+        "error_code": null,
+        "error_description": null
       },
       {
         "to": {
@@ -413,7 +429,9 @@
           "object": "exchange"
         },
         "encrypted_metadata": {},
-        "created_at": "2018-03-14T10:42:21.938472Z"
+        "created_at": "2018-03-14T10:42:21.938472Z",
+        "error_code": null,
+        "error_description": null
       }
     ]
   }

@@ -7,8 +7,10 @@ import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
 import co.omisego.omisego.custom.gson.OMGEnumAdapter
 import co.omisego.omisego.custom.gson.SocketReceiveDataDeserializer
 import co.omisego.omisego.custom.gson.SocketTopicDeserializer
+import co.omisego.omisego.custom.gson.TransactionDeserializer
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
+import co.omisego.omisego.model.transaction.Transaction
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -26,6 +28,7 @@ class GsonProvider {
             return GsonBuilder()
                 .registerTypeAdapter(ErrorCode::class.java, ErrorCodeDeserializer())
                 .registerTypeAdapter(SocketTopic::class.java, SocketTopicDeserializer())
+                .registerTypeAdapter(Transaction::class.java, TransactionDeserializer())
                 .registerTypeAdapter(Either::class.java, EitherEnumDeserializer<OMGEnum, OMGEnum>())
                 .registerTypeAdapter(SocketReceive.SocketData::class.java, SocketReceiveDataDeserializer())
                 .registerTypeHierarchyAdapter(OMGEnum::class.java, OMGEnumAdapter<OMGEnum>())
