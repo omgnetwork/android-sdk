@@ -72,8 +72,8 @@ class TransactionConsumptionTest : GsonDelegator() {
             amount shouldEqual 1337.bd
             estimatedRequestAmount shouldEqual 1337.bd
             estimatedConsumptionAmount shouldEqual 1337.bd
-            finalizedRequestAmount shouldEqual 1337.bd
-            finalizedConsumptionAmount shouldEqual 1337.bd
+            finalizedRequestAmount shouldEqual null
+            finalizedConsumptionAmount shouldEqual null
             token shouldBeInstanceOf Token::class.java
             correlationId shouldEqual "31009545-db10-4287-82f4-afb46d9741d8"
             idempotencyToken shouldEqual "31009545-db10-4287-82f4-afb46d9741d8"
