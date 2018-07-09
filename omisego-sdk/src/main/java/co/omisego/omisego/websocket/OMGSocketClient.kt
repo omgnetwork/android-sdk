@@ -24,7 +24,6 @@ import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.SystemEventDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegator
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketReceiveParser
-import co.omisego.omisego.websocket.channel.dispatcher.talksTo
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.interval.SocketHeartbeat
 import okhttp3.OkHttpClient
@@ -264,7 +263,6 @@ class OMGSocketClient internal constructor(
                 compositeSocketChannelListener
             )
             socketClient talksTo socketChannel
-            socketDispatcher talksTo socketChannel
 
             socketClient.wsClient = null
 
