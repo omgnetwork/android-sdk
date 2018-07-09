@@ -147,18 +147,52 @@ class OMGSocketClient internal constructor(
         socketChannel.period = period
     }
 
+    @Deprecated(
+        message = "Use \'addConnectionListener\' or \'removeConnectionListener\' instead",
+        level = DeprecationLevel.ERROR
+    )
+    override fun setConnectionListener(connectionListener: SocketConnectionListener?) {}
+
+    @Deprecated(
+        "Use \'addChannelListener\' or \'removeChannelListener\' instead",
+        level = DeprecationLevel.ERROR
+    )
+    override fun setChannelListener(channelListener: SocketChannelListener?) {}
+
+    /**
+     * Add listener for subscribing to the [SocketConnectionListener] event.
+     *
+     * @param connectionListener The [SocketConnectionListener] to be invoked when the channel has been joined, left, or got an error.
+     * @see SocketConnectionListener for the event detail.
+     */
     override fun addConnectionListener(connectionListener: SocketConnectionListener) {
         socketChannel.addConnectionListener(connectionListener)
     }
 
+    /**
+     * Remove the listener for unsubscribing from the [SocketConnectionListener] event.
+     *
+     * @param connectionListener The [SocketConnectionListener] to be unsubscribed.
+     */
     override fun removeConnectionListener(connectionListener: SocketConnectionListener) {
         socketChannel.removeConnectionListener(connectionListener)
     }
 
+    /**
+     * Subscribe to the [SocketChannelListener] event.
+     *
+     * @param channelListener The [SocketChannelListener] to be invoked when the channel has been joined, left, or got an error.
+     * @see SocketChannelListener for the event detail.
+     */
     override fun addChannelListener(channelListener: SocketChannelListener) {
         socketChannel.addChannelListener(channelListener)
     }
 
+    /**
+     * Remove the listener for unsubscribing from the [SocketChannelListener] event.
+     *
+     * @param channelListener The [SocketChannelListener] to be unsubscribed.
+     */
     override fun removeChannelListener(channelListener: SocketChannelListener) {
         socketChannel.removeChannelListener(channelListener)
     }

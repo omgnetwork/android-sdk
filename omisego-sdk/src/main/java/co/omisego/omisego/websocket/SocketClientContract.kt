@@ -123,10 +123,46 @@ interface SocketClientContract {
          */
         fun setIntervalPeriod(period: Long)
 
+        @Deprecated(
+            message = "Use \'addConnectionListener\' or \'removeConnectionListener\' instead",
+            level = DeprecationLevel.ERROR
+        )
+        fun setConnectionListener(connectionListener: SocketConnectionListener?)
+
+        @Deprecated(
+            "Use \'addChannelListener\' or \'removeChannelListener\' instead",
+            level = DeprecationLevel.ERROR
+        )
+        fun setChannelListener(channelListener: SocketChannelListener?)
+
+        /**
+         * Add listener for subscribing to the [SocketConnectionListener] event.
+         *
+         * @param connectionListener The [SocketConnectionListener] to be invoked when the channel has been joined, left, or got an error.
+         * @see SocketConnectionListener for the event detail.
+         */
         fun addConnectionListener(connectionListener: SocketConnectionListener)
+
+        /**
+         * Remove the listener for unsubscribing from the [SocketConnectionListener] event.
+         *
+         * @param connectionListener The [SocketConnectionListener] to be unsubscribed.
+         */
         fun removeConnectionListener(connectionListener: SocketConnectionListener)
 
+        /**
+         * Subscribe to the [SocketChannelListener] event.
+         *
+         * @param channelListener The [SocketChannelListener] to be invoked when the channel has been joined, left, or got an error.
+         * @see SocketChannelListener for the event detail.
+         */
         fun addChannelListener(channelListener: SocketChannelListener)
+
+        /**
+         * Remove the listener for unsubscribing from the [SocketChannelListener] event.
+         *
+         * @param channelListener The [SocketChannelListener] to be unsubscribed.
+         */
         fun removeChannelListener(channelListener: SocketChannelListener)
     }
 
