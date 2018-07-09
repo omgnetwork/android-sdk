@@ -123,7 +123,7 @@ class OMGSocketClientTest {
     }
 
     @Test
-    fun `setChannelListener should delegate the listener to the socket channel correctly`() {
+    fun `addChannelListener should delegate the listener to the socket channel correctly`() {
         socketClient.socketChannel = mockSocketChannel
         val socketChannelListener: SocketChannelListener = mock()
 
