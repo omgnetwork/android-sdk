@@ -17,7 +17,6 @@ import co.omisego.omisego.websocket.SocketConnectionListener
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.channel.SocketChannelContract.Dispatcher
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
-import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcherContract
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import java.util.concurrent.ArrayBlockingQueue

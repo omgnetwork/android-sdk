@@ -10,9 +10,7 @@ package co.omisego.omisego.websocket.channel
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.websocket.CompositeSocketChannelListener
 import co.omisego.omisego.websocket.CompositeSocketConnectionListener
-import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketClientContract
-import co.omisego.omisego.websocket.SocketConnectionListener
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import java.util.concurrent.BlockingQueue
