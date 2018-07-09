@@ -14,7 +14,6 @@ import com.nhaarman.mockito_kotlin.whenever
 import okhttp3.Response
 import okhttp3.WebSocket
 import org.amshove.kluent.mock
-import org.amshove.kluent.shouldBe
 import org.junit.Before
 import org.junit.Test
 
@@ -27,9 +26,7 @@ class SocketDelegatorTest {
 
     @Before
     fun setup() {
-        socketDelegator = SocketDelegator(mockSocketResponseParser, mockSocketDispatcher).apply {
-            socketDispatcher = mockSocketDispatcher
-        }
+        socketDelegator = SocketDelegator(mockSocketResponseParser, mockSocketDispatcher)
     }
 
     @Test
@@ -64,15 +61,5 @@ class SocketDelegatorTest {
         val reason = "¯\\_(ツ)_/¯"
         socketDelegator.onClosed(mockWebSocket, code, reason)
         verify(mockSocketDispatcher, times(1)).dispatchOnClosed(code, reason)
-    }
-
-    @Test
-    fun `talkTo should assign the socket dispatcher correctly`() {
-        val socketDispatcher: SocketDelegatorContract.Dispatcher = mock()
-        socketDelegator.apply {
-            talksTo(socketDispatcher)
-        }
-
-        socketDelegator.socketDispatcher shouldBe socketDispatcher
     }
 }

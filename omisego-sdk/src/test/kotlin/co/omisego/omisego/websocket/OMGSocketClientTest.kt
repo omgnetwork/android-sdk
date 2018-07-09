@@ -113,13 +113,13 @@ class OMGSocketClientTest {
     }
 
     @Test
-    fun `setConnectionListener should delegate the listener to the socket channel correctly`() {
+    fun `addConnectionListener should delegate the listener to the socket channel correctly`() {
         socketClient.socketChannel = mockSocketChannel
         val socketConnectionListener: SocketConnectionListener = mock()
 
-        socketClient.setConnectionListener(socketConnectionListener)
+        socketClient.addConnectionListener(socketConnectionListener)
 
-        verify(mockSocketChannel, times(1)).setConnectionListener(socketConnectionListener)
+        verify(mockSocketChannel, times(1)).addConnectionListener(socketConnectionListener)
     }
 
     @Test
@@ -127,9 +127,9 @@ class OMGSocketClientTest {
         socketClient.socketChannel = mockSocketChannel
         val socketChannelListener: SocketChannelListener = mock()
 
-        socketClient.setChannelListener(socketChannelListener)
+        socketClient.addChannelListener(socketChannelListener)
 
-        verify(mockSocketChannel, times(1)).setChannelListener(socketChannelListener)
+        verify(mockSocketChannel, times(1)).addChannelListener(socketChannelListener)
     }
 
     @Test
@@ -197,7 +197,6 @@ class OMGSocketClientTest {
 
         // Validate dependencies flow wired up between SocketChannel <-- SocketDispatcher --> SocketDelegator, SystemEventDispatcher, CustomEventDispatcher
         val dispatcher = channel.socketDispatcher as SocketDispatcher
-        dispatcher.socketChannel shouldNotBe null
         dispatcher.systemEventDispatcher shouldNotBe null
         dispatcher.customEventDispatcher shouldNotBe null
     }

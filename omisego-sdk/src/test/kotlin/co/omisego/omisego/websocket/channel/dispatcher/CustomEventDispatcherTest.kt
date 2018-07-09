@@ -12,13 +12,13 @@ import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.utils.Either
+import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import org.amshove.kluent.mock
-import org.amshove.kluent.shouldEqualTo
 import org.junit.Before
 import org.junit.Test
 
@@ -54,20 +54,20 @@ class CustomEventDispatcherTest {
     private val txRequestCb: SocketCustomEventListener.TransactionRequestListener = mock()
     private val txConsumptionCb: SocketCustomEventListener.TransactionConsumptionListener = mock()
     private val txAnyCb: SocketCustomEventListener.AnyEventListener = mock()
+    private val mockCompositeSocketChannelListener: SocketChannelListener = mock()
 
     private lateinit var customEventDispatcher: CustomEventDispatcher
 
     @Before
     fun setup() {
-        customEventDispatcher = CustomEventDispatcher()
+        customEventDispatcher = CustomEventDispatcher(mockCompositeSocketChannelListener)
     }
 
     @Test
     fun `handleEvent should call handleTransactionRequestEvent to handle TransactionRequestListener`() {
-        customEventDispatcher.socketReceive = dataTxRequest
         customEventDispatcher.customEventListenerMap["topic"] = txRequestCb
 
-        customEventDispatcher.handleEvent(SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST)
+        customEventDispatcher.handleEvent(SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST, dataTxRequest)
 
         with(customEventDispatcher) {
             verify(txRequestCb, times(1))
@@ -77,10 +77,9 @@ class CustomEventDispatcherTest {
 
     @Test
     fun `handleEvent should call handleTransactionConsumptionEvent to handle TransactionConsumptionListener`() {
-        customEventDispatcher.socketReceive = dataTxFinalizedSuccess
         customEventDispatcher.customEventListenerMap["topic"] = txConsumptionCb
 
-        customEventDispatcher.handleEvent(SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
+        customEventDispatcher.handleEvent(SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED, dataTxFinalizedSuccess)
 
         with(customEventDispatcher) {
             verify(txConsumptionCb, times(1))
@@ -156,14 +155,5 @@ class CustomEventDispatcherTest {
         verify(txAnyCb, times(1)).onEventReceived(dataTxFinalizedSuccess)
         verify(txAnyCb, times(1)).onEventReceived(dataTxRequest)
         verifyNoMoreInteractions(txAnyCb)
-    }
-
-    @Test
-    fun `clearCustomEventListenerMap should be cleared all listeners`() {
-        customEventDispatcher.customEventListenerMap["test"] = mock()
-
-        customEventDispatcher.clearCustomEventListenerMap()
-
-        customEventDispatcher.customEventListenerMap.size shouldEqualTo 0
     }
 }

@@ -10,7 +10,6 @@ package co.omisego.omisego.websocket.channel.dispatcher
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.utils.Either
-import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketConnectionListener
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
@@ -37,40 +36,17 @@ class SocketDispatcherTest {
     private val mockSystemEventDispatcher: SocketDispatcherContract.SystemEventDispatcher = mock()
     private val mockCustomEventDispatcher: SocketDispatcherContract.CustomEventDispatcher = mock()
     private val mockSocketConnectionListener: SocketConnectionListener = mock()
-    private val mockSocketChannel: SocketDispatcherContract.SocketChannel = mock()
     private lateinit var socketDispatcher: SocketDispatcher
 
     @Before
     fun setup() {
-        socketDispatcher = SocketDispatcher(mockSystemEventDispatcher, mockCustomEventDispatcher, MainThreadExecutor())
+        socketDispatcher = SocketDispatcher(
+            mockSystemEventDispatcher,
+            mockCustomEventDispatcher,
+            mockSocketConnectionListener,
+            MainThreadExecutor()
+        )
         whenever(mockCustomEventDispatcher.customEventListenerMap).thenReturn(mock())
-    }
-
-    @Test
-    fun `setSocketChannel should also delegate to systemEventDispatcher`() {
-        socketDispatcher.socketChannel = mockSocketChannel
-
-        verify(mockSystemEventDispatcher, times(1)).socketChannel = mockSocketChannel
-        verifyNoMoreInteractions(mockCustomEventDispatcher, mockSystemEventDispatcher)
-    }
-
-    @Test
-    fun `setSocketConnectionListener should be delegated socketConnectionListener correctly`() {
-        socketDispatcher.setSocketConnectionListener(mockSocketConnectionListener)
-
-        socketDispatcher.connectionListener shouldEqual mockSocketConnectionListener
-        verify(mockSystemEventDispatcher).socketConnectionListener = mockSocketConnectionListener
-        verifyNoMoreInteractions(mockSystemEventDispatcher, mockCustomEventDispatcher)
-    }
-
-    @Test
-    fun `setSocketChannelListener should be delegated the socketChannelListener correctly`() {
-        val mockChannelListener: SocketChannelListener = mock()
-        socketDispatcher.setSocketChannelListener(mockChannelListener)
-
-        verify(mockSystemEventDispatcher).socketChannelListener = mockChannelListener
-        verify(mockCustomEventDispatcher).socketChannelListener = mockChannelListener
-        verifyNoMoreInteractions(mockSystemEventDispatcher, mockCustomEventDispatcher)
     }
 
     @Test
@@ -84,7 +60,6 @@ class SocketDispatcherTest {
 
     @Test
     fun `dispatchOnOpened should invoke the socketConnectionListener's onConnect correctly`() {
-        socketDispatcher.connectionListener = mockSocketConnectionListener
         socketDispatcher.dispatchOnOpen(mock())
 
         verify(mockSocketConnectionListener, times(1)).onConnected()
@@ -93,7 +68,6 @@ class SocketDispatcherTest {
 
     @Test
     fun `dispatchOnClosed should invoke the socketConnectionListener's onDisconnected correctly`() {
-        socketDispatcher.connectionListener = mockSocketConnectionListener
         socketDispatcher.dispatchOnClosed(1000, "")
         verify(mockSocketConnectionListener).onDisconnected(null)
 
@@ -119,8 +93,7 @@ class SocketDispatcherTest {
 
         socketDispatcher.dispatchOnMessage(mockSocketSystemEventReceive)
 
-        verify(mockSystemEventDispatcher).socketReceive = mockSocketSystemEventReceive
-        verify(mockSystemEventDispatcher).handleEvent(systemEvent.value)
+        verify(mockSystemEventDispatcher).handleEvent(systemEvent.value, mockSocketSystemEventReceive)
         verifyZeroInteractions(mockCustomEventDispatcher)
     }
 
@@ -136,26 +109,16 @@ class SocketDispatcherTest {
 
         socketDispatcher.dispatchOnMessage(mockCustomEventReceive)
 
-        verify(mockCustomEventDispatcher).socketReceive = mockCustomEventReceive
-        verify(mockCustomEventDispatcher).handleEvent(customEvent.value)
+        verify(mockCustomEventDispatcher).handleEvent(customEvent.value, mockCustomEventReceive)
         verifyZeroInteractions(mockSystemEventDispatcher)
     }
 
     @Test
     fun `dispatchOnFailure should invoke socketConnectionListener's onDisconnected correctly`() {
         val mockThrowable: Throwable = mock()
-        socketDispatcher.connectionListener = mockSocketConnectionListener
         socketDispatcher.dispatchOnFailure(mockThrowable, any())
 
         verify(mockSocketConnectionListener, times(1)).onDisconnected(mockThrowable)
         verifyNoMoreInteractions(mockSocketConnectionListener)
-    }
-
-    @Test
-    fun `talksTo should assign socketChannel correctly`() {
-        with(socketDispatcher) {
-            this talksTo mockSocketChannel
-            this.socketChannel shouldEqual mockSocketChannel
-        }
     }
 }

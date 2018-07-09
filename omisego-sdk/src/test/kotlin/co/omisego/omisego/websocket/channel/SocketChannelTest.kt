@@ -9,9 +9,9 @@ package co.omisego.omisego.websocket.channel
 
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.websocket.SocketChannelListener
+import co.omisego.omisego.websocket.CompositeSocketChannelListener
+import co.omisego.omisego.websocket.CompositeSocketConnectionListener
 import co.omisego.omisego.websocket.SocketClientContract
-import co.omisego.omisego.websocket.SocketConnectionListener
 import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
@@ -37,6 +37,8 @@ class SocketChannelTest {
     private val mockSocketDispatcher: SocketChannelContract.Dispatcher = mock()
     private val mockSocketClient: SocketChannelContract.SocketClient = mock()
     private val mockSocketHeartbeat: SocketClientContract.SocketInterval = mock()
+    private val mockCompositeChannelListener: CompositeSocketChannelListener = mock()
+    private val mockCompositeConnectionListener: CompositeSocketConnectionListener = mock()
     private val socketTopic = SocketTopic<SocketCustomEventListener.TransactionRequestListener>("topic")
     private lateinit var socketChannel: SocketChannel
 
@@ -45,7 +47,7 @@ class SocketChannelTest {
         whenever(mockSocketClient.socketHeartbeat).thenReturn(
             SocketHeartbeat(SocketMessageRef(scheme = SocketMessageRef.SCHEME_HEARTBEAT))
         )
-        socketChannel = spy(SocketChannel(mockSocketDispatcher, mockSocketClient))
+        socketChannel = spy(SocketChannel(mockSocketDispatcher, mockSocketClient, mockCompositeConnectionListener, mockCompositeChannelListener))
     }
 
     @Test
@@ -166,24 +168,6 @@ class SocketChannelTest {
     }
 
     @Test
-    fun `setConnectionListener should bind the connectionListener to the dispatcher correctly`() {
-        val mockConnectionListener: SocketConnectionListener = mock()
-
-        socketChannel.setConnectionListener(mockConnectionListener)
-
-        verify(mockSocketDispatcher, times(1)).setSocketConnectionListener(mockConnectionListener)
-    }
-
-    @Test
-    fun `setChannelListener should bind the channelListener to the dispatcher correctly`() {
-        val mockChannelListener: SocketChannelListener = mock()
-
-        socketChannel.setChannelListener(mockChannelListener)
-
-        verify(mockSocketDispatcher, times(1)).setSocketChannelListener(mockChannelListener)
-    }
-
-    @Test
     fun `addCustomEventListener should bind the customEventListener to the dispatcher correctly`() {
         val mockCustomEventListener: SocketCustomEventListener = mock()
 
@@ -258,14 +242,14 @@ class SocketChannelTest {
         socketChannel.onLeftChannel("topic")
 
         socketChannel.pendingChannelsQueue.isEmpty() shouldBe true
-        verify(mockSocketDispatcher, times(1)).clearCustomEventListenerMap()
+        verify(mockSocketDispatcher, times(1)).clearCustomEventListeners()
         socketChannel.leavingChannels.get() shouldEqualTo false
         verify(mockSocketClient, times(1)).closeConnection(SocketStatusCode.NORMAL, "Disconnected successfully")
     }
 
     @Test
     fun `When socket opened, leaving channels flag should be set to false`() {
-        socketChannel.onSocketOpened()
+        socketChannel.onConnected()
         socketChannel.leavingChannels.get() shouldEqualTo false
     }
 
