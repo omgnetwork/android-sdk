@@ -600,7 +600,7 @@ socketClient.setConnectionListener(object : SocketConnectionListener {
     
 **Usage**
 ```kotlin
-socketClient.setChannelListener(object : SocketChannelListener {
+socketClient.addChannelListener(object : SocketChannelListener {
     override fun onJoinedChannel(topic: String) {
         // Do something
     }
@@ -760,7 +760,7 @@ transactionConsumption.stopListening(socketClient)
 
 The web socket client will be disconnected automatically if no other channel is active, so you won't receive any system event after that.
 
-By the way, if you want to stop listening before that happen, you can pass `null` to both `omgSocketClient.setConnectionListener` and `omgSocketClient.setChannelListener`.
+By the way, if you want to stop listening before that happen, you can call `omgSocketClient.removeConnectionListener(listener)` or `omgSocketClient.removeChannelListener(listener)`.
 
 # Run Kotlin Lint
 
