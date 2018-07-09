@@ -239,8 +239,11 @@ class OMGSocketClient internal constructor(
             val compositeSocketConnectionListener = CompositeSocketConnectionListener()
             val compositeSocketChannelListener = CompositeSocketChannelListener()
 
+            /* To invoke the socket channel listener */
             val systemEventDispatcher = SystemEventDispatcher(compositeSocketChannelListener)
             val customEventDispatcher = CustomEventDispatcher(compositeSocketChannelListener)
+
+            /* To invoke the socket connection listener */
             val socketDispatcher = SocketDispatcher(
                 systemEventDispatcher,
                 customEventDispatcher,
@@ -256,6 +259,7 @@ class OMGSocketClient internal constructor(
                 socketDelegator
             )
 
+            // To add callbacks to the set
             val socketChannel = SocketChannel(
                 socketDispatcher,
                 socketClient,
