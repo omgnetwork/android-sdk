@@ -11,7 +11,6 @@ import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.websocket.listener.CompositeSocketChannelListener
 import co.omisego.omisego.websocket.listener.CompositeSocketConnectionListener
 import co.omisego.omisego.websocket.SocketClientContract
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.listener.SocketCustomEventListenerSet
 import java.util.concurrent.BlockingQueue

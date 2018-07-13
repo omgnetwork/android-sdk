@@ -8,6 +8,8 @@ package co.omisego.omisego.websocket
  */
 
 import co.omisego.omisego.model.APIError
+import co.omisego.omisego.websocket.listener.CompositeSocketChannelListener
+import co.omisego.omisego.websocket.listener.SocketChannelListener
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.amshove.kluent.mock

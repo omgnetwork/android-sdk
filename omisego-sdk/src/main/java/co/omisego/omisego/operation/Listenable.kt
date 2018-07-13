@@ -12,9 +12,9 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.websocket.SocketClientContract
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.event.TransactionConsumptionListener
 import co.omisego.omisego.websocket.event.TransactionRequestListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 
 /**
  * Represents an object that can be listened with websocket

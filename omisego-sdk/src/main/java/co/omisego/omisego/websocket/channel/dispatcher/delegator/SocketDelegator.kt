@@ -10,7 +10,6 @@ package co.omisego.omisego.websocket.channel.dispatcher.delegator
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.socket.runIfNotInternalTopic
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.WebSocketListenerProvider
 import okhttp3.Response
 import okhttp3.WebSocket

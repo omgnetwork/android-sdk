@@ -9,16 +9,16 @@ package co.omisego.omisego.websocket.channel
 
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketSend
-import co.omisego.omisego.websocket.SocketChannelListener
 import co.omisego.omisego.websocket.SocketClientContract
-import co.omisego.omisego.websocket.SocketConnectionListener
 import co.omisego.omisego.websocket.channel.SocketChannelContract.Dispatcher
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.listener.CompositeSocketChannelListener
 import co.omisego.omisego.websocket.listener.CompositeSocketConnectionListener
+import co.omisego.omisego.websocket.listener.SocketChannelListener
 import co.omisego.omisego.websocket.listener.SocketChannelListenerSet
+import co.omisego.omisego.websocket.listener.SocketConnectionListener
 import co.omisego.omisego.websocket.listener.SocketConnectionListenerSet
 import co.omisego.omisego.websocket.listener.SocketCustomEventListenerSet
 import java.util.concurrent.ArrayBlockingQueue

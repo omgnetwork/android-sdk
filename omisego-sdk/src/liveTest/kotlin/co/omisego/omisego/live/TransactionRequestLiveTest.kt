@@ -19,7 +19,7 @@ import co.omisego.omisego.model.transaction.request.TransactionRequestCreatePara
 import co.omisego.omisego.model.transaction.request.TransactionRequestParams
 import co.omisego.omisego.model.transaction.request.toTransactionConsumptionParams
 import co.omisego.omisego.operation.startListeningEvents
-import co.omisego.omisego.websocket.SocketCustomEventListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqual

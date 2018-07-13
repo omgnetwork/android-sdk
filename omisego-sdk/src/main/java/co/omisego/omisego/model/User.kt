@@ -3,7 +3,6 @@ package co.omisego.omisego.model
 import android.os.Parcelable
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.operation.Listenable
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import java.util.Date

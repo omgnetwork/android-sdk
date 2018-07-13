@@ -8,7 +8,6 @@ package co.omisego.omisego.custom.gson
  */
 
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement

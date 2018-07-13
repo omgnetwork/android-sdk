@@ -28,8 +28,11 @@ import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.interval.SocketHeartbeat
 import co.omisego.omisego.websocket.listener.CompositeSocketChannelListener
 import co.omisego.omisego.websocket.listener.CompositeSocketConnectionListener
+import co.omisego.omisego.websocket.listener.SocketChannelListener
 import co.omisego.omisego.websocket.listener.SocketChannelListenerSet
+import co.omisego.omisego.websocket.listener.SocketConnectionListener
 import co.omisego.omisego.websocket.listener.SocketConnectionListenerSet
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.listener.SocketCustomEventListenerSet
 import okhttp3.OkHttpClient
 import okhttp3.Request

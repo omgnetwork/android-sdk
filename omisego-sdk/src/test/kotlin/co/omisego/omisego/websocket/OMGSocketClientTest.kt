@@ -17,6 +17,8 @@ import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegator
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
+import co.omisego.omisego.websocket.listener.SocketChannelListener
+import co.omisego.omisego.websocket.listener.SocketConnectionListener
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -47,7 +49,6 @@ class OMGSocketClientTest {
     private val mockWebSocket: WebSocket = mock()
     private val mockWebSocketListener: WebSocketListener = mock()
     private val mockSocketChannel: SocketClientContract.Channel = mock()
-    private val mockCustomEventListener: SocketCustomEventListener.TransactionRequestListener = mock()
     private val mockSocketSendParser: SocketClientContract.PayloadSendParser = mock()
     private val mockSocketDelegator: SocketDelegator = mock()
 
@@ -81,20 +82,19 @@ class OMGSocketClientTest {
 
     @Test
     fun `joinChannel should call the socket channel join and addCustomEventListener correctly`() {
-        val socketTopic = SocketTopic<SocketCustomEventListener.TransactionRequestListener>("topic")
+        val socketTopic = SocketTopic("topic")
         val payload = mapOf<String, Any>()
 
         socketClient.socketChannel = mockSocketChannel
-        socketClient.joinChannel(socketTopic, payload, mockCustomEventListener)
+        socketClient.joinChannel(socketTopic)
 
         verify(mockSocketChannel, times(1)).join(socketTopic.name, payload)
-        verify(mockSocketChannel, times(1)).addCustomEventListener("topic", mockCustomEventListener)
         verifyNoMoreInteractions(mockSocketChannel)
     }
 
     @Test
     fun `leaveChannel should call the socket channel leave correctly`() {
-        val socketTopic = SocketTopic<SocketCustomEventListener.TransactionRequestListener>("topic")
+        val socketTopic = SocketTopic("topic")
         val payload = mapOf<String, Any>()
 
         socketClient.socketChannel = mockSocketChannel

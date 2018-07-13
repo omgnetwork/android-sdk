@@ -1,8 +1,4 @@
-package co.omisego.omisego.websocket
-
-import co.omisego.omisego.model.APIError
-import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.websocket.event.SocketEvent
+package co.omisego.omisego.websocket.listener
 
 /*
  * OmiseGO
@@ -10,6 +6,10 @@ import co.omisego.omisego.websocket.event.SocketEvent
  * Created by Phuchit Sirimongkolsathien on 8/5/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import co.omisego.omisego.model.APIError
+import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.websocket.event.SocketEvent
 
 interface SocketCustomEventListener {
 
@@ -57,7 +57,7 @@ interface SocketCustomEventListener {
 }
 
 /**
- * A [SocketCustomEventListener] than can be filtered for a specific type of event.
+ * A [SocketCustomEventListener] that can be filtered for a specific type of event.
  */
 // We don't specify the type argument for SocketEvent to have a nicer syntax, because of this, you won't be able to use
 // supertypes with this
@@ -83,7 +83,6 @@ abstract class SimpleSocketCustomEventListener<Event : SocketEvent<*>>(
             onError: (T, APIError) -> Any
         ) {
             when {
-            // TODO @ripzery Is data supposed to be null in case of error?
                 data is T && error != null -> onError(data, error)
                 data is T -> onSuccess(data)
                 else -> Unit

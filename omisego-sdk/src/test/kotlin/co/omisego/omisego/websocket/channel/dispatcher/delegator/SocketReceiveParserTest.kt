@@ -16,7 +16,7 @@ import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionSt
 import co.omisego.omisego.model.transaction.request.TransactionRequestStatus
 import co.omisego.omisego.model.transaction.request.TransactionRequestType
 import co.omisego.omisego.utils.Either
-import co.omisego.omisego.websocket.SocketCustomEventListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf

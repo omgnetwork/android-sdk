@@ -13,7 +13,9 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.channel.SocketMessageRef
+import co.omisego.omisego.websocket.listener.SocketChannelListener
 import co.omisego.omisego.websocket.listener.SocketChannelListenerSet
+import co.omisego.omisego.websocket.listener.SocketConnectionListener
 import co.omisego.omisego.websocket.listener.SocketConnectionListenerSet
 import co.omisego.omisego.websocket.listener.SocketCustomEventListenerSet
 import com.google.gson.Gson
@@ -123,6 +125,18 @@ interface SocketClientContract {
          * @param period an interval of milliseconds
          */
         fun setIntervalPeriod(period: Long)
+
+        @Deprecated(
+            message = "Use \'addConnectionListener\' or \'removeConnectionListener\' instead",
+            level = DeprecationLevel.ERROR
+        )
+        fun setConnectionListener(connectionListener: SocketConnectionListener?) {}
+
+        @Deprecated(
+            "Use \'addChannelListener\' or \'removeChannelListener\' instead",
+            level = DeprecationLevel.ERROR
+        )
+        fun setChannelListener(channelListener: SocketChannelListener?) {}
     }
 
     interface PayloadSendParser {

@@ -15,7 +15,6 @@ import co.omisego.omisego.model.User
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
 import co.omisego.omisego.operation.Listenable
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import java.math.BigDecimal

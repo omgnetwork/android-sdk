@@ -9,13 +9,13 @@ package co.omisego.omisego.websocket.channel
 
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.websocket.CompositeSocketChannelListener
-import co.omisego.omisego.websocket.CompositeSocketConnectionListener
 import co.omisego.omisego.websocket.SocketClientContract
-import co.omisego.omisego.websocket.SocketCustomEventListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.interval.SocketHeartbeat
+import co.omisego.omisego.websocket.listener.CompositeSocketChannelListener
+import co.omisego.omisego.websocket.listener.CompositeSocketConnectionListener
 import com.nhaarman.mockito_kotlin.spy
 import com.nhaarman.mockito_kotlin.timeout
 import com.nhaarman.mockito_kotlin.times
@@ -39,7 +39,7 @@ class SocketChannelTest {
     private val mockSocketHeartbeat: SocketClientContract.SocketInterval = mock()
     private val mockCompositeChannelListener: CompositeSocketChannelListener = mock()
     private val mockCompositeConnectionListener: CompositeSocketConnectionListener = mock()
-    private val socketTopic = SocketTopic<SocketCustomEventListener.TransactionRequestListener>("topic")
+    private val socketTopic = SocketTopic("topic")
     private lateinit var socketChannel: SocketChannel
 
     @Before
@@ -171,9 +171,9 @@ class SocketChannelTest {
     fun `addCustomEventListener should bind the customEventListener to the dispatcher correctly`() {
         val mockCustomEventListener: SocketCustomEventListener = mock()
 
-        socketChannel.addCustomEventListener("", mockCustomEventListener)
+        socketChannel.addCustomEventListener(mockCustomEventListener)
 
-        verify(mockSocketDispatcher, times(1)).addCustomEventListener("", mockCustomEventListener)
+        verify(mockSocketDispatcher, times(1)).addCustomEventListener(mockCustomEventListener)
     }
 
     @Test

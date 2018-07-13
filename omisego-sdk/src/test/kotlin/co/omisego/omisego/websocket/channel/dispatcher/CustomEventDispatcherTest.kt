@@ -12,8 +12,8 @@ import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.utils.Either
-import co.omisego.omisego.websocket.SocketChannelListener
-import co.omisego.omisego.websocket.SocketCustomEventListener
+import co.omisego.omisego.websocket.listener.SocketChannelListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -25,7 +25,7 @@ import org.junit.Test
 class CustomEventDispatcherTest {
 
     private val mockData: TransactionConsumption = mock()
-    private val dataTxRequest: SocketReceive = SocketReceive(
+    private val dataTxRequest: SocketReceive<TransactionConsumption> = SocketReceive(
         "topic",
         event = Either.Right(SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST),
         data = mockData,
@@ -33,7 +33,7 @@ class CustomEventDispatcherTest {
         success = true
     )
 
-    private val dataTxFinalizedSuccess: SocketReceive = SocketReceive(
+    private val dataTxFinalizedSuccess: SocketReceive<TransactionConsumption> = SocketReceive(
         "topic",
         event = Either.Right(SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED),
         data = mockData,
@@ -42,7 +42,7 @@ class CustomEventDispatcherTest {
     )
 
     val apiError = APIError(ErrorCode.TRANSACTION_CONSUMPTION_EXPIRED, "The transaction has been expired.")
-    private val dataTxFinalizedFail: SocketReceive = SocketReceive(
+    private val dataTxFinalizedFail: SocketReceive<TransactionConsumption> = SocketReceive(
         "topic",
         event = Either.Right(SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED),
         version = "1",

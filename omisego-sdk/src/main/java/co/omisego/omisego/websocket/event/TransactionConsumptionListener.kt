@@ -2,7 +2,7 @@ package co.omisego.omisego.websocket.event
 
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-import co.omisego.omisego.websocket.SimpleSocketCustomEventListener
+import co.omisego.omisego.websocket.listener.SimpleSocketCustomEventListener
 
 abstract class TransactionConsumptionListener : SimpleSocketCustomEventListener<SocketEvent<*>>(allowedEvents) {
 

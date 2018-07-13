@@ -8,9 +8,9 @@ package co.omisego.omisego.websocket.channel.dispatcher
  */
 
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.websocket.SocketChannelListener
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
+import co.omisego.omisego.websocket.listener.SocketChannelListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 
 /**
  * A listener for dispatch the [SocketCustomEventListener] events.

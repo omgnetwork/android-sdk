@@ -10,8 +10,8 @@ package co.omisego.omisego.websocket.enum
 import co.omisego.omisego.constant.enums.OMGEnum
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.websocket.event.SocketEvent
-import  co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
-import  co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
+import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
+import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
 
 enum class SocketEventSend(override val value: String) : OMGEnum {
 

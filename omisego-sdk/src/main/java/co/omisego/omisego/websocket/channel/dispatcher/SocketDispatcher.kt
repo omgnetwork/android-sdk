@@ -8,13 +8,13 @@ package co.omisego.omisego.websocket.channel.dispatcher
  */
 
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.websocket.SocketChannelListener
-import co.omisego.omisego.websocket.SocketConnectionListener
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegatorContract
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
+import co.omisego.omisego.websocket.listener.SocketChannelListener
+import co.omisego.omisego.websocket.listener.SocketConnectionListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import okhttp3.Response
 import java.net.SocketException
 import java.util.concurrent.Executor
