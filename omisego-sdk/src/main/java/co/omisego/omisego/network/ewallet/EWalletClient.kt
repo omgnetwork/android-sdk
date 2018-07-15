@@ -16,8 +16,8 @@ import co.omisego.omisego.network.InterceptorProvider
 import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.utils.OMGEncryption
 import okhttp3.HttpUrl
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.Executor
 
@@ -71,6 +71,11 @@ class EWalletClient {
         var debug: Boolean = false
 
         /**
+         * The OKHttp interceptor list for debugging purpose.
+         */
+        var debugOkHttpInterceptors: MutableList<Interceptor> = mutableListOf()
+
+        /**
          * For testing purpose
          */
         internal var debugUrl: HttpUrl? = null
@@ -94,9 +99,9 @@ class EWalletClient {
 
                 /* If set debug true, then print the http logging */
                 if (debug) {
-                    addInterceptor(HttpLoggingInterceptor().apply {
-                        level = HttpLoggingInterceptor.Level.BODY
-                    })
+                    for (interceptor in debugOkHttpInterceptors) {
+                        addNetworkInterceptor(interceptor)
+                    }
                 }
             }.build()
 
