@@ -46,6 +46,7 @@ class EWalletClient {
     internal lateinit var eWalletAPI: EWalletAPI
     internal lateinit var header: InterceptorProvider.Header
     internal lateinit var retrofit: Retrofit
+    internal lateinit var client: OkHttpClient
 
     /**
      * Build a new [EWalletClient].
@@ -106,6 +107,7 @@ class EWalletClient {
             }.build()
 
             val gson = GsonProvider.create()
+            eWalletClient.client = client
 
             /* Create retrofit with OMGConverter and OMGCaller */
             eWalletClient.retrofit = Retrofit.Builder().apply {
