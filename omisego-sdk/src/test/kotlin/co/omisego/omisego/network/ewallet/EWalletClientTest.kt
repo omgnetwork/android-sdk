@@ -69,8 +69,6 @@ class EWalletClientTest : GsonDelegator() {
             debugUrl = mockUrl
             clientConfiguration = config
             callbackExecutor = Executor { it.run() }
-            debug = true
-            debugOkHttpInterceptors = mockInterceptors
         }.build()
     }
 
@@ -177,7 +175,15 @@ class EWalletClientTest : GsonDelegator() {
 
     @Test
     fun `EWalletClient should be able to add the network interceptor for debugging purpose`() {
-        eWalletClient.client.networkInterceptors().size shouldEqualTo 3
+        val debuggableClient = EWalletClient.Builder {
+            debugUrl = mockUrl
+            clientConfiguration = config
+            callbackExecutor = Executor { it.run() }
+            debug = true
+            debugOkHttpInterceptors = mockInterceptors
+        }.build()
+
+        debuggableClient.client.networkInterceptors().size shouldEqualTo 3
     }
 
     @Test
