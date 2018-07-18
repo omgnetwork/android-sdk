@@ -7,7 +7,6 @@ package co.omisego.omisego.model.transaction
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.extension.bd
 import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.Account
@@ -25,7 +24,7 @@ class TransactionExchangeTest : GsonDelegator() {
     fun `test transaction_exchange parsing`() {
         val exchange = gson.fromJson(transactionExchangeFile.readText(), TransactionExchange::class.java)
         with(exchange) {
-            rate shouldEqual 0.017.bd
+            rate shouldEqual null
             calculatedAt shouldEqual dateConverter.fromString("2018-01-01T00:00:00Z")
             exchangePairId shouldEqual "exg_01cgvppyrz2pprj6s0zmc26p2p"
             exchangePair shouldBeInstanceOf ExchangePair::class.java

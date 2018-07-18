@@ -6,6 +6,10 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [1.0.1] - 2018-06-12
+### Changed
+- Change `TransactionExchange` rate to nullable type
+
 ## [1.0.0] - 2018-07-6
 ### Added
 - Added documentation for missing fields in `TransactionRequest`
@@ -90,7 +94,8 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Logout the current user
 - [OMGKeyManager - encryption and decryption helpers](https://github.com/omisego/android-sdk/pull/11)
 
-[Unreleased]: https://github.com/omisego/android-sdk/compare/v0.9.6...HEAD
+[Unreleased]: https://github.com/omisego/android-sdk/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/omisego/android-sdk/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/omisego/android-sdk/compare/v0.9.6...v1.0.0
 [0.9.6]: https://github.com/omisego/android-sdk/compare/v0.9.52...v0.9.6
 [0.9.52]: https://github.com/omisego/android-sdk/compare/v0.9.51...v0.9.52

@@ -20,7 +20,7 @@ import java.util.Date
 
 @Parcelize
 data class TransactionExchange(
-    val rate: BigDecimal,
+    val rate: BigDecimal?,
     val calculatedAt: Date?,
     val exchangePairId: String?,
     val exchangePair: ExchangePair?,

@@ -1,6 +1,6 @@
 {
   "object": "exchange",
-  "rate": 0.017,
+  "rate": null,
   "calculated_at": "2018-01-01T00:00:00Z",
   "exchange_pair_id": "exg_01cgvppyrz2pprj6s0zmc26p2p",
   "exchange_pair": {
