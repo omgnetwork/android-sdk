@@ -6,6 +6,7 @@
 # Local configuration file (sdk path, etc)
 local.properties
 secret.json
+settings.gradle
 
 # Android Studio
 .externalNativeBuild
@@ -25,3 +26,6 @@ myapplication
 /.idea/misc.xml
 /.idea/libraries
 /.idea/dictionaries
+/.idea/vcs.xml
+
+# sample-android

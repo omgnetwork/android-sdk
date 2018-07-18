@@ -1,0 +1,3 @@
+[submodule "sample-android"]
+	path = sample-android
+	url = https://github.com/omisego/sample-android.git
