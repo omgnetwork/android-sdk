@@ -23,9 +23,11 @@ import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.utils.Encryptor
 import okhttp3.HttpUrl
+import okhttp3.Interceptor
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldEqualTo
 import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.withMessage
 import org.json.JSONObject
@@ -47,6 +49,11 @@ class EWalletClientTest : GsonDelegator() {
     private val getSettingFile: File by ResourceFile("setting.json")
     private var mockWebServer: MockWebServer = MockWebServer()
     private var mockUrl: HttpUrl = mockWebServer.url("/api/client/")
+    private val mockInterceptors = mutableListOf<Interceptor>(
+        mock(),
+        mock(),
+        mock()
+    )
     private lateinit var eWalletClient: EWalletClient
     private lateinit var config: ClientConfiguration
 
@@ -164,6 +171,32 @@ class EWalletClientTest : GsonDelegator() {
     fun `EWalletClient should throws an IllegalStateException if the clientConfiguration is not set`() {
         val error = { EWalletClient.Builder { }.build() }
         error shouldThrow IllegalStateException::class withMessage Exceptions.MSG_NULL_CLIENT_CONFIGURATION
+    }
+
+    @Test
+    fun `EWalletClient should be able to add the network interceptor for debugging purpose`() {
+        val debuggableClient = EWalletClient.Builder {
+            debugUrl = mockUrl
+            clientConfiguration = config
+            callbackExecutor = Executor { it.run() }
+            debug = true
+            debugOkHttpInterceptors = mockInterceptors
+        }.build()
+
+        debuggableClient.client.networkInterceptors().size shouldEqualTo 3
+    }
+
+    @Test
+    fun `EWalletClient should not add the network interceptor when debug flag is false`() {
+        val nonDebuggableClient = EWalletClient.Builder {
+            debugUrl = mockUrl
+            clientConfiguration = config
+            callbackExecutor = Executor { it.run() }
+            debug = false
+            debugOkHttpInterceptors = mockInterceptors
+        }.build()
+
+        nonDebuggableClient.client.networkInterceptors().size shouldEqualTo 0
     }
 
     private inline fun <reified T> buildResponse(responseText: String): OMGResponse<T> {
