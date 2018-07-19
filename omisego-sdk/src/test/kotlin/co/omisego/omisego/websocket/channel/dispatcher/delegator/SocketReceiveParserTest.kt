@@ -16,7 +16,6 @@ import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionSt
 import co.omisego.omisego.model.transaction.request.TransactionRequestStatus
 import co.omisego.omisego.model.transaction.request.TransactionRequestType
 import co.omisego.omisego.utils.Either
-import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
@@ -50,14 +49,14 @@ class SocketReceiveParserTest : GsonDelegator() {
             val transactionConsumptionData = data as TransactionConsumption
             with(transactionConsumptionData) {
                 status shouldEqual TransactionConsumptionStatus.CONFIRMED
-                socketTopic shouldEqual SocketTopic<SocketCustomEventListener.TransactionConsumptionListener>(
+                socketTopic shouldEqual SocketTopic(
                     "transaction_consumption:8eb0160e-1c96-481a-88e1-899399cc84dc"
                 )
                 user?.id shouldEqual "6f56efa1-caf9-4348-8e0f-f5af283f17ee"
                 user?.username shouldEqual "john.doe@example.com"
                 transactionRequest.type shouldEqual TransactionRequestType.RECEIVE
                 transactionRequest.status shouldEqual TransactionRequestStatus.VALID
-                transactionRequest.socketTopic shouldEqual SocketTopic<SocketCustomEventListener.TransactionConsumptionListener>(
+                transactionRequest.socketTopic shouldEqual SocketTopic(
                     "transaction_request:8eb0160e-1c96-481a-88e1-899399cc84dc"
                 )
                 transactionRequest.requireConfirmation shouldEqualTo true

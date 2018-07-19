@@ -10,10 +10,11 @@ package co.omisego.omisego.websocket.channel.dispatcher
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.utils.Either
-import co.omisego.omisego.websocket.CompositeSocketChannelListener
 import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
+import co.omisego.omisego.websocket.listener.CompositeSocketChannelListener
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -22,7 +23,7 @@ import org.junit.Before
 import org.junit.Test
 
 class SystemEventDispatcherTest {
-    private val dataHeartbeat: SocketReceive = SocketReceive(
+    private val dataHeartbeat: SocketReceive<TransactionConsumption> = SocketReceive(
         "phoenix",
         event = Either.Left(SocketSystemEvent.REPLY),
         data = null,
@@ -31,7 +32,7 @@ class SystemEventDispatcherTest {
         success = true
     )
 
-    private val dataPhxReply: SocketReceive = SocketReceive(
+    private val dataPhxReply: SocketReceive<TransactionConsumption> = SocketReceive(
         "topic",
         event = Either.Left(SocketSystemEvent.REPLY),
         data = null,
@@ -40,7 +41,7 @@ class SystemEventDispatcherTest {
         success = true
     )
 
-    private val dataPhxClose: SocketReceive = SocketReceive(
+    private val dataPhxClose: SocketReceive<TransactionConsumption> = SocketReceive(
         "topic",
         event = Either.Left(SocketSystemEvent.CLOSE),
         data = null,
@@ -49,7 +50,7 @@ class SystemEventDispatcherTest {
         success = true
     )
 
-    private val dataPhxError: SocketReceive = SocketReceive(
+    private val dataPhxError: SocketReceive<TransactionConsumption> = SocketReceive(
         "topic",
         event = Either.Left(SocketSystemEvent.ERROR),
         data = null,

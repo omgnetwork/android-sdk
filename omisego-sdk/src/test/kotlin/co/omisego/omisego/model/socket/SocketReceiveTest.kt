@@ -8,11 +8,11 @@ package co.omisego.omisego.model.socket
  */
 
 import co.omisego.omisego.constant.enums.ErrorCode
-import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.utils.Either
+import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketReceiveParser
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
 import org.amshove.kluent.shouldBe
@@ -21,16 +21,17 @@ import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldEqualTo
 import org.junit.Test
 
-class SocketReceiveTest : GsonDelegator() {
+class SocketReceiveTest {
+    private val socketReceiveParser by lazy { SocketReceiveParser() }
     private val socketReceiveSuccessFile by ResourceFile("socket_receive.json", "object")
     private val socketReceiveFailureFile by ResourceFile("socket_receive_failure.json", "object")
     private val socketReceiveReplyFile by ResourceFile("socket_receive_reply.json", "object")
     private val socketReceiveUnknownFile by ResourceFile("socket_receive_unknown.json", "object")
 
-    private val socketReceiveSuccess by lazy { gson.fromJson(socketReceiveSuccessFile.readText(), SocketReceive::class.java) }
-    private val socketReceiveFailure by lazy { gson.fromJson(socketReceiveFailureFile.readText(), SocketReceive::class.java) }
-    private val socketReceiveReply by lazy { gson.fromJson(socketReceiveReplyFile.readText(), SocketReceive::class.java) }
-    private val socketReceiveUnknown by lazy { gson.fromJson(socketReceiveUnknownFile.readText(), SocketReceive::class.java) }
+    private val socketReceiveSuccess by lazy { socketReceiveParser.parse(socketReceiveSuccessFile.readText()) }
+    private val socketReceiveFailure by lazy { socketReceiveParser.parse(socketReceiveFailureFile.readText()) }
+    private val socketReceiveReply by lazy { socketReceiveParser.parse(socketReceiveReplyFile.readText()) }
+    private val socketReceiveUnknown by lazy { socketReceiveParser.parse(socketReceiveUnknownFile.readText()) }
 
     @Test
     fun `socket_receive should be parsed success case correctly`() {

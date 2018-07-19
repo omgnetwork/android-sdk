@@ -8,6 +8,7 @@ package co.omisego.omisego.websocket.channel.dispatcher.delegator
  */
 
 import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -47,7 +48,7 @@ class SocketDelegatorTest {
     @Test
     fun `dispatchOnMessage is invoked correctly when the onMessage is called`() {
         val text = "¯\\_(ツ)_/¯"
-        val socketReceive = mock<SocketReceive>()
+        val socketReceive = mock<SocketReceive<TransactionConsumption>>()
         whenever(mockSocketResponseParser.parse(text)).thenReturn(socketReceive)
         whenever(socketReceive.topic).thenReturn(text)
 

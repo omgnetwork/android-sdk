@@ -9,11 +9,12 @@ package co.omisego.omisego.websocket.channel.dispatcher
 
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.utils.Either
-import co.omisego.omisego.websocket.listener.SocketConnectionListener
-import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
+import co.omisego.omisego.websocket.listener.SocketConnectionListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -46,15 +47,15 @@ class SocketDispatcherTest {
             mockSocketConnectionListener,
             MainThreadExecutor()
         )
-        whenever(mockCustomEventDispatcher.customEventListenerMap).thenReturn(mock())
+        whenever(mockCustomEventDispatcher.customEventListeners).thenReturn(mock())
     }
 
     @Test
     fun `addCustomEventListener should be delegated customEventListener correctly`() {
         val mockCustomEventListener: SocketCustomEventListener = mock()
-        socketDispatcher.addCustomEventListener("topic", mockCustomEventListener)
+        socketDispatcher.addCustomEventListener(mockCustomEventListener)
 
-        verify(mockCustomEventDispatcher.customEventListenerMap)["topic"] = mockCustomEventListener
+        verify(mockCustomEventDispatcher.customEventListeners).add(mockCustomEventListener)
         verifyNoMoreInteractions(mockCustomEventListener)
     }
 
@@ -84,7 +85,7 @@ class SocketDispatcherTest {
     @Test
     fun `dispatchOnMessaged should delegate the socketReceive with system event to the systemEventDispatcher and handle correctly`() {
         val systemEvent = Either.Left(SocketSystemEvent.REPLY)
-        val mockSocketSystemEventReceive = SocketReceive(
+        val mockSocketSystemEventReceive = SocketReceive<TransactionConsumption>(
             "topic",
             systemEvent,
             version = "1",
@@ -100,7 +101,7 @@ class SocketDispatcherTest {
     @Test
     fun `dispatchOnMessaged should delegate the socketReceive with custom event to the customEventDispatcher and handle correctly`() {
         val customEvent = Either.Right(SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST)
-        val mockCustomEventReceive = SocketReceive(
+        val mockCustomEventReceive = SocketReceive<TransactionConsumption>(
             "topic",
             customEvent,
             version = "1",
