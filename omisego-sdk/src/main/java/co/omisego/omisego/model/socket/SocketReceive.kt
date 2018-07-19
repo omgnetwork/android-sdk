@@ -29,7 +29,7 @@ import co.omisego.omisego.websocket.enum.SocketSystemEvent
  * @param success Defines if the event is the result of a successful action or not.
  * @param error The error resulting from the action generating the event
  */
-data class SocketReceive<T: SocketReceive.SocketData>(
+data class SocketReceive<T : SocketReceive.SocketData>(
     val topic: String,
     val event: Either<SocketSystemEvent, SocketCustomEvent>,
     val ref: String? = null,

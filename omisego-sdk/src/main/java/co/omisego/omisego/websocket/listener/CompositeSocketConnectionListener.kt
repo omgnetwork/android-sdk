@@ -7,13 +7,6 @@ package co.omisego.omisego.websocket.listener
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-/**
- * OmiseGO
- *
- * Created by Yannick Badoual on 7/13/2018 AD.
- * Copyright © 2017-2018 OmiseGO. All rights reserved.
- */
-
 class CompositeSocketConnectionListener(
     private val listeners: MutableSet<SocketConnectionListener> = linkedSetOf()
 ) : SocketConnectionListener, MutableSet<SocketConnectionListener> by listeners {

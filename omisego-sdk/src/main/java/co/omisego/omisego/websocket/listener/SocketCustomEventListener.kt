@@ -7,19 +7,19 @@ package co.omisego.omisego.websocket.listener
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.websocket.event.SocketEvent
+import co.omisego.omisego.websocket.strategy.FilterStrategy
 
 interface SocketCustomEventListener {
-
     fun onEvent(event: SocketEvent<*>)
 
     companion object {
         inline fun <reified Event : SocketEvent<*>> forEvent(
             crossinline lambda: (Event) -> Unit
         ): SocketCustomEventListener {
-            return object : SimpleSocketCustomEventListener<Event>(Event::class.java) {
+            return object : SimpleSocketCustomEventListener<Event>() {
+                override var strategy: FilterStrategy = FilterStrategy.Event(listOf(Event::class.java))
                 override fun onSpecificEvent(event: Event) {
                     lambda(event)
                 }
@@ -31,9 +31,10 @@ interface SocketCustomEventListener {
          */
         fun forEvents(
             listener: SocketCustomEventListener,
-            events: List<Class<out SocketEvent<*>>>
+            strategy: FilterStrategy
         ): SocketCustomEventListener {
-            return object : SimpleSocketCustomEventListener<SocketEvent<*>>(events) {
+            return object : SimpleSocketCustomEventListener<SocketEvent<*>>() {
+                override var strategy: FilterStrategy = strategy
                 override fun onSpecificEvent(event: SocketEvent<*>) {
                     listener.onEvent(event)
                 }
@@ -45,48 +46,16 @@ interface SocketCustomEventListener {
          */
         inline fun forEvents(
             crossinline lambda: (SocketEvent<out SocketReceive.SocketData>) -> Unit,
-            events: List<Class<out SocketEvent<*>>>
+            strategy: FilterStrategy
         ): SocketCustomEventListener {
-            return object : SimpleSocketCustomEventListener<SocketEvent<*>>(events) {
+            return object : SimpleSocketCustomEventListener<SocketEvent<*>>() {
+                override var strategy: FilterStrategy = strategy
                 override fun onSpecificEvent(event: SocketEvent<*>) {
                     lambda(event)
                 }
             }
         }
     }
-}
 
-/**
- * A [SocketCustomEventListener] that can be filtered for a specific type of event.
- */
-// We don't specify the type argument for SocketEvent to have a nicer syntax, because of this, you won't be able to use
-// supertypes with this
-abstract class SimpleSocketCustomEventListener<Event : SocketEvent<*>>(
-    private val allowedEvents: List<Class<out Event>>
-) : SocketCustomEventListener {
-
-    constructor(allowedEvent: Class<Event>) : this(listOf(allowedEvent))
-
-    @Suppress("UNCHECKED_CAST")
-    final override fun onEvent(event: SocketEvent<*>) {
-        if (allowedEvents.any { it.isAssignableFrom(event::class.java) }) {
-            onSpecificEvent(event as Event)
-        }
-    }
-
-    abstract fun onSpecificEvent(event: Event)
-
-    companion object {
-        @Suppress("UNCHECKED_CAST")
-        internal inline fun <T : SocketReceive.SocketData> SocketReceive<T>.dispatch(
-            onSuccess: (T) -> Any,
-            onError: (T, APIError) -> Any
-        ) {
-            when {
-                data is T && error != null -> onError(data, error)
-                data is T -> onSuccess(data)
-                else -> Unit
-            }
-        }
-    }
+    abstract var strategy: FilterStrategy
 }

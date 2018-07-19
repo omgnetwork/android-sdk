@@ -17,7 +17,7 @@ sealed class FilterStrategy {
         override fun accept(event: SocketEvent<*>) = allowedEvents.any { it.isAssignableFrom(event::class.java) }
     }
 
-    class Topic(val topic: SocketTopic) : FilterStrategy() {
+    class Topic(private val topic: SocketTopic) : FilterStrategy() {
         override fun accept(event: SocketEvent<*>) = topic.name == event.socketReceive.topic
     }
 
