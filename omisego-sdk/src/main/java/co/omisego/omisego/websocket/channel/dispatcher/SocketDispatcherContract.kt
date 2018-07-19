@@ -71,6 +71,7 @@ interface SocketDispatcherContract {
          * Handles the [SocketCustomEvent] and dispatch the [SocketCustomEventListener] to the client.
          *
          * @param customEvent To indicate the actual type of generic [SocketCustomEvent]
+         * @param response The websocket payload that is sent from the websocket API
          */
         fun handleEvent(customEvent: SocketCustomEvent, response: SocketReceive<*>)
     }
