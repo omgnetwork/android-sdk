@@ -10,6 +10,8 @@ package co.omisego.omisego.websocket.strategy
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
+import co.omisego.omisego.utils.Either
+import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.event.SocketEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
@@ -20,9 +22,14 @@ import org.amshove.kluent.shouldEqualTo
 import org.junit.Test
 
 class FilterStrategyTest {
-    val topic = SocketTopic("topic")
+    val topic = SocketTopic("topic1")
     private val noneStrategy: FilterStrategy by lazy { FilterStrategy.None() }
     private val topicStrategy: FilterStrategy by lazy { FilterStrategy.Topic(topic) }
+    private val customStrategy: FilterStrategy by lazy {
+        FilterStrategy.Custom {
+            it.socketReceive.topic.contains("2") || it.socketReceive.event == Either.Right(SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST)
+        }
+    }
     private val eventStrategy: FilterStrategy by lazy {
         FilterStrategy.Event(
             listOf(
@@ -31,34 +38,50 @@ class FilterStrategyTest {
         )
     }
 
-    private val mockMatchedTopicSocketEvent = mock<SocketEvent<TransactionConsumption>> {
+    private val mockTopicOneSocketEvent = mock<SocketEvent<TransactionConsumption>> {
         on { socketReceive } doReturn mock<SocketReceive<TransactionConsumption>>()
-        on { socketReceive.topic } doReturn "topic"
+        on { socketReceive.topic } doReturn "topic1"
     }
-    private val mockUnMatchedTopicSocketEvent = mock<SocketEvent<TransactionConsumption>> {
+    private val mockTopicTwoSocketEvent = mock<SocketEvent<TransactionConsumption>> {
         on { socketReceive } doReturn mock<SocketReceive<TransactionConsumption>>()
         on { socketReceive.topic } doReturn "topic2"
     }
-    private val mockExistEventSocketEvent = mock<TransactionConsumptionRequestEvent>()
-    private val mockNonExistEventSocketEvent = mock<TransactionConsumptionFinalizedEvent>()
+    private val mockConsumptionRequestEvent = mock<TransactionConsumptionRequestEvent> {
+        on { socketReceive } doReturn mock<SocketReceive<TransactionConsumption>>()
+        on { socketReceive.topic } doReturn "topic3"
+        on { socketReceive.event } doReturn Either.Right(SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST)
+    }
+    private val mockConsumptionFinalizedEvent = mock<TransactionConsumptionFinalizedEvent> {
+        on { socketReceive } doReturn mock<SocketReceive<TransactionConsumption>>()
+        on { socketReceive.topic } doReturn "topic4"
+        on { socketReceive.event } doReturn Either.Right(SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED)
+    }
 
     @Test
     fun `topic_strategy should accept only if the topic matched with its own`() {
-        topicStrategy.accept(mockMatchedTopicSocketEvent) shouldEqualTo true
-        topicStrategy.accept(mockUnMatchedTopicSocketEvent) shouldEqualTo false
+        topicStrategy.accept(mockTopicOneSocketEvent) shouldEqualTo true
+        topicStrategy.accept(mockTopicTwoSocketEvent) shouldEqualTo false
     }
 
     @Test
     fun `event_strategy should accept only if the event exist in the list`() {
-        eventStrategy.accept(mockExistEventSocketEvent) shouldEqualTo true
-        eventStrategy.accept(mockNonExistEventSocketEvent) shouldEqualTo false
+        eventStrategy.accept(mockConsumptionRequestEvent) shouldEqualTo true
+        eventStrategy.accept(mockConsumptionFinalizedEvent) shouldEqualTo false
+    }
+
+    @Test
+    fun `custom_strategy should be accept only if the custom filtering is return true`() {
+        customStrategy.accept(mockConsumptionRequestEvent) shouldEqualTo true
+        customStrategy.accept(mockTopicTwoSocketEvent) shouldEqualTo true
+        customStrategy.accept(mockConsumptionFinalizedEvent) shouldEqualTo false
+        customStrategy.accept(mockTopicOneSocketEvent) shouldEqualTo false
     }
 
     @Test
     fun `none_strategy should accept all events`() {
-        noneStrategy.accept(mockExistEventSocketEvent) shouldEqualTo true
-        noneStrategy.accept(mockNonExistEventSocketEvent) shouldEqualTo true
-        noneStrategy.accept(mockMatchedTopicSocketEvent) shouldEqualTo true
-        noneStrategy.accept(mockUnMatchedTopicSocketEvent) shouldEqualTo true
+        noneStrategy.accept(mockConsumptionRequestEvent) shouldEqualTo true
+        noneStrategy.accept(mockConsumptionFinalizedEvent) shouldEqualTo true
+        noneStrategy.accept(mockTopicOneSocketEvent) shouldEqualTo true
+        noneStrategy.accept(mockTopicTwoSocketEvent) shouldEqualTo true
     }
 }

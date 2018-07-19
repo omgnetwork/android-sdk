@@ -21,6 +21,10 @@ sealed class FilterStrategy {
         override fun accept(event: SocketEvent<*>) = topic.name == event.socketReceive.topic
     }
 
+    class Custom(private val customFiltering: (event: SocketEvent<*>) -> Boolean) : FilterStrategy() {
+        override fun accept(event: SocketEvent<*>) = customFiltering(event)
+    }
+
     class None : FilterStrategy() {
         override fun accept(event: SocketEvent<*>) = true
     }
