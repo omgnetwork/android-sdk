@@ -21,6 +21,7 @@ internal class OMGEnumAdapter<T : OMGEnum> : JsonDeserializer<T>, JsonSerializer
     override fun deserialize(json: JsonElement, type: Type, context: JsonDeserializationContext): T? {
         val enumConstants = (type as Class<T>).enumConstants
         return enumConstants.firstOrNull { it.value == json.asString }
+            ?: enumConstants.firstOrNull { it.value == "other" }
     }
 
     override fun serialize(src: T, type: Type, context: JsonSerializationContext): JsonElement {
