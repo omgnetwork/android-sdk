@@ -52,10 +52,6 @@ enum class SocketSystemEvent(override val value: String) : OMGEnum {
     override fun toString(): String = this.value
 }
 
-// TODO @ripzery sealed class might be more appropriate, we can put the eventBuilder in it
-// TODO but we will need a custom serializer/deserializer and lose the simplicity of using OMGEnum
-// TODO plus, sealed class will means adding a case in the serializer/deserializer for each new event
-// TODO but we should investigate the perf impact of keeping of lambda in an enum
 enum class SocketCustomEvent(
     override val value: String,
     val eventBuilder: (SocketReceive<*>) -> SocketEvent<*>?
@@ -75,5 +71,5 @@ enum class SocketCustomEvent(
 private inline fun <reified T : SocketReceive.SocketData> eventBuilder(
     crossinline eventProvider: (SocketReceive<T>) -> SocketEvent<T>?
 ): (SocketReceive<*>) -> SocketEvent<T>? = {
-    (it as? T)?.let { eventProvider(it as SocketReceive<T>) }
+    (it as? SocketReceive<T>)?.let { eventProvider(it) }
 }
