@@ -108,7 +108,7 @@ class TransactionRequestLiveTest : LiveTest() {
                 fail("The transaction consumption should not be finalized.")
             }
 
-            override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption?, apiError: APIError) {
+            override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
                 apiError.code shouldEqual ErrorCode.TRANSACTION_SAME_ADDRESS
             }
         })

@@ -7,7 +7,6 @@ package co.omisego.omisego.websocket.listener
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
@@ -30,7 +29,7 @@ class SimpleSocketCustomEventListenerTest {
                 override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
                 }
 
-                override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption?, apiError: APIError) {
+                override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
                 }
             }
         )
@@ -65,14 +64,6 @@ class SimpleSocketCustomEventListenerTest {
         listener.onSpecificEvent(TransactionConsumptionFinalizedEvent(mockResponseFail))
 
         verify(listener, times(1)).onTransactionConsumptionFinalizedFail(mockTransactionConsumption, mockAPIError)
-        verify(listener, times(0)).onTransactionConsumptionFinalizedSuccess(mockTransactionConsumption)
-    }
-
-    @Test
-    fun `dispatch function should be invoked onFailed even there is no error is provided`() {
-        listener.onSpecificEvent(TransactionConsumptionFinalizedEvent(mockResponseUnknownError))
-
-        verify(listener, times(1)).onTransactionConsumptionFinalizedFail(null, APIError(ErrorCode.SERVER_UNKNOWN_ERROR, "Unknown error"))
         verify(listener, times(0)).onTransactionConsumptionFinalizedSuccess(mockTransactionConsumption)
     }
 

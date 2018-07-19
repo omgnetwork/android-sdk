@@ -19,7 +19,7 @@ abstract class TransactionRequestListener : SimpleSocketCustomEventListener<Sock
 
     abstract fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption)
     abstract fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
-    abstract fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption?, apiError: APIError)
+    abstract fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
 
     companion object {
         internal val allowedEvents = listOf(
