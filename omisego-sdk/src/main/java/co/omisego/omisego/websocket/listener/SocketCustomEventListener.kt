@@ -12,6 +12,7 @@ import co.omisego.omisego.websocket.event.SocketEvent
 import co.omisego.omisego.websocket.strategy.FilterStrategy
 
 interface SocketCustomEventListener {
+    abstract var strategy: FilterStrategy
     fun onEvent(event: SocketEvent<*>)
 
     companion object {
@@ -56,6 +57,4 @@ interface SocketCustomEventListener {
             }
         }
     }
-
-    abstract var strategy: FilterStrategy
 }

@@ -7,7 +7,6 @@ sealed class SocketEvent<T : SocketReceive.SocketData> {
     abstract val socketReceive: SocketReceive<T>
 }
 
-// Transaction consumption events
 data class TransactionConsumptionRequestEvent(
     override val socketReceive: SocketReceive<TransactionConsumption>
 ) : SocketEvent<TransactionConsumption>()
