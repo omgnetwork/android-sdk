@@ -12,8 +12,6 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.websocket.SocketClientContract
-import co.omisego.omisego.websocket.event.TransactionConsumptionListener
-import co.omisego.omisego.websocket.event.TransactionRequestListener
 import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.strategy.FilterStrategy
 
@@ -45,7 +43,7 @@ interface Listenable {
 fun TransactionRequest.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    listener: TransactionRequestListener
+    listener: SocketCustomEventListener.TransactionRequestListener
 ) {
     with(client) {
         listener.strategy = FilterStrategy.Topic(socketTopic)
@@ -65,7 +63,7 @@ fun TransactionRequest.startListeningEvents(
 fun TransactionConsumption.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    listener: TransactionConsumptionListener
+    listener: SocketCustomEventListener.TransactionConsumptionListener
 ) {
     with(client) {
         listener.strategy = FilterStrategy.Topic(socketTopic)
