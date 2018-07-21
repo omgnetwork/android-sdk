@@ -12,7 +12,10 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.websocket.SocketClientContract
+import co.omisego.omisego.websocket.listener.ListenableTopicListener
 import co.omisego.omisego.websocket.listener.SocketCustomEventListener
+import co.omisego.omisego.websocket.listener.TransactionConsumptionTopicListener
+import co.omisego.omisego.websocket.listener.TransactionRequestTopicListener
 import co.omisego.omisego.websocket.strategy.FilterStrategy
 
 /**
@@ -32,6 +35,53 @@ interface Listenable {
     }
 }
 
+@Deprecated(
+    level = DeprecationLevel.ERROR,
+    message = "Use startListeningEvents(SocketClientContract.Client, Map<String, Any>, TransactionRequestTopicListener) instead."
+)
+fun TransactionRequest.startListeningEvents(
+    client: SocketClientContract.Client,
+    payload: Map<String, Any> = mapOf(),
+    listener: SocketCustomEventListener.TransactionRequestListener
+) {
+    with(client) {
+        listener.strategy = FilterStrategy.Topic(socketTopic)
+        addCustomEventListener(listener)
+        joinChannel(socketTopic, payload)
+    }
+}
+
+@Deprecated(
+    level = DeprecationLevel.ERROR,
+    message = "Use startListeningEvents(SocketClientContract.Client, Map<String, Any>, TransactionConsumptionTopicListener) instead."
+)
+fun TransactionConsumption.startListeningEvents(
+    client: SocketClientContract.Client,
+    payload: Map<String, Any> = mapOf(),
+    listener: SocketCustomEventListener.TransactionConsumptionListener
+) {
+    with(client) {
+        addCustomEventListener(listener)
+        joinChannel(socketTopic, payload)
+    }
+}
+
+@Deprecated(
+    level = DeprecationLevel.ERROR,
+    message = "Use startListeningEvents(SocketClientContract.Client, Map<String, Any>, ListenableTopicListener) instead."
+)
+fun User.startListeningEvents(
+    client: SocketClientContract.Client,
+    payload: Map<String, Any> = mapOf(),
+    listener: SocketCustomEventListener
+) {
+    with(client) {
+        listener.strategy = FilterStrategy.Topic(socketTopic)
+        addCustomEventListener(listener)
+        joinChannel(socketTopic, payload)
+    }
+}
+
 /**
  * Opens a websocket connection with the server and starts to listen for events happening on this transaction request.
  * Typically, this should be used to listen for consumption request made on the request.
@@ -43,10 +93,9 @@ interface Listenable {
 fun TransactionRequest.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    listener: SocketCustomEventListener.TransactionRequestListener
+    listener: TransactionRequestTopicListener
 ) {
     with(client) {
-        listener.strategy = FilterStrategy.Topic(socketTopic)
         addCustomEventListener(listener)
         joinChannel(socketTopic, payload)
     }
@@ -63,10 +112,9 @@ fun TransactionRequest.startListeningEvents(
 fun TransactionConsumption.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    listener: SocketCustomEventListener.TransactionConsumptionListener
+    listener: TransactionConsumptionTopicListener
 ) {
     with(client) {
-        listener.strategy = FilterStrategy.Topic(socketTopic)
         addCustomEventListener(listener)
         joinChannel(socketTopic, payload)
     }
@@ -82,9 +130,10 @@ fun TransactionConsumption.startListeningEvents(
 fun User.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    listener: SocketCustomEventListener
+    listener: ListenableTopicListener
 ) {
-    listener.strategy = FilterStrategy.Topic(socketTopic)
-    client.addCustomEventListener(listener)
-    client.joinChannel(socketTopic, payload)
+    with(client) {
+        addCustomEventListener(listener)
+        joinChannel(socketTopic, payload)
+    }
 }
