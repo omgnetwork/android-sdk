@@ -13,7 +13,8 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Changed
 - Change `TransactionExchange` rate to nullable type
-- Deprecated `setConnectionListener` and `setChannelListener` as compilation error.
+- Deprecated `setConnectionListener` and `setChannelListener` as a compilation error.
+- Deprecated `startListeningEvents` as a compilation error.
 
 ## [1.0.0] - 2018-07-6
 ### Added
