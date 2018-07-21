@@ -7,8 +7,8 @@ package co.omisego.omisego.websocket
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.websocket.listener.CompositeSocketConnectionListener
 import co.omisego.omisego.websocket.listener.SocketConnectionListener
+import co.omisego.omisego.websocket.listener.internal.CompositeSocketConnectionListener
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.amshove.kluent.mock

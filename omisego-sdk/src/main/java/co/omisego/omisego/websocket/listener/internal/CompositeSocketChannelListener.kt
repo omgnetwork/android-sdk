@@ -1,4 +1,4 @@
-package co.omisego.omisego.websocket.listener
+package co.omisego.omisego.websocket.listener.internal
 
 /**
  * OmiseGO
@@ -8,6 +8,7 @@ package co.omisego.omisego.websocket.listener
  */
 
 import co.omisego.omisego.model.APIError
+import co.omisego.omisego.websocket.listener.SocketChannelListener
 
 class CompositeSocketChannelListener(
     private val listeners: MutableSet<SocketChannelListener> = linkedSetOf()

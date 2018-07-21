@@ -14,7 +14,7 @@ import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.utils.Either
 import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
-import co.omisego.omisego.websocket.listener.CompositeSocketChannelListener
+import co.omisego.omisego.websocket.listener.internal.CompositeSocketChannelListener
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify

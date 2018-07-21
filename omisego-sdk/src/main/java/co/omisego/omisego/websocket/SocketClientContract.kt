@@ -14,10 +14,10 @@ import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.listener.SocketChannelListener
-import co.omisego.omisego.websocket.listener.SocketChannelListenerSet
+import co.omisego.omisego.websocket.listener.internal.SocketChannelListenerSet
 import co.omisego.omisego.websocket.listener.SocketConnectionListener
-import co.omisego.omisego.websocket.listener.SocketConnectionListenerSet
-import co.omisego.omisego.websocket.listener.SocketCustomEventListenerSet
+import co.omisego.omisego.websocket.listener.internal.SocketConnectionListenerSet
+import co.omisego.omisego.websocket.listener.internal.SocketCustomEventListenerSet
 import com.google.gson.Gson
 import java.util.Timer
 import java.util.concurrent.Executor

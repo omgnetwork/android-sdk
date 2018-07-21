@@ -14,8 +14,8 @@ import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.interval.SocketHeartbeat
-import co.omisego.omisego.websocket.listener.CompositeSocketChannelListener
-import co.omisego.omisego.websocket.listener.CompositeSocketConnectionListener
+import co.omisego.omisego.websocket.listener.internal.CompositeSocketChannelListener
+import co.omisego.omisego.websocket.listener.internal.CompositeSocketConnectionListener
 import com.nhaarman.mockito_kotlin.spy
 import com.nhaarman.mockito_kotlin.timeout
 import com.nhaarman.mockito_kotlin.times
