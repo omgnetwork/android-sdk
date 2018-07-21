@@ -10,6 +10,7 @@ package co.omisego.omisego.websocket
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.HTTPHeaders
 import co.omisego.omisego.model.ClientConfiguration
+import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.channel.SocketChannel
@@ -17,8 +18,12 @@ import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegator
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
+import co.omisego.omisego.websocket.event.SocketEvent
+import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
 import co.omisego.omisego.websocket.listener.SocketChannelListener
 import co.omisego.omisego.websocket.listener.SocketConnectionListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
+import co.omisego.omisego.websocket.strategy.FilterStrategy
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -29,6 +34,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
+import org.amshove.kluent.any
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
@@ -51,6 +57,8 @@ class OMGSocketClientTest {
     private val mockSocketChannel: SocketClientContract.Channel = mock()
     private val mockSocketSendParser: SocketClientContract.PayloadSendParser = mock()
     private val mockSocketDelegator: SocketDelegator = mock()
+    private val mockTransactionRequestListener: SocketCustomEventListener.TransactionRequestListener = mock()
+    private val mockLambdaEvent: (SocketEvent<out SocketReceive.SocketData>) -> Unit = mock()
 
     private lateinit var socketClient: OMGSocketClient
 
@@ -81,7 +89,7 @@ class OMGSocketClientTest {
     }
 
     @Test
-    fun `joinChannel should call the socket channel join and addCustomEventListener correctly`() {
+    fun `joinChannel should call the socket channel join successfully`() {
         val socketTopic = SocketTopic("topic")
         val payload = mapOf<String, Any>()
 
@@ -90,6 +98,16 @@ class OMGSocketClientTest {
 
         verify(mockSocketChannel, times(1)).join(socketTopic.name, payload)
         verifyNoMoreInteractions(mockSocketChannel)
+    }
+
+    @Test
+    fun `addCustomSocketListener with convenient methods should work correctly`() {
+        socketClient.socketChannel = mockSocketChannel
+        socketClient.addCustomEventListener(mockTransactionRequestListener)
+        socketClient.addCustomEventListener(SocketCustomEventListener.forEvent<TransactionConsumptionRequestEvent>(mockLambdaEvent))
+        socketClient.addCustomEventListener(SocketCustomEventListener.forEvents(mockLambdaEvent, FilterStrategy.None()))
+        socketClient.addCustomEventListener(SocketCustomEventListener.forEvents(mockTransactionRequestListener, FilterStrategy.None()))
+        verify(mockSocketChannel, times(4)).addCustomEventListener(any())
     }
 
     @Test
