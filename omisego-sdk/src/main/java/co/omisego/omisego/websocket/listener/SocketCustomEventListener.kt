@@ -20,6 +20,11 @@ interface SocketCustomEventListener {
     fun onEvent(event: SocketEvent<*>)
 
     companion object {
+        /**
+         * A convenient method for listening for the specific event.
+         *
+         * @param lambda A lambda which receives the `SocketEvent` object without regarding the `SocketTopic`.
+         */
         inline fun <reified Event : SocketEvent<*>> forEvent(
             crossinline lambda: (Event) -> Unit
         ): SocketCustomEventListener {
@@ -32,7 +37,10 @@ interface SocketCustomEventListener {
         }
 
         /**
-         * Wrap a [SocketCustomEventListener] by making sure it's called only for events matching the given list
+         * A convenient method for listening for any events, but the events will be filtered out by the provided `FilterStrategy`
+         *
+         * @param listener A [SocketCustomEventListener] implementation
+         * @param strategy A [FilterStrategy] that used for filtering an event.
          */
         fun forEvents(
             listener: SocketCustomEventListener,
@@ -47,7 +55,10 @@ interface SocketCustomEventListener {
         }
 
         /**
-         * Wrap a [SocketCustomEventListener] by making sure it's called only for events matching the given list
+         * A convenient method for listening for any events, but the events will be filtered out by the provided `FilterStrategy`.
+         *
+         * @param lambda A lambda which receives the `SocketEvent` object.
+         * @param strategy A [FilterStrategy] that used for filtering an event.
          */
         inline fun forEvents(
             crossinline lambda: (SocketEvent<out SocketReceive.SocketData>) -> Unit,
@@ -61,6 +72,7 @@ interface SocketCustomEventListener {
             }
         }
     }
+
     abstract class TransactionRequestListener : SimpleSocketCustomEventListener<SocketEvent<*>>() {
         override var strategy: FilterStrategy = FilterStrategy.Event(allowedEvents)
         final override fun onSpecificEvent(event: SocketEvent<*>) {

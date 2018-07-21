@@ -10,6 +10,15 @@ package co.omisego.omisego.websocket.strategy
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.event.SocketEvent
 
+/**
+ * A strategy that is used in the [SimpleSocketCustomEventListener] for filtering the events.
+ * There're currently 4 types of strategy including:
+ *
+ * Event: Filtering events by accept only if the event type is contained in the given [SocketEvent] classes (e.g. TransactionConsumptionRequestEvent, TransactionConsumptionFinalizedEvent).
+ * Topic: Filtering events by accept only if the event's `SocketTopic` matches the given [SocketTopic].
+ * Custom: Custom filtering by implementing a lambda that receives [SocketEvent] to return a boolean.
+ * None: Accept all events.
+ */
 sealed class FilterStrategy {
     abstract fun accept(event: SocketEvent<*>): Boolean
 
