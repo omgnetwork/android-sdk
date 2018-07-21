@@ -92,7 +92,7 @@ Where:
 ## Retrieving resources
 
 Once you have a client object in the [initialization section](#initialization), you can retrieve different resources.
-Every call takes an `OMGCallback` interface that returns a `OMGResponse` object:
+Every call takes an `OMGCallback` interface that returns an `OMGResponse` object:
 
 ```kotlin
 interface OMGCallback<in T> {
@@ -239,7 +239,7 @@ The SDK offers 2 ways for transferring tokens between addresses:
 
 #### Create a transaction
 
-The most basic way to transfer tokens is to use the `omgAPIClient.createTransaction()` method, which allows the current user to send tokens from one of its wallet to a specific address.
+The most basic way to transfer tokens is to use the `omgAPIClient.createTransaction()` method, which allows the current user to send tokens from one of its wallets to a specific address.
 
 ```kotlin
 val request = TransactionCreateParams(
@@ -319,7 +319,7 @@ Where:
     * `consumptionLifetime`: (optional) The amount of time in millisecond during which a consumption is valid. Default `null` (forever).
     * `expirationDate`: (optional) The date when the request will expire and not be consumable anymore. Default `null` (never expired).
     * `allowAmountOverride`: (optional) Allow or not the consumer to override the amount specified in the request. This needs to be true if the amount is not specified
-    > Note that if amount is nil and allowAmountOverride is false the init will fail and return null.
+    > Note that if the amount is null and allowAmountOverride is false the init will fail and return null.
     * `maxConsumptionsPerUser`: (optional) The maximum number of consumptions allowed per unique user. Default `null` (unlimited).
     * `metadata`: Additional metadata embedded with the request
     * `encryptedMetadata`: Additional encrypted metadata embedded with the request
@@ -488,7 +488,7 @@ As you can see, the `OMGQRScannerContract.Callback` offers the following interfa
 
 ```kotlin
 /**
- * Called when the user tap on the screen. The request to the backend will be cancelled.
+ * Called when the user taps on the screen. The request to the backend will be canceled.
  *
  * @param view The QR scanner view
  */
@@ -539,7 +539,7 @@ The transaction request flow is as follow:
 2. Consume that `TransactionRequest` which will generate a TransactionConsumption.
 3. Approve or reject the `TransactionConsumption` generated in step 2.
 
-This section describes the use of the `OMGSocketClient` in order to listen for events which happens after step 2 or step 3.
+This section describes the use of the `OMGSocketClient` in order to listen for events which happen after step 2 or step 3.
 
 ## Websocket Initialization
 
@@ -594,8 +594,8 @@ socketClient.addConnectionListener(object : SocketConnectionListener {
 
 `SocketChannelListener` *(optional)* is the listener that listens for a **channel connection status**. The possible events are:
 
-* `onJoinedChannel(topic: String)`: Invoked when the client have been joined the channel successfully.
-* `onLeftChannel(topic: String)`: Invoked when the client have been left the channel successfully.
+* `onJoinedChannel(topic: String)`: Invoked when the client has been joined the channel successfully.
+* `onLeftChannel(topic: String)`: Invoked when the client has been left the channel successfully.
 * `onError(apiError: APIError)`: Invoked when something goes wrong while connecting to a channel.
     
 **Usage**
@@ -617,7 +617,7 @@ socketClient.addChannelListener(object : SocketChannelListener {
 
 ## Listen for custom events
 
-Custom event are special events that are currently limited to the `TransactionRequest` and the `TransactionConsumption` event.
+A custom event is special events that are currently limited to the `TransactionRequest` and the `TransactionConsumption` event.
 All custom events will be a sub-class of the `SocketCustomEventListener`. `SocketCustomEventListener` is a **required** generic listener that you will need to pass its sub-class when joining to the channel for listening to the events.
 All possible events are the following:
 
@@ -680,12 +680,12 @@ user.startListeningEvents(socketClient, listener = object : ListenableTopicListe
 ```
 
 Where:
-* `onSpecificEvent`: An event callback. This method will be called when any event regarding to the user is received.
+* `onSpecificEvent`: An event callback. This method will be called when any event regarding the user is received.
 * `event`:  An object which is containing a raw response from the eWallet socket API.
 
 For more information can be found [here](https://github.com/omisego/ewallet/blob/develop/docs/websockets/ewallet_api.md).
 
-Additionally, you might want to control how you receive the event manually, we've also provide the `FilterStrategy` to control the event filtering mechanism.
+Additionally, you might want to control how you receive the event manually, we've also provided the `FilterStrategy` to control the event filtering mechanism.
 
 ### FilterStrategy
 `FilterStrategy` is a strategy that is used when receiving an event coming from the WebSocket server for filtering the events.
@@ -751,7 +751,7 @@ By the way, if you want to stop listening before that happen, you can call `sock
 
 # Run Kotlin Lint
 
-Simply run `./gradlew ktlintCheck` under project root directory.
+Simply run `./gradlew ktlintCheck` under the project root directory.
 
 # Test
 
