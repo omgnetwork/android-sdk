@@ -720,14 +720,24 @@ socketClient.addCustomEventListener(SocketCustomEventListener.forEvents({ socket
 }, FilterStrategy.Event(allowedEvents)))
 ```
 
-3. Use `SocketCustomEventListener.forEvents<SocketEvent>` but using our listener.
+3. Use `SocketCustomEventListener.forEvents<SocketEvent>`, same as above but using the conventional listener instead of lambda.
 ```kotlin
 val customStrategy = FilterStrategy.Custom {
   it.socketReceive.topic.contains("transaction_consumption")
 }
 
-socketClient.addCustomEventListener(SocketCustomEventListener.forEvents({ socketEvent ->
-    // Do something with `socketEvent.socketReceive` manually
+socketClient.addCustomEventListener(SocketCustomEventListener.forEvents(object: SocketCustomEventListener.TransactionRequestListener() {
+    override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
+        // Do something
+    }
+
+    override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
+        // Do something
+    }
+
+    override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
+        // Do something
+    }
 }, customStrategy))
 ```
 
