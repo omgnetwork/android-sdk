@@ -33,6 +33,7 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
         - [TransactionRequest Event](#transactionrequest-event)
         - [TransactionConsumption Event](#transactionconsumption-event)
         - [User Event](#user-events)
+        - [Filter Strategy](#filter-strategy)
     - [Stop listen for the custom event](#stop-listening-for-the-custom-event)
     - [Stop listen for the system event](#stop-listening-for-the-system-event)
 - [Run Kotlin Lint](#run-kotlin-lint)
@@ -687,7 +688,7 @@ For more information can be found [here](https://github.com/omisego/ewallet/blob
 
 Additionally, you might want to control how you receive the event manually, we've also provided the `FilterStrategy` to control the event filtering mechanism.
 
-### FilterStrategy
+### Filter Strategy
 `FilterStrategy` is a strategy that is used when receiving an event coming from the WebSocket server for filtering the events.
 There're currently 4 strategies available:
 
