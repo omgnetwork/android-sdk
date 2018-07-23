@@ -61,6 +61,7 @@ fun TransactionConsumption.startListeningEvents(
     listener: SocketCustomEventListener.TransactionConsumptionListener
 ) {
     with(client) {
+        listener.strategy = FilterStrategy.Topic(socketTopic)
         addCustomEventListener(listener)
         joinChannel(socketTopic, payload)
     }
