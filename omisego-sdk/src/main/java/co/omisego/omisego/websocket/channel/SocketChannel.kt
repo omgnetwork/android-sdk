@@ -173,7 +173,9 @@ internal class SocketChannel(
         disconnect(SocketStatusCode.CONNECTION_FAILURE, "Disconnected due to network connectivity change")
         socketReconnect.startInterval { socketSend ->
             whenNeverJoinedChannel(socketSend.topic) {
-                socketClient.send(socketSend)
+                if (!socketClient.send(socketSend)) {
+                    disconnect(SocketStatusCode.CONNECTION_FAILURE, "Disconnected due to network connectivity change")
+                }
             }
         }
     }
