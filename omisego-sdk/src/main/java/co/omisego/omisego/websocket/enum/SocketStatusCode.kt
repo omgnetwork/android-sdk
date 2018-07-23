@@ -8,5 +8,6 @@ package co.omisego.omisego.websocket.enum
  */
 
 enum class SocketStatusCode(val code: Int) {
-    NORMAL(1000)
+    NORMAL(1000),
+    CONNECTION_FAILURE(1001)
 }

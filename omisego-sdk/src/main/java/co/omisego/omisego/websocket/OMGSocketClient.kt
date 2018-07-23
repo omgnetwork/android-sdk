@@ -26,6 +26,7 @@ import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegator
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketReceiveParser
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.interval.SocketHeartbeat
+import co.omisego.omisego.websocket.interval.SocketReconnect
 import co.omisego.omisego.websocket.listener.SocketChannelListener
 import co.omisego.omisego.websocket.listener.SocketConnectionListener
 import co.omisego.omisego.websocket.listener.SocketCustomEventListener
@@ -78,7 +79,7 @@ class OMGSocketClient internal constructor(
     /**
      * A [SocketHeartbeat] is responsible for schedule sending the heartbeat event for keep the connection alive
      */
-    override val socketHeartbeat: SocketClientContract.SocketInterval by lazy {
+    override val socketHeartbeat: SocketHeartbeat by lazy {
         SocketHeartbeat(SocketMessageRef(scheme = SocketMessageRef.SCHEME_HEARTBEAT))
     }
 
@@ -96,7 +97,7 @@ class OMGSocketClient internal constructor(
      * @return true, if all messages have been sent, otherwise false.
      */
     override fun hasSentAllMessages(): Boolean =
-        socketChannel.hasSentAllPendingJoinChannel() && (wsClient?.queueSize() ?: 0L) == 0L
+        socketChannel.pending() && (wsClient?.queueSize() ?: 0L) == 0L
 
     /**
      * Joining a channel by the given [SocketTopic].
@@ -159,13 +160,15 @@ class OMGSocketClient internal constructor(
         message = "Use \'addConnectionListener\' or \'removeConnectionListener\' instead",
         level = DeprecationLevel.ERROR
     )
-    override fun setConnectionListener(connectionListener: SocketConnectionListener?) {}
+    override fun setConnectionListener(connectionListener: SocketConnectionListener?) {
+    }
 
     @Deprecated(
         "Use \'addChannelListener\' or \'removeChannelListener\' instead",
         level = DeprecationLevel.ERROR
     )
-    override fun setChannelListener(channelListener: SocketChannelListener?) {}
+    override fun setChannelListener(channelListener: SocketChannelListener?) {
+    }
 
     /**
      * Add listener for subscribing to the [SocketConnectionListener] event.
@@ -294,6 +297,7 @@ class OMGSocketClient internal constructor(
             val customEventDispatcher = CustomEventDispatcher(compositeSocketChannelListener)
 
             /* To invoke the socket connection listener */
+            val socketReconnect = SocketReconnect()
             val socketDispatcher = SocketDispatcher(
                 systemEventDispatcher,
                 customEventDispatcher,
@@ -314,7 +318,8 @@ class OMGSocketClient internal constructor(
                 socketDispatcher,
                 socketClient,
                 compositeSocketConnectionListener,
-                compositeSocketChannelListener
+                compositeSocketChannelListener,
+                socketReconnect
             )
             socketClient talksTo socketChannel
 

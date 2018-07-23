@@ -8,10 +8,11 @@ package co.omisego.omisego.websocket.channel
  */
 
 import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.model.socket.SocketTopic
+import co.omisego.omisego.websocket.enum.SocketStatusCode
+import co.omisego.omisego.websocket.interval.SocketHeartbeat
 import co.omisego.omisego.websocket.listener.internal.CompositeSocketChannelListener
 import co.omisego.omisego.websocket.listener.internal.CompositeSocketConnectionListener
-import co.omisego.omisego.websocket.SocketClientContract
-import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.listener.internal.SocketCustomEventListenerSet
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
@@ -19,12 +20,20 @@ import java.util.concurrent.atomic.AtomicBoolean
 interface SocketChannelContract {
     /* Channel Package */
     interface Channel {
-        val pendingChannelsQueue: BlockingQueue<SocketSend>
+        val socketSendCreator: SocketSendCreator
+        val socketPendingChannel: SocketPendingChannel
+        val compositeSocketConnectionListener: CompositeSocketConnectionListener
+        val compositeSocketChannelListener: CompositeSocketChannelListener
 
         /**
-         * A boolean indicating channels are currently leaving or not
+         * [SocketReconnect] is responsible for re-initialized the websocket client and re-join all of the active channels.
          */
-        val leavingChannels: AtomicBoolean
+        val socketReconnect: SocketReconnect
+
+        /**
+         * A boolean indicating channels are currently leavingAllChannels or not
+         */
+        val leavingAllChannels: AtomicBoolean
 
         /**
          * A [Dispatcher] is responsible dispatch all events to the client.
@@ -36,13 +45,34 @@ interface SocketChannelContract {
          */
         val socketClient: SocketClient
 
-        val compositeSocketConnectionListener: CompositeSocketConnectionListener
-        val compositeSocketChannelListener: CompositeSocketChannelListener
+        /**
+         * Retrieves a set of active [SocketTopic].
+         *
+         * @return A set of active [SocketTopic].
+         */
+        fun retrieveChannels(): Set<String>
 
+        /**
+         * Disconnect the websocket client.
+         */
+        fun disconnect(status: SocketStatusCode, reason: String)
+
+        /**
+         * Run socket heartbeat when the first channel is joined.
+         */
+        fun startHeartbeatWhenBegin()
+
+        /**
+         * Start reconnect mechanism when the socket connection has failed.
+         */
+        fun startReconnect(throwable: Throwable?)
+    }
+
+    interface SocketSendCreator {
         /**
          * A [SocketMessageRef] is responsible for create unique ref value to be included in the [SocketSend] request.
          */
-        val socketMessageRef: SocketChannelContract.MessageRef
+        val socketMessageRef: SocketMessageRef
 
         /**
          * Create a [SocketSend] instance to be used for join a channel.
@@ -60,16 +90,34 @@ interface SocketChannelContract {
          * @param topic A topic indicating which channel will be joined.
          * @param payload (Optional) the additional data you might want to send bundled with the request.
          *
-         * @return A [SocketSend] instance used for leaving the channel.
+         * @return A [SocketSend] instance used for leavingAllChannels the channel.
          */
         fun createLeaveMessage(topic: String, payload: Map<String, Any>): SocketSend
+    }
+
+    interface PendingChannel {
+        val pendingChannelsQueue: BlockingQueue<SocketSend>
 
         /**
-         * Check if we're currently leaving all channels or not.
-         *
-         * @return true, if we're currently leaving all channels, otherwise false.
+         * Join all pending channels in the queue.
          */
-        fun joinable(): Boolean
+        fun execute(join: (topic: String, payload: Map<String, Any>) -> Unit)
+
+        /**
+         * Add channel to pending channel queue.
+         */
+        fun add(socketSend: SocketSend, period: Long)
+
+        /**
+         * Remove channel from pending channel queue.
+         */
+        fun remove(topic: String)
+    }
+
+    interface SocketReconnect {
+        fun add(socketSend: SocketSend)
+        fun remove(topic: String)
+        fun stopReconnectIfDone(channelSet: Set<String>)
     }
 
     /**
@@ -86,7 +134,7 @@ interface SocketChannelContract {
         /**
          * A [SocketHeartbeat] is responsible for schedule sending the heartbeat event for keep the connection alive
          */
-        val socketHeartbeat: SocketClientContract.SocketInterval
+        val socketHeartbeat: SocketHeartbeat
 
         /**
          * Send the [SocketSend] request to the eWallet web socket API.

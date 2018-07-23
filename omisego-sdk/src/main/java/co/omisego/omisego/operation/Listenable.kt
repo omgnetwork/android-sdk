@@ -28,7 +28,7 @@ interface Listenable {
      * Stop listening for events
      *
      * @param client The client used when starting to listen
-     * @param payload The additional metadata for leaving the channel.
+     * @param payload The additional metadata for leavingAllChannels the channel.
      */
     fun stopListening(client: SocketClientContract.Client, payload: Map<String, Any> = mapOf()) {
         client.leaveChannel(socketTopic, payload)

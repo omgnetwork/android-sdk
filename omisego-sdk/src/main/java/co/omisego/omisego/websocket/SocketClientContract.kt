@@ -14,8 +14,8 @@ import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.listener.SocketChannelListener
-import co.omisego.omisego.websocket.listener.internal.SocketChannelListenerSet
 import co.omisego.omisego.websocket.listener.SocketConnectionListener
+import co.omisego.omisego.websocket.listener.internal.SocketChannelListenerSet
 import co.omisego.omisego.websocket.listener.internal.SocketConnectionListenerSet
 import co.omisego.omisego.websocket.listener.internal.SocketCustomEventListenerSet
 import com.google.gson.Gson
@@ -168,7 +168,7 @@ interface SocketClientContract {
          * @param topic Join the channel by the given topic.
          * @param payload (Optional) the additional data you might want to send bundled with the request.
          */
-        fun join(topic: String, payload: Map<String, Any>)
+        fun join(topic: String, payload: Map<String, Any>): Boolean
 
         /**
          * Send [SocketEventSend.LEAVE] event to the server. Do nothing if the channel has already left.
@@ -184,23 +184,11 @@ interface SocketClientContract {
         fun leaveAll()
 
         /**
-         * Join all pending channels.
-         */
-        fun executePendingJoinChannel()
-
-        /**
          * A boolean indicating if all pending join channel messages have been sent to the server.
          *
          * @return true, if all messages have been sent, otherwise false.
          */
-        fun hasSentAllPendingJoinChannel(): Boolean
-
-        /**
-         * Retrieves a set of active [SocketTopic].
-         *
-         * @return A set of active [SocketTopic].
-         */
-        fun retrieveChannels(): Set<String>
+        fun pending(): Boolean
     }
 
     /* Interval Package */
@@ -219,13 +207,6 @@ interface SocketClientContract {
          * An interval of milliseconds between the end of the previous task and the start of the next one.
          */
         var period: Long
-
-        /**
-         * Start to schedule the [SocketSend] to be sent to the server periodically.
-         *
-         * @param task A lambda with a [SocketSend] parameter. This will be executed periodically that starts immediately.
-         */
-        fun startInterval(task: (SocketSend) -> Unit)
 
         /**
          * Stop to schedule the task to be sent to the server.
