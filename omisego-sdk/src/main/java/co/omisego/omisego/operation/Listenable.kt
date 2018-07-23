@@ -16,7 +16,6 @@ import co.omisego.omisego.websocket.listener.ListenableTopicListener
 import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.listener.TransactionConsumptionTopicListener
 import co.omisego.omisego.websocket.listener.TransactionRequestTopicListener
-import co.omisego.omisego.websocket.strategy.FilterStrategy
 
 /**
  * Represents an object that can be listened with websocket
@@ -45,7 +44,6 @@ fun TransactionRequest.startListeningEvents(
     listener: SocketCustomEventListener.TransactionRequestListener
 ) {
     with(client) {
-        listener.strategy = FilterStrategy.Topic(socketTopic)
         addCustomEventListener(listener)
         joinChannel(socketTopic, payload)
     }
@@ -61,7 +59,6 @@ fun TransactionConsumption.startListeningEvents(
     listener: SocketCustomEventListener.TransactionConsumptionListener
 ) {
     with(client) {
-        listener.strategy = FilterStrategy.Topic(socketTopic)
         addCustomEventListener(listener)
         joinChannel(socketTopic, payload)
     }
@@ -77,7 +74,6 @@ fun User.startListeningEvents(
     listener: SocketCustomEventListener
 ) {
     with(client) {
-        listener.strategy = FilterStrategy.Topic(socketTopic)
         addCustomEventListener(listener)
         joinChannel(socketTopic, payload)
     }

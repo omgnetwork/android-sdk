@@ -15,18 +15,14 @@ import co.omisego.omisego.websocket.strategy.FilterStrategy
 
 abstract class TransactionRequestTopicListener(
     transactionRequest: TransactionRequest
-) : SocketCustomEventListener.TransactionRequestListener() {
-    final override var strategy: FilterStrategy = FilterStrategy.Topic(transactionRequest.socketTopic)
-}
+) : SocketCustomEventListener.TransactionRequestListener(FilterStrategy.Topic(transactionRequest.socketTopic))
 
 abstract class TransactionConsumptionTopicListener(
     transactionConsumption: TransactionConsumption
-) : SocketCustomEventListener.TransactionConsumptionListener() {
-    final override var strategy: FilterStrategy = FilterStrategy.Topic(transactionConsumption.socketTopic)
-}
+) : SocketCustomEventListener.TransactionConsumptionListener(FilterStrategy.Topic(transactionConsumption.socketTopic))
 
 abstract class ListenableTopicListener(
     listenable: Listenable
 ) : SimpleSocketCustomEventListener<SocketEvent<*>>() {
-    final override var strategy: FilterStrategy = FilterStrategy.Topic(listenable.socketTopic)
+    final override val strategy: FilterStrategy = FilterStrategy.Topic(listenable.socketTopic)
 }

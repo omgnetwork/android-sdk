@@ -16,7 +16,7 @@ import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
 import co.omisego.omisego.websocket.strategy.FilterStrategy
 
 interface SocketCustomEventListener {
-    var strategy: FilterStrategy
+    val strategy: FilterStrategy
     fun onEvent(event: SocketEvent<*>)
 
     companion object {
@@ -29,7 +29,7 @@ interface SocketCustomEventListener {
             crossinline lambda: (Event) -> Unit
         ): SocketCustomEventListener {
             return object : SimpleSocketCustomEventListener<Event>() {
-                override var strategy: FilterStrategy = FilterStrategy.Event(listOf(Event::class.java))
+                override val strategy: FilterStrategy = FilterStrategy.Event(listOf(Event::class.java))
                 override fun onSpecificEvent(event: Event) {
                     lambda(event)
                 }
@@ -47,7 +47,7 @@ interface SocketCustomEventListener {
             strategy: FilterStrategy
         ): SocketCustomEventListener {
             return object : SimpleSocketCustomEventListener<SocketEvent<*>>() {
-                override var strategy: FilterStrategy = strategy
+                override val strategy: FilterStrategy = strategy
                 override fun onSpecificEvent(event: SocketEvent<*>) {
                     listener.onEvent(event)
                 }
@@ -65,7 +65,7 @@ interface SocketCustomEventListener {
             crossinline lambda: (SocketEvent<out SocketReceive.SocketData>) -> Unit
         ): SocketCustomEventListener {
             return object : SimpleSocketCustomEventListener<SocketEvent<*>>() {
-                override var strategy: FilterStrategy = strategy
+                override val strategy: FilterStrategy = strategy
                 override fun onSpecificEvent(event: SocketEvent<*>) {
                     lambda(event)
                 }
@@ -73,8 +73,9 @@ interface SocketCustomEventListener {
         }
     }
 
-    abstract class TransactionRequestListener : SimpleSocketCustomEventListener<SocketEvent<*>>() {
-        override var strategy: FilterStrategy = FilterStrategy.Event(allowedEvents)
+    abstract class TransactionRequestListener(
+        final override val strategy: FilterStrategy = FilterStrategy.Event(allowedEvents)
+    ) : SimpleSocketCustomEventListener<SocketEvent<*>>() {
         final override fun onSpecificEvent(event: SocketEvent<*>) {
             when (event) {
                 is TransactionConsumptionRequestEvent -> event.socketReceive.data?.let(::onTransactionConsumptionRequest)
@@ -97,8 +98,9 @@ interface SocketCustomEventListener {
         }
     }
 
-    abstract class TransactionConsumptionListener : SimpleSocketCustomEventListener<SocketEvent<*>>() {
-        override var strategy: FilterStrategy = FilterStrategy.Event(allowedEvents)
+    abstract class TransactionConsumptionListener(
+        final override val strategy: FilterStrategy = FilterStrategy.Event(allowedEvents)
+    ) : SimpleSocketCustomEventListener<SocketEvent<*>>() {
         final override fun onSpecificEvent(event: SocketEvent<*>) {
             when (event) {
                 is TransactionConsumptionFinalizedEvent -> event.socketReceive.dispatch(
