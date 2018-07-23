@@ -57,12 +57,12 @@ interface SocketCustomEventListener {
         /**
          * A convenient method for listening for any events, but the events will be filtered out by the provided `FilterStrategy`.
          *
-         * @param lambda A lambda which receives the `SocketEvent` object.
          * @param strategy A [FilterStrategy] that used for filtering an event.
+         * @param lambda A lambda which receives the `SocketEvent` object.
          */
         inline fun forEvents(
-            crossinline lambda: (SocketEvent<out SocketReceive.SocketData>) -> Unit,
-            strategy: FilterStrategy
+            strategy: FilterStrategy,
+            crossinline lambda: (SocketEvent<out SocketReceive.SocketData>) -> Unit
         ): SocketCustomEventListener {
             return object : SimpleSocketCustomEventListener<SocketEvent<*>>() {
                 override var strategy: FilterStrategy = strategy
