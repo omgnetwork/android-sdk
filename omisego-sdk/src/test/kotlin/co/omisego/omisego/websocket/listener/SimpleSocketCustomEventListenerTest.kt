@@ -11,7 +11,6 @@ import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
-import co.omisego.omisego.websocket.strategy.FilterStrategy
 import com.nhaarman.mockito_kotlin.spy
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -21,10 +20,9 @@ import org.junit.Before
 import org.junit.Test
 
 class SimpleSocketCustomEventListenerTest {
-    private val listener: SocketCustomEventListener.TransactionConsumptionListener by lazy {
+    private val listener: TransactionConsumptionListener by lazy {
         spy(
-            object : SocketCustomEventListener.TransactionConsumptionListener() {
-                override var strategy: FilterStrategy = mock()
+            object : TransactionConsumptionListener(mock()) {
                 override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
                 }
 

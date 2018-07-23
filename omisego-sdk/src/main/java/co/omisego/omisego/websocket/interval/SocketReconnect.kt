@@ -17,6 +17,10 @@ import kotlin.concurrent.schedule
 class SocketReconnect : BaseSocketInterval(), SocketChannelContract.SocketReconnect {
     val reconnectChannels: MutableSet<SocketSend> = mutableSetOf()
 
+    companion object {
+        const val NETWORK_AVAILABILITY_SITE = "google.com"
+    }
+
     @Synchronized
     inline fun startInterval(crossinline join: (SocketSend) -> Unit) {
         synchronized(this) {
@@ -55,8 +59,7 @@ class SocketReconnect : BaseSocketInterval(), SocketChannelContract.SocketReconn
      */
     fun isInternetAvailable(): Boolean {
         return try {
-            val ip = InetAddress.getByName("google.com").hostAddress
-            ip.isNotEmpty()
+            InetAddress.getByName(NETWORK_AVAILABILITY_SITE).hostAddress.isNotEmpty()
         } catch (e: Exception) {
             false
         }

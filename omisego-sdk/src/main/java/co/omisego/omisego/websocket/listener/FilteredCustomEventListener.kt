@@ -15,11 +15,11 @@ import co.omisego.omisego.websocket.strategy.FilterStrategy
 
 abstract class TransactionRequestTopicListener(
     transactionRequest: TransactionRequest
-) : SocketCustomEventListener.TransactionRequestListener(FilterStrategy.Topic(transactionRequest.socketTopic))
+) : TransactionRequestListener(FilterStrategy.Topic(transactionRequest.socketTopic))
 
 abstract class TransactionConsumptionTopicListener(
     transactionConsumption: TransactionConsumption
-) : SocketCustomEventListener.TransactionConsumptionListener(FilterStrategy.Topic(transactionConsumption.socketTopic))
+) : TransactionConsumptionListener(FilterStrategy.Topic(transactionConsumption.socketTopic))
 
 abstract class ListenableTopicListener(
     listenable: Listenable

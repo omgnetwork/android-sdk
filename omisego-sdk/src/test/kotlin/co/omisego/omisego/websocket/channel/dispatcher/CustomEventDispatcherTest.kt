@@ -16,7 +16,8 @@ import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
 import co.omisego.omisego.websocket.listener.SocketChannelListener
-import co.omisego.omisego.websocket.listener.SocketCustomEventListener
+import co.omisego.omisego.websocket.listener.TransactionConsumptionListener
+import co.omisego.omisego.websocket.listener.TransactionRequestListener
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
@@ -54,8 +55,8 @@ class CustomEventDispatcherTest {
         error = apiError
     )
 
-    private val txRequestCb: SocketCustomEventListener.TransactionRequestListener = mock()
-    private val txConsumptionCb: SocketCustomEventListener.TransactionConsumptionListener = mock()
+    private val txRequestCb: TransactionRequestListener = mock()
+    private val txConsumptionCb: TransactionConsumptionListener = mock()
     private val mockSocketChannelListener: SocketChannelListener = mock()
 
     private lateinit var customEventDispatcher: CustomEventDispatcher

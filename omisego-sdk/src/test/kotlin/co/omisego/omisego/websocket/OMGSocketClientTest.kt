@@ -23,6 +23,7 @@ import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
 import co.omisego.omisego.websocket.listener.SocketChannelListener
 import co.omisego.omisego.websocket.listener.SocketConnectionListener
 import co.omisego.omisego.websocket.listener.SocketCustomEventListener
+import co.omisego.omisego.websocket.listener.TransactionRequestListener
 import co.omisego.omisego.websocket.strategy.FilterStrategy
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -57,7 +58,7 @@ class OMGSocketClientTest {
     private val mockSocketChannel: SocketClientContract.Channel = mock()
     private val mockSocketSendParser: SocketClientContract.PayloadSendParser = mock()
     private val mockSocketDelegator: SocketDelegator = mock()
-    private val mockTransactionRequestListener: SocketCustomEventListener.TransactionRequestListener = mock()
+    private val mockTransactionRequestListener: TransactionRequestListener = mock()
     private val mockLambdaEvent: (SocketEvent<out SocketReceive.SocketData>) -> Unit = mock()
 
     private lateinit var socketClient: OMGSocketClient
@@ -106,7 +107,7 @@ class OMGSocketClientTest {
         socketClient.addCustomEventListener(mockTransactionRequestListener)
         socketClient.addCustomEventListener(SocketCustomEventListener.forEvent<TransactionConsumptionRequestEvent>(mockLambdaEvent))
         socketClient.addCustomEventListener(SocketCustomEventListener.forEvents(FilterStrategy.None(), mockLambdaEvent))
-        socketClient.addCustomEventListener(SocketCustomEventListener.forEvents(mockTransactionRequestListener, FilterStrategy.None()))
+        socketClient.addCustomEventListener(SocketCustomEventListener.forEvents(FilterStrategy.None(), mockTransactionRequestListener))
         verify(mockSocketChannel, times(4)).addCustomEventListener(any())
     }
 

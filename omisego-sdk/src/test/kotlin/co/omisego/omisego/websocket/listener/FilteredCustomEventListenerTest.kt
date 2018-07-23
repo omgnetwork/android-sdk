@@ -57,10 +57,12 @@ class FilteredCustomEventListenerTest {
             }
         }
 
-        listener.strategy shouldBeInstanceOf FilterStrategy.Topic::class.java
-        (listener.strategy as FilterStrategy.Topic).accept(mockTransactionRequestSocketEvent) shouldBe true
-        (listener.strategy as FilterStrategy.Topic).accept(mockTransactionConsumptionSocketEvent) shouldBe false
-        (listener.strategy as FilterStrategy.Topic).accept(mockUserSocketEvent) shouldBe false
+        with(listener.strategy) {
+            this shouldBeInstanceOf FilterStrategy.Topic::class.java
+            accept(mockTransactionRequestSocketEvent) shouldBe true
+            accept(mockTransactionConsumptionSocketEvent) shouldBe false
+            accept(mockUserSocketEvent) shouldBe false
+        }
     }
 
     @Test
@@ -73,10 +75,12 @@ class FilteredCustomEventListenerTest {
             }
         }
 
-        listener.strategy shouldBeInstanceOf FilterStrategy.Topic::class.java
-        (listener.strategy as FilterStrategy.Topic).accept(mockTransactionRequestSocketEvent) shouldBe false
-        (listener.strategy as FilterStrategy.Topic).accept(mockTransactionConsumptionSocketEvent) shouldBe true
-        (listener.strategy as FilterStrategy.Topic).accept(mockUserSocketEvent) shouldBe false
+        with(listener.strategy) {
+            this shouldBeInstanceOf FilterStrategy.Topic::class.java
+            listener.strategy.accept(mockTransactionRequestSocketEvent) shouldBe false
+            listener.strategy.accept(mockTransactionConsumptionSocketEvent) shouldBe true
+            listener.strategy.accept(mockUserSocketEvent) shouldBe false
+        }
     }
 
     @Test
@@ -86,9 +90,11 @@ class FilteredCustomEventListenerTest {
             }
         }
 
-        listener.strategy shouldBeInstanceOf FilterStrategy.Topic::class.java
-        (listener.strategy as FilterStrategy.Topic).accept(mockTransactionRequestSocketEvent) shouldBe false
-        (listener.strategy as FilterStrategy.Topic).accept(mockTransactionConsumptionSocketEvent) shouldBe false
-        (listener.strategy as FilterStrategy.Topic).accept(mockUserSocketEvent) shouldBe true
+        with(listener.strategy) {
+            this shouldBeInstanceOf FilterStrategy.Topic::class.java
+            accept(mockTransactionRequestSocketEvent) shouldBe false
+            accept(mockTransactionConsumptionSocketEvent) shouldBe false
+            accept(mockUserSocketEvent) shouldBe true
+        }
     }
 }
