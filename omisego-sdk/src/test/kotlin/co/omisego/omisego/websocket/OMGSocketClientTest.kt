@@ -80,11 +80,11 @@ class OMGSocketClientTest {
     @Test
     fun `hasSentAllMessages should call the web socket client's queue size and check pending channels correctly`() {
         socketClient.socketChannel = mockSocketChannel
-        whenever(mockSocketChannel.hasSentAllPendingJoinChannel()).thenReturn(true)
+        whenever(mockSocketChannel.pending()).thenReturn(true)
         socketClient.hasSentAllMessages()
 
         verify(mockWebSocket, times(1)).queueSize()
-        verify(mockSocketChannel, times(1)).hasSentAllPendingJoinChannel()
+        verify(mockSocketChannel, times(1)).pending()
         verifyNoMoreInteractions(mockWebSocket)
     }
 
@@ -105,7 +105,7 @@ class OMGSocketClientTest {
         socketClient.socketChannel = mockSocketChannel
         socketClient.addCustomEventListener(mockTransactionRequestListener)
         socketClient.addCustomEventListener(SocketCustomEventListener.forEvent<TransactionConsumptionRequestEvent>(mockLambdaEvent))
-        socketClient.addCustomEventListener(SocketCustomEventListener.forEvents(mockLambdaEvent, FilterStrategy.None()))
+        socketClient.addCustomEventListener(SocketCustomEventListener.forEvents(FilterStrategy.None(), mockLambdaEvent))
         socketClient.addCustomEventListener(SocketCustomEventListener.forEvents(mockTransactionRequestListener, FilterStrategy.None()))
         verify(mockSocketChannel, times(4)).addCustomEventListener(any())
     }
