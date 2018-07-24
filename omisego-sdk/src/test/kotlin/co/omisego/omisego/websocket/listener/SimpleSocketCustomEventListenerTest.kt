@@ -9,8 +9,11 @@ package co.omisego.omisego.websocket.listener
 
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
+import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.spy
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -22,7 +25,9 @@ import org.junit.Test
 class SimpleSocketCustomEventListenerTest {
     private val listener: TransactionConsumptionListener by lazy {
         spy(
-            object : TransactionConsumptionListener(mock()) {
+            object : TransactionConsumptionListener(mock {
+                on { socketTopic } doReturn SocketTopic("topic")
+            }) {
                 override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
                 }
 
@@ -34,23 +39,32 @@ class SimpleSocketCustomEventListenerTest {
 
     private val mockTransactionConsumption: TransactionConsumption = mock()
     private val mockAPIError: APIError = mock()
-    private val mockResponseSuccess: SocketReceive<TransactionConsumption> = mock()
-    private val mockResponseFail: SocketReceive<TransactionConsumption> = mock()
+    private val mockResponseMatchedTopic: SocketReceive<TransactionConsumption> = mock {
+        on { topic } doReturn "topic"
+    }
+    private val mockResponseUnmatchedTopic: SocketReceive<TransactionConsumption> = mock {
+        on { topic } doReturn "topic2"
+    }
+    private val mockResponseFail: SocketReceive<TransactionConsumption> = mock {
+        on { topic } doReturn "topic"
+    }
     private val mockResponseUnknownError: SocketReceive<TransactionConsumption> = mock()
 
     @Before
     fun mockResponse() {
         whenever(mockResponseFail.error).thenReturn(mockAPIError)
         whenever(mockResponseFail.data).thenReturn(mockTransactionConsumption)
-        whenever(mockResponseSuccess.error).thenReturn(null)
-        whenever(mockResponseSuccess.data).thenReturn(mockTransactionConsumption)
+        whenever(mockResponseMatchedTopic.error).thenReturn(null)
+        whenever(mockResponseMatchedTopic.data).thenReturn(mockTransactionConsumption)
+        whenever(mockResponseUnmatchedTopic.error).thenReturn(null)
+        whenever(mockResponseUnmatchedTopic.data).thenReturn(mockTransactionConsumption)
         whenever(mockResponseUnknownError.error).thenReturn(null)
         whenever(mockResponseUnknownError.data).thenReturn(null)
     }
 
     @Test
     fun `dispatch function should be invoked onSuccess correctly`() {
-        listener.onSpecificEvent(TransactionConsumptionFinalizedEvent(mockResponseSuccess))
+        listener.onSpecificEvent(TransactionConsumptionFinalizedEvent(mockResponseMatchedTopic))
 
         verify(listener, times(1)).onTransactionConsumptionFinalizedSuccess(mockTransactionConsumption)
         verify(listener, times(0)).onTransactionConsumptionFinalizedFail(mockTransactionConsumption, mockAPIError)
@@ -66,10 +80,8 @@ class SimpleSocketCustomEventListenerTest {
 
     @Test
     fun `onEvent function should called onSpecificEvent only if the strategy is accept the event`() {
-        val event = TransactionConsumptionFinalizedEvent(mockResponseSuccess)
+        val event = TransactionConsumptionFinalizedEvent(mockResponseMatchedTopic)
 
-        /* Only if the strategy accept this event, the onSpecificEvent should be immediately invoked. */
-        whenever(listener.strategy.accept(event)).thenReturn(true)
         listener.onEvent(event)
 
         verify(listener, times(1)).onSpecificEvent(event)
@@ -77,9 +89,8 @@ class SimpleSocketCustomEventListenerTest {
 
     @Test
     fun `onEvent function should not called onSpecificEvent only if the strategy is not accept the event`() {
-        val event = TransactionConsumptionFinalizedEvent(mockResponseSuccess)
+        val event = TransactionConsumptionFinalizedEvent(mockResponseUnmatchedTopic)
 
-        whenever(listener.strategy.accept(event)).thenReturn(false)
         listener.onEvent(event)
 
         verify(listener, times(0)).onSpecificEvent(event)

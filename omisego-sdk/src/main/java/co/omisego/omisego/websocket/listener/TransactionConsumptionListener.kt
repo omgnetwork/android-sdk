@@ -14,8 +14,9 @@ import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
 import co.omisego.omisego.websocket.strategy.FilterStrategy
 
 abstract class TransactionConsumptionListener(
-    final override val strategy: FilterStrategy = FilterStrategy.Event(allowedEvents)
+    transactionConsumption: TransactionConsumption
 ) : SimpleSocketCustomEventListener<SocketEvent<*>>() {
+    final override val strategy: FilterStrategy = FilterStrategy.Topic(transactionConsumption.socketTopic)
     final override fun onSpecificEvent(event: SocketEvent<*>) {
         when (event) {
             is TransactionConsumptionFinalizedEvent -> event.socketReceive.dispatch(
@@ -27,10 +28,4 @@ abstract class TransactionConsumptionListener(
 
     abstract fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption)
     abstract fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError)
-
-    companion object {
-        private val allowedEvents = listOf(
-            TransactionConsumptionFinalizedEvent::class.java
-        )
-    }
 }

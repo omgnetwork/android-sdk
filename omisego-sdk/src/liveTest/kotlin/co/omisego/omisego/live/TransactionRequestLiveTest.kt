@@ -19,7 +19,7 @@ import co.omisego.omisego.model.transaction.request.TransactionRequestCreatePara
 import co.omisego.omisego.model.transaction.request.TransactionRequestParams
 import co.omisego.omisego.model.transaction.request.toTransactionConsumptionParams
 import co.omisego.omisego.operation.startListeningEvents
-import co.omisego.omisego.websocket.listener.TransactionRequestTopicListener
+import co.omisego.omisego.websocket.listener.TransactionRequestListener
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqual
@@ -88,7 +88,7 @@ class TransactionRequestLiveTest : LiveTest() {
         println("Create a transaction id ${createdTransactionRequest.id}")
 
         /* The requestor is listening to the socket events. */
-        createdTransactionRequest.startListeningEvents(socketClient, listener = object : TransactionRequestTopicListener(createdTransactionRequest) {
+        createdTransactionRequest.startListeningEvents(socketClient, listener = object : TransactionRequestListener(createdTransactionRequest) {
             override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
                 try {
                     /* Approve the transaction consumption (should throw OMGAPIErrorException.) */

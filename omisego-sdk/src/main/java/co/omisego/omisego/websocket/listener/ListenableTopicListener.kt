@@ -7,19 +7,9 @@ package co.omisego.omisego.websocket.listener
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.operation.Listenable
 import co.omisego.omisego.websocket.event.SocketEvent
 import co.omisego.omisego.websocket.strategy.FilterStrategy
-
-abstract class TransactionRequestTopicListener(
-    transactionRequest: TransactionRequest
-) : TransactionRequestListener(FilterStrategy.Topic(transactionRequest.socketTopic))
-
-abstract class TransactionConsumptionTopicListener(
-    transactionConsumption: TransactionConsumption
-) : TransactionConsumptionListener(FilterStrategy.Topic(transactionConsumption.socketTopic))
 
 abstract class ListenableTopicListener(
     listenable: Listenable

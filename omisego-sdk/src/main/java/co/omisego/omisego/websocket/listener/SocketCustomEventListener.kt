@@ -12,7 +12,6 @@ import co.omisego.omisego.websocket.event.SocketEvent
 import co.omisego.omisego.websocket.strategy.FilterStrategy
 
 interface SocketCustomEventListener {
-    val strategy: FilterStrategy
     fun onEvent(event: SocketEvent<*>)
 
     companion object {
@@ -68,4 +67,16 @@ interface SocketCustomEventListener {
             }
         }
     }
+
+    @Deprecated(
+        message = "Remove SocketCustomEventListener.TransactionConsumptionListener and use TransactionConsumptionListener instead.",
+        level = DeprecationLevel.ERROR
+    )
+    abstract class TransactionConsumptionListener : SimpleSocketCustomEventListener<SocketEvent<*>>()
+
+    @Deprecated(
+        message = "Remove SocketCustomEventListener.TransactionRequestListener and use TransactionRequestListener instead.",
+        level = DeprecationLevel.ERROR
+    )
+    abstract class TransactionRequestListener : SimpleSocketCustomEventListener<SocketEvent<*>>()
 }

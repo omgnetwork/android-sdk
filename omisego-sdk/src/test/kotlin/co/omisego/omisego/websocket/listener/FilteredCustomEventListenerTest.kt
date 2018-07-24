@@ -45,8 +45,8 @@ class FilteredCustomEventListenerTest {
     }
 
     @Test
-    fun `TransactionRequestTopicListener should accept an event only if the topic is the same`() {
-        val listener = object : TransactionRequestTopicListener(mockTransactionRequest) {
+    fun `TransactionRequestListener should accept an event only if the topic is the same`() {
+        val listener = object : TransactionRequestListener(mockTransactionRequest) {
             override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
             }
 
@@ -66,8 +66,8 @@ class FilteredCustomEventListenerTest {
     }
 
     @Test
-    fun `TransactionConsumptionTopicListener should accept an event only if the topic is the same`() {
-        val listener = object : TransactionConsumptionTopicListener(mockTransactionConsumption) {
+    fun `TransactionConsumptionListener should accept an event only if the topic is the same`() {
+        val listener = object : TransactionConsumptionListener(mockTransactionConsumption) {
             override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
             }
 

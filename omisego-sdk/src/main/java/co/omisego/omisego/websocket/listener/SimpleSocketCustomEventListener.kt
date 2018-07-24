@@ -10,12 +10,15 @@ package co.omisego.omisego.websocket.listener
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.websocket.event.SocketEvent
+import co.omisego.omisego.websocket.strategy.FilterStrategy
 
 /**
  * A [SocketCustomEventListener] that can be filtered for a specific type of event.
  */
 
 abstract class SimpleSocketCustomEventListener<Event : SocketEvent<*>> : SocketCustomEventListener {
+    abstract val strategy: FilterStrategy
+
     @Suppress("UNCHECKED_CAST")
     final override fun onEvent(event: SocketEvent<*>) {
         if (strategy.accept(event)) {

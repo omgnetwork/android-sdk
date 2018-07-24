@@ -15,9 +15,7 @@ import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.listener.ListenableTopicListener
 import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.listener.TransactionConsumptionListener
-import co.omisego.omisego.websocket.listener.TransactionConsumptionTopicListener
 import co.omisego.omisego.websocket.listener.TransactionRequestListener
-import co.omisego.omisego.websocket.listener.TransactionRequestTopicListener
 
 /**
  * Represents an object that can be listened with websocket
@@ -36,10 +34,14 @@ interface Listenable {
     }
 }
 
-@Deprecated(
-    level = DeprecationLevel.ERROR,
-    message = "Use startListeningEvents(SocketClientContract.Client, Map<String, Any>, TransactionRequestTopicListener) instead."
-)
+/**
+ * Opens a websocket connection with the server and starts to listen for events happening on this transaction request.
+ * Typically, this should be used to listen for consumption request made on the request.
+ *
+ * @param client The correctly initialised client to use for the websocket connection.
+ * @param payload The additional metadata for the consumption
+ * @param listener The delegate that will receive events.
+ */
 fun TransactionRequest.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
@@ -51,10 +53,14 @@ fun TransactionRequest.startListeningEvents(
     }
 }
 
-@Deprecated(
-    level = DeprecationLevel.ERROR,
-    message = "Use startListeningEvents(SocketClientContract.Client, Map<String, Any>, TransactionConsumptionTopicListener) instead."
-)
+/**
+ * Opens a websocket connection with the server and starts to listen for events happening on this transaction consumption.
+ * Typically, this should be used to listen for consumption confirmation.
+ *
+ * @param client The correctly initialised client to use for the websocket connection.
+ * @param payload The additional metadata for the consumption
+ * @param listener The delegate that will receive events.
+ */
 fun TransactionConsumption.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
@@ -74,44 +80,6 @@ fun User.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
     listener: SocketCustomEventListener
-) {
-    with(client) {
-        addCustomEventListener(listener)
-        joinChannel(socketTopic, payload)
-    }
-}
-
-/**
- * Opens a websocket connection with the server and starts to listen for events happening on this transaction request.
- * Typically, this should be used to listen for consumption request made on the request.
- *
- * @param client The correctly initialised client to use for the websocket connection.
- * @param payload The additional metadata for the consumption
- * @param listener The delegate that will receive events.
- */
-fun TransactionRequest.startListeningEvents(
-    client: SocketClientContract.Client,
-    payload: Map<String, Any> = mapOf(),
-    listener: TransactionRequestTopicListener
-) {
-    with(client) {
-        addCustomEventListener(listener)
-        joinChannel(socketTopic, payload)
-    }
-}
-
-/**
- * Opens a websocket connection with the server and starts to listen for events happening on this transaction consumption.
- * Typically, this should be used to listen for consumption confirmation.
- *
- * @param client The correctly initialised client to use for the websocket connection.
- * @param payload The additional metadata for the consumption
- * @param listener The delegate that will receive events.
- */
-fun TransactionConsumption.startListeningEvents(
-    client: SocketClientContract.Client,
-    payload: Map<String, Any> = mapOf(),
-    listener: TransactionConsumptionTopicListener
 ) {
     with(client) {
         addCustomEventListener(listener)
