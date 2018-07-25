@@ -15,6 +15,7 @@ import co.omisego.omisego.websocket.interval.SocketReconnect
 import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.listener.internal.CompositeSocketChannelListener
 import co.omisego.omisego.websocket.listener.internal.CompositeSocketConnectionListener
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.spy
 import com.nhaarman.mockito_kotlin.timeout
 import com.nhaarman.mockito_kotlin.times
@@ -167,7 +168,7 @@ class SocketChannelTest {
         socketChannel.onJoinedChannel("topic2")
         socketChannel.onLeftChannel(joinMessage.topic)
 
-        verify(mockSocketHeartbeat, times(0)).stopInterval()
+        verify(mockSocketHeartbeat, never()).stopInterval()
     }
 
     @Test
@@ -206,7 +207,7 @@ class SocketChannelTest {
         mockSocketClient.socketHeartbeat.timer shouldBe null
         mockSocketPendingChannel.pendingChannelsQueue.size shouldBe 0
         socketChannel.leavingAllChannels.get() shouldEqual false
-        verify(mockSocketDispatcher, times(0)).clearCustomEventListeners()
+        verify(mockSocketDispatcher, never()).clearCustomEventListeners()
         verify(mockSocketClient).closeConnection(SocketStatusCode.CONNECTION_FAILURE, "test")
     }
 
@@ -249,7 +250,7 @@ class SocketChannelTest {
 
         socketChannel.join(joinMessage.topic, joinMessage.data)
 
-        verify(mockSocketPendingChannel, times(0)).add(joinMessage, period = 5000L)
+        verify(mockSocketPendingChannel, never()).add(joinMessage, period = 5000L)
         verify(mockSocketClient).send(joinMessage)
     }
 

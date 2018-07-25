@@ -9,6 +9,7 @@ package co.omisego.omisego.websocket.interval
 
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.websocket.enum.SocketEventSend
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.spy
 import com.nhaarman.mockito_kotlin.timeout
 import com.nhaarman.mockito_kotlin.times
@@ -62,7 +63,7 @@ class SocketReconnectTest {
         socketReconnect.reconnectChannels.add(SocketSend("topic2", SocketEventSend.JOIN, null, mapOf()))
 
         socketReconnect.stopReconnectIfDone(setOf("topic1", "topic2"))
-        verify(socketReconnect, times(0)).stopInterval()
+        verify(socketReconnect, never()).stopInterval()
         socketReconnect.timer shouldNotBe null
     }
 

@@ -14,6 +14,7 @@ import co.omisego.omisego.websocket.event.SocketEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
 import co.omisego.omisego.websocket.strategy.FilterStrategy
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.spy
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -77,7 +78,7 @@ class SimpleSocketCustomEventListenerTest {
         whenever(listener.strategy.accept(event)).thenReturn(false)
         listener.onEvent(event)
 
-        verify(listener, times(0)).onSpecificEvent(event)
+        verify(listener, never()).onSpecificEvent(event)
     }
 
     @Test

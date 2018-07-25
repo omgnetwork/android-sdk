@@ -14,6 +14,7 @@ import co.omisego.omisego.websocket.strategy.FilterStrategy
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.Test
@@ -40,6 +41,6 @@ class ForStrategyTest {
             on { socketReceive.success } doReturn false
         })
 
-        verify(lambda, times(0)).invoke(any())
+        verify(lambda, never()).invoke(any())
     }
 }

@@ -11,6 +11,7 @@ import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.Test
@@ -20,7 +21,7 @@ class ForEventTest {
     fun `forEvent should not invoke the lambda if the unrelated event has come`() {
         val mockSpecificEventLambda: (TransactionConsumptionRequestEvent) -> Unit = mock()
         SocketCustomEventListener.forEvent(mockSpecificEventLambda).onEvent(mock<TransactionConsumptionFinalizedEvent>())
-        verify(mockSpecificEventLambda, times(0)).invoke(any())
+        verify(mockSpecificEventLambda, never()).invoke(any())
     }
 
     @Test

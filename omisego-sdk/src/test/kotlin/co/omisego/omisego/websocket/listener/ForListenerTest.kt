@@ -15,6 +15,7 @@ import co.omisego.omisego.websocket.event.SocketEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.Test
@@ -49,6 +50,6 @@ class ForListenerTest {
 
         forListenableListener.onEvent(event)
 
-        verify(mockTopicEventLambda, times(0)).invoke(event)
+        verify(mockTopicEventLambda, never()).invoke(event)
     }
 }
