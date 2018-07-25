@@ -14,7 +14,7 @@ class DelegateSocketCustomEventListener(
     override val strategy: FilterStrategy,
     val delegate: SocketCustomEventListener
 ) : SimpleSocketCustomEventListener<SocketEvent<*>>() {
-    fun onSpecificEvent(event: SocketEvent<*>) {
+    override fun onSpecificEvent(event: SocketEvent<*>) {
         delegate.onEvent(event)
     }
 }

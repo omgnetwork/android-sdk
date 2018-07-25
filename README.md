@@ -673,15 +673,12 @@ transactionConsumption.startListeningEvents(socketClient, listener = object: Tra
 A `user` can also be listened and will receive all events that are related to him:
 
 ```kotlin
-user.startListeningEvents(socketClient, listener = object : ListenableTopicListener(user) {
-    override fun onSpecificEvent(event: SocketEvent<*>) {
+user.startListeningEvents(socketClient, listener = SocketCustomEventListener.forEvent<TransactionConsumptionRequestEvent> { event -> 
        // Do something
-    }
 })
 ```
 
 Where:
-* `onSpecificEvent`: An event callback. This method will be called when any event regarding the user is received.
 * `event`:  An object which is containing a raw response from the eWallet socket API.
 
 For more information can be found [here](https://github.com/omisego/ewallet/blob/develop/docs/websockets/ewallet_api.md).

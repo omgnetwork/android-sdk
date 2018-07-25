@@ -13,7 +13,6 @@ import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.listener.DelegateSocketCustomEventListener
-import co.omisego.omisego.websocket.listener.ListenableTopicListener
 import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.listener.TransactionConsumptionListener
 import co.omisego.omisego.websocket.listener.TransactionRequestListener
@@ -76,22 +75,6 @@ fun TransactionConsumption.startListeningEvents(
     }
 }
 
-@Deprecated(
-    level = DeprecationLevel.ERROR,
-    message = "Use startListeningEvents(SocketClientContract.Client, Map<String, Any>, ListenableTopicListener) instead."
-)
-fun User.startListeningEvents(
-    client: SocketClientContract.Client,
-    payload: Map<String, Any> = mapOf(),
-    listener: SocketCustomEventListener
-) {
-    with(client) {
-        val wrapper = DelegateSocketCustomEventListener(FilterStrategy.Topic(socketTopic), listener)
-        addCustomEventListener(wrapper)
-        joinChannel(socketTopic, payload)
-    }
-}
-
 /**
  * Opens a websocket connection with the server and starts to listen for any event regarding the current user.
  *
@@ -102,10 +85,11 @@ fun User.startListeningEvents(
 fun User.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    listener: ListenableTopicListener
+    listener: SocketCustomEventListener
 ) {
     with(client) {
-        addCustomEventListener(listener)
+        val wrapper = DelegateSocketCustomEventListener(FilterStrategy.Topic(socketTopic), listener)
+        addCustomEventListener(wrapper)
         joinChannel(socketTopic, payload)
     }
 }
