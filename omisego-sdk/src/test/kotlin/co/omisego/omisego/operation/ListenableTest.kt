@@ -13,8 +13,9 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.websocket.SocketClientContract
-import co.omisego.omisego.websocket.event.SocketEvent
-import co.omisego.omisego.websocket.listener.ListenableTopicListener
+import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
+import co.omisego.omisego.websocket.listener.DelegateSocketCustomEventListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.listener.TransactionConsumptionListener
 import co.omisego.omisego.websocket.listener.TransactionRequestListener
 import com.nhaarman.mockito_kotlin.any
@@ -41,13 +42,12 @@ class ListenableTest {
     fun `when the user call startListenerEvents, the client should add the listener and join channel correctly`() {
         mockUser.startListeningEvents(
             mockClient,
-            listener = object : ListenableTopicListener(mockUser) {
-                override fun onSpecificEvent(event: SocketEvent<*>) {
-                }
+            listener = SocketCustomEventListener.forEvent<TransactionConsumptionRequestEvent> { event ->
+                // Do something
             }
         )
 
-        verify(mockClient, times(1)).addCustomEventListener(any<ListenableTopicListener>())
+        verify(mockClient, times(1)).addCustomEventListener(any<DelegateSocketCustomEventListener>())
         verify(mockClient, times(1)).joinChannel(SocketTopic("user"))
         verifyNoMoreInteractions(mockClient)
     }
@@ -56,7 +56,7 @@ class ListenableTest {
     fun `when the transaction_request call startListenerEvents, the client should add the listener and join channel correctly`() {
         mockTransactionRequest.startListeningEvents(
             mockClient,
-            listener = object : TransactionRequestListener(mockTransactionRequest) {
+            listener = object : TransactionRequestListener() {
                 override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
                 }
 
@@ -68,7 +68,7 @@ class ListenableTest {
             }
         )
 
-        verify(mockClient, times(1)).addCustomEventListener(any<TransactionRequestListener>())
+        verify(mockClient, times(1)).addCustomEventListener(any<DelegateSocketCustomEventListener>())
         verify(mockClient, times(1)).joinChannel(SocketTopic("transaction_request"))
         verifyNoMoreInteractions(mockClient)
     }
@@ -77,7 +77,7 @@ class ListenableTest {
     fun `when the transaction_consumption call startListenerEvents, the client should add the listener and join channel correctly`() {
         mockTransactionConsumption.startListeningEvents(
             mockClient,
-            listener = object : TransactionConsumptionListener(mockTransactionConsumption) {
+            listener = object : TransactionConsumptionListener() {
                 override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
                 }
 
@@ -86,7 +86,7 @@ class ListenableTest {
             }
         )
 
-        verify(mockClient, times(1)).addCustomEventListener(any<TransactionConsumptionListener>())
+        verify(mockClient, times(1)).addCustomEventListener(any<DelegateSocketCustomEventListener>())
         verify(mockClient, times(1)).joinChannel(SocketTopic("transaction_consumption"))
         verifyNoMoreInteractions(mockClient)
     }

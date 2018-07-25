@@ -88,7 +88,7 @@ class TransactionRequestLiveTest : LiveTest() {
         println("Create a transaction id ${createdTransactionRequest.id}")
 
         /* The requestor is listening to the socket events. */
-        createdTransactionRequest.startListeningEvents(socketClient, listener = object : TransactionRequestListener(createdTransactionRequest) {
+        createdTransactionRequest.startListeningEvents(socketClient, listener = object : TransactionRequestListener() {
             override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
                 try {
                     /* Approve the transaction consumption (should throw OMGAPIErrorException.) */
