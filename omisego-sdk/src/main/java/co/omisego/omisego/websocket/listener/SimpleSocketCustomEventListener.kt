@@ -19,7 +19,6 @@ import co.omisego.omisego.websocket.strategy.FilterStrategy
 abstract class SimpleSocketCustomEventListener : SocketCustomEventListener {
     abstract val strategy: FilterStrategy
 
-    @Suppress("UNCHECKED_CAST")
     final override fun onEvent(event: SocketEvent<*>) {
         if (strategy.accept(event)) {
             onSpecificEvent(event)
