@@ -633,7 +633,7 @@ This allows the requester to [confirm](https://github.com/omisego/android-sdk#ap
         
 ```kotlin
 // The transaction requestor listen for the event 
-transactionRequest.startListeningEvents(socketClient, listener = object: TransactionRequestListener(transactionRequest) {
+transactionRequest.startListeningEvents(socketClient, listener = object: TransactionRequestListener() {
    override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
        // Do something
    }
@@ -658,7 +658,7 @@ The possible events are:
 **Usage**
 ```kotlin
 // The transaction consumer listen for the event
-transactionConsumption.startListeningEvents(socketClient, listener = object: TransactionConsumptionListener(transactionConsumption) {
+transactionConsumption.startListeningEvents(socketClient, listener = object: TransactionConsumptionListener() {
   override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
       // Do something
   }
@@ -705,37 +705,23 @@ socketClient.addCustomEventListener(SocketCustomEventListener.forEvent<Transacti
 })
 ```
 
-2. Use `SocketCustomEventListener.forEvents<SocketEvent>` to listen for any events, but the events will be filtered out by the provided `FilterStrategy`.
-```kotlin
-val allowedEvents = listOf(
-    TransactionConsumptionRequestEvent::class.java,
-    TransactionConsumptionFinalizedEvent::class.java
-)
 
-socketClient.addCustomEventListener(SocketCustomEventListener.forEvents({ socketEvent ->
+2. Use `SocketCustomEventListener.forTopic` to listen for any events that related to the `SocketTopic`.
+```kotlin
+socketClient.addCustomEventListener(SocketCustomEventListener.forTopic(transactionRequest) { socketEvent ->
     // Do something with `socketEvent.socketReceive` manually
-}, FilterStrategy.Event(allowedEvents)))
+})
 ```
 
-3. Use `SocketCustomEventListener.forEvents<SocketEvent>`, same as above but using the conventional listener instead of lambda.
+3. Use `SocketCustomEventListener.forStrategy` for listening for any events, but they will be filtered out by the provided `FilterStrategy`.
 ```kotlin
 val customStrategy = FilterStrategy.Custom {
   it.socketReceive.topic.contains("transaction_consumption")
 }
 
-socketClient.addCustomEventListener(SocketCustomEventListener.forEvents(object: SocketCustomEventListener.TransactionRequestListener() {
-    override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
-        // Do something
-    }
+socketClient.addCustomEventListener(SocketCustomEventListener.forStrategy(customStrategy) { socketEvent ->
 
-    override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
-        // Do something
-    }
-
-    override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
-        // Do something
-    }
-}, customStrategy))
+})
 ```
 
 ## Stop listening for the custom event
