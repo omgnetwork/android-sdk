@@ -624,7 +624,7 @@ All possible events are the following:
 
 ### TransactionRequest Event
 
-When creating a `TransactionRequest` that requires a confirmation it is possible to listen for all incoming events using the `TransactionRequestTopicListener`.
+When creating a `TransactionRequest` that requires a confirmation it is possible to listen for all incoming events using the `TransactionRequestListener`.
 The possible events are: 
 * `onTransactionConsumptionRequest(TransactionConsumption)`: Invoked when a `TransactionConsumption` is trying to consume the `TransactionRequest`. 
 This allows the requester to [confirm](https://github.com/omisego/android-sdk#approve-or-reject-a-transaction-consumption) or not the consumption if legitimate. 
@@ -633,7 +633,7 @@ This allows the requester to [confirm](https://github.com/omisego/android-sdk#ap
         
 ```kotlin
 // The transaction requestor listen for the event 
-transactionRequest.startListeningEvents(socketClient, listener = object: TransactionRequestTopicListener(transactionRequest) {
+transactionRequest.startListeningEvents(socketClient, listener = object: TransactionRequestListener(transactionRequest) {
    override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
        // Do something
    }
@@ -650,7 +650,7 @@ transactionRequest.startListeningEvents(socketClient, listener = object: Transac
         
 ### TransactionConsumption Event
  
-Similarly to the `TransactionRequestTopicListener`, a `TransactionConsumption` can be listened for incoming confirmations using the `TransactionConsumptionTopicListener`.
+Similarly to the `TransactionRequestListener`, a `TransactionConsumptionListener` can be listened for incoming confirmations using the `TransactionConsumptionListener`.
 The possible events are:
 * `onTransactionConsumptionFinalizedSuccess(TransactionConsumption)`: Invoked if a `TransactionConsumption` has been finalized successfully, and the transfer was made between the 2 addresses.
 * `onTransactionConsumptionFinalizedFail(TransactionConsumption, APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
@@ -658,7 +658,7 @@ The possible events are:
 **Usage**
 ```kotlin
 // The transaction consumer listen for the event
-transactionConsumption.startListeningEvents(socketClient, listener = object: TransactionConsumptionTopicListener(transactionConsumption) {
+transactionConsumption.startListeningEvents(socketClient, listener = object: TransactionConsumptionListener(transactionConsumption) {
   override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
       // Do something
   }
