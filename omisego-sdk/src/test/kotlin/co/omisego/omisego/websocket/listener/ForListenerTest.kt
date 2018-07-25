@@ -19,35 +19,35 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.Test
 
-class ForTopicTest {
+class ForListenerTest {
     data class TestListenable(override val socketTopic: SocketTopic) : Listenable
 
     private val mockTopicEventLambda: (SocketEvent<*>) -> Unit = mock()
-    private val forTopicListener: SocketCustomEventListener = SocketCustomEventListener.forTopic(
+    private val forListenableListener: SocketCustomEventListener = SocketCustomEventListener.forListenable(
         TestListenable(SocketTopic("topic1")),
         mockTopicEventLambda
     )
 
     @Test
-    fun `forTopic should invoke the lambda if the related topic has come`() {
+    fun `forListenable should invoke the lambda if the related topic has come`() {
         val socketReceive = mock<SocketReceive<TransactionConsumption>> {
             on { topic } doReturn "topic1"
         }
         val event = TransactionConsumptionRequestEvent(socketReceive)
 
-        forTopicListener.onEvent(event)
+        forListenableListener.onEvent(event)
 
         verify(mockTopicEventLambda, times(1)).invoke(event)
     }
 
     @Test
-    fun `forTopic should not invoke the lambda if the unrelated topic has come`() {
+    fun `forListenable should not invoke the lambda if the unrelated topic has come`() {
         val socketReceive = mock<SocketReceive<TransactionConsumption>> {
             on { topic } doReturn "topic2"
         }
         val event = TransactionConsumptionRequestEvent(socketReceive)
 
-        forTopicListener.onEvent(event)
+        forListenableListener.onEvent(event)
 
         verify(mockTopicEventLambda, times(0)).invoke(event)
     }

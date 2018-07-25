@@ -706,9 +706,9 @@ socketClient.addCustomEventListener(SocketCustomEventListener.forEvent<Transacti
 ```
 
 
-2. Use `SocketCustomEventListener.forTopic` to listen for any events that related to the `SocketTopic`.
+2. Use `SocketCustomEventListener.forListenable` to listen for any events that related to the `SocketTopic`.
 ```kotlin
-socketClient.addCustomEventListener(SocketCustomEventListener.forTopic(transactionRequest) { socketEvent ->
+socketClient.addCustomEventListener(SocketCustomEventListener.forListenable(transactionRequest) { socketEvent ->
     // Do something with `socketEvent.socketReceive` manually
 })
 ```

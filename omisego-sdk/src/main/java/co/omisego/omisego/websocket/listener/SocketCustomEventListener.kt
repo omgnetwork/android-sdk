@@ -34,10 +34,10 @@ interface SocketCustomEventListener {
         /**
          * A convenient method for listening for the specific topic.
          *
-         * @param listenable A listenable object that provide the `SocketTopic`.
+         * @param listenable A listenable object
          * @param lambda A lambda which receives the `SocketEvent` object regarding the topic.
          */
-        inline fun forTopic(
+        inline fun forListenable(
             listenable: Listenable,
             crossinline lambda: (SocketEvent<*>) -> Unit
         ): SocketCustomEventListener {

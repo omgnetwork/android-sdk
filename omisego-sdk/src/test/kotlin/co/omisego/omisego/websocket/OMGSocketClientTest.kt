@@ -108,7 +108,7 @@ class OMGSocketClientTest {
         socketClient.socketChannel = mockSocketChannel
         socketClient.addCustomEventListener(mockTransactionRequestListener)
         socketClient.addCustomEventListener(SocketCustomEventListener.forEvent<TransactionConsumptionRequestEvent>(mockLambdaEvent))
-        socketClient.addCustomEventListener(SocketCustomEventListener.forTopic(mock { on { socketTopic } doReturn mock<SocketTopic>() }, mockLambdaEvent))
+        socketClient.addCustomEventListener(SocketCustomEventListener.forListenable(mock { on { socketTopic } doReturn mock<SocketTopic>() }, mockLambdaEvent))
         socketClient.addCustomEventListener(SocketCustomEventListener.forStrategy(FilterStrategy.None(), mockLambdaEvent))
         verify(mockSocketChannel, times(4)).addCustomEventListener(any())
     }
