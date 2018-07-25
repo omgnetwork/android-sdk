@@ -7,7 +7,7 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
-## [1.0.1] - 2018-07-23
+## [1.0.1] - 2018-07-26
 ### Added
 - `addConnectionListener` and `removeConnectionListener` methods in `OMGSocketClient` class.
 - `addChannelListener` and `removeChannelListener` methods in `OMGSocketClient` class.
