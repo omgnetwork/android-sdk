@@ -9,16 +9,13 @@ package co.omisego.omisego.websocket.listener
 
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.websocket.event.SocketEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
 import co.omisego.omisego.websocket.strategy.FilterStrategy
 
-abstract class TransactionRequestListener(
-    transactionRequest: TransactionRequest
-) : SimpleSocketCustomEventListener<SocketEvent<*>>() {
-    final override val strategy: FilterStrategy = FilterStrategy.Topic(transactionRequest.socketTopic)
+abstract class TransactionRequestListener : SimpleSocketCustomEventListener<SocketEvent<*>>() {
+    final override val strategy: FilterStrategy = FilterStrategy.None()
 
     final override fun onSpecificEvent(event: SocketEvent<*>) {
         when (event) {

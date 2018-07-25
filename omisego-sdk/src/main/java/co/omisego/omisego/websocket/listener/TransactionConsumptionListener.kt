@@ -13,10 +13,8 @@ import co.omisego.omisego.websocket.event.SocketEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
 import co.omisego.omisego.websocket.strategy.FilterStrategy
 
-abstract class TransactionConsumptionListener(
-    transactionConsumption: TransactionConsumption
-) : SimpleSocketCustomEventListener<SocketEvent<*>>() {
-    final override val strategy: FilterStrategy = FilterStrategy.Topic(transactionConsumption.socketTopic)
+abstract class TransactionConsumptionListener : SimpleSocketCustomEventListener<SocketEvent<*>>() {
+    final override val strategy: FilterStrategy = FilterStrategy.None()
     final override fun onSpecificEvent(event: SocketEvent<*>) {
         when (event) {
             is TransactionConsumptionFinalizedEvent -> event.socketReceive.dispatch(

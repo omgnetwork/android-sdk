@@ -12,10 +12,12 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.websocket.SocketClientContract
+import co.omisego.omisego.websocket.listener.DelegateSocketCustomEventListener
 import co.omisego.omisego.websocket.listener.ListenableTopicListener
 import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.listener.TransactionConsumptionListener
 import co.omisego.omisego.websocket.listener.TransactionRequestListener
+import co.omisego.omisego.websocket.strategy.FilterStrategy
 
 /**
  * Represents an object that can be listened with websocket
@@ -48,7 +50,8 @@ fun TransactionRequest.startListeningEvents(
     listener: TransactionRequestListener
 ) {
     with(client) {
-        addCustomEventListener(listener)
+        val wrapper = DelegateSocketCustomEventListener(FilterStrategy.Topic(socketTopic), listener)
+        addCustomEventListener(wrapper)
         joinChannel(socketTopic, payload)
     }
 }
@@ -67,7 +70,8 @@ fun TransactionConsumption.startListeningEvents(
     listener: TransactionConsumptionListener
 ) {
     with(client) {
-        addCustomEventListener(listener)
+        val wrapper = DelegateSocketCustomEventListener(FilterStrategy.Topic(socketTopic), listener)
+        addCustomEventListener(wrapper)
         joinChannel(socketTopic, payload)
     }
 }
@@ -82,7 +86,8 @@ fun User.startListeningEvents(
     listener: SocketCustomEventListener
 ) {
     with(client) {
-        addCustomEventListener(listener)
+        val wrapper = DelegateSocketCustomEventListener(FilterStrategy.Topic(socketTopic), listener)
+        addCustomEventListener(wrapper)
         joinChannel(socketTopic, payload)
     }
 }
