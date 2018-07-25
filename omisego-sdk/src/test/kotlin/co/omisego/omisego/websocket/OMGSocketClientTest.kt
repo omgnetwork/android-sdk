@@ -25,6 +25,8 @@ import co.omisego.omisego.websocket.listener.SocketConnectionListener
 import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import co.omisego.omisego.websocket.listener.TransactionRequestListener
 import co.omisego.omisego.websocket.strategy.FilterStrategy
+import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -106,8 +108,8 @@ class OMGSocketClientTest {
         socketClient.socketChannel = mockSocketChannel
         socketClient.addCustomEventListener(mockTransactionRequestListener)
         socketClient.addCustomEventListener(SocketCustomEventListener.forEvent<TransactionConsumptionRequestEvent>(mockLambdaEvent))
-        socketClient.addCustomEventListener(SocketCustomEventListener.forEvents(FilterStrategy.None(), mockLambdaEvent))
-        socketClient.addCustomEventListener(SocketCustomEventListener.forEvents(FilterStrategy.None(), mockTransactionRequestListener))
+        socketClient.addCustomEventListener(SocketCustomEventListener.forTopic(mock { on { socketTopic } doReturn mock<SocketTopic>() }, mockLambdaEvent))
+        socketClient.addCustomEventListener(SocketCustomEventListener.forStrategy(FilterStrategy.None(), mockLambdaEvent))
         verify(mockSocketChannel, times(4)).addCustomEventListener(any())
     }
 

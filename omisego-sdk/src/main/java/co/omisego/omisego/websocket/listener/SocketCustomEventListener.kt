@@ -7,7 +7,7 @@ package co.omisego.omisego.websocket.listener
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.operation.Listenable
 import co.omisego.omisego.websocket.event.SocketEvent
 import co.omisego.omisego.websocket.strategy.FilterStrategy
 
@@ -22,7 +22,7 @@ interface SocketCustomEventListener {
          */
         inline fun <reified Event : SocketEvent<*>> forEvent(
             crossinline lambda: (Event) -> Unit
-        ): SocketCustomEventListener {
+        ): SimpleSocketCustomEventListener {
             return object : SimpleSocketCustomEventListener() {
                 override val strategy: FilterStrategy = FilterStrategy.Event(listOf(Event::class.java))
                 override fun onSpecificEvent(event: SocketEvent<*>) {
@@ -32,32 +32,32 @@ interface SocketCustomEventListener {
         }
 
         /**
-         * A convenient method for listening for any events, but the events will be filtered out by the provided `FilterStrategy`
+         * A convenient method for listening for the specific topic.
          *
-         * @param listener A [SocketCustomEventListener] implementation
-         * @param strategy A [FilterStrategy] that used for filtering an event.
+         * @param listenable A listenable object that provide the `SocketTopic`.
+         * @param lambda A lambda which receives the `SocketEvent` object regarding the topic.
          */
-        fun forEvents(
-            strategy: FilterStrategy,
-            listener: SocketCustomEventListener
+        inline fun forTopic(
+            listenable: Listenable,
+            crossinline lambda: (SocketEvent<*>) -> Unit
         ): SocketCustomEventListener {
             return object : SimpleSocketCustomEventListener() {
-                override val strategy: FilterStrategy = strategy
+                override val strategy: FilterStrategy = FilterStrategy.Topic(listenable.socketTopic)
                 override fun onSpecificEvent(event: SocketEvent<*>) {
-                    listener.onEvent(event)
+                    lambda(event)
                 }
             }
         }
 
         /**
-         * A convenient method for listening for any events, but the events will be filtered out by the provided `FilterStrategy`.
+         * A convenient method for listening to the event by using the [FilterStrategy] to filter the incoming event.
          *
-         * @param strategy A [FilterStrategy] that used for filtering an event.
-         * @param lambda A lambda which receives the `SocketEvent` object.
+         * @param strategy A [FilterStrategy] to use for filtering the incoming event.
+         * @param lambda A lambda which receives the `SocketEvent` object regarding the topic.
          */
-        inline fun forEvents(
+        inline fun forStrategy(
             strategy: FilterStrategy,
-            crossinline lambda: (SocketEvent<out SocketReceive.SocketData>) -> Unit
+            crossinline lambda: (SocketEvent<*>) -> Unit
         ): SocketCustomEventListener {
             return object : SimpleSocketCustomEventListener() {
                 override val strategy: FilterStrategy = strategy

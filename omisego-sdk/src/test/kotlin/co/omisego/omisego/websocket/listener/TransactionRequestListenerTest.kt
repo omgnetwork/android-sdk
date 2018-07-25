@@ -25,7 +25,6 @@ class TransactionRequestListenerTest {
     private val mockTransactionConsumptionRequestEvent: TransactionConsumptionRequestEvent = mock {
         on { socketReceive } doReturn mock<SocketReceive<TransactionConsumption>>()
         on { socketReceive.data } doReturn mock<TransactionConsumption>()
-
     }
     private val mockTransactionConsumptionFinalizedSuccessEvent: TransactionConsumptionFinalizedEvent = mock {
         on { socketReceive } doReturn mock<SocketReceive<TransactionConsumption>>()

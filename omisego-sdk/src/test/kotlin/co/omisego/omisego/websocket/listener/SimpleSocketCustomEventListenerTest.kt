@@ -32,13 +32,11 @@ class SimpleSocketCustomEventListenerTest {
 
     class RequestEventListener(override val strategy: FilterStrategy) : SimpleSocketCustomEventListener() {
         override fun onSpecificEvent(event: SocketEvent<*>) {
-
         }
     }
 
     class FinalizedEventListener(override val strategy: FilterStrategy) : SimpleSocketCustomEventListener() {
         override fun onSpecificEvent(event: SocketEvent<*>) {
-            // Do something
         }
     }
 
