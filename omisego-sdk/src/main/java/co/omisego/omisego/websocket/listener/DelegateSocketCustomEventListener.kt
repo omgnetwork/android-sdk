@@ -13,7 +13,7 @@ import co.omisego.omisego.websocket.strategy.FilterStrategy
 class DelegateSocketCustomEventListener(
     override val strategy: FilterStrategy,
     val delegate: SocketCustomEventListener
-) : SimpleSocketCustomEventListener<SocketEvent<*>>() {
+) : SimpleSocketCustomEventListener() {
     override fun onSpecificEvent(event: SocketEvent<*>) {
         delegate.onEvent(event)
     }

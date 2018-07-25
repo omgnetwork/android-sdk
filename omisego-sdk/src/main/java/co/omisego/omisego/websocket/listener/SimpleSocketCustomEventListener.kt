@@ -16,17 +16,17 @@ import co.omisego.omisego.websocket.strategy.FilterStrategy
  * A [SocketCustomEventListener] that can be filtered for a specific type of event.
  */
 
-abstract class SimpleSocketCustomEventListener<Event : SocketEvent<*>> : SocketCustomEventListener {
+abstract class SimpleSocketCustomEventListener : SocketCustomEventListener {
     abstract val strategy: FilterStrategy
 
     @Suppress("UNCHECKED_CAST")
     final override fun onEvent(event: SocketEvent<*>) {
         if (strategy.accept(event)) {
-            onSpecificEvent(event as Event)
+            onSpecificEvent(event)
         }
     }
 
-    abstract fun onSpecificEvent(event: Event)
+    abstract fun onSpecificEvent(event: SocketEvent<*>)
 
     companion object {
         internal inline fun <reified T : SocketReceive.SocketData> SocketReceive<T>.dispatch(

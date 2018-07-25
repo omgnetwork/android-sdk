@@ -9,79 +9,64 @@ package co.omisego.omisego.websocket.listener
 
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
+import co.omisego.omisego.websocket.event.SocketEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
-import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.mock
+import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
+import co.omisego.omisego.websocket.strategy.FilterStrategy
 import com.nhaarman.mockito_kotlin.spy
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.amshove.kluent.mock
+import org.amshove.kluent.shouldNotThrowTheException
 import org.junit.Before
 import org.junit.Test
 
 class SimpleSocketCustomEventListenerTest {
-    private val listener: TransactionConsumptionListener by lazy {
-        spy(
-            object : TransactionConsumptionListener(mock {
-                on { socketTopic } doReturn SocketTopic("topic")
-            }) {
-                override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
-                }
 
-                override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
-                }
-            }
-        )
+    class TestListener(override val strategy: FilterStrategy) : SimpleSocketCustomEventListener() {
+        override fun onSpecificEvent(event: SocketEvent<*>) {
+        }
     }
 
+    class RequestEventListener(override val strategy: FilterStrategy) : SimpleSocketCustomEventListener() {
+        override fun onSpecificEvent(event: SocketEvent<*>) {
+
+        }
+    }
+
+    class FinalizedEventListener(override val strategy: FilterStrategy) : SimpleSocketCustomEventListener() {
+        override fun onSpecificEvent(event: SocketEvent<*>) {
+            // Do something
+        }
+    }
+
+    private val listener: TestListener = spy(TestListener(mock()))
+    private val requestListener: RequestEventListener = spy(RequestEventListener(FilterStrategy.None()))
+    private val finalizedListener: FinalizedEventListener = spy(FinalizedEventListener(FilterStrategy.None()))
     private val mockTransactionConsumption: TransactionConsumption = mock()
     private val mockAPIError: APIError = mock()
-    private val mockResponseMatchedTopic: SocketReceive<TransactionConsumption> = mock {
-        on { topic } doReturn "topic"
-    }
-    private val mockResponseUnmatchedTopic: SocketReceive<TransactionConsumption> = mock {
-        on { topic } doReturn "topic2"
-    }
-    private val mockResponseFail: SocketReceive<TransactionConsumption> = mock {
-        on { topic } doReturn "topic"
-    }
+    private val mockResponseSuccess: SocketReceive<TransactionConsumption> = mock()
+    private val mockResponseFail: SocketReceive<TransactionConsumption> = mock()
     private val mockResponseUnknownError: SocketReceive<TransactionConsumption> = mock()
 
     @Before
     fun mockResponse() {
         whenever(mockResponseFail.error).thenReturn(mockAPIError)
         whenever(mockResponseFail.data).thenReturn(mockTransactionConsumption)
-        whenever(mockResponseMatchedTopic.error).thenReturn(null)
-        whenever(mockResponseMatchedTopic.data).thenReturn(mockTransactionConsumption)
-        whenever(mockResponseUnmatchedTopic.error).thenReturn(null)
-        whenever(mockResponseUnmatchedTopic.data).thenReturn(mockTransactionConsumption)
+        whenever(mockResponseSuccess.error).thenReturn(null)
+        whenever(mockResponseSuccess.data).thenReturn(mockTransactionConsumption)
         whenever(mockResponseUnknownError.error).thenReturn(null)
         whenever(mockResponseUnknownError.data).thenReturn(null)
     }
 
     @Test
-    fun `dispatch function should be invoked onSuccess correctly`() {
-        listener.onSpecificEvent(TransactionConsumptionFinalizedEvent(mockResponseMatchedTopic))
-
-        verify(listener, times(1)).onTransactionConsumptionFinalizedSuccess(mockTransactionConsumption)
-        verify(listener, times(0)).onTransactionConsumptionFinalizedFail(mockTransactionConsumption, mockAPIError)
-    }
-
-    @Test
-    fun `dispatch function should be invoked onFailed correctly`() {
-        listener.onSpecificEvent(TransactionConsumptionFinalizedEvent(mockResponseFail))
-
-        verify(listener, times(1)).onTransactionConsumptionFinalizedFail(mockTransactionConsumption, mockAPIError)
-        verify(listener, times(0)).onTransactionConsumptionFinalizedSuccess(mockTransactionConsumption)
-    }
-
-    @Test
     fun `onEvent function should called onSpecificEvent only if the strategy is accept the event`() {
-        val event = TransactionConsumptionFinalizedEvent(mockResponseMatchedTopic)
+        val event = TransactionConsumptionFinalizedEvent(mockResponseSuccess)
 
+        /* Only if the strategy accept this event, the onSpecificEvent should be immediately invoked. */
+        whenever(listener.strategy.accept(event)).thenReturn(true)
         listener.onEvent(event)
 
         verify(listener, times(1)).onSpecificEvent(event)
@@ -89,10 +74,19 @@ class SimpleSocketCustomEventListenerTest {
 
     @Test
     fun `onEvent function should not called onSpecificEvent only if the strategy is not accept the event`() {
-        val event = TransactionConsumptionFinalizedEvent(mockResponseUnmatchedTopic)
+        val event = TransactionConsumptionFinalizedEvent(mockResponseSuccess)
 
+        whenever(listener.strategy.accept(event)).thenReturn(false)
         listener.onEvent(event)
 
         verify(listener, times(0)).onSpecificEvent(event)
+    }
+
+    @Test
+    fun `casting event type should not crash`() {
+        val onRequestEvent = { requestListener.onEvent(mock<TransactionConsumptionFinalizedEvent>()) }
+        val onFinalizedEvent = { finalizedListener.onEvent(mock<TransactionConsumptionRequestEvent>()) }
+        onRequestEvent shouldNotThrowTheException ClassCastException::class
+        onFinalizedEvent shouldNotThrowTheException ClassCastException::class
     }
 }

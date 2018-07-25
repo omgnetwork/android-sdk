@@ -14,7 +14,7 @@ import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
 import co.omisego.omisego.websocket.strategy.FilterStrategy
 
-abstract class TransactionRequestListener : SimpleSocketCustomEventListener<SocketEvent<*>>() {
+abstract class TransactionRequestListener : SimpleSocketCustomEventListener() {
     final override val strategy: FilterStrategy = FilterStrategy.None()
 
     final override fun onSpecificEvent(event: SocketEvent<*>) {

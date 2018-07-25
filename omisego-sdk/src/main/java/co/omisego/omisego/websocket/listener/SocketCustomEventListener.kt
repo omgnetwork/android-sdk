@@ -23,10 +23,10 @@ interface SocketCustomEventListener {
         inline fun <reified Event : SocketEvent<*>> forEvent(
             crossinline lambda: (Event) -> Unit
         ): SocketCustomEventListener {
-            return object : SimpleSocketCustomEventListener<Event>() {
+            return object : SimpleSocketCustomEventListener() {
                 override val strategy: FilterStrategy = FilterStrategy.Event(listOf(Event::class.java))
-                override fun onSpecificEvent(event: Event) {
-                    lambda(event)
+                override fun onSpecificEvent(event: SocketEvent<*>) {
+                    lambda(event as Event)
                 }
             }
         }
@@ -41,7 +41,7 @@ interface SocketCustomEventListener {
             strategy: FilterStrategy,
             listener: SocketCustomEventListener
         ): SocketCustomEventListener {
-            return object : SimpleSocketCustomEventListener<SocketEvent<*>>() {
+            return object : SimpleSocketCustomEventListener() {
                 override val strategy: FilterStrategy = strategy
                 override fun onSpecificEvent(event: SocketEvent<*>) {
                     listener.onEvent(event)
@@ -59,7 +59,7 @@ interface SocketCustomEventListener {
             strategy: FilterStrategy,
             crossinline lambda: (SocketEvent<out SocketReceive.SocketData>) -> Unit
         ): SocketCustomEventListener {
-            return object : SimpleSocketCustomEventListener<SocketEvent<*>>() {
+            return object : SimpleSocketCustomEventListener() {
                 override val strategy: FilterStrategy = strategy
                 override fun onSpecificEvent(event: SocketEvent<*>) {
                     lambda(event)
@@ -72,11 +72,11 @@ interface SocketCustomEventListener {
         message = "Remove SocketCustomEventListener.TransactionConsumptionListener and use TransactionConsumptionListener instead.",
         level = DeprecationLevel.ERROR
     )
-    abstract class TransactionConsumptionListener : SimpleSocketCustomEventListener<SocketEvent<*>>()
+    abstract class TransactionConsumptionListener : SimpleSocketCustomEventListener()
 
     @Deprecated(
         message = "Remove SocketCustomEventListener.TransactionRequestListener and use TransactionRequestListener instead.",
         level = DeprecationLevel.ERROR
     )
-    abstract class TransactionRequestListener : SimpleSocketCustomEventListener<SocketEvent<*>>()
+    abstract class TransactionRequestListener : SimpleSocketCustomEventListener()
 }
