@@ -595,8 +595,8 @@ socketClient.addConnectionListener(object : SocketConnectionListener {
 
 `SocketChannelListener` *(optional)* is the listener that listens for a **channel connection status**. The possible events are:
 
-* `onJoinedChannel(topic: String)`: Invoked when the client has been joined the channel successfully.
-* `onLeftChannel(topic: String)`: Invoked when the client has been left the channel successfully.
+* `onJoinedChannel(topic: String)`: Invoked when the client has joined the channel successfully.
+* `onLeftChannel(topic: String)`: Invoked when the client has left the channel successfully.
 * `onError(apiError: APIError)`: Invoked when something goes wrong while connecting to a channel.
     
 **Usage**
