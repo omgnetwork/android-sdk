@@ -68,7 +68,8 @@ class OMGSocketClient internal constructor(
     internal var request: Request,
     internal val socketSendParser: SocketClientContract.PayloadSendParser,
     internal val webSocketListenerProvider: WebSocketListenerProvider
-) : SocketClientContract.Client, SocketChannelContract.SocketClient,
+) : SocketClientContract.Client,
+    SocketChannelContract.SocketClient,
     SocketConnectionListenerSet,
     SocketChannelListenerSet,
     SocketCustomEventListenerSet {
@@ -156,18 +157,10 @@ class OMGSocketClient internal constructor(
         socketChannel.period = period
     }
 
-    @Deprecated(
-        message = "Use \'addConnectionListener\' or \'removeConnectionListener\' instead",
-        level = DeprecationLevel.ERROR
-    )
-    override fun setConnectionListener(connectionListener: SocketConnectionListener?) {
+    override fun setConnectionListener(connectionListener: SocketConnectionListener) {
     }
 
-    @Deprecated(
-        "Use \'addChannelListener\' or \'removeChannelListener\' instead",
-        level = DeprecationLevel.ERROR
-    )
-    override fun setChannelListener(channelListener: SocketChannelListener?) {
+    override fun setChannelListener(channelListener: SocketChannelListener) {
     }
 
     /**

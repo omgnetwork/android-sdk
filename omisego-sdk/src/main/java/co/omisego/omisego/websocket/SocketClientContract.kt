@@ -128,15 +128,23 @@ interface SocketClientContract {
 
         @Deprecated(
             message = "Use \'addConnectionListener\' or \'removeConnectionListener\' instead",
+            replaceWith = ReplaceWith(
+                "addConnectionListener(connectionListener)"
+            ),
             level = DeprecationLevel.ERROR
         )
-        fun setConnectionListener(connectionListener: SocketConnectionListener?) {}
+        fun setConnectionListener(connectionListener: SocketConnectionListener) {
+        }
 
         @Deprecated(
             "Use \'addChannelListener\' or \'removeChannelListener\' instead",
+            replaceWith = ReplaceWith(
+                "addChannelListener(channelListener)"
+            ),
             level = DeprecationLevel.ERROR
         )
-        fun setChannelListener(channelListener: SocketChannelListener?) {}
+        fun setChannelListener(channelListener: SocketChannelListener) {
+        }
     }
 
     interface PayloadSendParser {
