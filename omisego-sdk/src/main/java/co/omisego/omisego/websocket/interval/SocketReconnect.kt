@@ -1,18 +1,18 @@
 package co.omisego.omisego.websocket.interval
 
-import co.omisego.omisego.model.socket.SocketSend
-import co.omisego.omisego.websocket.channel.SocketChannelContract
-import java.net.InetAddress
-import java.util.Date
-import java.util.Timer
-import kotlin.concurrent.schedule
-
 /*
  * OmiseGO
  *
  * Created by Phuchit Sirimongkolsathien on 3/5/2018 AD.
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
+
+import co.omisego.omisego.model.socket.SocketSend
+import co.omisego.omisego.websocket.channel.SocketChannelContract
+import java.net.InetAddress
+import java.util.Date
+import java.util.Timer
+import kotlin.concurrent.schedule
 
 class SocketReconnect : BaseSocketInterval(), SocketChannelContract.SocketReconnect {
     val reconnectChannels: MutableSet<SocketSend> = mutableSetOf()
