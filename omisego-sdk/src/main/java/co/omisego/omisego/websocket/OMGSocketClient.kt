@@ -166,7 +166,7 @@ class OMGSocketClient internal constructor(
     /**
      * Add listener for subscribing to the [SocketConnectionListener] event.
      *
-     * @param connectionListener The [SocketConnectionListener] to be invoked when the channel has been joined, left, or got an error.
+     * @param connectionListener The [SocketConnectionListener] to be invoked when the connection has been connected, or disconnected.
      * @see SocketConnectionListener for the event detail.
      */
     override fun addConnectionListener(connectionListener: SocketConnectionListener) {
@@ -183,7 +183,7 @@ class OMGSocketClient internal constructor(
     }
 
     /**
-     * Subscribe to the [SocketChannelListener] event.
+     * Add listener for subscribing to the [SocketChannelListener] event.
      *
      * @param channelListener The [SocketChannelListener] to be invoked when the channel has been joined, left, or got an error.
      * @see SocketChannelListener for the event detail.
@@ -201,10 +201,21 @@ class OMGSocketClient internal constructor(
         socketChannel.removeChannelListener(channelListener)
     }
 
+    /**
+     * Add listener for subscribing to the [SocketCustomEventListener] event.
+     *
+     * @param customEventListener The [SocketCustomEventListener] to be invoked when the custom event is coming.
+     * Learn more: https://github.com/omisego/ewallet/blob/master/docs/guides/ewallet_api_websockets.md#receivable-custom-events
+     */
     override fun addCustomEventListener(customEventListener: SocketCustomEventListener) {
         socketChannel.addCustomEventListener(customEventListener)
     }
 
+    /**
+     * Remove the listener for unsubscribing from the [SocketCustomEventListener] event.
+     *
+     * @param customEventListener The [SocketChannelListener] to be unsubscribed.
+     */
     override fun removeCustomEventListener(customEventListener: SocketCustomEventListener) {
         socketChannel.removeCustomEventListener(customEventListener)
     }

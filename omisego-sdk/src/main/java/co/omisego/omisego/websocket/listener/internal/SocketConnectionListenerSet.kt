@@ -10,6 +10,19 @@ package co.omisego.omisego.websocket.listener.internal
 import co.omisego.omisego.websocket.listener.SocketConnectionListener
 
 interface SocketConnectionListenerSet {
+    /**
+     * Add listener for subscribing to the [SocketConnectionListener] event.
+     *
+     * @param connectionListener The [SocketConnectionListener] to be invoked when the channel has been joined, left, or got an error.
+     * @see SocketConnectionListener for the event detail.
+     */
     fun addConnectionListener(connectionListener: SocketConnectionListener)
+
+    /**
+     * Remove the listener for unsubscribing from the [SocketConnectionListener] event.
+     *
+     * @param connectionListener The [SocketConnectionListener] to be invoked when the channel has been joined, left, or got an error.
+     * @see SocketConnectionListener for the event detail.
+     */
     fun removeConnectionListener(connectionListener: SocketConnectionListener)
 }
