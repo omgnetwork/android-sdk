@@ -78,7 +78,7 @@ class EWalletClientTest : GsonDelegator() {
     }
 
     @Test
-    fun `Calls get_current_user should be match with the expected response`() {
+    fun `calls get_current_user should be match with the expected response`() {
         userFile.mockEnqueueWithHttpCode(mockWebServer)
 
         val actualResponse = eWalletClient.eWalletAPI.getCurrentUser().execute().body()!!
@@ -87,7 +87,7 @@ class EWalletClientTest : GsonDelegator() {
     }
 
     @Test
-    fun `Calls get_settings should be match with the expected response`() {
+    fun `calls get_settings should be match with the expected response`() {
         getSettingFile.mockEnqueueWithHttpCode(mockWebServer)
 
         val actualResponse = eWalletClient.eWalletAPI.getSettings().execute().body()!!
@@ -96,7 +96,7 @@ class EWalletClientTest : GsonDelegator() {
     }
 
     @Test
-    fun `Calls list_wallets should be match with the expected response`() {
+    fun `calls list_wallets should be match with the expected response`() {
         getWalletsFile.mockEnqueueWithHttpCode(mockWebServer)
 
         val actualResponse = eWalletClient.eWalletAPI.getWallets().execute().body()!!
@@ -105,7 +105,7 @@ class EWalletClientTest : GsonDelegator() {
     }
 
     @Test
-    fun `EWalletClient should be set the header correctly`() {
+    fun `should be set the header correctly`() {
         userFile.mockEnqueueWithHttpCode(mockWebServer)
         val expectedAuth = "OMGClient ${Encryptor.encryptBase64(
             "api_key",
@@ -119,7 +119,7 @@ class EWalletClientTest : GsonDelegator() {
     }
 
     @Test
-    fun `EWalletClient request to get_current_user with the correct path`() {
+    fun `get_current_user with the correct path`() {
         userFile.mockEnqueueWithHttpCode(mockWebServer)
 
         eWalletClient.eWalletAPI.getCurrentUser().execute()
@@ -129,7 +129,7 @@ class EWalletClientTest : GsonDelegator() {
     }
 
     @Test
-    fun `EWalletClient request to get_setting with the correct path`() {
+    fun `get_setting with the correct path`() {
         getSettingFile.mockEnqueueWithHttpCode(mockWebServer)
 
         eWalletClient.eWalletAPI.getSettings().execute()
@@ -138,7 +138,7 @@ class EWalletClientTest : GsonDelegator() {
     }
 
     @Test
-    fun `EWalletClient request to list_wallets with the correct path`() {
+    fun `list_wallets with the correct path`() {
         getWalletsFile.mockEnqueueWithHttpCode(mockWebServer)
 
         eWalletClient.eWalletAPI.getWallets().execute()
@@ -147,7 +147,7 @@ class EWalletClientTest : GsonDelegator() {
     }
 
     @Test
-    fun `EWalletClient request to get_transactions with the correct path`() {
+    fun `get_transactions with the correct path`() {
         getTransactionsFile.mockEnqueueWithHttpCode(mockWebServer)
 
         val listTransactionParams: TransactionListParams = mock()
@@ -158,7 +158,7 @@ class EWalletClientTest : GsonDelegator() {
     }
 
     @Test
-    fun `EWalletClient request to logout with the correct path`() {
+    fun `logout with the correct path`() {
         userFile.mockEnqueueWithHttpCode(mockWebServer)
 
         eWalletClient.eWalletAPI.logout().execute()
@@ -168,13 +168,13 @@ class EWalletClientTest : GsonDelegator() {
     }
 
     @Test
-    fun `EWalletClient should throws an IllegalStateException if the clientConfiguration is not set`() {
+    fun `should throws an IllegalStateException if the clientConfiguration is not set`() {
         val error = { EWalletClient.Builder { }.build() }
         error shouldThrow IllegalStateException::class withMessage Exceptions.MSG_NULL_CLIENT_CONFIGURATION
     }
 
     @Test
-    fun `EWalletClient should be able to add the network interceptor for debugging purpose`() {
+    fun `should be able to add the network interceptor for debugging purpose`() {
         val debuggableClient = EWalletClient.Builder {
             debugUrl = mockUrl
             clientConfiguration = config
@@ -187,7 +187,7 @@ class EWalletClientTest : GsonDelegator() {
     }
 
     @Test
-    fun `EWalletClient should not add the network interceptor when debug flag is false`() {
+    fun `should not add the network interceptor when debug flag is false`() {
         val nonDebuggableClient = EWalletClient.Builder {
             debugUrl = mockUrl
             clientConfiguration = config

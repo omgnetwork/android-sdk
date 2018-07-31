@@ -8,7 +8,7 @@ package co.omisego.omisego.custom.gson
  */
 
 import co.omisego.omisego.helpers.delegation.GsonDelegator
-import co.omisego.omisego.client.utils.Either
+import co.omisego.omisego.utils.Either
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
 import org.amshove.kluent.shouldEqual

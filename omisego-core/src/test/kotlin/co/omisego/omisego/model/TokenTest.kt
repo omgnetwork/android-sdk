@@ -11,7 +11,7 @@ package co.omisego.omisego.model
 import co.omisego.omisego.extension.bd
 import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
-import co.omisego.omisego.client.utils.DateConverter
+import co.omisego.omisego.utils.DateConverter
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldEqualTo
 import org.junit.Test

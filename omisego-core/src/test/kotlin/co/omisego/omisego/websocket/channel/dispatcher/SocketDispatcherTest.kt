@@ -10,7 +10,7 @@ package co.omisego.omisego.websocket.channel.dispatcher
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-import co.omisego.omisego.client.utils.Either
+import co.omisego.omisego.utils.Either
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
 import co.omisego.omisego.websocket.listener.SocketConnectionListener

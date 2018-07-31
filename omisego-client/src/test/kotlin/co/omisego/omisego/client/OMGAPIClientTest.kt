@@ -8,6 +8,7 @@ package co.omisego.omisego.client
  */
 
 import co.omisego.omisego.client.constant.Versions
+import co.omisego.omisego.client.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.client.model.ClientConfiguration
 import co.omisego.omisego.client.network.ewallet.EWalletClient
 import co.omisego.omisego.client.util.GsonDelegator
@@ -15,7 +16,6 @@ import co.omisego.omisego.client.util.ResourceFile
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.exception.OMGAPIErrorException
-import co.omisego.omisego.client.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting

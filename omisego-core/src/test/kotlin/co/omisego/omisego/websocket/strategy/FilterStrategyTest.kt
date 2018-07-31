@@ -10,7 +10,7 @@ package co.omisego.omisego.websocket.strategy
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-import co.omisego.omisego.client.utils.Either
+import co.omisego.omisego.utils.Either
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.event.SocketEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionFinalizedEvent
