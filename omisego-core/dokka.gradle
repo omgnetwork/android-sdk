@@ -1,0 +1,43 @@
+apply plugin: 'org.jetbrains.dokka-android'
+
+def rootPackageName = "co.omisego.omisego"
+
+dokka {
+    outputFormat = 'html'
+    packageOptions {
+        prefix = rootPackageName
+        suppress = true
+    }
+    packageOptions {
+        prefix = "${rootPackageName}.OMGAPIClient"
+        suppress = false
+    }
+    packageOptions {
+        prefix = "${rootPackageName}.operation.Listenable"
+        suppress = false
+    }
+    packageOptions {
+        prefix = "${rootPackageName}.security.OMGKeyManager"
+        suppress = false
+    }
+    packageOptions {
+        prefix = "${rootPackageName}.websocket.OMGSocketClient"
+        suppress = false
+    }
+    packageOptions {
+        prefix = "${rootPackageName}.qrcode.scanner.OMGQRScannerView"
+        suppress = false
+    }
+    packageOptions {
+        prefix = "${rootPackageName}.network.ewallet.EWalletClient"
+        suppress = false
+    }
+    packageOptions {
+        prefix = "${rootPackageName}.custom.OMGCallback"
+        suppress = false
+    }
+    packageOptions {
+        prefix = "${rootPackageName}.model"
+        suppress = false
+    }
+}

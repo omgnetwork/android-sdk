@@ -1,0 +1,21 @@
+project.ext {
+    /* package version */
+    versionName = "1.0.1"
+
+    /* android compile tools */
+    buildToolsVersion = '27.0.3'
+    compileSdkVersion = 27
+
+    /* android default config */
+    minSdkVersion = 19
+    targetSdkVersion = 27
+    versionCode = 1
+
+    /* publish artifact */
+    userOrg = 'omise-go'
+    groupId = 'co.omisego'
+    desc = 'The OmiseGO Android SDK allows developers to easily interact with a node of the OmiseGO eWallet.'
+    website = 'https://github.com/omisego/android-sdk'
+    artifactIdCore = 'omisego-core'
+    artifactIdClient = 'omisego-client'
+}

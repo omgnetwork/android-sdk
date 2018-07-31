@@ -1,0 +1,41 @@
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+ext {
+    kotlinVersion = '1.2.51'
+    retrofitVersion = '2.4.0'
+    deps = [
+        kotlin     : [
+            "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
+            "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+        ],
+        networking : [
+            "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+            "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
+            "com.squareup.okhttp3:logging-interceptor:3.9.1",
+        ],
+        scanner    : [
+            "com.google.zxing:core:3.3.0",
+            "com.android.support:appcompat-v7:27.1.1",
+        ],
+        test       : [
+            "org.json:json:20160810",
+            "junit:junit:4.12",
+            "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion",
+            "org.amshove.kluent:kluent-android:1.30",
+            "org.robolectric:robolectric:3.4.2",
+            "com.squareup.okhttp3:mockwebserver:3.9.1",
+            "com.squareup.retrofit2:retrofit-mock:$retrofitVersion",
+            "com.android.support.test:runner:1.0.2",
+        ],
+        androidTest: [
+            "com.android.support.test.espresso:espresso-core:3.0.2",
+            "com.android.support.test:rules:1.0.2",
+        ]
+    ]
+}

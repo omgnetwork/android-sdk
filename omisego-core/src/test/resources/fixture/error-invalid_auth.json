@@ -1,0 +1,8 @@
+{
+  "version": "1",
+  "success": false,
+  "data": {
+    "description": "The provided authentication scheme is not supported",
+    "code": "client:invalid_auth_scheme"
+  }
+}

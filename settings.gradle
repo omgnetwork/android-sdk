@@ -1,2 +1,5 @@
-include ':omisego-sdk', ':app'
+include ':omisego-core',
+        ':omisego-client',
+        ':app'
+
 project(':app').projectDir = new File('sample-android/app')
