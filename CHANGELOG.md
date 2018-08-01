@@ -7,6 +7,10 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [1.1] - 2018-08-xx
+### Changed
+- Separated `omisego-sdk` module into `omisego-core` and `omisego-client`.
+
 ## [1.0.1] - 2018-07-26
 ### Added
 - `addConnectionListener` and `removeConnectionListener` methods in `OMGSocketClient` class.

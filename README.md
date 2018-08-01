@@ -52,7 +52,8 @@ To use the OmiseGO SDK in your android project, simply add the following line in
  
 ```groovy
 dependencies {
-    implementation 'co.omisego:omisego-sdk:<latest-sdk-version>'
+    implementation 'co.omisego:omisego-core:<latest-sdk-version>'
+    implementation 'co.omisego:omisego-client:<latest-sdk-version>'
 }
 ```
 ## Usage
@@ -445,20 +446,22 @@ You can then use the `OMGQRScannerView` to scan the generated QR code.
 </FrameLayout>
 ```
 
-**Then**, you can call `scannerView.startCamera` passing your `OMGAPIClient` and `OMGQRScannerContract.Callback` respectively to start the camera.
+**Then**, you can call `scannerView.startCameraWithVerifier` passing the `OMGQRVerifier` to start the camera.
 
 > Note: You need to handle the camera permission first
 
 ```kotlin
-class QRScannerActivity : AppCompatActivity(), OMGQRScannerContract.Callback {
+class QRScannerActivity : AppCompatActivity(), OMGQRVerifierListener {
     private lateinit var omgAPIClient: OMGAPIClient
+    private lateinit var verifier: OMGQRVerifier
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_qrscanner)
         
         omgAPIClient = your_omg_api_client
-        scannerView.startCamera(omgAPIClient, this)
+        scannerView = findViewById(R.id.scannerView) as OMGQRScannerView
+        verifier = OMGQRVerifier(scannerView, omgAPIClient, this)
     }
 
     override fun scannerDidCancel(view: OMGQRScannerContract.View) {
@@ -473,19 +476,19 @@ class QRScannerActivity : AppCompatActivity(), OMGQRScannerContract.Callback {
     
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         scannerView.stopCamera()
     } 
 
-    override fun onResume() {
-        super.onResume()
-        scannerView.startCamera(omgAPIClient, this)
+    override fun onStart() {
+        super.onStart()
+        scannerView.startCameraWithVerifier(verifier)
     }
 }
 ```
 
-As you can see, the `OMGQRScannerContract.Callback` offers the following interface:
+As you can see, the `OMGQRVerifierListener` offers the following interface:
 
 ```kotlin
 /**

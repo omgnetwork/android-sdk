@@ -13,13 +13,17 @@ class EWalletClient : BaseClient() {
     internal lateinit var eWalletAPI: EWalletAPI
 
     /**
-     * Build a new [EWalletClient].
-     * Set [apiKey], [authenticationToken] and [baseUrl] are required before calling [Builder.build].
+     * A builder user for build an [EWalletClient] instance.
+     * clientConfiguration is required before calling [Builder.build].
      * Set [debug] true for printing a log
      *
      * @receiver A [Builder]'s methods.
      */
     class Builder(init: BaseClient.Builder.() -> Unit) : BaseClient.Builder(init) {
+
+        /**
+         * Create an [EWalletClient] instance.
+         */
         override fun build(): EWalletClient {
             with(super.build()) {
                 return EWalletClient().also {
