@@ -108,9 +108,6 @@ class OMGSocketClient internal constructor(
      *
      * @param topic The topic (channel) to which the event to be sent.
      * @param payload (Optional) the additional data you might want to send bundled with the request.
-     * @param listener The event you want to receive for the specified [Channel].
-     * Be careful, the listener should be related to the topic, otherwise you won't receive any message.
-     * For example, if you are sending the topic begins with "transaction_request", then the listener must be the [SocketCustomEventListener.TransactionRequestListener] event.
      *
      * @see SocketCustomEventListener
      */

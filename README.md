@@ -325,7 +325,7 @@ Where:
     * `metadata`: Additional metadata embedded with the request
     * `encryptedMetadata`: Additional encrypted metadata embedded with the request
 
-A `TransactionRequest` object is passed to the success callback, you can generate its QR code representation using `transactionRequest.generateQRCode(size)`.
+A `TransactionRequest` object is passed to the success listener, you can generate its QR code representation using `transactionRequest.generateQRCode(size)`.
 
 ### Consume a transaction request
 The previously created `transactionRequest` can then be consumed:
@@ -751,13 +751,26 @@ Simply run `./gradlew ktlintCheck` under the project root directory.
 
 ## Unit Test
 
+### Running all tests
 ```bash
 ./gradlew clean test
 ```
 
+### Running tests for omisego-core module
+
+```bash
+./gradlew omisego-core:test -Plive=false
+```
+
+### Running tests for omisego-client module
+
+```bash
+./gradlew omisego-client:test -Plive=false
+```
+
 ## Live Test
 
-In order to run the live tests (bound to a working server), you need to create a file `secret.json` under `src/liveTest/resources/` directory (You can take a template from `secret.example.json` there).
+In order to run the live tests (bound to a working server), you need to create a file `secret.json` under `src/liveTest/resources/` directory in the `omisego-client` module (You can take a template from `secret.example.json` there).
 
 The `secret.json` file will be using the following format which is the same as the `secret.example.json` file.
 
@@ -773,7 +786,7 @@ The `secret.json` file will be using the following format which is the same as t
 You will need to fill the corresponding variables, then runs the following command to execute the live test.
 
 ```bash
-./gradlew clean test -Plive=true
+./gradlew omisego-client:test -Plive=true
 ```
 
 # Contributing

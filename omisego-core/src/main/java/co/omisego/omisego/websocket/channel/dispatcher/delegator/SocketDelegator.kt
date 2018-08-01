@@ -19,6 +19,7 @@ import okhttp3.WebSocketListener
  * SocketDelegator is responsible for delegate the [WebSocketListener] events to the [SocketDelegatorContract.Dispatcher].
  *
  * @param socketResponseParser A socketResponseParser is responsible for parse a raw replied json object to the [SocketReceive] model.
+ * @param socketDispatcher A socketDispatcher is responsible for dispatch an event which received from the server.
  */
 class SocketDelegator(
     override val socketResponseParser: SocketDelegatorContract.PayloadReceiveParser,
