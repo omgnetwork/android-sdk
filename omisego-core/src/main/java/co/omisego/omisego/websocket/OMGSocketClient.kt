@@ -277,7 +277,7 @@ class OMGSocketClient internal constructor(
          * Create a [OMGSocketClient] instance to be used for connecting to the web socket API.
          *
          * @return An instance of the [OMGSocketClient].
-         * @throws IllegalStateException if [authenticationToken], [apiKey] or the [baseURL] is empty.
+         * @throws IllegalStateException if the [ClientConfiguration] is null.
          */
         override fun build(): SocketClientContract.Client {
             val config = clientConfiguration ?: throw IllegalStateException(Exceptions.MSG_NULL_CLIENT_CONFIGURATION)
@@ -288,7 +288,7 @@ class OMGSocketClient internal constructor(
                 addHeader(HTTPHeaders.ACCEPT, HTTPHeaders.ACCEPT_OMG)
             }.build()
 
-            val okHttpClient = okHttpHelper.createClient(debug, omgHeader, debugOkHttpInterceptors)
+            val okHttpClient = okHttpHelper.createClient(false, debug, omgHeader, debugOkHttpInterceptors)
 
             val gson = GsonProvider.create()
 

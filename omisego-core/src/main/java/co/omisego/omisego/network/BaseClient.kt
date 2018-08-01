@@ -83,7 +83,7 @@ open class BaseClient {
         open fun build(): BaseClient {
             val config = clientConfiguration ?: throw IllegalStateException(Exceptions.MSG_NULL_CLIENT_CONFIGURATION)
             val omgHeader = okHttpHelper.createHeader(config)
-            val client = okHttpHelper.createClient(debug, omgHeader, debugOkHttpInterceptors)
+            val client = okHttpHelper.createClient(true, debug, omgHeader, debugOkHttpInterceptors)
             val retrofit = createRetrofit(GsonProvider.create(), client)
 
             return BaseClient().also {

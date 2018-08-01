@@ -22,11 +22,13 @@ class OkHttpHelper(
 
     /* Initialize the OKHttpClient with header interceptor*/
     internal fun createClient(
+        requiredAuth: Boolean = true,
         debug: Boolean,
         headerInterceptor: HeaderInterceptor,
         debugOkHttpInterceptors: MutableList<Interceptor>
     ) = OkHttpClient.Builder().apply {
-        addInterceptor(headerInterceptor)
+        if (requiredAuth)
+            addInterceptor(headerInterceptor)
 
         /* If set debug true, then print the http logging */
         if (debug) {

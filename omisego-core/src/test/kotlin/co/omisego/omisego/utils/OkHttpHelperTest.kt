@@ -55,7 +55,7 @@ class OkHttpHelperTest {
     fun `createClient should return OKHttpClient when debug is true correctly`() {
         val mockHeaderInterceptor: HeaderInterceptor = mock()
         val mockNetworkInterceptor: Interceptor = mock()
-        with(okHttpHelper.createClient(true, mockHeaderInterceptor, mutableListOf(mockNetworkInterceptor))) {
+        with(okHttpHelper.createClient(true, true, mockHeaderInterceptor, mutableListOf(mockNetworkInterceptor))) {
             interceptors().size shouldEqualTo 1
             interceptors()[0] shouldBeInstanceOf HeaderInterceptor::class.java
             networkInterceptors().size shouldEqualTo 1
@@ -67,10 +67,19 @@ class OkHttpHelperTest {
     fun `createClient should return OKHttpClient when debug is false correctly`() {
         val mockHeaderInterceptor: HeaderInterceptor = mock()
         val mockNetworkInterceptor: Interceptor = mock()
-        with(okHttpHelper.createClient(false, mockHeaderInterceptor, mutableListOf(mockNetworkInterceptor))) {
+        with(okHttpHelper.createClient(true, false, mockHeaderInterceptor, mutableListOf(mockNetworkInterceptor))) {
             interceptors().size shouldEqualTo 1
             interceptors()[0] shouldBeInstanceOf HeaderInterceptor::class.java
             networkInterceptors().size shouldEqualTo 0
+        }
+    }
+
+    @Test
+    fun `createClient should return OKHttpClient when requiredAuth is false correctly`() {
+        val mockHeaderInterceptor: HeaderInterceptor = mock()
+        val mockNetworkInterceptor: Interceptor = mock()
+        with(okHttpHelper.createClient(false, true, mockHeaderInterceptor, mutableListOf(mockNetworkInterceptor))) {
+            interceptors().size shouldEqualTo 0
         }
     }
 }
