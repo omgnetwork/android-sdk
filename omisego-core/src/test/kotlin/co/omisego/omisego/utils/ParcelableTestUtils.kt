@@ -1,4 +1,4 @@
-package co.omisego.omisego.client.utils
+package co.omisego.omisego.utils
 
 /*
  * OmiseGO

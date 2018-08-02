@@ -8,6 +8,7 @@ package co.omisego.omisego.client.model
  */
 
 import co.omisego.omisego.constant.Exceptions
+import co.omisego.omisego.model.ClientConfiguration
 import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.withMessage
 import org.junit.Test

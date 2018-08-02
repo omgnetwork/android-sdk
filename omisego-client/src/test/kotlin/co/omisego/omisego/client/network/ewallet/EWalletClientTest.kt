@@ -8,9 +8,9 @@ package co.omisego.omisego.client.network.ewallet
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.client.constant.Endpoints
+import co.omisego.omisego.constant.ClientAPIEndpoints
 import co.omisego.omisego.client.extension.mockEnqueueWithHttpCode
-import co.omisego.omisego.client.model.ClientConfiguration
+import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.client.util.Encryptor
 import co.omisego.omisego.client.util.GsonDelegator
 import co.omisego.omisego.client.util.ResourceFile
@@ -22,6 +22,7 @@ import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.transaction.list.TransactionListParams
+import co.omisego.omisego.network.ewallet.EWalletClient
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.mockwebserver.MockWebServer
@@ -125,7 +126,7 @@ class EWalletClientTest : GsonDelegator() {
         eWalletClient.eWalletAPI.getCurrentUser().execute()
         val request = mockWebServer.takeRequest()
 
-        request.path shouldEqual "/api/client/${Endpoints.GET_CURRENT_USER}"
+        request.path shouldEqual "/api/client/${ClientAPIEndpoints.GET_CURRENT_USER}"
     }
 
     @Test
@@ -134,7 +135,7 @@ class EWalletClientTest : GsonDelegator() {
 
         eWalletClient.eWalletAPI.getSettings().execute()
         val request = mockWebServer.takeRequest()
-        request.path shouldEqual "/api/client/${Endpoints.GET_SETTINGS}"
+        request.path shouldEqual "/api/client/${ClientAPIEndpoints.GET_SETTINGS}"
     }
 
     @Test
@@ -143,7 +144,7 @@ class EWalletClientTest : GsonDelegator() {
 
         eWalletClient.eWalletAPI.getWallets().execute()
         val request = mockWebServer.takeRequest()
-        request.path shouldEqual "/api/client/${Endpoints.GET_WALLETS}"
+        request.path shouldEqual "/api/client/${ClientAPIEndpoints.GET_WALLETS}"
     }
 
     @Test
@@ -154,7 +155,7 @@ class EWalletClientTest : GsonDelegator() {
 
         eWalletClient.eWalletAPI.getTransactions(listTransactionParams).execute()
         val request = mockWebServer.takeRequest()
-        request.path shouldEqual "/api/client/${Endpoints.GET_TRANSACTIONS}"
+        request.path shouldEqual "/api/client/${ClientAPIEndpoints.GET_TRANSACTIONS}"
     }
 
     @Test
@@ -164,7 +165,7 @@ class EWalletClientTest : GsonDelegator() {
         eWalletClient.eWalletAPI.logout().execute()
         val request = mockWebServer.takeRequest()
 
-        request.path shouldEqual "/api/client/${Endpoints.LOGOUT}"
+        request.path shouldEqual "/api/client/${ClientAPIEndpoints.LOGOUT}"
     }
 
     @Test

@@ -8,7 +8,7 @@ package co.omisego.omisego.client.model
  */
 
 import android.support.test.runner.AndroidJUnit4
-import co.omisego.omisego.client.OMGAPIClient
+import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.client.util.DateConverter
 import co.omisego.omisego.client.util.GsonDelegator
 import co.omisego.omisego.client.util.ResourceFile
@@ -16,6 +16,8 @@ import co.omisego.omisego.client.util.validateParcel
 import co.omisego.omisego.extension.bd
 import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.User
+import co.omisego.omisego.model.approve
+import co.omisego.omisego.model.reject
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.Transaction
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption

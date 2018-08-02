@@ -10,7 +10,7 @@ package co.omisego.omisego.model
 import android.support.test.runner.AndroidJUnit4
 import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
-import co.omisego.omisego.client.utils.validateParcel
+import co.omisego.omisego.utils.validateParcel
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
