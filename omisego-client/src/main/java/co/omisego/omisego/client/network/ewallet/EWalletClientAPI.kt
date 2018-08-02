@@ -1,12 +1,5 @@
 package co.omisego.omisego.client.network.ewallet
 
-/*
- * OmiseGO
- *
- * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.
- * Copyright © 2017-2018 OmiseGO. All rights reserved.
- */
-
 import co.omisego.omisego.client.constant.Endpoints.APPROVE_TRANSACTION
 import co.omisego.omisego.client.constant.Endpoints.CONSUME_TRANSACTION_REQUEST
 import co.omisego.omisego.client.constant.Endpoints.CREATE_TRANSACTION_REQUEST
@@ -36,7 +29,14 @@ import co.omisego.omisego.model.transaction.send.TransactionCreateParams
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-interface EWalletAPI {
+/*
+ * OmiseGO
+ *
+ * Created by Phuchit Sirimongkolsathien on 5/3/2018 AD.
+ * Copyright © 2017-2018 OmiseGO. All rights reserved.
+ */
+
+interface EWalletClientAPI {
     @POST(GET_CURRENT_USER)
     fun getCurrentUser(): OMGCall<User>
 

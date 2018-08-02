@@ -1,0 +1,23 @@
+apply plugin: 'org.jetbrains.dokka-android'
+
+def rootPackageName = "co.omisego.omisego.admin"
+
+dokka {
+    outputFormat = 'html'
+    packageOptions {
+        prefix = rootPackageName
+        suppress = true
+    }
+    packageOptions {
+        prefix = "${rootPackageName}.OMGAPIClient"
+        suppress = false
+    }
+    packageOptions {
+        prefix = "${rootPackageName}.network.ewallet.EWalletAdmin"
+        suppress = false
+    }
+    packageOptions {
+        prefix = "${rootPackageName}.model"
+        suppress = false
+    }
+}

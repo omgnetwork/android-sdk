@@ -1,4 +1,4 @@
-package co.omisego.omisego.client.network.ewallet
+package co.omisego.omisego.admin.network.ewallet
 
 /*
  * OmiseGO
@@ -9,11 +9,11 @@ package co.omisego.omisego.client.network.ewallet
 
 import co.omisego.omisego.network.BaseClient
 
-class EWalletClient : BaseClient() {
-    internal lateinit var eWalletAPI: EWalletClientAPI
+class EWalletAdmin : BaseClient() {
+    internal lateinit var eWalletAPI: EWalletAdminAPI
 
     /**
-     * A builder user for build an [EWalletClient] instance.
+     * A builder user for build an [EWalletAdmin] instance.
      * clientConfiguration is required before calling [Builder.build].
      * Set [debug] true for printing a log
      *
@@ -22,15 +22,15 @@ class EWalletClient : BaseClient() {
     class Builder(init: BaseClient.Builder.() -> Unit) : BaseClient.Builder(init) {
 
         /**
-         * Create an [EWalletClient] instance.
+         * Create an [EWalletAdmin] instance.
          */
-        override fun build(): EWalletClient {
+        override fun build(): EWalletAdmin {
             with(super.build()) {
-                return EWalletClient().also {
+                return EWalletAdmin().also {
                     it.header = header
                     it.client = client
                     it.retrofit = retrofit
-                    it.eWalletAPI = retrofit.create(EWalletClientAPI::class.java)
+                    it.eWalletAPI = retrofit.create(EWalletAdminAPI::class.java)
                 }
             }
         }

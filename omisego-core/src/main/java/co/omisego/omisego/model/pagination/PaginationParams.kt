@@ -57,4 +57,33 @@ sealed class Paginable {
             override fun toString(): String = value
         }
     }
+
+    open class Account : Paginable() {
+
+        /**
+         * Represents account's searchable fields
+         */
+        enum class SearchableFields constructor(override val value: String) : OMGEnum {
+            ID("id"),
+            NAME("name"),
+            DESCRIPTION("description"),
+            CREATED_AT("created_at"),
+            UPDATED_AT("updated_at");
+
+            override fun toString(): String = value
+        }
+
+        /**
+         * Represents account's sortable fields.
+         */
+        enum class SortableFields constructor(override val value: String) : OMGEnum {
+            ID("id"),
+            NAME("name"),
+            DESCRIPTION("description"),
+            CREATED_AT("created_at"),
+            UPDATED_AT("updated_at");
+
+            override fun toString(): String = value
+        }
+    }
 }

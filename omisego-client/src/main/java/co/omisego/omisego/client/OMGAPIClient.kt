@@ -27,10 +27,14 @@ import co.omisego.omisego.model.transaction.send.TransactionCreateParams
  *
  * For example,
  * <code>
- * val eWalletClient = EWalletClient.Builder {
+ * val config = ClientConfiguration(
  *      authenticationToken = YOUR_TOKEN
  *      apiKey = YOUR_API_KEY
  *      baseUrl = YOUR_BASE_URL
+ * )
+ *
+ * val eWalletClient = EWalletClient.Builder {
+ *      clientConfiguration = config
  * }.build()
  * </code>
  *

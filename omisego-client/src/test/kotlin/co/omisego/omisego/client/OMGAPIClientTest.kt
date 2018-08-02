@@ -7,12 +7,12 @@ package co.omisego.omisego.client
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.client.constant.Versions
 import co.omisego.omisego.client.extension.mockEnqueueWithHttpCode
 import co.omisego.omisego.client.model.ClientConfiguration
 import co.omisego.omisego.client.network.ewallet.EWalletClient
 import co.omisego.omisego.client.util.GsonDelegator
 import co.omisego.omisego.client.util.ResourceFile
+import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.exception.OMGAPIErrorException

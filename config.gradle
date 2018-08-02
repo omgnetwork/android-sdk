@@ -1,6 +1,6 @@
 project.ext {
     /* package version */
-    versionName = "1.0.1"
+    versionName = "1.0.1-alpha2"
 
     /* android compile tools */
     buildToolsVersion = '27.0.3'
@@ -18,4 +18,5 @@ project.ext {
     website = 'https://github.com/omisego/android-sdk'
     artifactIdCore = 'omisego-core'
     artifactIdClient = 'omisego-client'
+    artifactIdAdmin = 'omisego-admin'
 }

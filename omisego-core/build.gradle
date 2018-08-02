@@ -30,16 +30,6 @@ android {
     testOptions {
         unitTests {
             includeAndroidResources = true
-            all {
-                if (it.name == "testReleaseUnitTest") return
-                if (project.hasProperty('live') && project.live.toBoolean() == true) {
-                    println "Running live tests..."
-                    it.include 'co/omisego/omisego/live/**'
-                } else {
-                    println "Running unit tests..."
-                    it.exclude 'co/omisego/omisego/live/**'
-                }
-            }
         }
     }
 
