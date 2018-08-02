@@ -19,6 +19,7 @@ android {
         versionCode constants.versionCode
         versionName constants.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-proguard-rules.pro'
     }
 
     sourceSets {
@@ -46,6 +47,10 @@ testlogger {
 
 tasks.withType(Javadoc) {
     enabled = false
+}
+
+afterEvaluate {
+    generateReleaseBuildConfig.enabled = false
 }
 
 publish {

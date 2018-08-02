@@ -19,12 +19,13 @@ android {
         versionCode constants.versionCode
         versionName constants.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-proguard-rules.pro'
     }
 
     sourceSets {
         test.java.srcDirs += 'src/test/kotlin'
-        test.java.srcDirs += 'src/liveTest/kotlin'
-        test.resources.srcDirs += 'src/liveTest/resources'
+//        test.java.srcDirs += 'src/liveTest/kotlin'
+//        test.resources.srcDirs += 'src/liveTest/resources'
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 
@@ -54,6 +55,10 @@ testlogger {
 
 tasks.withType(Javadoc) {
     enabled = false
+}
+
+afterEvaluate {
+    generateReleaseBuildConfig.enabled = false
 }
 
 publish {
