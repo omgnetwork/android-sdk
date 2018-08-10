@@ -9,7 +9,7 @@ package co.omisego.omisego.model
 
 interface CredentialConfiguration {
     val baseURL: String
-    val authenticationToken: String
+    val authenticationToken: String?
     val userId: String?
     val apiKey: String?
     val authScheme: String

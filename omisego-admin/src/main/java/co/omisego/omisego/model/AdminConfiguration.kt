@@ -24,28 +24,22 @@ import co.omisego.omisego.constant.Exceptions
  * @throws IllegalStateException if set with an empty string to [baseURL], [apiKey], or [authenticationToken].
  */
 
-data class AdminConfiguration private constructor(
+data class AdminConfiguration internal constructor(
     override val baseURL: String,
-    override val apiKey: String? = null,
-    override val userId: String? = null,
-    override val authenticationToken: String
+    override var apiKey: String? = null,
+    override var userId: String? = null,
+    override val authenticationToken: String? = null
 ) : CredentialConfiguration {
     override val authScheme: String = "OMGAdmin"
 
     /**
      * @param baseURL base url of the eWallet API.
-     * @param userId A userId can be retrieved when logged in.
-     * @param authenticationToken An authenticationToken is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
      */
     constructor(
-        baseURL: String,
-        userId: String,
-        authenticationToken: String
-    ) : this(baseURL, null, userId, authenticationToken)
+        baseURL: String
+    ) : this(baseURL, null, null, null)
 
     init {
         check(baseURL.isNotEmpty()) { Exceptions.MSG_EMPTY_BASE_URL }
-        check(userId?.isNotEmpty() == true) { Exceptions.MSG_EMPTY_USER_ID }
-        check(authenticationToken.isNotEmpty()) { Exceptions.MSG_EMPTY_AUTH_TOKEN }
     }
 }
