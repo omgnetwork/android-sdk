@@ -78,7 +78,7 @@ enum class TransactionConsumptionStatus constructor(override val value: String) 
 @Parcelize
 data class TransactionConsumption(
     val id: String,
-    val status: TransactionConsumptionStatus,
+    val status: TransactionConsumptionStatus?,
     val amount: BigDecimal?,
     val estimatedRequestAmount: BigDecimal,
     val estimatedConsumptionAmount: BigDecimal,
