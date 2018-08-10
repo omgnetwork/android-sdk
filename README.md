@@ -33,6 +33,7 @@ The [OmiseGO](https://omisego.network) Android SDK allows developers to easily i
         - [TransactionRequest Event](#transactionrequest-event)
         - [TransactionConsumption Event](#transactionconsumption-event)
         - [User Event](#user-events)
+        - [Filter Strategy](#filter-strategy)
     - [Stop listen for the custom event](#stop-listening-for-the-custom-event)
     - [Stop listen for the system event](#stop-listening-for-the-system-event)
 - [Run Kotlin Lint](#run-kotlin-lint)
@@ -92,7 +93,7 @@ Where:
 ## Retrieving resources
 
 Once you have a client object in the [initialization section](#initialization), you can retrieve different resources.
-Every call takes an `OMGCallback` interface that returns a `OMGResponse` object:
+Every call takes an `OMGCallback` interface that returns an `OMGResponse` object:
 
 ```kotlin
 interface OMGCallback<in T> {
@@ -239,7 +240,7 @@ The SDK offers 2 ways for transferring tokens between addresses:
 
 #### Create a transaction
 
-The most basic way to transfer tokens is to use the `omgAPIClient.createTransaction()` method, which allows the current user to send tokens from one of its wallet to a specific address.
+The most basic way to transfer tokens is to use the `omgAPIClient.createTransaction()` method, which allows the current user to send tokens from one of its wallets to a specific address.
 
 ```kotlin
 val request = TransactionCreateParams(
@@ -319,7 +320,7 @@ Where:
     * `consumptionLifetime`: (optional) The amount of time in millisecond during which a consumption is valid. Default `null` (forever).
     * `expirationDate`: (optional) The date when the request will expire and not be consumable anymore. Default `null` (never expired).
     * `allowAmountOverride`: (optional) Allow or not the consumer to override the amount specified in the request. This needs to be true if the amount is not specified
-    > Note that if amount is nil and allowAmountOverride is false the init will fail and return null.
+    > Note that if the amount is null and allowAmountOverride is false the init will fail and return null.
     * `maxConsumptionsPerUser`: (optional) The maximum number of consumptions allowed per unique user. Default `null` (unlimited).
     * `metadata`: Additional metadata embedded with the request
     * `encryptedMetadata`: Additional encrypted metadata embedded with the request
@@ -488,7 +489,7 @@ As you can see, the `OMGQRScannerContract.Callback` offers the following interfa
 
 ```kotlin
 /**
- * Called when the user tap on the screen. The request to the backend will be cancelled.
+ * Called when the user taps on the screen. The request to the backend will be canceled.
  *
  * @param view The QR scanner view
  */
@@ -539,7 +540,7 @@ The transaction request flow is as follow:
 2. Consume that `TransactionRequest` which will generate a TransactionConsumption.
 3. Approve or reject the `TransactionConsumption` generated in step 2.
 
-This section describes the use of the `OMGSocketClient` in order to listen for events which happens after step 2 or step 3.
+This section describes the use of the `OMGSocketClient` in order to listen for events which happen after step 2 or step 3.
 
 ## Websocket Initialization
 
@@ -580,7 +581,7 @@ Throws an exception if the web socket was not disconnected successfully.
 
 **Usage**
 ```kotlin
-socketClient.setConnectionListener(object : SocketConnectionListener {
+socketClient.addConnectionListener(object : SocketConnectionListener {
     override fun onConnected() {
         // Do something
     }
@@ -594,13 +595,13 @@ socketClient.setConnectionListener(object : SocketConnectionListener {
 
 `SocketChannelListener` *(optional)* is the listener that listens for a **channel connection status**. The possible events are:
 
-* `onJoinedChannel(topic: String)`: Invoked when the client have been joined the channel successfully.
-* `onLeftChannel(topic: String)`: Invoked when the client have been left the channel successfully.
+* `onJoinedChannel(topic: String)`: Invoked when the client has joined the channel successfully.
+* `onLeftChannel(topic: String)`: Invoked when the client has left the channel successfully.
 * `onError(apiError: APIError)`: Invoked when something goes wrong while connecting to a channel.
     
 **Usage**
 ```kotlin
-socketClient.setChannelListener(object : SocketChannelListener {
+socketClient.addChannelListener(object : SocketChannelListener {
     override fun onJoinedChannel(topic: String) {
         // Do something
     }
@@ -617,30 +618,22 @@ socketClient.setChannelListener(object : SocketChannelListener {
 
 ## Listen for custom events
 
-Custom event are special events that are currently limited to the `TransactionRequest` and the `TransactionConsumption` event.
+A custom event is special events that are currently limited to the `TransactionRequest` and the `TransactionConsumption` event.
 All custom events will be a sub-class of the `SocketCustomEventListener`. `SocketCustomEventListener` is a **required** generic listener that you will need to pass its sub-class when joining to the channel for listening to the events.
-All possible listeners are the following:
+All possible events are the following:
 
 ### TransactionRequest Event
 
 When creating a `TransactionRequest` that requires a confirmation it is possible to listen for all incoming events using the `TransactionRequestListener`.
 The possible events are: 
 * `onTransactionConsumptionRequest(TransactionConsumption)`: Invoked when a `TransactionConsumption` is trying to consume the `TransactionRequest`. 
-This allows the requester to [confirm](https://github.com/omisego/ios-sdk#confirm-a-transaction-consumption) or not the consumption if legitimate. 
+This allows the requester to [confirm](https://github.com/omisego/android-sdk#approve-or-reject-a-transaction-consumption) or not the consumption if legitimate. 
 * `onTransactionConsumptionFinalizedSuccess(TransactionConsumption)`: Invoked if a `TransactionConsumption` has been finalized successfully, and the transfer was made between the 2 addresses.
 * `onTransactionConsumptionFinalizedFail(TransactionConsumption, APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
         
-### TransactionConsumption Event
- 
-Similarly to the `TransactionRequestListener`, a `TransactionConsumption` can be listened for incoming confirmations using the `TransactionConsumptionListener`.
-The possible events are:
-* `onTransactionConsumptionFinalizedSuccess(TransactionConsumption)`: Invoked if a `TransactionConsumption` has been finalized successfully, and the transfer was made between the 2 addresses.
-* `onTransactionConsumptionFinalizedFail(TransactionConsumption, APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
-
-**Usage**
 ```kotlin
 // The transaction requestor listen for the event 
-transactionRequest.startListeningEvents(socketClient, listener = object: SocketCustomEventListener.TransactionRequestListener() {
+transactionRequest.startListeningEvents(socketClient, listener = object: TransactionRequestListener() {
    override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
        // Do something
    }
@@ -653,34 +646,19 @@ transactionRequest.startListeningEvents(socketClient, listener = object: SocketC
        // Do something
    }
 })
+```        
+        
+### TransactionConsumption Event
+ 
+Similarly to the `TransactionRequestListener`, a `TransactionConsumptionListener` can be listened for incoming confirmations using the `TransactionConsumptionListener`.
+The possible events are:
+* `onTransactionConsumptionFinalizedSuccess(TransactionConsumption)`: Invoked if a `TransactionConsumption` has been finalized successfully, and the transfer was made between the 2 addresses.
+* `onTransactionConsumptionFinalizedFail(TransactionConsumption, APIError)`: Invoked if a `TransactionConsumption` fails to consume the request.
 
-// The transaction consumer listen for the event
-transactionConsumption.startListeningEvents(socketClient, listener = object: SocketCustomEventListener.TransactionConsumptionListener() {
-  override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
-      // Do something
-  }
-
-  override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
-      // Do something
-  }
-})
-```
-
-You might want to listen for the event later after you got the `TransactionRequest` or `TransactionConsumption` object, but you might not want to pass the object around.
-In this case, it is possible to keep only the `SocketTopic` directly. 
-
-Then you can alternatively listening for custom events by using `joinChannel` method of the `OMGSocketClient` instance.
-This implementation will provide the exactly same result as the implementation above ☝️. For example,
-
+**Usage**
 ```kotlin
-// The transaction requestor listen for the event 
-// Typically, it doesn't need to create a [SocketTopic] instance. it can be retrieved from the `TransactionRequest` or `TransactionConsumption` object.
-val topic = SocketTopic<SocketCustomEventListener.TransactionRequestListener>("transaction_request:1234")
-socketClient.joinChannel(topic, listener = object: SocketCustomEventListener.TransactionRequestListener(){
-  override fun onTransactionConsumptionRequest(transactionConsumption: TransactionConsumption) {
-      // Do something
-  }
-
+// The transaction consumer listen for the event
+transactionConsumption.startListeningEvents(socketClient, listener = object: TransactionConsumptionListener() {
   override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
       // Do something
   }
@@ -689,59 +667,62 @@ socketClient.joinChannel(topic, listener = object: SocketCustomEventListener.Tra
       // Do something
   }
 })
-
-// The transaction consumer listen for the event
-// Typically, it doesn't need to create a [SocketTopic] instance. it can be retrieved from the `TransactionRequest` or `TransactionConsumption` object.
-val topic = SocketTopic<SocketCustomEventListener.TransactionConsumptionListener>("transaction_request:1234")
-socketClient.joinChannel(topic, listener = object: SocketCustomEventListener.TransactionConsumptionListener() {
-    override fun onTransactionConsumptionFinalizedSuccess(transactionConsumption: TransactionConsumption) {
-        // Do something
-    }
-
-    override fun onTransactionConsumptionFinalizedFail(transactionConsumption: TransactionConsumption, apiError: APIError) {
-        // Do something
-    }
-})
 ```
 
-## User events
+### User Event
 A `user` can also be listened and will receive all events that are related to him:
 
 ```kotlin
-user.startListeningEvents(socketClient, listener = object: SocketCustomEventListener.AnyEventListener() {
-   override fun onEventReceived(data: SocketReceive) {
-        data.event.either(this::handleSocketSystemEvent, this::handleSocketCustomEvent)
-   }
+user.startListeningEvents(socketClient, listener = SocketCustomEventListener.forEvent<TransactionConsumptionRequestEvent> { event -> 
+       // Do something
 })
-
-fun handleSocketSystemEvent(systemEvent: SocketSystemEvent){
-    when(systemEvent){
-        SocketSystemEvent.CLOSE -> {
-            // Do something
-        }
-        SocketSystemEvent.ERROR -> {
-            // Do something
-        }
-    }
-}
-
-fun handleSocketCustomEvent(customEvent: SocketCustomEvent){
-    when(customEvent){
-        SocketCustomEvent.TRANSACTION_CONSUMPTION_FINALIZED -> {
-            // Do something
-        }
-        SocketCustomEvent.TRANSACTION_CONSUMPTION_REQUEST -> {
-            // Do something
-        }
-    }
-}
 ```
 
 Where:
-* `onEventReceived`: An event callback. This method will be called when any event regarding to the user is received.
-* `SocketReceive`:  A raw object which is a response from the eWallet socket API.
+* `event`:  An object which is containing a raw response from the eWallet socket API.
 
 For more information can be found [here](https://github.com/omisego/ewallet/blob/develop/docs/websockets/ewallet_api.md).
+
+Additionally, you might want to control how you receive the event manually, we've also provided the `FilterStrategy` to control the event filtering mechanism.
+
+### Filter Strategy
+`FilterStrategy` is a strategy that is used when receiving an event coming from the WebSocket server for filtering the events.
+There're currently 4 strategies available:
+
+* **Event**: Accept an event when the event is one of the given `SocketEvent` classes (e.g. TransactionConsumptionRequestEvent, TransactionConsumptionFinalizedEvent).
+* **Topic**: Accept an event when the `SocketTopic` of the event is the same as the given `SocketTopic`.
+* **None**: Accept all events.
+* **Custom**: Manually custom filtering by implementing a lambda that receives `SocketEvent` to return a boolean.
+
+In order to use `FilterStrategy`, it is needed to be listening for custom events by using `addCustomEventListener` method of the `OMGSocketClient` instance.
+
+To avoid requiring to implement the `SocketCustomEventListener` manually, we recommend you to use conventional methods which are very useful for listening for the event easier. For example,
+
+1. Use `SocketCustomEventListener.forEvent<SocketEvent>` to listen for the specific event. 
+```kotlin
+socketClient.addCustomEventListener(SocketCustomEventListener.forEvent<TransactionConsumptionRequestEvent> { socketEvent ->
+    // Do something with `socketEvent.socketReceive` manually                         
+})
+```
+
+
+2. Use `SocketCustomEventListener.forListenable` to listen for any events that related to the `SocketTopic`.
+```kotlin
+socketClient.addCustomEventListener(SocketCustomEventListener.forListenable(transactionRequest) { socketEvent ->
+    // Do something with `socketEvent.socketReceive` manually
+})
+```
+
+3. Use `SocketCustomEventListener.forStrategy` for listening for any events, but they will be filtered out by the provided `FilterStrategy`.
+```kotlin
+val customStrategy = FilterStrategy.Custom {
+  it.socketReceive.topic.contains("transaction_consumption")
+}
+
+socketClient.addCustomEventListener(SocketCustomEventListener.forStrategy(customStrategy) { socketEvent ->
+
+})
+```
 
 ## Stop listening for the custom event
 
@@ -760,11 +741,11 @@ transactionConsumption.stopListening(socketClient)
 
 The web socket client will be disconnected automatically if no other channel is active, so you won't receive any system event after that.
 
-By the way, if you want to stop listening before that happen, you can pass `null` to both `omgSocketClient.setConnectionListener` and `omgSocketClient.setChannelListener`.
+By the way, if you want to stop listening before that happen, you can call `socketClient.removeConnectionListener(listener)` or `socketClient.removeChannelListener(listener)`.
 
 # Run Kotlin Lint
 
-Simply run `./gradlew ktlintCheck` under project root directory.
+Simply run `./gradlew ktlintCheck` under the project root directory.
 
 # Test
 

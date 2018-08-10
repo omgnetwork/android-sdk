@@ -8,13 +8,11 @@ package co.omisego.omisego.websocket.channel.dispatcher
  */
 
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.websocket.SocketChannelListener
-import co.omisego.omisego.websocket.SocketConnectionListener
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
-import okhttp3.Response
-import okhttp3.WebSocketListener
+import co.omisego.omisego.websocket.listener.SocketChannelListener
+import co.omisego.omisego.websocket.listener.SocketConnectionListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
 import java.util.concurrent.Executor
 
 interface SocketDispatcherContract {
@@ -33,158 +31,48 @@ interface SocketDispatcherContract {
         val customEventDispatcher: CustomEventDispatcher
 
         /**
-         * A socketChannel is used to receive some event for further handling in the [SocketChannel]
-         */
-        val socketChannel: SocketChannel?
-
-        /**
-         * An executor used for invoking the listener.
-         */
-        val executor: Executor
-
-        /**
          * A connectionListener will be passed to the [systemEventDispatcher] for further handling.
          */
-        var connectionListener: SocketConnectionListener?
+        val connectionListener: SocketConnectionListener
+
+        /**
+         * An executor used when invoking the listener.
+         */
+        val executor: Executor
     }
 
     interface SystemEventDispatcher {
-        /**
-         * A connection listener that will be used for dispatch the [SocketConnectionListener] events.
-         */
-        var socketConnectionListener: SocketConnectionListener?
 
         /**
          * A channel listener that be used for dispatch the [SocketChannelListener] events.
          */
-        var socketChannelListener: SocketChannelListener?
-
-        /**
-         * The web socket replied object from eWallet API.
-         */
-        var socketReceive: SocketReceive?
-
-        /**
-         * A socketChannel for delegate the event to the [SocketChannel] internally for further handling the event.
-         */
-        var socketChannel: SocketChannel?
+        val socketChannelListener: SocketChannelListener
 
         /**
          * Handles the [SocketSystemEvent] and may dispatch the [SocketChannelListener] or [SocketConnectionListener] to the client.
          *
          * @param systemEvent To indicate which event of the [SocketSystemEvent]
          */
-        fun handleEvent(systemEvent: SocketSystemEvent)
-
-        /**
-         * the Websocket's [onFailure] will be delegated to this function
-         *
-         * @see [WebSocketListener]
-         */
-        fun handleSocketFailure(throwable: Throwable, response: Response?)
-
-        /**
-         * the Websocket's [onOpened] will be delegated to this function
-         *
-         * @see [WebSocketListener]
-         */
-        fun handleSocketOpened(response: Response)
-
-        /**
-         * the Websocket's [onClosed] will be delegated to this function
-         *
-         * @see [WebSocketListener]
-         */
-        fun handleSocketClosed(code: Int, reason: String)
+        fun handleEvent(systemEvent: SocketSystemEvent, response: SocketReceive<*>)
     }
 
     interface CustomEventDispatcher {
         /**
-         * For dispatching the [SocketCustomEventListener] event.
-         */
-        val customEventListenerMap: MutableMap<String, SocketCustomEventListener>
-
-        /**
          * For dispatching the [SocketChannelListener] event.
          */
-        var socketChannelListener: SocketChannelListener?
+        val socketChannelListener: SocketChannelListener
 
         /**
-         * The web socket replied object from eWallet API.
+         * For dispatching the [SocketCustomEventListener] event.
          */
-        var socketReceive: SocketReceive?
-
-        /**
-         * Clear all callbacks in the customEventListenerMap
-         */
-        fun clearCustomEventListenerMap()
+        val customEventListeners: MutableSet<SocketCustomEventListener>
 
         /**
          * Handles the [SocketCustomEvent] and dispatch the [SocketCustomEventListener] to the client.
          *
          * @param customEvent To indicate the actual type of generic [SocketCustomEvent]
+         * @param response The websocket payload that is sent from the websocket API
          */
-        fun handleEvent(customEvent: SocketCustomEvent)
-
-        /**
-         * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.TransactionRequestListener].
-         * This method will be invoked by the [handleEvent] method.
-         *
-         * @param socketReceive The web socket replied object from eWallet API.
-         * @param customEvent The custom event used for decide the event to be dispatched
-         */
-        fun SocketCustomEventListener.TransactionRequestListener.handleTransactionRequestEvent(
-            socketReceive: SocketReceive,
-            customEvent: SocketCustomEvent
-        )
-
-        /**
-         * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.TransactionConsumptionListener].
-         * This method will be invoked by the [handleEvent] method.
-         *
-         * @param socketReceive The web socket replied object from eWallet API.
-         * @param customEvent The custom event used for decide the event to be dispatched
-         */
-        fun SocketCustomEventListener.TransactionConsumptionListener.handleTransactionConsumptionEvent(
-            socketReceive: SocketReceive,
-            customEvent: SocketCustomEvent
-        )
-
-        /**
-         * Handles the [SocketCustomEvent] event and dispatch the [SocketCustomEventListener.AnyEventListener].
-         * This method will be invoked by the [handleEvent] method.
-         *
-         * @param socketReceive The web socket replied object from eWallet API.
-         */
-        fun SocketCustomEventListener.AnyEventListener.handleAnyEvent(
-            socketReceive: SocketReceive
-        )
-    }
-
-    /* Channel Package */
-    interface SocketChannel {
-        /**
-         * Executes when the client have been left the channel successfully.
-         *
-         * @param topic A topic indicating which channel will be joined.
-         */
-        fun onLeftChannel(topic: String)
-
-        /**
-         * Executes when the client have been joined the channel successfully.
-         *
-         * @param topic A topic indicating which channel will be joined.
-         */
-        fun onJoinedChannel(topic: String)
-
-        /**
-         * Returns a boolean indicating if the channel is joined.
-         *
-         * @param topic A topic indicating which channel will be joined.
-         * @return A boolean indicating if the channel is joined.
-         */
-        fun joined(topic: String): Boolean
-
-        fun onSocketOpened()
+        fun handleEvent(customEvent: SocketCustomEvent, response: SocketReceive<*>)
     }
 }

@@ -53,7 +53,7 @@ class SocketHeartbeatTest {
          * timer = Timer()
          * timer = timer?.schedule(whatever) <-- Thread A (thread A will throw IllegalStateException, so task() won't be invoked)
          *
-         * Because of that, this expression will verify that all tasks should be invoked.
+         * Because of that, this expression will accept that all tasks should be invoked.
          */
         Mockito.mockingDetails(task).invocations.size shouldBeInRange (countFinishedThread - 5)..100 // approximately
     }

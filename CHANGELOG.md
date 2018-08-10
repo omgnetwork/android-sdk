@@ -1,3 +1,4 @@
+
 # Changelog
 All notable changes to this project will be documented in this file.
 
@@ -6,9 +7,18 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
-## [1.0.1] - 2018-06-12
+## [1.0.1] - 2018-07-26
+### Added
+- `addConnectionListener` and `removeConnectionListener` methods in `OMGSocketClient` class.
+- `addChannelListener` and `removeChannelListener` methods in `OMGSocketClient` class.
+
 ### Changed
 - Change `TransactionExchange` rate to nullable type
+- Deprecated `setConnectionListener` and `setChannelListener` as a compilation error.
+- Deprecated `SocketCustomEventListener.TransactionRequestListener` and `SocketCustomEventListener.TransactionConsumptionListener` as a compilation error.
+
+### Fixed
+- [Fix the websocket client doesn't rejoin the channel automatically when the network is temporarily offline.](https://github.com/omisego/android-sdk/issues/63)
 
 ## [1.0.0] - 2018-07-6
 ### Added

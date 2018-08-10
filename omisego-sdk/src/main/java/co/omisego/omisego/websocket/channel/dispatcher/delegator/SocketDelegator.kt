@@ -10,7 +10,6 @@ package co.omisego.omisego.websocket.channel.dispatcher.delegator
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.socket.runIfNotInternalTopic
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import co.omisego.omisego.websocket.WebSocketListenerProvider
 import okhttp3.Response
 import okhttp3.WebSocket
@@ -23,7 +22,7 @@ import okhttp3.WebSocketListener
  */
 class SocketDelegator(
     override val socketResponseParser: SocketDelegatorContract.PayloadReceiveParser,
-    override var socketDispatcher: SocketDelegatorContract.Dispatcher
+    override val socketDispatcher: SocketDelegatorContract.Dispatcher
 ) : SocketDelegatorContract.Delegator,
     WebSocketListenerProvider,
     WebSocketListener() {
@@ -41,7 +40,7 @@ class SocketDelegator(
 
     override fun onMessage(webSocket: WebSocket, text: String) {
         val socketReceive = socketResponseParser.parse(text)
-        SocketTopic<SocketCustomEventListener>(socketReceive.topic).runIfNotInternalTopic {
+        SocketTopic(socketReceive.topic).runIfNotInternalTopic {
             socketDispatcher.dispatchOnMessage(socketReceive)
         }
     }
@@ -49,8 +48,4 @@ class SocketDelegator(
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
         socketDispatcher.dispatchOnClosed(code, reason)
     }
-}
-
-internal infix fun SocketDelegator.talksTo(socketDispatcher: SocketDelegatorContract.Dispatcher) {
-    this.socketDispatcher = socketDispatcher
 }

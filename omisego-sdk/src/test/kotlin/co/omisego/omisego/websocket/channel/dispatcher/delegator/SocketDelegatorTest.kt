@@ -8,13 +8,13 @@ package co.omisego.omisego.websocket.channel.dispatcher.delegator
  */
 
 import co.omisego.omisego.model.socket.SocketReceive
+import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import okhttp3.Response
 import okhttp3.WebSocket
 import org.amshove.kluent.mock
-import org.amshove.kluent.shouldBe
 import org.junit.Before
 import org.junit.Test
 
@@ -27,9 +27,7 @@ class SocketDelegatorTest {
 
     @Before
     fun setup() {
-        socketDelegator = SocketDelegator(mockSocketResponseParser, mockSocketDispatcher).apply {
-            socketDispatcher = mockSocketDispatcher
-        }
+        socketDelegator = SocketDelegator(mockSocketResponseParser, mockSocketDispatcher)
     }
 
     @Test
@@ -50,7 +48,7 @@ class SocketDelegatorTest {
     @Test
     fun `dispatchOnMessage is invoked correctly when the onMessage is called`() {
         val text = "¯\\_(ツ)_/¯"
-        val socketReceive = mock<SocketReceive>()
+        val socketReceive = mock<SocketReceive<TransactionConsumption>>()
         whenever(mockSocketResponseParser.parse(text)).thenReturn(socketReceive)
         whenever(socketReceive.topic).thenReturn(text)
 
@@ -64,15 +62,5 @@ class SocketDelegatorTest {
         val reason = "¯\\_(ツ)_/¯"
         socketDelegator.onClosed(mockWebSocket, code, reason)
         verify(mockSocketDispatcher, times(1)).dispatchOnClosed(code, reason)
-    }
-
-    @Test
-    fun `talkTo should assign the socket dispatcher correctly`() {
-        val socketDispatcher: SocketDelegatorContract.Dispatcher = mock()
-        socketDelegator.apply {
-            talksTo(socketDispatcher)
-        }
-
-        socketDelegator.socketDispatcher shouldBe socketDispatcher
     }
 }

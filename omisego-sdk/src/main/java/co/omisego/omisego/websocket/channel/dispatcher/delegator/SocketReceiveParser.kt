@@ -10,6 +10,7 @@ package co.omisego.omisego.websocket.channel.dispatcher.delegator
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.utils.GsonProvider
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 /**
  * A data deserializer for receiving an object from the eWallet web socket API
@@ -26,5 +27,7 @@ class SocketReceiveParser(
      * @param json raw json string that being receive from the eWallet web socket API.
      * @return A [SocketReceive]
      */
-    override fun parse(json: String): SocketReceive = gson.fromJson(json, SocketReceive::class.java)
+    override fun parse(json: String): SocketReceive<*> {
+        return gson.fromJson(json, object : TypeToken<SocketReceive<SocketReceive.SocketData>>() {}.type)
+    }
 }

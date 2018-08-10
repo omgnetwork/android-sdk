@@ -37,7 +37,7 @@ interface SocketDelegatorContract {
          * @param json raw json string that being receive from the eWallet web socket API.
          * @return A [SocketReceive]
          */
-        fun parse(json: String): SocketReceive
+        fun parse(json: String): SocketReceive<*>
     }
 
     /* Dispatcher Package */
@@ -62,7 +62,7 @@ interface SocketDelegatorContract {
          *
          * @param response A [SocketReceive] object to be used for further handling by the [Dispatcher]
          */
-        fun dispatchOnMessage(response: SocketReceive)
+        fun dispatchOnMessage(response: SocketReceive<*>)
 
         /**
          * Invoked when the method [WebSocketListener]'s onFailure is called.

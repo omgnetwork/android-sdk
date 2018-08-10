@@ -15,7 +15,6 @@ import co.omisego.omisego.model.User
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
 import co.omisego.omisego.operation.Listenable
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import java.math.BigDecimal
@@ -88,7 +87,7 @@ data class TransactionRequest(
     val user: User?,
     val account: Account?,
     val correlationId: String?,
-    override val socketTopic: SocketTopic<SocketCustomEventListener.TransactionRequestListener>,
+    override val socketTopic: SocketTopic,
     val maxConsumptions: Int?,
     val status: TransactionRequestStatus,
     val allowAmountOverride: Boolean,
@@ -102,7 +101,7 @@ data class TransactionRequest(
     val formattedId: String,
     val metadata: @RawValue Map<String, Any>,
     val encryptedMetadata: @RawValue Map<String, Any>
-) : Parcelable, Listenable<SocketCustomEventListener.TransactionRequestListener>
+) : Parcelable, Listenable
 
 /**
  * An extension function that converts the [TransactionRequest] to the [TransactionConsumptionParams] easily

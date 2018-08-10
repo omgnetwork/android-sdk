@@ -13,6 +13,11 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.channel.SocketChannelContract
 import co.omisego.omisego.websocket.channel.SocketChannelContract.SocketClient
 import co.omisego.omisego.websocket.channel.SocketMessageRef
+import co.omisego.omisego.websocket.listener.SocketChannelListener
+import co.omisego.omisego.websocket.listener.SocketConnectionListener
+import co.omisego.omisego.websocket.listener.internal.SocketChannelListenerSet
+import co.omisego.omisego.websocket.listener.internal.SocketConnectionListenerSet
+import co.omisego.omisego.websocket.listener.internal.SocketCustomEventListenerSet
 import com.google.gson.Gson
 import java.util.Timer
 import java.util.concurrent.Executor
@@ -63,7 +68,7 @@ interface SocketClientContract {
      * 1. The client will be automatically connected before you've joined the first channel.
      * 2. The client will be automatically disconnected after you've left all the channels you've joined.
      */
-    interface Client {
+    interface Client : SocketConnectionListenerSet, SocketChannelListenerSet, SocketCustomEventListenerSet {
         /**
          * A [Channel] responsible for join and leave the web socket channel.
          */
@@ -87,16 +92,14 @@ interface SocketClientContract {
          *
          * @param topic The topic (channel) to which the event to be sent.
          * @param payload (Optional) the additional data you might want to send bundled with the request.
-         * @param listener The event you want to receive for the specified [Channel].
          * Be careful, the listener should be related to the topic, otherwise you won't receive any message.
          * For example, if you are sending the topic begins with "transaction_request", then the listener must be the [SocketCustomEventListener.TransactionRequestListener] event.
          *
          * @see SocketCustomEventListener
          */
-        fun <T : SocketCustomEventListener> joinChannel(
-            topic: SocketTopic<T>,
-            payload: Map<String, Any> = mapOf(),
-            listener: T
+        fun joinChannel(
+            topic: SocketTopic,
+            payload: Map<String, Any> = mapOf()
         )
 
         /**
@@ -106,7 +109,7 @@ interface SocketClientContract {
          * @param topic The topic (channel) to be left.
          * @param payload (Optional) the additional data you might want to send bundled with the request.
          */
-        fun <T : SocketCustomEventListener> leaveChannel(topic: SocketTopic<T>, payload: Map<String, Any>)
+        fun leaveChannel(topic: SocketTopic, payload: Map<String, Any>)
 
         /**
          * Set new authentication header
@@ -123,21 +126,25 @@ interface SocketClientContract {
          */
         fun setIntervalPeriod(period: Long)
 
-        /**
-         * Subscribe to the [SocketConnectionListener] event.
-         *
-         * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected.
-         * @see SocketConnectionListener for the event detail.
-         */
-        fun setConnectionListener(connectionListener: SocketConnectionListener?)
+        @Deprecated(
+            message = "Use \'addConnectionListener\' or \'removeConnectionListener\' instead",
+            replaceWith = ReplaceWith(
+                "addConnectionListener(connectionListener)"
+            ),
+            level = DeprecationLevel.ERROR
+        )
+        fun setConnectionListener(connectionListener: SocketConnectionListener) {
+        }
 
-        /**
-         * Subscribe to the [SocketChannelListener] event.
-         *
-         * @param channelListener The [SocketChannelListener] to be invoked when the channel has been joined, left, or got an error.
-         * @see SocketChannelListener for the event detail.
-         */
-        fun setChannelListener(channelListener: SocketChannelListener?)
+        @Deprecated(
+            "Use \'addChannelListener\' or \'removeChannelListener\' instead",
+            replaceWith = ReplaceWith(
+                "addChannelListener(channelListener)"
+            ),
+            level = DeprecationLevel.ERROR
+        )
+        fun setChannelListener(channelListener: SocketChannelListener) {
+        }
     }
 
     interface PayloadSendParser {
@@ -156,7 +163,7 @@ interface SocketClientContract {
     }
 
     /* Channel Package */
-    interface Channel {
+    interface Channel : SocketConnectionListenerSet, SocketChannelListenerSet, SocketCustomEventListenerSet {
         /**
          * An interval of milliseconds for scheduling the interval event such as the heartbeat event which used for keeping the connection alive.
          * Default 5,000 milliseconds.
@@ -169,7 +176,7 @@ interface SocketClientContract {
          * @param topic Join the channel by the given topic.
          * @param payload (Optional) the additional data you might want to send bundled with the request.
          */
-        fun join(topic: String, payload: Map<String, Any>)
+        fun join(topic: String, payload: Map<String, Any>): Boolean
 
         /**
          * Send [SocketEventSend.LEAVE] event to the server. Do nothing if the channel has already left.
@@ -185,44 +192,11 @@ interface SocketClientContract {
         fun leaveAll()
 
         /**
-         * Join all pending channels.
-         */
-        fun executePendingJoinChannel()
-
-        /**
          * A boolean indicating if all pending join channel messages have been sent to the server.
          *
          * @return true, if all messages have been sent, otherwise false.
          */
-        fun hasSentAllPendingJoinChannel(): Boolean
-
-        /**
-         * Retrieves a set of active [SocketTopic].
-         *
-         * @return A set of active [SocketTopic].
-         */
-        fun retrieveChannels(): Set<String>
-
-        /**
-         * Subscribe to the [SocketConnectionListener] event.
-         *
-         * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected
-         */
-        fun setConnectionListener(connectionListener: SocketConnectionListener?)
-
-        /**
-         * Subscribe to the [SocketChannelListener] event.
-         *
-         * @param channelListener The [SocketChannelListener] to be invoked when the web socket channel has been joined, left or got an error.
-         */
-        fun setChannelListener(channelListener: SocketChannelListener?)
-
-        /**
-         * Subscribe to the [SocketCustomEventListener] event.
-         *
-         * @param customEventListener The [SocketCustomEventListener] to be invoked when the [CustomEvent] event happened.
-         */
-        fun addCustomEventListener(topic: String, customEventListener: SocketCustomEventListener)
+        fun pending(): Boolean
     }
 
     /* Interval Package */
@@ -241,13 +215,6 @@ interface SocketClientContract {
          * An interval of milliseconds between the end of the previous task and the start of the next one.
          */
         var period: Long
-
-        /**
-         * Start to schedule the [SocketSend] to be sent to the server periodically.
-         *
-         * @param task A lambda with a [SocketSend] parameter. This will be executed periodically that starts immediately.
-         */
-        fun startInterval(task: (SocketSend) -> Unit)
 
         /**
          * Stop to schedule the task to be sent to the server.

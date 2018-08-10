@@ -3,7 +3,6 @@ package co.omisego.omisego.model
 import android.os.Parcelable
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.operation.Listenable
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import java.util.Date
@@ -35,7 +34,7 @@ data class User(
     val username: String,
     val metadata: @RawValue Map<String, Any>,
     val encryptedMetadata: @RawValue Map<String, Any>,
-    override val socketTopic: SocketTopic<SocketCustomEventListener>,
+    override val socketTopic: SocketTopic,
     val createdAt: Date,
     val updatedAt: Date
-) : Parcelable, Listenable<SocketCustomEventListener>
+) : Parcelable, Listenable

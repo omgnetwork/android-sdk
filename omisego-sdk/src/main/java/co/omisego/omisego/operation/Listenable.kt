@@ -12,21 +12,23 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.websocket.SocketClientContract
-import co.omisego.omisego.websocket.SocketCustomEventListener
-import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionConsumptionListener
-import co.omisego.omisego.websocket.SocketCustomEventListener.TransactionRequestListener
+import co.omisego.omisego.websocket.listener.DelegateSocketCustomEventListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
+import co.omisego.omisego.websocket.listener.TransactionConsumptionListener
+import co.omisego.omisego.websocket.listener.TransactionRequestListener
+import co.omisego.omisego.websocket.strategy.FilterStrategy
 
 /**
  * Represents an object that can be listened with websocket
  */
-interface Listenable<T : SocketCustomEventListener> {
-    val socketTopic: SocketTopic<T>
+interface Listenable {
+    val socketTopic: SocketTopic
 
     /**
      * Stop listening for events
      *
      * @param client The client used when starting to listen
-     * @param payload The additional metadata for leaving the channel.
+     * @param payload The additional metadata for leavingAllChannels the channel.
      */
     fun stopListening(client: SocketClientContract.Client, payload: Map<String, Any> = mapOf()) {
         client.leaveChannel(socketTopic, payload)
@@ -46,7 +48,11 @@ fun TransactionRequest.startListeningEvents(
     payload: Map<String, Any> = mapOf(),
     listener: TransactionRequestListener
 ) {
-    client.joinChannel(socketTopic, payload, listener)
+    with(client) {
+        val wrapper = DelegateSocketCustomEventListener(FilterStrategy.Topic(socketTopic), listener)
+        addCustomEventListener(wrapper)
+        joinChannel(socketTopic, payload)
+    }
 }
 
 /**
@@ -62,7 +68,11 @@ fun TransactionConsumption.startListeningEvents(
     payload: Map<String, Any> = mapOf(),
     listener: TransactionConsumptionListener
 ) {
-    client.joinChannel(socketTopic, payload, listener)
+    with(client) {
+        val wrapper = DelegateSocketCustomEventListener(FilterStrategy.Topic(socketTopic), listener)
+        addCustomEventListener(wrapper)
+        joinChannel(socketTopic, payload)
+    }
 }
 
 /**
@@ -72,10 +82,14 @@ fun TransactionConsumption.startListeningEvents(
  * @param payload The additional metadata for the consumption
  * @param listener The delegate that will receive events.
  */
-fun <T : SocketCustomEventListener> User.startListeningEvents(
+fun User.startListeningEvents(
     client: SocketClientContract.Client,
     payload: Map<String, Any> = mapOf(),
-    listener: T
+    listener: SocketCustomEventListener
 ) {
-    client.joinChannel(socketTopic, payload, listener)
+    with(client) {
+        val wrapper = DelegateSocketCustomEventListener(FilterStrategy.Topic(socketTopic), listener)
+        addCustomEventListener(wrapper)
+        joinChannel(socketTopic, payload)
+    }
 }

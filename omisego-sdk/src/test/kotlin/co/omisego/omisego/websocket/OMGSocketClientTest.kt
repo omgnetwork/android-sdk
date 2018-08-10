@@ -10,6 +10,7 @@ package co.omisego.omisego.websocket
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.HTTPHeaders
 import co.omisego.omisego.model.ClientConfiguration
+import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketSend
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.channel.SocketChannel
@@ -17,6 +18,15 @@ import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegator
 import co.omisego.omisego.websocket.enum.SocketEventSend
 import co.omisego.omisego.websocket.enum.SocketStatusCode
+import co.omisego.omisego.websocket.event.SocketEvent
+import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
+import co.omisego.omisego.websocket.listener.SocketChannelListener
+import co.omisego.omisego.websocket.listener.SocketConnectionListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
+import co.omisego.omisego.websocket.listener.TransactionRequestListener
+import co.omisego.omisego.websocket.strategy.FilterStrategy
+import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -27,6 +37,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
+import org.amshove.kluent.any
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
@@ -47,9 +58,10 @@ class OMGSocketClientTest {
     private val mockWebSocket: WebSocket = mock()
     private val mockWebSocketListener: WebSocketListener = mock()
     private val mockSocketChannel: SocketClientContract.Channel = mock()
-    private val mockCustomEventListener: SocketCustomEventListener.TransactionRequestListener = mock()
     private val mockSocketSendParser: SocketClientContract.PayloadSendParser = mock()
     private val mockSocketDelegator: SocketDelegator = mock()
+    private val mockTransactionRequestListener: TransactionRequestListener = mock()
+    private val mockLambdaEvent: (SocketEvent<out SocketReceive.SocketData>) -> Unit = mock()
 
     private lateinit var socketClient: OMGSocketClient
 
@@ -71,30 +83,39 @@ class OMGSocketClientTest {
     @Test
     fun `hasSentAllMessages should call the web socket client's queue size and check pending channels correctly`() {
         socketClient.socketChannel = mockSocketChannel
-        whenever(mockSocketChannel.hasSentAllPendingJoinChannel()).thenReturn(true)
+        whenever(mockSocketChannel.pending()).thenReturn(true)
         socketClient.hasSentAllMessages()
 
         verify(mockWebSocket, times(1)).queueSize()
-        verify(mockSocketChannel, times(1)).hasSentAllPendingJoinChannel()
+        verify(mockSocketChannel, times(1)).pending()
         verifyNoMoreInteractions(mockWebSocket)
     }
 
     @Test
-    fun `joinChannel should call the socket channel join and addCustomEventListener correctly`() {
-        val socketTopic = SocketTopic<SocketCustomEventListener.TransactionRequestListener>("topic")
+    fun `joinChannel should call the socket channel join successfully`() {
+        val socketTopic = SocketTopic("topic")
         val payload = mapOf<String, Any>()
 
         socketClient.socketChannel = mockSocketChannel
-        socketClient.joinChannel(socketTopic, payload, mockCustomEventListener)
+        socketClient.joinChannel(socketTopic)
 
         verify(mockSocketChannel, times(1)).join(socketTopic.name, payload)
-        verify(mockSocketChannel, times(1)).addCustomEventListener("topic", mockCustomEventListener)
         verifyNoMoreInteractions(mockSocketChannel)
     }
 
     @Test
+    fun `addCustomSocketListener with convenient methods should work correctly`() {
+        socketClient.socketChannel = mockSocketChannel
+        socketClient.addCustomEventListener(mockTransactionRequestListener)
+        socketClient.addCustomEventListener(SocketCustomEventListener.forEvent<TransactionConsumptionRequestEvent>(mockLambdaEvent))
+        socketClient.addCustomEventListener(SocketCustomEventListener.forListenable(mock { on { socketTopic } doReturn mock<SocketTopic>() }, mockLambdaEvent))
+        socketClient.addCustomEventListener(SocketCustomEventListener.forStrategy(FilterStrategy.None(), mockLambdaEvent))
+        verify(mockSocketChannel, times(4)).addCustomEventListener(any())
+    }
+
+    @Test
     fun `leaveChannel should call the socket channel leave correctly`() {
-        val socketTopic = SocketTopic<SocketCustomEventListener.TransactionRequestListener>("topic")
+        val socketTopic = SocketTopic("topic")
         val payload = mapOf<String, Any>()
 
         socketClient.socketChannel = mockSocketChannel
@@ -113,23 +134,23 @@ class OMGSocketClientTest {
     }
 
     @Test
-    fun `setConnectionListener should delegate the listener to the socket channel correctly`() {
+    fun `addConnectionListener should delegate the listener to the socket channel correctly`() {
         socketClient.socketChannel = mockSocketChannel
         val socketConnectionListener: SocketConnectionListener = mock()
 
-        socketClient.setConnectionListener(socketConnectionListener)
+        socketClient.addConnectionListener(socketConnectionListener)
 
-        verify(mockSocketChannel, times(1)).setConnectionListener(socketConnectionListener)
+        verify(mockSocketChannel, times(1)).addConnectionListener(socketConnectionListener)
     }
 
     @Test
-    fun `setChannelListener should delegate the listener to the socket channel correctly`() {
+    fun `addChannelListener should delegate the listener to the socket channel correctly`() {
         socketClient.socketChannel = mockSocketChannel
         val socketChannelListener: SocketChannelListener = mock()
 
-        socketClient.setChannelListener(socketChannelListener)
+        socketClient.addChannelListener(socketChannelListener)
 
-        verify(mockSocketChannel, times(1)).setChannelListener(socketChannelListener)
+        verify(mockSocketChannel, times(1)).addChannelListener(socketChannelListener)
     }
 
     @Test
@@ -197,7 +218,6 @@ class OMGSocketClientTest {
 
         // Validate dependencies flow wired up between SocketChannel <-- SocketDispatcher --> SocketDelegator, SystemEventDispatcher, CustomEventDispatcher
         val dispatcher = channel.socketDispatcher as SocketDispatcher
-        dispatcher.socketChannel shouldNotBe null
         dispatcher.systemEventDispatcher shouldNotBe null
         dispatcher.customEventDispatcher shouldNotBe null
     }

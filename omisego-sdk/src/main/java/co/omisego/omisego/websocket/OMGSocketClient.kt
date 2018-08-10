@@ -24,10 +24,17 @@ import co.omisego.omisego.websocket.channel.dispatcher.SocketDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.SystemEventDispatcher
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketDelegator
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketReceiveParser
-import co.omisego.omisego.websocket.channel.dispatcher.delegator.talksTo
-import co.omisego.omisego.websocket.channel.dispatcher.talksTo
 import co.omisego.omisego.websocket.enum.SocketStatusCode
 import co.omisego.omisego.websocket.interval.SocketHeartbeat
+import co.omisego.omisego.websocket.interval.SocketReconnect
+import co.omisego.omisego.websocket.listener.SocketChannelListener
+import co.omisego.omisego.websocket.listener.SocketConnectionListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
+import co.omisego.omisego.websocket.listener.internal.CompositeSocketChannelListener
+import co.omisego.omisego.websocket.listener.internal.CompositeSocketConnectionListener
+import co.omisego.omisego.websocket.listener.internal.SocketChannelListenerSet
+import co.omisego.omisego.websocket.listener.internal.SocketConnectionListenerSet
+import co.omisego.omisego.websocket.listener.internal.SocketCustomEventListenerSet
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
@@ -61,14 +68,19 @@ class OMGSocketClient internal constructor(
     internal var request: Request,
     internal val socketSendParser: SocketClientContract.PayloadSendParser,
     internal val webSocketListenerProvider: WebSocketListenerProvider
-) : SocketClientContract.Client, SocketChannelContract.SocketClient {
+) : SocketClientContract.Client,
+    SocketChannelContract.SocketClient,
+    SocketConnectionListenerSet,
+    SocketChannelListenerSet,
+    SocketCustomEventListenerSet {
+
     internal var wsClient: WebSocket? = null
     override lateinit var socketChannel: SocketClientContract.Channel
 
     /**
      * A [SocketHeartbeat] is responsible for schedule sending the heartbeat event for keep the connection alive
      */
-    override val socketHeartbeat: SocketClientContract.SocketInterval by lazy {
+    override val socketHeartbeat: SocketHeartbeat by lazy {
         SocketHeartbeat(SocketMessageRef(scheme = SocketMessageRef.SCHEME_HEARTBEAT))
     }
 
@@ -86,7 +98,7 @@ class OMGSocketClient internal constructor(
      * @return true, if all messages have been sent, otherwise false.
      */
     override fun hasSentAllMessages(): Boolean =
-        socketChannel.hasSentAllPendingJoinChannel() && (wsClient?.queueSize() ?: 0L) == 0L
+        socketChannel.pending() && (wsClient?.queueSize() ?: 0L) == 0L
 
     /**
      * Joining a channel by the given [SocketTopic].
@@ -99,15 +111,11 @@ class OMGSocketClient internal constructor(
      *
      * @see SocketCustomEventListener
      */
-    override fun <T : SocketCustomEventListener> joinChannel(
-        topic: SocketTopic<T>,
-        payload: Map<String, Any>,
-        listener: T
+    override fun joinChannel(
+        topic: SocketTopic,
+        payload: Map<String, Any>
     ) {
-        with(socketChannel) {
-            addCustomEventListener(topic.name, listener)
-            join(topic.name, payload)
-        }
+        socketChannel.join(topic.name, payload)
     }
 
     /**
@@ -117,7 +125,7 @@ class OMGSocketClient internal constructor(
      * @param topic The topic (channel) to be left.
      * @param payload (Optional) the additional data you might want to send bundled with the request.
      */
-    override fun <T : SocketCustomEventListener> leaveChannel(topic: SocketTopic<T>, payload: Map<String, Any>) {
+    override fun leaveChannel(topic: SocketTopic, payload: Map<String, Any>) {
         socketChannel.leave(topic.name, payload)
     }
 
@@ -149,24 +157,67 @@ class OMGSocketClient internal constructor(
         socketChannel.period = period
     }
 
-    /**
-     * Subscribe to the [SocketConnectionListener] event.
-     *
-     * @param connectionListener The [SocketConnectionListener] to be invoked when the web socket connection is connected or disconnected.
-     * @see SocketConnectionListener for the event detail.
-     */
-    override fun setConnectionListener(connectionListener: SocketConnectionListener?) {
-        socketChannel.setConnectionListener(connectionListener)
+    override fun setConnectionListener(connectionListener: SocketConnectionListener) {
+    }
+
+    override fun setChannelListener(channelListener: SocketChannelListener) {
     }
 
     /**
-     * Subscribe to the [SocketChannelListener] event.
+     * Add listener for subscribing to the [SocketConnectionListener] event.
+     *
+     * @param connectionListener The [SocketConnectionListener] to be invoked when the connection has been connected, or disconnected.
+     * @see SocketConnectionListener for the event detail.
+     */
+    override fun addConnectionListener(connectionListener: SocketConnectionListener) {
+        socketChannel.addConnectionListener(connectionListener)
+    }
+
+    /**
+     * Remove the listener for unsubscribing from the [SocketConnectionListener] event.
+     *
+     * @param connectionListener The [SocketConnectionListener] to be unsubscribed.
+     */
+    override fun removeConnectionListener(connectionListener: SocketConnectionListener) {
+        socketChannel.removeConnectionListener(connectionListener)
+    }
+
+    /**
+     * Add listener for subscribing to the [SocketChannelListener] event.
      *
      * @param channelListener The [SocketChannelListener] to be invoked when the channel has been joined, left, or got an error.
      * @see SocketChannelListener for the event detail.
      */
-    override fun setChannelListener(channelListener: SocketChannelListener?) {
-        socketChannel.setChannelListener(channelListener)
+    override fun addChannelListener(channelListener: SocketChannelListener) {
+        socketChannel.addChannelListener(channelListener)
+    }
+
+    /**
+     * Remove the listener for unsubscribing from the [SocketChannelListener] event.
+     *
+     * @param channelListener The [SocketChannelListener] to be unsubscribed.
+     */
+    override fun removeChannelListener(channelListener: SocketChannelListener) {
+        socketChannel.removeChannelListener(channelListener)
+    }
+
+    /**
+     * Add listener for subscribing to the [SocketCustomEventListener] event.
+     *
+     * @param customEventListener The [SocketCustomEventListener] to be invoked when the custom event is coming.
+     * Learn more: https://github.com/omisego/ewallet/blob/master/docs/guides/ewallet_api_websockets.md#receivable-custom-events
+     */
+    override fun addCustomEventListener(customEventListener: SocketCustomEventListener) {
+        socketChannel.addCustomEventListener(customEventListener)
+    }
+
+    /**
+     * Remove the listener for unsubscribing from the [SocketCustomEventListener] event.
+     *
+     * @param customEventListener The [SocketChannelListener] to be unsubscribed.
+     */
+    override fun removeCustomEventListener(customEventListener: SocketCustomEventListener) {
+        socketChannel.removeCustomEventListener(customEventListener)
     }
 
     /**
@@ -242,12 +293,21 @@ class OMGSocketClient internal constructor(
 
             val gson = GsonProvider.create()
 
+            val compositeSocketConnectionListener = CompositeSocketConnectionListener()
+            val compositeSocketChannelListener = CompositeSocketChannelListener()
+
+            /* To invoke the socket channel listener */
+            val systemEventDispatcher = SystemEventDispatcher(compositeSocketChannelListener)
+            val customEventDispatcher = CustomEventDispatcher(compositeSocketChannelListener)
+
+            /* To invoke the socket connection listener */
+            val socketReconnect = SocketReconnect()
             val socketDispatcher = SocketDispatcher(
-                SystemEventDispatcher(),
-                CustomEventDispatcher(),
+                systemEventDispatcher,
+                customEventDispatcher,
+                compositeSocketConnectionListener,
                 executor
             )
-
             val socketDelegator = SocketDelegator(SocketReceiveParser(gson), socketDispatcher)
 
             val socketClient = OMGSocketClient(
@@ -257,11 +317,15 @@ class OMGSocketClient internal constructor(
                 socketDelegator
             )
 
-            socketDelegator talksTo socketDispatcher
-
-            val socketChannel = SocketChannel(socketDispatcher, socketClient)
+            // To add callbacks to the set
+            val socketChannel = SocketChannel(
+                socketDispatcher,
+                socketClient,
+                compositeSocketConnectionListener,
+                compositeSocketChannelListener,
+                socketReconnect
+            )
             socketClient talksTo socketChannel
-            socketDispatcher talksTo socketChannel
 
             socketClient.wsClient = null
 

@@ -19,7 +19,6 @@ import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.transaction.Transaction
 import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.operation.Listenable
-import co.omisego.omisego.websocket.SocketCustomEventListener
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import java.math.BigDecimal
@@ -95,7 +94,7 @@ data class TransactionConsumption(
     val user: User?,
     val account: Account?,
     val transactionRequest: TransactionRequest,
-    override val socketTopic: SocketTopic<SocketCustomEventListener.TransactionConsumptionListener>,
+    override val socketTopic: SocketTopic,
     val createdAt: Date?,
     val expirationDate: Date?,
     val approvedAt: Date?,
@@ -105,7 +104,7 @@ data class TransactionConsumption(
     val expiredAt: Date?,
     val metadata: @RawValue Map<String, Any>,
     val encryptedMetadata: @RawValue Map<String, Any>
-) : Parcelable, Listenable<SocketCustomEventListener.TransactionConsumptionListener>, SocketReceive.SocketData {
+) : Parcelable, Listenable, SocketReceive.SocketData {
     override fun equals(other: Any?): Boolean {
         return other is TransactionConsumption && other.id == id
     }
