@@ -16,7 +16,7 @@
 <p><a href="-socket-receive/index.html">SocketReceive</a></p>
 </td>
 <td>
-<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">SocketReceive</span></code>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">SocketReceive</span><span class="symbol">&lt;</span><span class="identifier">T</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-socket-receive/-socket-data.html"><span class="identifier">SocketData</span></a><span class="symbol">&gt;</span></code>
 <p>A model for receiving the replied object from the eWallet web socket API.
 It closely follows the usual envelope used in the eWallet HTTP APIs with some added attributes related to web socket.
 Note that those events can either be successful or not.</p>
@@ -34,7 +34,7 @@ Note that those events can either be successful or not.</p>
 <p><a href="-socket-topic/index.html">SocketTopic</a></p>
 </td>
 <td>
-<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">SocketTopic</span><span class="symbol">&lt;</span><span class="identifier">T</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">SocketCustomEventListener</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a></code></td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">SocketTopic</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a></code></td>
 </tr>
 </tbody>
 </table>
