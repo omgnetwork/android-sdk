@@ -8,17 +8,19 @@ package co.omisego.omisego.network
  */
 
 import co.omisego.omisego.constant.HTTPHeaders
+import co.omisego.omisego.constant.enums.AuthScheme
 import okhttp3.Interceptor
 import okhttp3.Response
 
 class HeaderInterceptor(
-    internal val authScheme: String,
+    internal val authScheme: AuthScheme,
     internal var authenticationToken: String
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         val newRequest = originalRequest.newBuilder().apply {
-            addHeader(HTTPHeaders.AUTHORIZATION, "$authScheme $authenticationToken")
+            if (authenticationToken.isNotEmpty())
+                addHeader(HTTPHeaders.AUTHORIZATION, "$authScheme $authenticationToken")
             addHeader(HTTPHeaders.ACCEPT, HTTPHeaders.ACCEPT_OMG)
         }.build()
         return chain.proceed(newRequest)
