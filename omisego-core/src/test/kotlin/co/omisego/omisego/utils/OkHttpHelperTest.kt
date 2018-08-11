@@ -7,12 +7,14 @@ package co.omisego.omisego.utils
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.constant.enums.AuthScheme
 import co.omisego.omisego.model.CredentialConfiguration
 import co.omisego.omisego.network.HeaderInterceptor
 import okhttp3.Interceptor
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
+import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldEqualTo
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,7 +30,7 @@ class OkHttpHelperTest {
         override val authenticationToken: String,
         override val userId: String?,
         override val apiKey: String?,
-        override val authScheme: String
+        override val authScheme: AuthScheme
     ) : CredentialConfiguration
 
     private val clientConfiguration: TestCredentialConfiguration by lazy {
@@ -37,7 +39,7 @@ class OkHttpHelperTest {
             "authenticationToken",
             null,
             "apiKey",
-            "OMGClient"
+            AuthScheme.Client
         )
     }
 
@@ -47,7 +49,7 @@ class OkHttpHelperTest {
     fun `createHeader should return HeaderInterceptor correctly`() {
         val headerInterceptor = okHttpHelper.createHeader(clientConfiguration)
         headerInterceptor shouldBeInstanceOf HeaderInterceptor::class.java
-        headerInterceptor.authScheme shouldEqualTo "OMGClient"
+        headerInterceptor.authScheme shouldEqual AuthScheme.Client
         headerInterceptor.authenticationToken shouldEqualTo "YXBpS2V5OmF1dGhlbnRpY2F0aW9uVG9rZW4="
     }
 

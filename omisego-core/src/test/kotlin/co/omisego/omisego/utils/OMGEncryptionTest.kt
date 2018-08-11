@@ -8,6 +8,9 @@ package co.omisego.omisego.utils
  */
 
 import co.omisego.omisego.constant.Exceptions
+import co.omisego.omisego.constant.enums.AuthScheme
+import co.omisego.omisego.constant.enums.AuthScheme.ADMIN
+import co.omisego.omisego.constant.enums.AuthScheme.Client
 import co.omisego.omisego.model.CredentialConfiguration
 import org.amshove.kluent.shouldEqualTo
 import org.amshove.kluent.shouldThrow
@@ -26,7 +29,7 @@ class OMGEncryptionTest {
         override val authenticationToken: String,
         override val userId: String?,
         override val apiKey: String?,
-        override val authScheme: String
+        override val authScheme: AuthScheme
     ) : CredentialConfiguration
 
     private val clientConfiguration: TestCredentialConfiguration by lazy {
@@ -35,7 +38,7 @@ class OMGEncryptionTest {
             "authenticationToken",
             null,
             "apiKey",
-            "OMGClient"
+            Client
         )
     }
 
@@ -45,17 +48,27 @@ class OMGEncryptionTest {
             "authenticationToken",
             "userId",
             null,
-            "OMGClient"
+            ADMIN
         )
     }
 
-    private val invalidConfiguration: TestCredentialConfiguration by lazy {
+    private val nullAPIKeyClientConfiguration: TestCredentialConfiguration by lazy {
         TestCredentialConfiguration(
             "http://test.com/",
             "authenticationToken",
             null,
             null,
-            "OMGClient"
+            Client
+        )
+    }
+
+    private val emptyUserIdConfiguration: TestCredentialConfiguration by lazy {
+        TestCredentialConfiguration(
+            "http://test.com/",
+            "authenticationToken",
+            "",
+            null,
+            ADMIN
         )
     }
 
@@ -72,13 +85,17 @@ class OMGEncryptionTest {
     }
 
     @Test
-    fun `createAuthorizationHeader should throw IllegalStateException if apiKey and userId are null or empty`() {
-        val exception = { omgEncryption.createAuthorizationHeader(invalidConfiguration) }
-        val exception2 = { omgEncryption.createAuthorizationHeader(invalidConfiguration.copy(apiKey = "")) }
-        val exception3 = { omgEncryption.createAuthorizationHeader(invalidConfiguration.copy(userId = "")) }
+    fun `createAuthorizationHeader should throw IllegalStateException if apiKey is null or empty`() {
+        val exception = { omgEncryption.createAuthorizationHeader(nullAPIKeyClientConfiguration) }
+        val exception2 = { omgEncryption.createAuthorizationHeader(nullAPIKeyClientConfiguration.copy(apiKey = "")) }
 
-        exception shouldThrow IllegalStateException::class withMessage Exceptions.MSG_EMPTY_API_KEY_OR_USER_ID
-        exception2 shouldThrow IllegalStateException::class withMessage Exceptions.MSG_EMPTY_API_KEY_OR_USER_ID
-        exception3 shouldThrow IllegalStateException::class withMessage Exceptions.MSG_EMPTY_API_KEY_OR_USER_ID
+        exception shouldThrow IllegalStateException::class withMessage Exceptions.MSG_EMPTY_API_KEY
+        exception2 shouldThrow IllegalStateException::class withMessage Exceptions.MSG_EMPTY_API_KEY
+    }
+
+    @Test
+    fun `createAuthorizationHeader should return empty string if authScheme is OMGAdmin and userId is nullOrEmpty`() {
+        omgEncryption.createAuthorizationHeader(emptyUserIdConfiguration) shouldEqualTo ""
+        omgEncryption.createAuthorizationHeader(emptyUserIdConfiguration.copy(userId = null)) shouldEqualTo ""
     }
 }

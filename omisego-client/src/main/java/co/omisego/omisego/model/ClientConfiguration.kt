@@ -8,6 +8,7 @@ package co.omisego.omisego.model
  */
 
 import co.omisego.omisego.constant.Exceptions
+import co.omisego.omisego.constant.enums.AuthScheme
 
 /**
  * This class will be used for creating an instance of [OMGSocketClient] and [EWalletClient].
@@ -32,7 +33,7 @@ data class ClientConfiguration private constructor(
     override val userId: String? = null,
     override val authenticationToken: String
 ) : CredentialConfiguration {
-    override val authScheme: String = "OMGClient"
+    override val authScheme: AuthScheme = AuthScheme.Client
 
     constructor(
         baseURL: String,

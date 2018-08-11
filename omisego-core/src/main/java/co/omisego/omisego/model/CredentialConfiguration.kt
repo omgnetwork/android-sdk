@@ -7,10 +7,12 @@ package co.omisego.omisego.model
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.constant.enums.AuthScheme
+
 interface CredentialConfiguration {
     val baseURL: String
     val authenticationToken: String?
     val userId: String?
     val apiKey: String?
-    val authScheme: String
+    val authScheme: AuthScheme
 }

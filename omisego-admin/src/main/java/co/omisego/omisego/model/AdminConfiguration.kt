@@ -8,6 +8,7 @@ package co.omisego.omisego.model
  */
 
 import co.omisego.omisego.constant.Exceptions
+import co.omisego.omisego.constant.enums.AuthScheme
 
 /**
  * This class will be used for creating an instance of [OMGSocketClient] and [EWalletClient].
@@ -30,7 +31,7 @@ data class AdminConfiguration internal constructor(
     override var userId: String? = null,
     override val authenticationToken: String? = null
 ) : CredentialConfiguration {
-    override val authScheme: String = "OMGAdmin"
+    override val authScheme: AuthScheme = AuthScheme.ADMIN
 
     /**
      * @param baseURL base url of the eWallet API.

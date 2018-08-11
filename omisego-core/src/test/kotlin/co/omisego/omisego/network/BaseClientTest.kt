@@ -8,6 +8,7 @@ package co.omisego.omisego.network
  */
 
 import co.omisego.omisego.constant.Exceptions
+import co.omisego.omisego.constant.enums.AuthScheme
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
 import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
@@ -36,7 +37,7 @@ class BaseClientTest {
         override val authenticationToken: String,
         override val userId: String?,
         override val apiKey: String?,
-        override val authScheme: String
+        override val authScheme: AuthScheme
     ) : CredentialConfiguration
 
     private val testCredentialConfiguration: TestCredentialConfiguration by lazy {
@@ -45,7 +46,7 @@ class BaseClientTest {
             "authenticationToken",
             null,
             "apiKey",
-            "OMGClient"
+            AuthScheme.Client
         )
     }
 

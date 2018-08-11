@@ -9,6 +9,7 @@ package co.omisego.omisego.websocket
 
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.HTTPHeaders
+import co.omisego.omisego.constant.enums.AuthScheme
 import co.omisego.omisego.model.CredentialConfiguration
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketSend
@@ -69,7 +70,7 @@ class OMGSocketClientTest {
         override val authenticationToken: String = "authToken",
         override val userId: String? = "userId",
         override val apiKey: String? = "apiKey",
-        override val authScheme: String = "OMGClient"
+        override val authScheme: AuthScheme = AuthScheme.Client
     ) : CredentialConfiguration
 
     @Before
