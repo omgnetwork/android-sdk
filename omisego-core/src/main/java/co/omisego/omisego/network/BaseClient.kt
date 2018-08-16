@@ -23,6 +23,7 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.internal.Util.UTF_8
 import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Retrofit
 import java.util.concurrent.Executor
@@ -92,7 +93,6 @@ open class BaseClient {
             val interceptors: List<Interceptor> = when (config.authScheme) {
                 AuthScheme.ADMIN -> listOf(omgHeader, provideAuthenticationTokenInterceptor(omgHeader))
                 AuthScheme.Client -> listOf(omgHeader)
-
             }
 
             val client = okHttpHelper.createClient(debug, interceptors, debugOkHttpInterceptors)
@@ -111,24 +111,27 @@ open class BaseClient {
                     if (it.header(HTTPHeaders.AUTHORIZATION) != null) return@also
                     val body = it.body()
                     val rawBody = body?.source()?.buffer()?.clone()?.readString(UTF_8)?.toString() ?: return@also
-                    val data = JSONObject(rawBody).getJSONObject("data")
-                    val objectType = data.getString("object")
-                    if (objectType != "authentication_token") return@also
+                    try {
+                        val data = JSONObject(rawBody).getJSONObject("data")
+                        val objectType = data.getString("object")
+                        if (objectType != "authentication_token") return@also
 
-                    val unauthorizedConfig = this@Builder.clientConfiguration ?: return@also
-                    val adminAuthorizedConfig = object : CredentialConfiguration {
-                        override val apiKey: String? = unauthorizedConfig.apiKey
-                        override val baseURL: String = unauthorizedConfig.baseURL
-                        override val authScheme: AuthScheme = unauthorizedConfig.authScheme
-                        override val authenticationToken: String? = data.getString("authentication_token")
-                        override val userId = data.getString("user_id")
+                        val unauthorizedConfig = this@Builder.clientConfiguration ?: return@also
+                        val adminAuthorizedConfig = object : CredentialConfiguration {
+                            override val apiKey: String? = unauthorizedConfig.apiKey
+                            override val baseURL: String = unauthorizedConfig.baseURL
+                            override val authScheme: AuthScheme = unauthorizedConfig.authScheme
+                            override val authenticationToken: String? = data.getString("authentication_token")
+                            override val userId = data.getString("user_id")
+                        }
+
+                        /* Create new authorized header */
+                        val newHeader = OMGEncryption().createAuthorizationHeader(adminAuthorizedConfig)
+
+                        /* Replace with authorized header */
+                        header.setHeader(newHeader)
+                    } catch (e: JSONException) {
                     }
-
-                    /* Create new authorized header */
-                    val newHeader = OMGEncryption().createAuthorizationHeader(adminAuthorizedConfig)
-
-                    /* Replace with authorized header */
-                    header.setHeader(newHeader)
                 }
             }
         }
