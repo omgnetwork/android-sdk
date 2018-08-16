@@ -1,5 +1,9 @@
 package co.omisego.omisego.model.pagination
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
+
 /*
  * OmiseGO
  *
@@ -7,4 +11,8 @@ package co.omisego.omisego.model.pagination
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-data class PaginationList<out T>(val data: List<T>, val pagination: Pagination)
+@Parcelize
+data class PaginationList<out T>(
+    val data: @RawValue List<T>,
+    val pagination: Pagination
+) : Parcelable

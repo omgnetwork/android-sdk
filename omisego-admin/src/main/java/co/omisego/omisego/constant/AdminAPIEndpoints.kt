@@ -13,6 +13,7 @@ object AdminAPIEndpoints {
     const val TRANSACTION_ALL = "transaction.all"
     const val TOKEN_ALL = "token.all"
     const val ACCOUNT_ALL = "account.all"
+    const val ACCOUNT_GET_WALLETS = "account.get_wallets"
     const val SWITCH_ACCOUNT = "auth_token.switch_account"
     const val LOGOUT = "me.logout"
     const val TRANSACTION_CALCULATE = "transaction.calculate"

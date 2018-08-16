@@ -12,6 +12,7 @@ import co.omisego.omisego.model.params.LoginParams
 import co.omisego.omisego.model.params.SwitchAccountParams
 import co.omisego.omisego.model.params.TokenListParams
 import co.omisego.omisego.model.params.TransactionCalculateParams
+import co.omisego.omisego.model.params.WalletListParams
 import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.model.transaction.send.TransactionCreateParams
 import co.omisego.omisego.network.ewallet.EWalletAdmin
@@ -68,6 +69,8 @@ class OMGAPIAdmin(private val eWalletAdmin: EWalletAdmin) {
     fun getAccounts(params: AccountListParams) = eWalletAPI.getAccounts(params)
 
     fun getTokens(params: TokenListParams) = eWalletAPI.getTokens(params)
+
+    fun getWallets(params: WalletListParams) = eWalletAPI.getWallets(params)
 
     fun switchAccount(params: SwitchAccountParams) = eWalletAPI.switchAccount(params)
 

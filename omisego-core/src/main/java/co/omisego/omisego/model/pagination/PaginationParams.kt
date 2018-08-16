@@ -109,4 +109,27 @@ sealed class Paginable {
             override fun toString(): String = value
         }
     }
+
+    open class Wallet : Paginable() {
+        /**
+         * Represents wallet's searchable fields
+         */
+        enum class SearchableFields constructor(override val value: String) : OMGEnum {
+            ADDRESS("address"),
+            NAME("name");
+
+            override fun toString(): String = value
+        }
+
+        /**
+         * Represents wallet's sortable fields.
+         */
+        enum class SortableFields constructor(override val value: String) : OMGEnum {
+            NAME("name"),
+            ADDRESS("address"),
+            CREATED_AT("created_at");
+
+            override fun toString(): String = value
+        }
+    }
 }

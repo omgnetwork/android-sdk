@@ -11,10 +11,17 @@ import co.omisego.omisego.model.pagination.Paginable
 import co.omisego.omisego.model.pagination.SortDirection
 
 /**
- *  Represent a structure used to query a list of tokens
+ *  Represent a structure used to query a list of wallets
  */
 
-data class TokenListParams internal constructor(
+data class WalletListParams internal constructor(
+    /**
+     * An account id
+     */
+    val id: String,
+
+    val owned: Boolean = true,
+
     /**
      * A page number
      */
@@ -29,11 +36,11 @@ data class TokenListParams internal constructor(
      * The sorting field
      *
      * The available values are
-     * - [Paginable.Token.SortableFields.NAME]
-     * - [Paginable.Token.SortableFields.SYMBOL]
-     * - [Paginable.Token.SortableFields.CREATED_AT]
+     * - [Paginable.Wallet.SortableFields.NAME]
+     * - [Paginable.Wallet.SortableFields.ADDRESS]
+     * - [Paginable.Wallet.SortableFields.CREATED_AT]
      */
-    val sortBy: Paginable.Token.SortableFields = Paginable.Token.SortableFields.CREATED_AT,
+    val sortBy: Paginable.Wallet.SortableFields = Paginable.Wallet.SortableFields.CREATED_AT,
 
     /**
      * The desired sort direction
@@ -46,7 +53,7 @@ data class TokenListParams internal constructor(
 
     /**
      * A term to search for in all of the searchable fields.
-     * See more at [Paginable.Token.SearchableFields]
+     * See more at [Paginable.Wallet.SearchableFields]
      *
      * Note: Conflict with searchTerms, only use one of them.
      */
@@ -54,19 +61,23 @@ data class TokenListParams internal constructor(
 
     /**
      * A key-value map to search with the available fields
-     * See more at [Paginable.Token.SearchableFields]
+     * See more at [Paginable.Wallet.SearchableFields]
      *
      */
-    val searchTerms: Map<Paginable.Token.SearchableFields, Any>? = null
+    val searchTerms: Map<Paginable.Wallet.SearchableFields, Any>? = null
 ) {
     companion object {
         fun create(
+            id: String,
+            owned: Boolean = true,
             page: Int = 1,
             perPage: Int = 10,
-            sortBy: Paginable.Token.SortableFields = Paginable.Token.SortableFields.CREATED_AT,
+            sortBy: Paginable.Wallet.SortableFields = Paginable.Wallet.SortableFields.CREATED_AT,
             sortDir: SortDirection = SortDirection.DESCENDING,
             searchTerm: String? = null
-        ) = TokenListParams(
+        ) = WalletListParams(
+            id = id,
+            owned = owned,
             page = page,
             perPage = perPage,
             sortBy = sortBy,
@@ -75,12 +86,16 @@ data class TokenListParams internal constructor(
         )
 
         fun create(
+            id: String,
+            owned: Boolean = true,
             page: Int = 1,
             perPage: Int = 10,
-            sortBy: Paginable.Token.SortableFields = Paginable.Token.SortableFields.CREATED_AT,
+            sortBy: Paginable.Wallet.SortableFields = Paginable.Wallet.SortableFields.CREATED_AT,
             sortDir: SortDirection = SortDirection.DESCENDING,
-            searchTerms: Map<Paginable.Token.SearchableFields, Any>? = null
-        ) = TokenListParams(
+            searchTerms: Map<Paginable.Wallet.SearchableFields, Any>? = null
+        ) = WalletListParams(
+            id = id,
+            owned = owned,
             page = page,
             perPage = perPage,
             sortBy = sortBy,
