@@ -10,10 +10,11 @@ package co.omisego.omisego
 import co.omisego.omisego.model.params.AccountListParams
 import co.omisego.omisego.model.params.LoginParams
 import co.omisego.omisego.model.params.SwitchAccountParams
+import co.omisego.omisego.model.params.TokenListParams
 import co.omisego.omisego.model.params.TransactionCalculateParams
-import co.omisego.omisego.network.ewallet.EWalletAdmin
 import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.model.transaction.send.TransactionCreateParams
+import co.omisego.omisego.network.ewallet.EWalletAdmin
 
 /**
  * The class OMGAPIAdmin represents an object that knows how to interact with OmiseGO API.
@@ -65,6 +66,8 @@ class OMGAPIAdmin(private val eWalletAdmin: EWalletAdmin) {
     fun getTransactions(params: TransactionListParams) = eWalletAPI.getTransactions(params)
 
     fun getAccounts(params: AccountListParams) = eWalletAPI.getAccounts(params)
+
+    fun getTokens(params: TokenListParams) = eWalletAPI.getTokens(params)
 
     fun switchAccount(params: SwitchAccountParams) = eWalletAPI.switchAccount(params)
 
