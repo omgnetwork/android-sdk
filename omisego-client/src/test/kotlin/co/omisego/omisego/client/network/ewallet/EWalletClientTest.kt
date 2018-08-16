@@ -8,15 +8,15 @@ package co.omisego.omisego.client.network.ewallet
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.ClientAPIEndpoints
 import co.omisego.omisego.client.extension.mockEnqueueWithHttpCode
-import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.client.util.Encryptor
 import co.omisego.omisego.client.util.GsonDelegator
 import co.omisego.omisego.client.util.ResourceFile
+import co.omisego.omisego.constant.ClientAPIEndpoints
 import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.HTTPHeaders
 import co.omisego.omisego.constant.Versions
+import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User

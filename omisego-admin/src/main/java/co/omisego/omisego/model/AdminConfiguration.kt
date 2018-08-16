@@ -33,12 +33,11 @@ data class AdminConfiguration internal constructor(
 ) : CredentialConfiguration {
     override val authScheme: AuthScheme = AuthScheme.ADMIN
 
-    /**
-     * @param baseURL base url of the eWallet API.
-     */
     constructor(
-        baseURL: String
-    ) : this(baseURL, null, null, null)
+        baseURL: String,
+        userId: String? = null,
+        authenticationToken: String? = null
+    ) : this(baseURL, null, userId, authenticationToken)
 
     init {
         check(baseURL.isNotEmpty()) { Exceptions.MSG_EMPTY_BASE_URL }

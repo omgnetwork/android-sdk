@@ -15,22 +15,19 @@ import okhttp3.OkHttpClient
 class OkHttpHelper(
     private val encryption: OMGEncryption = OMGEncryption()
 ) {
-    internal fun createHeader(clientConfiguration: CredentialConfiguration): HeaderInterceptor = HeaderInterceptor(
+    fun createHeader(clientConfiguration: CredentialConfiguration): HeaderInterceptor = HeaderInterceptor(
         clientConfiguration.authScheme,
         encryption.createAuthorizationHeader(clientConfiguration)
     )
 
     /* Initialize the OKHttpClient with header interceptor*/
     internal fun createClient(
-        requiredAuth: Boolean = true,
         debug: Boolean,
-        headerInterceptor: HeaderInterceptor,
+        interceptors: List<Interceptor>,
         debugOkHttpInterceptors: MutableList<Interceptor>
     ) = OkHttpClient.Builder().apply {
-        if (requiredAuth)
-            addInterceptor(headerInterceptor)
+        interceptors.forEach { addInterceptor(it) }
 
-        /* If set debug true, then print the http logging */
         if (debug) {
             for (interceptor in debugOkHttpInterceptors) {
                 addNetworkInterceptor(interceptor)

@@ -288,7 +288,7 @@ class OMGSocketClient internal constructor(
                 addHeader(HTTPHeaders.ACCEPT, HTTPHeaders.ACCEPT_OMG)
             }.build()
 
-            val okHttpClient = okHttpHelper.createClient(false, debug, omgHeader, debugOkHttpInterceptors)
+            val okHttpClient = okHttpHelper.createClient(debug, listOf(omgHeader), debugOkHttpInterceptors)
 
             val gson = GsonProvider.create()
 

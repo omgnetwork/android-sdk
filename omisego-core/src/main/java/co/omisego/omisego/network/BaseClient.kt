@@ -8,17 +8,22 @@ package co.omisego.omisego.network
  */
 
 import co.omisego.omisego.constant.Exceptions
+import co.omisego.omisego.constant.HTTPHeaders
+import co.omisego.omisego.constant.enums.AuthScheme
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
 import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.CredentialConfiguration
 import co.omisego.omisego.utils.GsonProvider
+import co.omisego.omisego.utils.OMGEncryption
 import co.omisego.omisego.utils.OkHttpHelper
 import com.google.gson.Gson
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.internal.Util.UTF_8
 import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONObject
 import retrofit2.Retrofit
 import java.util.concurrent.Executor
 
@@ -83,13 +88,48 @@ open class BaseClient {
         open fun build(): BaseClient {
             val config = clientConfiguration ?: throw IllegalStateException(Exceptions.MSG_NULL_CLIENT_CONFIGURATION)
             val omgHeader = okHttpHelper.createHeader(config)
-            val client = okHttpHelper.createClient(true, debug, omgHeader, debugOkHttpInterceptors)
+
+            val interceptors: List<Interceptor> = when (config.authScheme) {
+                AuthScheme.ADMIN -> listOf(omgHeader, provideAuthenticationTokenInterceptor(omgHeader))
+                AuthScheme.Client -> listOf(omgHeader)
+
+            }
+
+            val client = okHttpHelper.createClient(debug, interceptors, debugOkHttpInterceptors)
             val retrofit = createRetrofit(GsonProvider.create(), client)
 
             return BaseClient().also {
                 it.header = omgHeader
                 it.client = client
                 it.retrofit = retrofit
+            }
+        }
+
+        internal fun provideAuthenticationTokenInterceptor(header: HeaderInterceptor): Interceptor {
+            return Interceptor { chain ->
+                chain.proceed(chain.request()).also {
+                    if (it.header(HTTPHeaders.AUTHORIZATION) != null) return@also
+                    val body = it.body()
+                    val rawBody = body?.source()?.buffer()?.clone()?.readString(UTF_8)?.toString() ?: return@also
+                    val data = JSONObject(rawBody).getJSONObject("data")
+                    val objectType = data.getString("object")
+                    if (objectType != "authentication_token") return@also
+
+                    val unauthorizedConfig = this@Builder.clientConfiguration ?: return@also
+                    val adminAuthorizedConfig = object : CredentialConfiguration {
+                        override val apiKey: String? = unauthorizedConfig.apiKey
+                        override val baseURL: String = unauthorizedConfig.baseURL
+                        override val authScheme: AuthScheme = unauthorizedConfig.authScheme
+                        override val authenticationToken: String? = data.getString("authentication_token")
+                        override val userId = data.getString("user_id")
+                    }
+
+                    /* Create new authorized header */
+                    val newHeader = OMGEncryption().createAuthorizationHeader(adminAuthorizedConfig)
+
+                    /* Replace with authorized header */
+                    header.setHeader(newHeader)
+                }
             }
         }
 

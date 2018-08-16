@@ -8,8 +8,8 @@ package co.omisego.omisego.utils
  */
 
 import android.util.Base64
+import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.Exceptions.MSG_EMPTY_API_KEY
-import co.omisego.omisego.constant.Exceptions.MSG_EMPTY_AUTH_TOKEN
 import co.omisego.omisego.constant.enums.AuthScheme.ADMIN
 import co.omisego.omisego.constant.enums.AuthScheme.Client
 import co.omisego.omisego.model.CredentialConfiguration
@@ -24,14 +24,14 @@ class OMGEncryption {
      */
     fun createAuthorizationHeader(credentialConfiguration: CredentialConfiguration): String {
         return with(credentialConfiguration) {
-            if (authenticationToken.isNullOrEmpty()) throw IllegalStateException(MSG_EMPTY_AUTH_TOKEN)
             when (authScheme) {
                 Client -> {
+                    if (authenticationToken.isNullOrEmpty()) throw IllegalStateException(Exceptions.MSG_EMPTY_AUTH_TOKEN)
                     if (apiKey.isNullOrEmpty()) throw IllegalStateException(MSG_EMPTY_API_KEY)
                     String(Base64.encode("$apiKey:$authenticationToken".toByteArray(), Base64.NO_WRAP))
                 }
                 ADMIN -> {
-                    if (userId.isNullOrEmpty()) return ""
+                    if (userId.isNullOrEmpty() || authenticationToken.isNullOrEmpty()) return ""
                     String(Base64.encode("$userId:$authenticationToken".toByteArray(), Base64.NO_WRAP))
                 }
             }
