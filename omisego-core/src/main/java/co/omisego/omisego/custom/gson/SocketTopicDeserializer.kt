@@ -20,6 +20,10 @@ class SocketTopicDeserializer : JsonDeserializer<SocketTopic> {
         typeOfT: Type,
         context: JsonDeserializationContext
     ): SocketTopic {
-        return SocketTopic(json.asString)
+        return if (json.isJsonObject) {
+            SocketTopic(json.asJsonObject.get("name").asString)
+        } else {
+            SocketTopic(json.asString)
+        }
     }
 }
