@@ -7,14 +7,15 @@ package co.omisego.omisego.utils
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import android.util.Base64
-import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.Exceptions.MSG_EMPTY_API_KEY
+import co.omisego.omisego.constant.Exceptions.MSG_EMPTY_AUTH_TOKEN
 import co.omisego.omisego.constant.enums.AuthScheme.ADMIN
 import co.omisego.omisego.constant.enums.AuthScheme.Client
 import co.omisego.omisego.model.CredentialConfiguration
 
-class OMGEncryption {
+class OMGEncryption(
+    private val encoder: Base64Encoder = Base64Encoder()
+) {
 
     /**
      * Create an authentication header with Base64
@@ -26,13 +27,13 @@ class OMGEncryption {
         return with(credentialConfiguration) {
             when (authScheme) {
                 Client -> {
-                    if (authenticationToken.isNullOrEmpty()) throw IllegalStateException(Exceptions.MSG_EMPTY_AUTH_TOKEN)
-                    if (apiKey.isNullOrEmpty()) throw IllegalStateException(MSG_EMPTY_API_KEY)
-                    String(Base64.encode("$apiKey:$authenticationToken".toByteArray(), Base64.NO_WRAP))
+                    check(!authenticationToken.isNullOrEmpty()) { MSG_EMPTY_AUTH_TOKEN }
+                    check(!apiKey.isNullOrEmpty()) { MSG_EMPTY_API_KEY }
+                    encoder.encode(apiKey!!, authenticationToken!!)
                 }
                 ADMIN -> {
                     if (userId.isNullOrEmpty() || authenticationToken.isNullOrEmpty()) return ""
-                    String(Base64.encode("$userId:$authenticationToken".toByteArray(), Base64.NO_WRAP))
+                    encoder.encode(userId!!, authenticationToken!!)
                 }
             }
         }

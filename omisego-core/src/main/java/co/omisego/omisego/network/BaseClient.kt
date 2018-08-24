@@ -14,8 +14,8 @@ import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
 import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.CredentialConfiguration
+import co.omisego.omisego.utils.Base64Encoder
 import co.omisego.omisego.utils.GsonProvider
-import co.omisego.omisego.utils.OMGEncryption
 import co.omisego.omisego.utils.OkHttpHelper
 import com.google.gson.Gson
 import okhttp3.HttpUrl
@@ -116,17 +116,11 @@ open class BaseClient {
                         val objectType = data.getString("object")
                         if (objectType != "authentication_token") return@also
 
-                        val unauthorizedConfig = this@Builder.clientConfiguration ?: return@also
-                        val adminAuthorizedConfig = object : CredentialConfiguration {
-                            override val apiKey: String? = unauthorizedConfig.apiKey
-                            override val baseURL: String = unauthorizedConfig.baseURL
-                            override val authScheme: AuthScheme = unauthorizedConfig.authScheme
-                            override val authenticationToken: String? = data.getString("authentication_token")
-                            override val userId = data.getString("user_id")
-                        }
-
                         /* Create new authorized header */
-                        val newHeader = OMGEncryption().createAuthorizationHeader(adminAuthorizedConfig)
+                        val newHeader = Base64Encoder().encode(
+                            data.getString("user_id"),
+                            data.getString("authentication_token")
+                        )
 
                         /* Replace with authorized header */
                         header.setHeader(newHeader)
