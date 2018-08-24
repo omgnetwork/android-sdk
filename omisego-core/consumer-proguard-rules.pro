@@ -22,3 +22,8 @@
 -dontwarn org.conscrypt.**
 -dontwarn org.codehaus.**
 -keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
+# Kotlinx Coroutines
+-keepclassmembernames class kotlinx.** {
+    volatile <fields>;
+}
