@@ -16,6 +16,7 @@ import co.omisego.omisego.custom.camera.CameraWrapper
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.experimental.runBlocking
 import org.amshove.kluent.any
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldEqual
@@ -100,7 +101,7 @@ class OMGCameraPreviewTest {
     }
 
     @Test
-    fun `OMGCameraPreview should be call showCameraPreview properly`() {
+    fun `OMGCameraPreview should be call showCameraPreview properly`() = runBlocking {
         ShadowCamera.addCameraInfo(Camera.CameraInfo.CAMERA_FACING_BACK, Camera.CameraInfo())
         val camera = mock<Camera>()
         whenever(mockCameraWrapper.camera).thenReturn(camera)
