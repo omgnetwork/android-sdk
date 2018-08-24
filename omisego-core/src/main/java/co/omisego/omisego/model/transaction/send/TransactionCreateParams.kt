@@ -1,5 +1,7 @@
 package co.omisego.omisego.model.transaction.send
 
+import java.math.BigDecimal
+
 /*
  * OmiseGO
  *
@@ -26,7 +28,7 @@ data class TransactionCreateParams(
     val toAddress: String,
     val toProviderUserId: String? = null,
     val toAccountId: String? = null,
-    val amount: Double,
+    val amount: BigDecimal,
     val tokenId: String,
     val idempotencyToken: String = "$toAddress-${System.nanoTime()}",
     val metadata: Map<String, Any> = mapOf(),
