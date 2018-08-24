@@ -27,6 +27,7 @@
       "object": "transaction_source",
       "address": "3b7f1c68-e3bd-4f8f-9916-4af19be95d00",
       "amount": 1337,
+      "token_id": "token-1",
       "token": {
         "object": "token",
         "id": "BTC:861020af-17b6-49ee-a0cb-661a4d2d1f95",
@@ -43,6 +44,7 @@
       "object": "transaction_source",
       "address": "3b7f1c68-e3bd-4f8f-9916-4af19be95d00",
       "amount": 1337,
+      "token_id": "token_2",
       "token": {
         "object": "token",
         "id": "BTC:861020af-17b6-49ee-a0cb-661a4d2d1f95",
