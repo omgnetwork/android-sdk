@@ -21,6 +21,7 @@ import co.omisego.omisego.qrcode.scanner.SimpleVerifier
 import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import kotlinx.coroutines.experimental.runBlocking
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
@@ -55,7 +56,7 @@ class OMGQRScannerViewTest {
     @Test
     fun `should have the proper initial state`() {
         mOMGQRScannerView.debugImageView shouldBe null
-        mOMGQRScannerView.omgScannerLogic shouldBe null
+        mOMGQRScannerView.omgScannerPreview shouldBe null
         mOMGQRScannerView.isLoading shouldEqualTo false
         mOMGQRScannerView.loadingView?.visibility!! shouldEqualTo View.GONE
         mOMGQRScannerView.borderColor shouldEqualTo ContextCompat.getColor(RuntimeEnvironment.application, R.color.omg_scanner_ui_border)
@@ -68,26 +69,26 @@ class OMGQRScannerViewTest {
         mOMGQRScannerView.startCamera(mock())
 
         verify(mOMGQRScannerView.cameraHandlerThread, times(1))?.startCamera()
-        mOMGQRScannerView.omgScannerLogic?.verifier shouldNotBe null
-        mOMGQRScannerView.omgScannerLogic?.verifier shouldBeInstanceOf SimpleVerifier::class.java
+        mOMGQRScannerView.omgScannerPreview?.verifier shouldNotBe null
+        mOMGQRScannerView.omgScannerPreview?.verifier shouldBeInstanceOf SimpleVerifier::class.java
     }
 
     @Test
     fun `should be able to start camera with the custom verifier properly`() {
         mOMGQRScannerView.cameraHandlerThread = mock()
-        val verifier = mock<OMGQRScannerContract.Logic.Verifier>()
+        val verifier = mock<OMGQRScannerContract.Preview.Verifier>()
         mOMGQRScannerView.startCameraWithVerifier(verifier)
 
         verify(mOMGQRScannerView.cameraHandlerThread, times(1))?.startCamera()
-        mOMGQRScannerView.omgScannerLogic?.verifier shouldBe verifier
+        mOMGQRScannerView.omgScannerPreview?.verifier shouldBe verifier
     }
 
     @Test
-    fun `should be able to stop the camera properly`() {
+    fun `should be able to stop the camera properly`() = runBlocking {
         mOMGQRScannerView.cameraHandlerThread = mock()
         mOMGQRScannerView.cameraWrapper = CameraWrapper(mock(), 0)
         mOMGQRScannerView.cameraPreview = mock()
-        mOMGQRScannerView.stopCamera()
+        mOMGQRScannerView.stopCamera().await()
 
         verify(mOMGQRScannerView.cameraPreview, times(1))?.stopCameraPreview()
         verify(mOMGQRScannerView.cameraWrapper?.camera, times(1))?.release()

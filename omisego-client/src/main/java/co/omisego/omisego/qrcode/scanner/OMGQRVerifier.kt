@@ -22,8 +22,8 @@ class OMGQRVerifier(
     val scannerView: OMGQRScannerContract.View,
     val client: OMGAPIClient,
     val listener: OMGQRVerifierListener
-) : OMGQRScannerContract.Logic.Verifier {
-    override var postVerification: OMGQRScannerContract.Logic.PostVerification? = null
+) : OMGQRScannerContract.Preview.Verifier {
+    override var postVerification: OMGQRScannerContract.Preview.PostVerification? = null
 
     /**
      * The [OMGCall<TransactionRequest>] that will be assigned when call [requestTransaction], then will use later for cancel the request.

@@ -12,7 +12,7 @@ package co.omisego.omisego.qrcode.scanner.utils
 import android.hardware.Camera
 import co.omisego.omisego.qrcode.scanner.OMGQRScannerContract
 
-class Rotater : OMGQRScannerContract.Logic.Rotation {
+class Rotater : OMGQRScannerContract.Preview.Rotation {
     /**
      * Rotate the image data depends on the device orientation
      *

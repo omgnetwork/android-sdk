@@ -12,8 +12,8 @@ package co.omisego.omisego.qrcode.scanner
 class SimpleVerifier(
     val scannerView: OMGQRScannerContract.View,
     val listener: SimpleVerifierListener
-) : OMGQRScannerContract.Logic.Verifier {
-    override var postVerification: OMGQRScannerContract.Logic.PostVerification? = null
+) : OMGQRScannerContract.Preview.Verifier {
+    override var postVerification: OMGQRScannerContract.Preview.PostVerification? = null
 
     override fun onDecoded(payload: String) {
         listener.onDecoded(scannerView, payload)
