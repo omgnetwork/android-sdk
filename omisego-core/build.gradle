@@ -96,3 +96,10 @@ dependencies {
 repositories {
     mavenCentral()
 }
+
+/* Coroutines will be official when Kotlin 1.3 is release */
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
