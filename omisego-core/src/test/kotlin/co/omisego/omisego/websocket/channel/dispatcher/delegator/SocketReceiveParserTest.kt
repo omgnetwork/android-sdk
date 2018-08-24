@@ -53,7 +53,7 @@ class SocketReceiveParserTest : GsonDelegator() {
                     "transaction_consumption:8eb0160e-1c96-481a-88e1-899399cc84dc"
                 )
                 user?.id shouldEqual "6f56efa1-caf9-4348-8e0f-f5af283f17ee"
-                user?.username shouldEqual "john.doe@example.com"
+                user?.email shouldEqual "john.doe@example.com"
                 transactionRequest.type shouldEqual TransactionRequestType.RECEIVE
                 transactionRequest.status shouldEqual TransactionRequestStatus.VALID
                 transactionRequest.socketTopic shouldEqual SocketTopic(

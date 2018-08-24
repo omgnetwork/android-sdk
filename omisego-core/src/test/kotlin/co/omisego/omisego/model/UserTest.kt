@@ -41,7 +41,7 @@ class UserTest : GsonDelegator() {
         with(user) {
             id shouldEqual "cec34607-0761-4a59-8357-18963e42a1aa"
             providerUserId shouldEqual "wijf-fbancomw-dqwjudb"
-            username shouldEqual "john.doe@example.com"
+            email shouldEqual "john.doe@example.com"
             socketTopic shouldBeInstanceOf SocketTopic::class.java
             createdAt shouldEqual dateConverter.fromString("2018-01-01T00:00:00Z")
             updatedAt shouldEqual dateConverter.fromString("2018-01-01T00:00:00Z")
