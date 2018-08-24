@@ -11,6 +11,7 @@ import android.os.Parcelable
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.Account
 import co.omisego.omisego.model.Token
+import co.omisego.omisego.model.User
 import co.omisego.omisego.model.Wallet
 import co.omisego.omisego.model.pagination.Paginable
 import kotlinx.android.parcel.Parcelize
@@ -34,7 +35,12 @@ data class TransactionExchange(
 data class TransactionSource(
     val address: String,
     val amount: BigDecimal,
-    val token: Token
+    val tokenId: String,
+    val token: Token,
+    val userId: String?,
+    val user: User?,
+    val accountId: String?,
+    val account: Account?
 ) : Parcelable
 
 /**
