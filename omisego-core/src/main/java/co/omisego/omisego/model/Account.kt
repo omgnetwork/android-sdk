@@ -29,13 +29,13 @@ import java.util.Date
 @Parcelize
 data class Account(
     val id: String,
-    val parentId: String?,
+    val parentId: String? = null,
     val name: String,
     val description: String,
     val master: Boolean,
     val avatar: Avatar,
-    val metadata: @RawValue Map<String, Any>,
-    val encryptedMetadata: @RawValue Map<String, Any>,
-    val createdAt: Date?,
-    val updatedAt: Date?
+    val metadata: @RawValue Map<String, Any> = mapOf(),
+    val encryptedMetadata: @RawValue Map<String, Any> = mapOf(),
+    val createdAt: Date? = null,
+    val updatedAt: Date? = null
 ) : Parcelable

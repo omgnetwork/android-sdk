@@ -20,8 +20,8 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 data class Avatar(
-    val original: String?,
-    val large: String?,
-    val small: String?,
-    val thumb: String?
+    val original: String? = null,
+    val large: String? = null,
+    val small: String? = null,
+    val thumb: String? = null
 ) : Parcelable
