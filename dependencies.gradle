@@ -9,10 +9,12 @@ allprojects {
 ext {
     kotlinVersion = '1.2.51'
     retrofitVersion = '2.4.0'
+    coroutinesVersion = '0.23.4'
     deps = [
         kotlin     : [
             "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
-            "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+            "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
+            "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
         ],
         networking : [
             "com.squareup.retrofit2:retrofit:${retrofitVersion}",
