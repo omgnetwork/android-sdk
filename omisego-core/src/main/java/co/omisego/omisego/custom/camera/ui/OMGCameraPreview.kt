@@ -21,6 +21,9 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import co.omisego.omisego.custom.camera.AutoFocusManager
 import co.omisego.omisego.custom.camera.CameraWrapper
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import java.lang.Exception
 
 @SuppressLint("ViewConstructor")
@@ -85,16 +88,12 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
 
             /* Setup camera display */
             cameraWrapper?.camera?.let {
-                it.setPreviewDisplay(holder)
-                it.setDisplayOrientation(mOMGCameraLogic.getDisplayOrientation(cameraWrapper != null))
-                it.setPreviewCallback(mPreviewCallback)
-                postDelayed({
-                    try {
-                        it.startPreview()
-                    } catch (e: Exception) {
-                        Log.e("OMGCameraPreview", e.message)
-                    }
-                }, 200)
+                launch(UI) {
+                    async { it.setDisplayOrientation(mOMGCameraLogic.getDisplayOrientation(cameraWrapper != null)) }
+                    async { it.setPreviewDisplay(holder) }
+                    async { it.setPreviewCallback(mPreviewCallback) }
+                    async { it.startPreview() }
+                }
             }
 
             when {
@@ -111,7 +110,7 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
             mPreviewing = false
             holder.removeCallback(this)
             mFocusManager.stop()
-            cameraWrapper?.camera?.stopPreview()
+            async { cameraWrapper?.camera?.stopPreview() }
             cameraWrapper?.camera?.setPreviewCallback(null)
         } catch (e: Exception) {
             Log.d(OMGCameraPreview.TAG, e.toString(), e)

@@ -14,7 +14,6 @@ import android.content.res.Resources
 import android.hardware.Camera
 import android.os.Handler
 import android.os.HandlerThread
-import android.os.Looper
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.annotation.ColorInt
@@ -30,6 +29,10 @@ import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.ui.OMGCameraPreview
 import co.omisego.omisego.custom.camera.utils.DisplayUtils
 import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI
+import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 
 /**
  * [OMGQRScannerView] is responsible for scanning the QRCode with customizable border color and loading view
@@ -115,9 +118,9 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
     override var loadingView: View? = null
 
     /**
-     * The [OMGQRScannerContract.Logic] class to handle main logic
+     * The [OMGQRScannerContract.Preview] class to handle main logic
      */
-    internal var omgScannerLogic: OMGQRScannerContract.Logic? = null
+    internal var omgScannerPreview: OMGQRScannerContract.Preview? = null
 
     /**
      * A flag to indicate that the QR code is currently processing or not
@@ -171,7 +174,7 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
         this.setOnClickListener {
             // Reset loading when tap on any view
             isLoading = false
-            omgScannerLogic?.cancelLoading()
+            omgScannerPreview?.cancelLoading()
         }
     }
 
@@ -200,14 +203,14 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
     /**
      * Start stream the camera preview
      */
-    override fun startCameraWithVerifier(verifier: OMGQRScannerContract.Logic.Verifier) {
+    override fun startCameraWithVerifier(verifier: OMGQRScannerContract.Preview.Verifier) {
         initCamera()
-        omgScannerLogic = omgScannerLogic ?: OMGQRScannerLogic(this, verifier)
+        omgScannerPreview = omgScannerPreview ?: OMGQRScannerPreview(this, verifier)
     }
 
     override fun startCamera(listener: SimpleVerifierListener) {
         initCamera()
-        omgScannerLogic = omgScannerLogic ?: OMGQRScannerLogic(this, SimpleVerifier(this, listener))
+        omgScannerPreview = omgScannerPreview ?: OMGQRScannerPreview(this, SimpleVerifier(this, listener))
     }
 
     private fun initCamera() {
@@ -219,15 +222,17 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
     /**
      * Stop the camera to stream the image preview
      */
-    override fun stopCamera() {
+    override fun stopCamera(): Deferred<Unit?> {
+        omgScannerPreview?.stopCamera()
         cameraPreview?.stopCameraPreview()
-        cameraWrapper?.camera?.release()
         cameraHandlerThread?.quit()
         cameraHandlerThread = null
+        /* This method is very time-consuming. Let's use background thread to handle this*/
+        return async { cameraWrapper?.camera?.release() }
     }
 
     override fun onPreviewFrame(data: ByteArray, camera: Camera) {
-        omgScannerLogic?.onPreviewFrame(data, camera)
+        omgScannerPreview?.onPreviewFrame(data, camera)
     }
 
     override fun onSaveInstanceState(): Parcelable {
@@ -263,8 +268,10 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
         fun startCamera() {
             val localHandler = Handler(looper)
             localHandler.post {
-                val mainHandler = Handler(Looper.getMainLooper())
-                mainHandler.post { scannerView.setupCameraPreview(CameraWrapper.newInstance()) }
+                launch(UI) {
+                    val wrapper = async { CameraWrapper.newInstance() }
+                    scannerView.setupCameraPreview(wrapper.await())
+                }
             }
         }
     }
