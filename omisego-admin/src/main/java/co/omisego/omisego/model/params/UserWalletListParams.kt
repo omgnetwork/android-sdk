@@ -14,13 +14,11 @@ import co.omisego.omisego.model.pagination.SortDirection
  *  Represent a structure used to query a list of wallets
  */
 
-data class WalletListParams internal constructor(
+data class UserWalletListParams internal constructor(
     /**
-     * An account id
+     * A provider user Id
      */
-    val id: String,
-
-    val owned: Boolean = true,
+    val providerUserId: String,
 
     /**
      * A page number
@@ -68,39 +66,17 @@ data class WalletListParams internal constructor(
 ) {
     companion object {
         fun create(
-            id: String,
-            owned: Boolean = true,
+            providerUserId: String,
             page: Int = 1,
             perPage: Int = 10,
             sortBy: Paginable.Wallet.SortableFields = Paginable.Wallet.SortableFields.CREATED_AT,
-            sortDir: SortDirection = SortDirection.DESCENDING,
-            searchTerm: String? = null
-        ) = WalletListParams(
-            id = id,
-            owned = owned,
+            sortDir: SortDirection = SortDirection.DESCENDING
+        ) = UserWalletListParams(
+            providerUserId = providerUserId,
             page = page,
             perPage = perPage,
             sortBy = sortBy,
-            sortDir = sortDir,
-            searchTerm = searchTerm
-        )
-
-        fun create(
-            id: String,
-            owned: Boolean = true,
-            page: Int = 1,
-            perPage: Int = 10,
-            sortBy: Paginable.Wallet.SortableFields = Paginable.Wallet.SortableFields.CREATED_AT,
-            sortDir: SortDirection = SortDirection.DESCENDING,
-            searchTerms: Map<Paginable.Wallet.SearchableFields, Any>? = null
-        ) = WalletListParams(
-            id = id,
-            owned = owned,
-            page = page,
-            perPage = perPage,
-            sortBy = sortBy,
-            sortDir = sortDir,
-            searchTerms = searchTerms
+            sortDir = sortDir
         )
     }
 }

@@ -16,6 +16,7 @@ import co.omisego.omisego.constant.AdminAPIEndpoints.TOKEN_ALL
 import co.omisego.omisego.constant.AdminAPIEndpoints.TRANSACTION_ALL
 import co.omisego.omisego.constant.AdminAPIEndpoints.TRANSACTION_CALCULATE
 import co.omisego.omisego.constant.AdminAPIEndpoints.TRANSACTION_CREATE
+import co.omisego.omisego.constant.AdminAPIEndpoints.USER_GET_WALLETS
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
 import co.omisego.omisego.model.Account
 import co.omisego.omisego.model.AuthenticationToken
@@ -25,11 +26,12 @@ import co.omisego.omisego.model.TransactionCalculation
 import co.omisego.omisego.model.Wallet
 import co.omisego.omisego.model.pagination.PaginationList
 import co.omisego.omisego.model.params.AccountListParams
+import co.omisego.omisego.model.params.AccountWalletListParams
 import co.omisego.omisego.model.params.LoginParams
 import co.omisego.omisego.model.params.SwitchAccountParams
 import co.omisego.omisego.model.params.TokenListParams
 import co.omisego.omisego.model.params.TransactionCalculateParams
-import co.omisego.omisego.model.params.WalletListParams
+import co.omisego.omisego.model.params.UserWalletListParams
 import co.omisego.omisego.model.transaction.Transaction
 import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.model.transaction.send.TransactionCreateParams
@@ -50,7 +52,10 @@ interface EWalletAdminAPI {
     fun getAccounts(@Body params: AccountListParams): OMGCall<PaginationList<Account>>
 
     @POST(ACCOUNT_GET_WALLETS)
-    fun getWallets(@Body params: WalletListParams): OMGCall<PaginationList<Wallet>>
+    fun getAccountWallets(@Body params: AccountWalletListParams): OMGCall<PaginationList<Wallet>>
+
+    @POST(USER_GET_WALLETS)
+    fun getUserWallets(@Body params: UserWalletListParams): OMGCall<PaginationList<Wallet>>
 
     @POST(TOKEN_ALL)
     fun getTokens(@Body params: TokenListParams): OMGCall<PaginationList<Token>>
