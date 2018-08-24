@@ -9,13 +9,14 @@ package co.omisego.omisego.qrcode.scanner
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import android.graphics.Rect
 import android.hardware.Camera
 import android.os.HandlerThread
 import android.widget.ImageView
 import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.ui.OMGCameraPreview
 import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI
+import com.google.zxing.Result
+import kotlinx.coroutines.experimental.Deferred
 
 interface OMGQRScannerContract {
     interface View : Camera.PreviewCallback {
@@ -31,12 +32,12 @@ interface OMGQRScannerContract {
          *
          * @param verifier The custom verifier
          */
-        fun startCameraWithVerifier(verifier: Logic.Verifier)
+        fun startCameraWithVerifier(verifier: Preview.Verifier)
 
         /**
          * Stop the camera to stream the image preview
          */
-        fun stopCamera()
+        fun stopCamera(): Deferred<Unit?>
 
         /* Read write zone */
 
@@ -98,7 +99,7 @@ interface OMGQRScannerContract {
         val orientation: Int
     }
 
-    interface Logic {
+    interface Preview {
         /**
          * Keep failed QR payload that being sent to the server to prevent spamming
          */
@@ -107,28 +108,7 @@ interface OMGQRScannerContract {
         /**
          * The qr code payload verifier
          */
-        val verifier: OMGQRScannerContract.Logic.Verifier?
-
-        /**
-         * Resize the frame to fit in the preview frame correctly
-         *
-         * @param cameraPreviewSize The width and height of the camera preview size
-         * @param previewSize The width and height of the preview layout
-         * @param qrFrame Represents the QR frame position and size
-         *
-         * @return The adjusted [Rect] with the correct ratio to the camera preview resolution
-         */
-        fun adjustFrameInPreview(cameraPreviewSize: Pair<Int, Int>, previewSize: Pair<Int, Int>, qrFrame: Rect?): Rect?
-
-        /**
-         * Rotate the image based on the orientation of the raw image data
-         *
-         * @param data the raw image data from onPreviewFrame method
-         * @param size The size of the image (width to height)
-         * @param orientation the orientation of the image that return from the function [Rotation.getRotationCount]
-         * @return The correct image data for the current orientation of the device
-         */
-        fun adjustRotation(data: ByteArray, size: Pair<Int, Int>, orientation: Int?): ByteArray
+        val verifier: OMGQRScannerContract.Preview.Verifier?
 
         /**
          * Handle logic when previewing a frame from the camera
@@ -152,6 +132,8 @@ interface OMGQRScannerContract {
          */
         fun isCached(payload: String): Boolean
 
+        fun stopCamera()
+
         interface Verifier {
             var postVerification: PostVerification?
 
@@ -174,6 +156,20 @@ interface OMGQRScannerContract {
              * @param orientation The orientation of the image
              */
             fun rotate(data: ByteArray, width: Int, height: Int, orientation: Int?): ByteArray
+        }
+
+        interface Decoder {
+
+            /**
+             * decode the information coming from onPreviewFrame to Result
+             *
+             * @param data A byte array of camera preview.
+             * @param orientation The orientation of the device.
+             * @param cameraPreviewSize The resolution of the preview size.
+             *
+             * @return A final result including the raw text.
+             */
+            suspend fun decode(data: ByteArray, orientation: Int?, cameraPreviewSize: Camera.Size): Result?
         }
     }
 }
