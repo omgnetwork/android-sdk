@@ -7,7 +7,7 @@ allprojects {
 }
 
 ext {
-    kotlinVersion = '1.2.51'
+    kotlinVersion = '1.2.61'
     retrofitVersion = '2.4.0'
     coroutinesVersion = '0.23.4'
     deps = [
