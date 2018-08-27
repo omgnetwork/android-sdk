@@ -13,6 +13,7 @@ import android.content.Context
 import android.hardware.Camera
 import android.view.WindowManager
 import co.omisego.omisego.custom.camera.CameraWrapper
+import com.nhaarman.mockito_kotlin.timeout
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -27,7 +28,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowCamera
-import org.robolectric.shadows.ShadowLooper
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [21])
@@ -103,18 +103,17 @@ class OMGCameraPreviewTest {
     @Test
     fun `OMGCameraPreview should be call showCameraPreview properly`() = runBlocking {
         ShadowCamera.addCameraInfo(Camera.CameraInfo.CAMERA_FACING_BACK, Camera.CameraInfo())
-        val camera = mock<Camera>()
-        whenever(mockCameraWrapper.camera).thenReturn(camera)
+        val mockCamera = mock<Camera>()
+        whenever(mockCameraWrapper.camera).thenReturn(mockCamera)
         whenever(spyOMGCameraPreview.mOMGCameraLogic).thenReturn(mock())
         whenever(spyOMGCameraPreview.mOMGCameraLogic.getDisplayOrientation(true)).thenReturn(0)
         whenever(spyOMGCameraPreview.setupCameraParameters()).thenReturn(null)
 
         spyOMGCameraPreview.startCameraPreview()
-        ShadowLooper.runUiThreadTasksIncludingDelayedTasks()
 
-        verify(camera, times(1)).setPreviewDisplay(any())
-        verify(camera, times(1)).setDisplayOrientation(any())
-        verify(camera, times(1)).setPreviewCallback(any())
-        verify(camera, times(1)).startPreview()
+        verify(mockCamera, timeout(1000).times(1)).setPreviewDisplay(any())
+        verify(mockCamera, timeout(1000).times(1)).setDisplayOrientation(any())
+        verify(mockCamera, timeout(1000).times(1)).setPreviewCallback(any())
+        verify(mockCamera, timeout(1000).times(1)).startPreview()
     }
 }

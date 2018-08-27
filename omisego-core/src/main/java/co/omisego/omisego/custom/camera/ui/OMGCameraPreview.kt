@@ -155,8 +155,10 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
     override fun surfaceChanged(surfaceHolder: SurfaceHolder?, format: Int, width: Int, height: Int) {
         Log.d("OMGCameraPreview", "surfaceChanged")
         surfaceHolder?.surface.let {
-            stopCameraPreview()
-            startCameraPreview()
+            if (!mPreviewing) {
+                stopCameraPreview()
+                startCameraPreview()
+            }
         }
     }
 
