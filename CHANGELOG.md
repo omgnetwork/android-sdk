@@ -7,7 +7,7 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
-## [1.1] - 2018-08-xx
+## [1.1.0] - 2018-08-xx
 ### Added
 - Added `email` to `User`
 - Added more properties for `TransactionSource`
