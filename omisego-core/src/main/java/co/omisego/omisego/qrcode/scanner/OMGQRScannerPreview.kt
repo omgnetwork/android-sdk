@@ -10,7 +10,6 @@ package co.omisego.omisego.qrcode.scanner
  */
 
 import android.hardware.Camera
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.CoroutineStart
 import kotlinx.coroutines.experimental.DefaultDispatcher
 import kotlinx.coroutines.experimental.Deferred
@@ -19,7 +18,6 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
-import kotlin.coroutines.experimental.CoroutineContext
 
 internal class OMGQRScannerPreview(
     private val omgQRScannerView: OMGQRScannerContract.View,
@@ -36,10 +34,6 @@ internal class OMGQRScannerPreview(
         verifier?.postVerification = this
     }
 
-    internal fun provideAndroidContext(): CoroutineContext = UI
-
-    internal fun provideAsyncContext(): CoroutineContext = CommonPool
-
     internal fun getPreviewOrientation(): Int {
         return omgQRScannerView.cameraPreview?.displayOrientation ?: 1
     }
@@ -55,7 +49,7 @@ internal class OMGQRScannerPreview(
         /* Don't process anything if currently loading */
         if (omgQRScannerView.isLoading) return
 
-        previewJob = launch(provideAndroidContext(), start = CoroutineStart.LAZY) {
+        previewJob = launch(UI, start = CoroutineStart.LAZY) {
             if (!isActive) return@launch
 
             /* Process in background thread */

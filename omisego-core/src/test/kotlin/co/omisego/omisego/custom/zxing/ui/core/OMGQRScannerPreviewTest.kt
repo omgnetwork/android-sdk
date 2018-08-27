@@ -43,12 +43,6 @@ class OMGQRScannerPreviewTest {
         spy(OMGQRScannerPreview(mockScannerView, mockVerifier, decoder = mockDecoder))
     }
 
-    @Before
-    fun setup() {
-        whenever(omgQRScannerPreview.provideAsyncContext()).thenReturn(Unconfined)
-        whenever(omgQRScannerPreview.provideAndroidContext()).thenReturn(Unconfined)
-    }
-
     @Test
     fun `should not processed the preview frame if the scanner view is still loading`() = runBlocking {
         whenever(mockScannerView.isLoading).thenReturn(true)
@@ -104,7 +98,6 @@ class OMGQRScannerPreviewTest {
     }
 
     private fun mockOnPreviewFrameDeps() {
-        whenever(omgQRScannerPreview.provideAndroidContext()).thenReturn(EmptyCoroutineContext)
         whenever(mockScannerView.isLoading).thenReturn(false)
         whenever(mockScannerView.debugging).thenReturn(false)
         whenever(mockScannerView.orientation).thenReturn(Configuration.ORIENTATION_PORTRAIT)
@@ -116,12 +109,6 @@ class OMGQRScannerPreviewTest {
         whenever(mockScannerView.omgScannerUI.mFramingRect).thenReturn(
             Rect(100, 100, 356, 356)
         )
-    }
-
-    @Test
-    fun `coroutine context for test should be empty_coroutine_context`() {
-        omgQRScannerPreview.provideAndroidContext() shouldBe Unconfined
-        omgQRScannerPreview.provideAsyncContext() shouldBe Unconfined
     }
 
     private fun mockCameraPreview() {
