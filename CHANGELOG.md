@@ -8,9 +8,18 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ## [Unreleased]
 
 ## [1.1] - 2018-08-xx
+### Added
+- Added `email` to `User`
+- Added more properties for `TransactionSource`
+- Added [Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+
+### Fixed
+- Fixed crash when `TransactionConsumptionStatus` is null
+
 ### Changed
 - Separated `omisego-sdk` module into `omisego-core` and `omisego-client`.
 - Updated kotlin version to `1.2.61`
+- Improved performance for QR Scanner
 
 ## [1.0.1] - 2018-07-26
 ### Added

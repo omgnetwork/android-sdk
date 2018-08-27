@@ -51,7 +51,6 @@ class OMGQRScannerPreviewTest {
                 parameters.setPreviewSize(480, 720)
             }
         )
-
         verify(mockVerifier, never()).onDecoded(any())
     }
 
