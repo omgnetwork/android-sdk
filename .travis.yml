@@ -31,7 +31,7 @@ android:
    - google-gdk-license-.+
 
 before_script:
-  - CODE_DOCUMENTATION_LOCATION=omisego-sdk/build/dokka
+  - CODE_DOCUMENTATION_LOCATION=omisego-core/build/dokka
 
 script:
   - ./gradlew lint # android lint
