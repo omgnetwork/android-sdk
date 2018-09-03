@@ -1,0 +1,85 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'checkstyle'
+apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
+apply plugin: 'com.adarshr.test-logger'
+apply from: 'dokka.gradle'
+apply from: '../config.gradle'
+
+def constants = project.ext
+
+android {
+    buildToolsVersion '27.0.3'
+    compileSdkVersion constants.compileSdkVersion
+    defaultConfig {
+        minSdkVersion constants.minSdkVersion
+        targetSdkVersion constants.targetSdkVersion
+        versionCode constants.versionCode
+        versionName constants.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-proguard-rules.pro'
+    }
+
+    sourceSets {
+        test.java.srcDirs += 'src/test/kotlin'
+//        test.java.srcDirs += 'src/liveTest/kotlin'
+//        test.resources.srcDirs += 'src/liveTest/resources'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            all {
+                if (it.name == "testReleaseUnitTest") return
+                if (project.hasProperty('live') && project.live.toBoolean() == true) {
+                    it.include 'co/omisego/omisego/live/**'
+                } else {
+                    it.exclude 'co/omisego/omisego/live/**'
+                }
+            }
+        }
+    }
+
+    lintOptions {
+        disable 'ParcelCreator'
+    }
+}
+
+testlogger {
+    showSummary true
+    theme 'mocha'
+}
+
+tasks.withType(Javadoc) {
+    enabled = false
+}
+
+afterEvaluate {
+    generateReleaseBuildConfig.enabled = false
+}
+
+publish {
+    userOrg = constants.userOrg
+    groupId = constants.groupId
+    artifactId = constants.artifactIdClient
+    publishVersion = constants.versionName
+    desc = constants.desc
+    website = constants.website
+}
+
+dependencies {
+    implementation project(':omisego-core')
+
+    implementation deps.networking
+
+    // Unit test
+    testImplementation deps.test
+    testImplementation("com.nhaarman:mockito-kotlin:1.5.0", {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+    })
+    // Instrumental test
+    androidTestImplementation deps.androidTest
+}

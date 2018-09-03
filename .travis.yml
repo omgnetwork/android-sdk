@@ -36,7 +36,8 @@ before_script:
 script:
   - ./gradlew lint # android lint
   - ./gradlew ktlintCheck # kotlin lint
-  - ./gradlew clean testDebugUnitTest # unit test
+  - ./gradlew clean omisego-core:testDebugUnitTest # unit test for omisego-core module
+  - ./gradlew clean omisego-client:testDebugUnitTest # unit test for omisego-client module
   - ./gradlew dokka > /dev/null # generate kotlin doc
 
 before_deploy:
