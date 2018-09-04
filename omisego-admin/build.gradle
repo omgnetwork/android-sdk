@@ -68,6 +68,7 @@ dependencies {
     implementation deps.networking
 
     // Unit test
+    testImplementation project(':omisego-core')
     testImplementation deps.test
     testImplementation("com.nhaarman:mockito-kotlin:1.5.0", {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'

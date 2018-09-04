@@ -1,0 +1,117 @@
+{
+  "version": "1",
+  "success": true,
+  "data": {
+    "updated_at": "2018-09-04T03:37:54.834614Z",
+    "to": {
+      "user_id": null,
+      "user": null,
+      "token_id": "tok_OMG_01ccmny8yn756412b14a794963",
+      "token": {
+        "updated_at": "2018-06-21T08:52:41.036753Z",
+        "symbol": "OMG",
+        "subunit_to_unit": 100,
+        "object": "token",
+        "name": "OmiseGO",
+        "metadata": {
+          "migration_original_id": "tok_OMG_01C78Z7DVJSK5NSGGMA0SA6WE2"
+        },
+        "id": "tok_OMG_01ccmny8yn756412b14a794963",
+        "encrypted_metadata": {},
+        "created_at": "2018-02-26T11:51:05.842355Z"
+      },
+      "object": "transaction_source",
+      "amount": 1,
+      "address": "5f17ee4e-25a2-489f-ba91-cea157e31c73",
+      "account_id": "acc_01C6CWDST263MSXHS6KPC55FMV",
+      "account": {
+        "updated_at": "2018-06-21T08:52:40.869214Z",
+        "socket_topic": "account:acc_01C6CWDST263MSXHS6KPC55FMV",
+        "parent_id": "acc_01C6CWDS6QW157X8M0FJCPTSB2",
+        "object": "account",
+        "name": "brand2",
+        "metadata": {},
+        "master": false,
+        "id": "acc_01C6CWDST263MSXHS6KPC55FMV",
+        "encrypted_metadata": {},
+        "description": "Region 2",
+        "created_at": "2018-02-15T14:03:24.866817Z",
+        "category_ids": [],
+        "categories": {
+          "object": "list",
+          "data": []
+        },
+        "avatar": {
+          "thumb": null,
+          "small": null,
+          "original": null,
+          "large": null
+        }
+      }
+    },
+    "status": "confirmed",
+    "object": "transaction",
+    "metadata": {},
+    "idempotency_token": "5f17ee4e-25a2-489f-ba91-cea157e31c73-368105050918552",
+    "id": "txn_01cphagyb0ptcyfcwxexwj9hn7",
+    "from": {
+      "user_id": "usr_01ceap7mydz4df0223sbrecxj0",
+      "user": {
+        "username": "euro3@omise.co",
+        "updated_at": "2018-06-21T08:52:43.973399Z",
+        "socket_topic": "user:usr_01ceap7mydz4df0223sbrecxj0",
+        "provider_user_id": "08a333c6-c4c0-4c20-9890-065bf2a48985",
+        "object": "user",
+        "metadata": {
+          "last_name": "OmiseGO",
+          "first_name": "Euro",
+          "email": "euro3@omise.co"
+        },
+        "id": "usr_01ceap7mydz4df0223sbrecxj0",
+        "encrypted_metadata": {},
+        "email": null,
+        "created_at": "2018-05-25T03:42:17.614141Z",
+        "avatar": {
+          "thumb": null,
+          "small": null,
+          "original": null,
+          "large": null
+        }
+      },
+      "token_id": "tok_OMG_01ccmny8yn756412b14a794963",
+      "token": {
+        "updated_at": "2018-06-21T08:52:41.036753Z",
+        "symbol": "OMG",
+        "subunit_to_unit": 100,
+        "object": "token",
+        "name": "OmiseGO",
+        "metadata": {
+          "migration_original_id": "tok_OMG_01C78Z7DVJSK5NSGGMA0SA6WE2"
+        },
+        "id": "tok_OMG_01ccmny8yn756412b14a794963",
+        "encrypted_metadata": {},
+        "created_at": "2018-02-26T11:51:05.842355Z"
+      },
+      "object": "transaction_source",
+      "amount": 1,
+      "address": "0cf66bad-78b8-45d5-a05c-49378e2e9b2d",
+      "account_id": null,
+      "account": null
+    },
+    "exchange": {
+      "rate": null,
+      "object": "exchange",
+      "exchange_wallet_address": null,
+      "exchange_wallet": null,
+      "exchange_pair_id": null,
+      "exchange_pair": null,
+      "exchange_account_id": null,
+      "exchange_account": null,
+      "calculated_at": null
+    },
+    "error_description": null,
+    "error_code": null,
+    "encrypted_metadata": {},
+    "created_at": "2018-09-04T03:37:54.784586Z"
+  }
+}
