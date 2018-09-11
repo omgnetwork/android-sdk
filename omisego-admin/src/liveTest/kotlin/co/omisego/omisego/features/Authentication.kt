@@ -11,7 +11,6 @@ import co.omisego.omisego.LiveTest
 import co.omisego.omisego.model.params.LoginParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldNotBe
-import org.amshove.kluent.shouldNotEqual
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -19,7 +18,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class AuthenticationLiveTest : LiveTest() {
+class Authentication : LiveTest() {
     private val secret by lazy { loadSecretFile("secret.json") }
 
     @Test
@@ -32,11 +31,8 @@ class AuthenticationLiveTest : LiveTest() {
         ).execute()
 
         response.isSuccessful shouldBe true
-        response.body()?.data?.authenticationToken shouldNotBe null
-        response.body()?.data?.authenticationToken shouldNotEqual ""
-        response.body()?.data?.userId shouldNotBe null
-        response.body()?.data?.userId shouldNotEqual ""
-        response.body()?.data?.accountId shouldNotBe null
-        response.body()?.data?.accountId shouldNotEqual ""
+        response.body()?.data?.authenticationToken.isNullOrEmpty() shouldNotBe true
+        response.body()?.data?.userId.isNullOrEmpty() shouldNotBe true
+        response.body()?.data?.accountId.isNullOrEmpty() shouldNotBe true
     }
 }
