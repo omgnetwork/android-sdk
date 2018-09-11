@@ -1,0 +1,208 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>OMGSocketClient - omisego-core</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">omisego-core</a>&nbsp;/&nbsp;<a href="../index.html">co.omisego.omisego.websocket</a>&nbsp;/&nbsp;<a href="./index.html">OMGSocketClient</a><br/>
+<br/>
+<h1>OMGSocketClient</h1>
+<code><span class="keyword">class </span><span class="identifier">OMGSocketClient</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">Client</span><span class="symbol">, </span><span class="identifier">SocketClient</span><span class="symbol">, </span><span class="identifier">SocketConnectionListenerSet</span><span class="symbol">, </span><span class="identifier">SocketChannelListenerSet</span><span class="symbol">, </span><span class="identifier">SocketCustomEventListenerSet</span></code>
+<p>The <a href="./index.html">OMGSocketClient</a> represents an object that knows how to interact with the eWallet Web Socket API.
+An instance should be created by using <a href="-builder/index.html">OMGSocketClient.Builder</a>. For example,</p>
+<pre><code>    val omgSocketClient = OMGSocketClient.Builder{
+         clientConfiguration = config
+         debug = false
+    }.build()</code></pre>
+<p>The available methods and details are listed in the <a href="#">SocketClientContract.Client</a></p>
+<p><strong>See Also</strong><br/>
+<p><a href="#">SocketClientContract.Client</a></p>
+</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-builder/index.html">Builder</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">Builder</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">Builder</span></code>
+<p>A <a href="-builder/index.html">OMGSocketClient.Builder</a> used to define the required data to create an instance of the <a href="./index.html">OMGSocketClient</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="socket-channel.html">socketChannel</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">socketChannel</span><span class="symbol">: </span><span class="identifier">Channel</span></code>
+<p>A <a href="#">Channel</a> responsible for join and leave the web socket channel.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="socket-heartbeat.html">socketHeartbeat</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">socketHeartbeat</span><span class="symbol">: </span><span class="identifier">SocketHeartbeat</span></code>
+<p>A <a href="#">SocketHeartbeat</a> is responsible for schedule sending the heartbeat event for keep the connection alive</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="add-channel-listener.html">addChannelListener</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">addChannelListener</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$addChannelListener(co.omisego.omisego.websocket.listener.SocketChannelListener)/channelListener">channelListener</span><span class="symbol">:</span>&nbsp;<span class="identifier">SocketChannelListener</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Add listener for subscribing to the <a href="#">SocketChannelListener</a> event.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="add-connection-listener.html">addConnectionListener</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">addConnectionListener</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$addConnectionListener(co.omisego.omisego.websocket.listener.SocketConnectionListener)/connectionListener">connectionListener</span><span class="symbol">:</span>&nbsp;<span class="identifier">SocketConnectionListener</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Add listener for subscribing to the <a href="#">SocketConnectionListener</a> event.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="add-custom-event-listener.html">addCustomEventListener</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">addCustomEventListener</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$addCustomEventListener(co.omisego.omisego.websocket.listener.SocketCustomEventListener)/customEventListener">customEventListener</span><span class="symbol">:</span>&nbsp;<span class="identifier">SocketCustomEventListener</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Add listener for subscribing to the <a href="#">SocketCustomEventListener</a> event.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="cancel.html">cancel</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">cancel</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Immediately and violently release resources held by this web socket, discarding any enqueued
+messages. This does nothing if the web socket has already been closed or canceled.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="close-connection.html">closeConnection</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">closeConnection</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$closeConnection(co.omisego.omisego.websocket.enum.SocketStatusCode, kotlin.String)/status">status</span><span class="symbol">:</span>&nbsp;<span class="identifier">SocketStatusCode</span><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$closeConnection(co.omisego.omisego.websocket.enum.SocketStatusCode, kotlin.String)/reason">reason</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Close the web socket connection</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="has-sent-all-messages.html">hasSentAllMessages</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">hasSentAllMessages</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>A boolean indicating if all messages have been sent to the server.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="join-channel.html">joinChannel</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">joinChannel</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$joinChannel(co.omisego.omisego.model.socket.SocketTopic, kotlin.collections.Map((kotlin.String, kotlin.Any)))/topic">topic</span><span class="symbol">:</span>&nbsp;<a href="../../co.omisego.omisego.model.socket/-socket-topic/index.html"><span class="identifier">SocketTopic</span></a><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$joinChannel(co.omisego.omisego.model.socket.SocketTopic, kotlin.collections.Map((kotlin.String, kotlin.Any)))/payload">payload</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Joining a channel by the given <a href="../../co.omisego.omisego.model.socket/-socket-topic/index.html">SocketTopic</a>.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="leave-channel.html">leaveChannel</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">leaveChannel</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$leaveChannel(co.omisego.omisego.model.socket.SocketTopic, kotlin.collections.Map((kotlin.String, kotlin.Any)))/topic">topic</span><span class="symbol">:</span>&nbsp;<a href="../../co.omisego.omisego.model.socket/-socket-topic/index.html"><span class="identifier">SocketTopic</span></a><span class="symbol">, </span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$leaveChannel(co.omisego.omisego.model.socket.SocketTopic, kotlin.collections.Map((kotlin.String, kotlin.Any)))/payload">payload</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Leave the <a href="#">Channel</a> with the given <a href="../../co.omisego.omisego.model.socket/-socket-topic/index.html">SocketTopic</a>.
+If the channel haven't joined yet, then this method does nothing.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="remove-channel-listener.html">removeChannelListener</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">removeChannelListener</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$removeChannelListener(co.omisego.omisego.websocket.listener.SocketChannelListener)/channelListener">channelListener</span><span class="symbol">:</span>&nbsp;<span class="identifier">SocketChannelListener</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Remove the listener for unsubscribing from the <a href="#">SocketChannelListener</a> event.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="remove-connection-listener.html">removeConnectionListener</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">removeConnectionListener</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$removeConnectionListener(co.omisego.omisego.websocket.listener.SocketConnectionListener)/connectionListener">connectionListener</span><span class="symbol">:</span>&nbsp;<span class="identifier">SocketConnectionListener</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Remove the listener for unsubscribing from the <a href="#">SocketConnectionListener</a> event.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="remove-custom-event-listener.html">removeCustomEventListener</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">removeCustomEventListener</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$removeCustomEventListener(co.omisego.omisego.websocket.listener.SocketCustomEventListener)/customEventListener">customEventListener</span><span class="symbol">:</span>&nbsp;<span class="identifier">SocketCustomEventListener</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Remove the listener for unsubscribing from the <a href="#">SocketCustomEventListener</a> event.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="send.html">send</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">send</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$send(co.omisego.omisego.model.socket.SocketSend)/message">message</span><span class="symbol">:</span>&nbsp;<a href="../../co.omisego.omisego.model.socket/-socket-send/index.html"><span class="identifier">SocketSend</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Send the <a href="../../co.omisego.omisego.model.socket/-socket-send/index.html">SocketSend</a> request to the eWallet web socket API.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="set-authentication-header.html">setAuthenticationHeader</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">setAuthenticationHeader</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$setAuthenticationHeader(co.omisego.omisego.model.CredentialConfiguration)/credentialConfiguration">credentialConfiguration</span><span class="symbol">:</span>&nbsp;<a href="../../co.omisego.omisego.model/-credential-configuration/index.html"><span class="identifier">CredentialConfiguration</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Set new authentication header. This will send leave request for every channel to the server.
+You'll need to join the channel again (please wait for disconnected listener is invoked).</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="set-channel-listener.html">setChannelListener</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">setChannelListener</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$setChannelListener(co.omisego.omisego.websocket.listener.SocketChannelListener)/channelListener">channelListener</span><span class="symbol">:</span>&nbsp;<span class="identifier">SocketChannelListener</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="set-connection-listener.html">setConnectionListener</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">setConnectionListener</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$setConnectionListener(co.omisego.omisego.websocket.listener.SocketConnectionListener)/connectionListener">connectionListener</span><span class="symbol">:</span>&nbsp;<span class="identifier">SocketConnectionListener</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="set-interval-period.html">setIntervalPeriod</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">setIntervalPeriod</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.websocket.OMGSocketClient$setIntervalPeriod(kotlin.Long)/period">period</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Set an interval of milliseconds for scheduling the interval event such as the heartbeat event which used for keeping the connection alive.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
