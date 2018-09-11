@@ -69,7 +69,6 @@ class OMGAPIAdminTest : GsonDelegator() {
             callbackExecutor = Executor { it.run() }
             clientConfiguration = config
             debugUrl = mockUrl
-
         }.build()
 
         omgAPIAdmin = OMGAPIAdmin(eWalletAdmin)

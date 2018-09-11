@@ -7,7 +7,6 @@ package co.omisego.omisego
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.OMGAPIAdmin
 import co.omisego.omisego.model.AdminConfiguration
 import co.omisego.omisego.network.ewallet.EWalletAdmin
 import co.omisego.omisego.utils.ResourceFileLoader
