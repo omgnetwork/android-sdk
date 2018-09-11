@@ -96,8 +96,8 @@ class OMGCameraPreviewTest {
 
         omgCameraPreview.stopCameraPreview()
 
-        verify(mockCameraWrapper.camera)?.setPreviewCallback(null)
-        verify(mockCameraWrapper.camera)?.stopPreview()
+        verify(mockCameraWrapper.camera, timeout(1000).times(1))?.setPreviewCallback(null)
+        verify(mockCameraWrapper.camera, timeout(1000).times(1))?.stopPreview()
     }
 
     @Test

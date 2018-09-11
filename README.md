@@ -3,7 +3,7 @@
 # OmiseGO Android SDK
 
 [![Build Status](https://travis-ci.org/omisego/android-sdk.svg?branch=master)](https://travis-ci.org/omisego/android-sdk)
-[![Download](https://api.bintray.com/packages/omise-go/maven/omisego-sdk/images/download.svg) ](https://bintray.com/omise-go/maven/omisego-sdk/_latestVersion)
+[![Download](https://api.bintray.com/packages/omise-go/maven/omisego-core/images/download.svg) ](https://bintray.com/omise-go/maven/omisego-sdk/_latestVersion)
 
 The [OmiseGO](https://omisego.network) Android SDK allows developers to easily interact with a node of the OmiseGO eWallet. This SDK is split into 3 modules : [Core](omisego-core), [Client](omisego-client) and [Admin](omisego-admin). The `Core` is a common dependency that contains the shared logic. The `Client` and `Admin` modules contain specific logic to respectively access the client or admin API. 
 
