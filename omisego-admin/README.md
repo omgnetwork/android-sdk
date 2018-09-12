@@ -65,12 +65,12 @@ Where:
 ### Login
 
 ```kotlin
-omgAPIAdmin.login(
-    LoginParams(
-        "john.doe@omise.co",
-        "password"
-    )
-).enqueue(object: OMGCallback<User>{
+val params = LoginParams(
+    "john.doe@omise.co",
+    "password"
+)
+
+omgAPIAdmin.login(params).enqueue(object: OMGCallback<User>{
     override fun fail(response: OMGResponse<APIError>) {
         
     }
@@ -111,7 +111,7 @@ There are different ways to initialize a `TransactionCreateParams` by specifying
 `PaginationList` is an object represents a paginated filtered data set. 
 This object will be returned from any APIs that probably contain multiple objects (e.g. account list, transaction list, token list, etc.).
 
-The general structure of the paginated request parameters will consist of:
+The general structure of the paginated request parameters is consist of:
 
 * `page` is the page you wish to receive
 * `perPage` is the number of results per page
