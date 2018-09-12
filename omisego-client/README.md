@@ -71,7 +71,7 @@ Where:
 
 ## Retrieving resources
 
-Once you have a client object in the [initialization section](#initialization), you can retrieve different resources.
+Once you have a client object from the [initialization section](#initialization), you can retrieve different resources.
 Every call takes an `OMGCallback` interface that returns an `OMGResponse` object:
 
 ```kotlin
