@@ -10,9 +10,7 @@ package co.omisego.omisego
 import co.omisego.omisego.model.params.AccountListParams
 import co.omisego.omisego.model.params.AccountWalletListParams
 import co.omisego.omisego.model.params.LoginParams
-import co.omisego.omisego.model.params.SwitchAccountParams
 import co.omisego.omisego.model.params.TokenListParams
-import co.omisego.omisego.model.params.TransactionCalculateParams
 import co.omisego.omisego.model.params.UserWalletListParams
 import co.omisego.omisego.model.params.WalletParams
 import co.omisego.omisego.model.transaction.list.TransactionListParams
@@ -64,7 +62,11 @@ class OMGAPIAdmin(internal val eWalletAdmin: EWalletAdmin) {
 
     fun login(params: LoginParams) = eWalletAPI.login(params)
 
+    fun logout() = eWalletAPI.logout()
+
     fun transfer(params: TransactionCreateParams) = eWalletAPI.transfer(params)
+
+    fun getWallet(params: WalletParams) = eWalletAPI.getWallet(params)
 
     fun getTransactions(params: TransactionListParams) = eWalletAPI.getTransactions(params)
 
@@ -74,15 +76,7 @@ class OMGAPIAdmin(internal val eWalletAdmin: EWalletAdmin) {
 
     fun getAccountWallets(params: AccountWalletListParams) = eWalletAPI.getAccountWallets(params)
 
-    fun getWallet(params: WalletParams) = eWalletAPI.getWallet(params)
-
     fun getUserWallets(params: UserWalletListParams) = eWalletAPI.getUserWallets(params)
-
-    fun switchAccount(params: SwitchAccountParams) = eWalletAPI.switchAccount(params)
-
-    fun calculateTransaction(params: TransactionCalculateParams) = eWalletAPI.calculateTransaction(params)
-
-    fun logout() = eWalletAPI.logout()
 
     /**
      * Set new [authenticationToken].
