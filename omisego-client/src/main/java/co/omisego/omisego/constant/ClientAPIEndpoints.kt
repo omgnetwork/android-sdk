@@ -9,6 +9,8 @@ package co.omisego.omisego.constant
 
 object ClientAPIEndpoints {
     const val GET_CURRENT_USER = "me.get"
+    const val LOGIN = "user.login"
+    const val SIGN_UP = "user.signup"
     const val LOGOUT = "me.logout"
     const val GET_WALLETS = "me.get_wallets"
     const val GET_TRANSACTIONS = "me.get_transactions"

@@ -7,16 +7,21 @@ import co.omisego.omisego.constant.ClientAPIEndpoints.GET_CURRENT_USER
 import co.omisego.omisego.constant.ClientAPIEndpoints.GET_SETTINGS
 import co.omisego.omisego.constant.ClientAPIEndpoints.GET_TRANSACTIONS
 import co.omisego.omisego.constant.ClientAPIEndpoints.GET_WALLETS
+import co.omisego.omisego.constant.ClientAPIEndpoints.LOGIN
 import co.omisego.omisego.constant.ClientAPIEndpoints.LOGOUT
 import co.omisego.omisego.constant.ClientAPIEndpoints.REJECT_TRANSACTION
 import co.omisego.omisego.constant.ClientAPIEndpoints.RETRIEVE_TRANSACTION_REQUEST
+import co.omisego.omisego.constant.ClientAPIEndpoints.SIGN_UP
 import co.omisego.omisego.constant.ClientAPIEndpoints.TRANSFER
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
+import co.omisego.omisego.model.AuthenticationToken
 import co.omisego.omisego.model.Logout
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.pagination.PaginationList
+import co.omisego.omisego.model.params.LoginParams
+import co.omisego.omisego.model.params.SignUpParams
 import co.omisego.omisego.model.transaction.Transaction
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionActionParams
@@ -39,6 +44,12 @@ import retrofit2.http.POST
 interface EWalletClientAPI {
     @POST(GET_CURRENT_USER)
     fun getCurrentUser(): OMGCall<User>
+
+    @POST(LOGIN)
+    fun login(params: LoginParams): OMGCall<AuthenticationToken>
+
+    @POST(SIGN_UP)
+    fun signup(params: SignUpParams): OMGCall<User>
 
     @POST(LOGOUT)
     fun logout(): OMGCall<Logout>
