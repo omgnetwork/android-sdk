@@ -1,0 +1,429 @@
+{
+  "version": "1",
+  "success": true,
+  "data": {
+    "pagination": {
+      "per_page": 10,
+      "is_last_page": true,
+      "is_first_page": true,
+      "current_page": 1
+    },
+    "object": "list",
+    "data": [
+      {
+        "user_id": null,
+        "user": null,
+        "updated_at": "2018-06-21T08:52:44.136805Z",
+        "socket_topic": "wallet:c019aebf-8238-4503-9a98-e1ab7b33b036",
+        "object": "wallet",
+        "name": "burn",
+        "metadata": {},
+        "identifier": "burn",
+        "encrypted_metadata": {},
+        "created_at": "2018-02-15T14:03:24.878927Z",
+        "balances": [
+          {
+            "token": {
+              "updated_at": "2018-06-21T08:52:41.036753Z",
+              "symbol": "OMG",
+              "subunit_to_unit": 100,
+              "object": "token",
+              "name": "OmiseGO",
+              "metadata": {
+                "migration_original_id": "tok_OMG_01C78Z7DVJSK5NSGGMA0SA6WE2"
+              },
+              "id": "tok_OMG_01ccmny8yn756412b14a794963",
+              "encrypted_metadata": {},
+              "created_at": "2018-02-26T11:51:05.842355Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-06-25T09:57:39.313575Z",
+              "symbol": "OBT",
+              "subunit_to_unit": 1000,
+              "object": "token",
+              "name": "Obit",
+              "metadata": {},
+              "id": "tok_OBT_01cgv617vgdkpwn76vv9bwdyhz",
+              "encrypted_metadata": {},
+              "created_at": "2018-06-25T09:57:39.313560Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-07-03T06:59:15.911368Z",
+              "symbol": "WTF",
+              "subunit_to_unit": 100,
+              "object": "token",
+              "name": "What The F",
+              "metadata": {},
+              "id": "tok_WTF_01chff0ba6n7mxndmcmpqyb91w",
+              "encrypted_metadata": {},
+              "created_at": "2018-07-03T06:59:15.911346Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-07-20T07:52:02.993084Z",
+              "symbol": "NAO",
+              "subunit_to_unit": 100,
+              "object": "token",
+              "name": "Naoko",
+              "metadata": {},
+              "id": "tok_NAO_01cjvas75am8ny6tb0eqm8f6b6",
+              "encrypted_metadata": {},
+              "created_at": "2018-07-20T07:52:02.993067Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-07-22T14:36:02.288719Z",
+              "symbol": "MTL",
+              "subunit_to_unit": 10,
+              "object": "token",
+              "name": "MTL",
+              "metadata": {},
+              "id": "tok_MTL_01ck16pcbfyqzsn7dq8nmv4vn1",
+              "encrypted_metadata": {},
+              "created_at": "2018-07-22T14:36:02.288703Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-07-23T03:31:40.753403Z",
+              "symbol": "AMZF",
+              "subunit_to_unit": 10,
+              "object": "token",
+              "name": "AMZ Free",
+              "metadata": {},
+              "id": "tok_AMZF_01ck2k2m2apm23xa1qtknt1rq5",
+              "encrypted_metadata": {},
+              "created_at": "2018-07-23T03:31:40.753388Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-07-23T09:08:40.774701Z",
+              "symbol": "AMZL",
+              "subunit_to_unit": 10,
+              "object": "token",
+              "name": "AMZL",
+              "metadata": {},
+              "id": "tok_AMZL_01ck36bp65am920pdscdc0wfnf",
+              "encrypted_metadata": {},
+              "created_at": "2018-07-23T09:08:40.774684Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-07-23T15:46:25.761780Z",
+              "symbol": "MTC",
+              "subunit_to_unit": 10,
+              "object": "token",
+              "name": "MTL concert ticket",
+              "metadata": {},
+              "id": "tok_MTC_01ck3x3zv0b2g7kwhnaefkpn22",
+              "encrypted_metadata": {},
+              "created_at": "2018-07-23T15:46:25.761764Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-07-26T08:56:19.490397Z",
+              "symbol": "ttk",
+              "subunit_to_unit": 10,
+              "object": "token",
+              "name": "tiktiok",
+              "metadata": {},
+              "id": "tok_ttk_01ckawv79145yvx5bwbt5nte09",
+              "encrypted_metadata": {},
+              "created_at": "2018-07-26T08:56:19.490382Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-08-07T04:25:49.794323Z",
+              "symbol": "FTK",
+              "subunit_to_unit": 10,
+              "object": "token",
+              "name": "FTK",
+              "metadata": {},
+              "id": "tok_FTK_01cm9a4hyy30hpczssz0wyrpfv",
+              "encrypted_metadata": {},
+              "created_at": "2018-08-07T04:25:49.794300Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-08-09T07:29:07.339105Z",
+              "symbol": "FMCF",
+              "subunit_to_unit": 10,
+              "object": "token",
+              "name": "FMCF",
+              "metadata": {},
+              "id": "tok_FMCF_01cmesdkr9dtkf2awpkscw8n2z",
+              "encrypted_metadata": {},
+              "created_at": "2018-08-09T07:29:07.339086Z"
+            },
+            "object": "balance",
+            "amount": 0
+          }
+        ],
+        "address": "c019aebf-8238-4503-9a98-e1ab7b33b036",
+        "account_id": "acc_01C6CWDST263MSXHS6KPC55FMV",
+        "account": {
+          "updated_at": "2018-06-21T08:52:40.869214Z",
+          "socket_topic": "account:acc_01C6CWDST263MSXHS6KPC55FMV",
+          "parent_id": "acc_01C6CWDS6QW157X8M0FJCPTSB2",
+          "object": "account",
+          "name": "brand2",
+          "metadata": {},
+          "master": false,
+          "id": "acc_01C6CWDST263MSXHS6KPC55FMV",
+          "encrypted_metadata": {},
+          "description": "Region 2",
+          "created_at": "2018-02-15T14:03:24.866817Z",
+          "category_ids": [],
+          "categories": {
+            "object": "list",
+            "data": []
+          },
+          "avatar": {
+            "thumb": null,
+            "small": null,
+            "original": null,
+            "large": null
+          }
+        }
+      },
+      {
+        "user_id": null,
+        "user": null,
+        "updated_at": "2018-06-21T08:52:44.133504Z",
+        "socket_topic": "wallet:5f17ee4e-25a2-489f-ba91-cea157e31c73",
+        "object": "wallet",
+        "name": "primary",
+        "metadata": {},
+        "identifier": "primary",
+        "encrypted_metadata": {},
+        "created_at": "2018-02-15T14:03:24.868911Z",
+        "balances": [
+          {
+            "token": {
+              "updated_at": "2018-06-21T08:52:41.036753Z",
+              "symbol": "OMG",
+              "subunit_to_unit": 100,
+              "object": "token",
+              "name": "OmiseGO",
+              "metadata": {
+                "migration_original_id": "tok_OMG_01C78Z7DVJSK5NSGGMA0SA6WE2"
+              },
+              "id": "tok_OMG_01ccmny8yn756412b14a794963",
+              "encrypted_metadata": {},
+              "created_at": "2018-02-26T11:51:05.842355Z"
+            },
+            "object": "balance",
+            "amount": 3601
+          },
+          {
+            "token": {
+              "updated_at": "2018-06-25T09:57:39.313575Z",
+              "symbol": "OBT",
+              "subunit_to_unit": 1000,
+              "object": "token",
+              "name": "Obit",
+              "metadata": {},
+              "id": "tok_OBT_01cgv617vgdkpwn76vv9bwdyhz",
+              "encrypted_metadata": {},
+              "created_at": "2018-06-25T09:57:39.313560Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-07-03T06:59:15.911368Z",
+              "symbol": "WTF",
+              "subunit_to_unit": 100,
+              "object": "token",
+              "name": "What The F",
+              "metadata": {},
+              "id": "tok_WTF_01chff0ba6n7mxndmcmpqyb91w",
+              "encrypted_metadata": {},
+              "created_at": "2018-07-03T06:59:15.911346Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-07-20T07:52:02.993084Z",
+              "symbol": "NAO",
+              "subunit_to_unit": 100,
+              "object": "token",
+              "name": "Naoko",
+              "metadata": {},
+              "id": "tok_NAO_01cjvas75am8ny6tb0eqm8f6b6",
+              "encrypted_metadata": {},
+              "created_at": "2018-07-20T07:52:02.993067Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-07-22T14:36:02.288719Z",
+              "symbol": "MTL",
+              "subunit_to_unit": 10,
+              "object": "token",
+              "name": "MTL",
+              "metadata": {},
+              "id": "tok_MTL_01ck16pcbfyqzsn7dq8nmv4vn1",
+              "encrypted_metadata": {},
+              "created_at": "2018-07-22T14:36:02.288703Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-07-23T03:31:40.753403Z",
+              "symbol": "AMZF",
+              "subunit_to_unit": 10,
+              "object": "token",
+              "name": "AMZ Free",
+              "metadata": {},
+              "id": "tok_AMZF_01ck2k2m2apm23xa1qtknt1rq5",
+              "encrypted_metadata": {},
+              "created_at": "2018-07-23T03:31:40.753388Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-07-23T09:08:40.774701Z",
+              "symbol": "AMZL",
+              "subunit_to_unit": 10,
+              "object": "token",
+              "name": "AMZL",
+              "metadata": {},
+              "id": "tok_AMZL_01ck36bp65am920pdscdc0wfnf",
+              "encrypted_metadata": {},
+              "created_at": "2018-07-23T09:08:40.774684Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-07-23T15:46:25.761780Z",
+              "symbol": "MTC",
+              "subunit_to_unit": 10,
+              "object": "token",
+              "name": "MTL concert ticket",
+              "metadata": {},
+              "id": "tok_MTC_01ck3x3zv0b2g7kwhnaefkpn22",
+              "encrypted_metadata": {},
+              "created_at": "2018-07-23T15:46:25.761764Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-07-26T08:56:19.490397Z",
+              "symbol": "ttk",
+              "subunit_to_unit": 10,
+              "object": "token",
+              "name": "tiktiok",
+              "metadata": {},
+              "id": "tok_ttk_01ckawv79145yvx5bwbt5nte09",
+              "encrypted_metadata": {},
+              "created_at": "2018-07-26T08:56:19.490382Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-08-07T04:25:49.794323Z",
+              "symbol": "FTK",
+              "subunit_to_unit": 10,
+              "object": "token",
+              "name": "FTK",
+              "metadata": {},
+              "id": "tok_FTK_01cm9a4hyy30hpczssz0wyrpfv",
+              "encrypted_metadata": {},
+              "created_at": "2018-08-07T04:25:49.794300Z"
+            },
+            "object": "balance",
+            "amount": 0
+          },
+          {
+            "token": {
+              "updated_at": "2018-08-09T07:29:07.339105Z",
+              "symbol": "FMCF",
+              "subunit_to_unit": 10,
+              "object": "token",
+              "name": "FMCF",
+              "metadata": {},
+              "id": "tok_FMCF_01cmesdkr9dtkf2awpkscw8n2z",
+              "encrypted_metadata": {},
+              "created_at": "2018-08-09T07:29:07.339086Z"
+            },
+            "object": "balance",
+            "amount": 0
+          }
+        ],
+        "address": "5f17ee4e-25a2-489f-ba91-cea157e31c73",
+        "account_id": "acc_01C6CWDST263MSXHS6KPC55FMV",
+        "account": {
+          "updated_at": "2018-06-21T08:52:40.869214Z",
+          "socket_topic": "account:acc_01C6CWDST263MSXHS6KPC55FMV",
+          "parent_id": "acc_01C6CWDS6QW157X8M0FJCPTSB2",
+          "object": "account",
+          "name": "brand2",
+          "metadata": {},
+          "master": false,
+          "id": "acc_01C6CWDST263MSXHS6KPC55FMV",
+          "encrypted_metadata": {},
+          "description": "Region 2",
+          "created_at": "2018-02-15T14:03:24.866817Z",
+          "category_ids": [],
+          "categories": {
+            "object": "list",
+            "data": []
+          },
+          "avatar": {
+            "thumb": null,
+            "small": null,
+            "original": null,
+            "large": null
+          }
+        }
+      }
+    ]
+  }
+}

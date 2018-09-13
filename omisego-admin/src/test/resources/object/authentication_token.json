@@ -1,0 +1,54 @@
+{
+  "version": "1",
+  "success": true,
+  "data": {
+    "user_id": "usr_01cj68fvbka7hd4j5fpdg9hk6s",
+    "user": {
+      "username": null,
+      "updated_at": "2018-07-12T09:59:22.870323Z",
+      "socket_topic": "user:usr_01cj68fvbka7hd4j5fpdg9hk6s",
+      "provider_user_id": null,
+      "object": "user",
+      "metadata": {},
+      "id": "usr_01cj68fvbka7hd4j5fpdg9hk6s",
+      "encrypted_metadata": {},
+      "email": "phuchit@omise.co",
+      "created_at": "2018-07-12T03:27:55.763721Z",
+      "avatar": {
+        "thumb": "https://ewallet.demo.omisego.io/public/uploads/prod/user/avatars/usr_01cj68fvbka7hd4j5fpdg9hk6s/thumb.png?v=63698608762",
+        "small": "https://ewallet.demo.omisego.io/public/uploads/prod/user/avatars/usr_01cj68fvbka7hd4j5fpdg9hk6s/small.png?v=63698608762",
+        "original": "https://ewallet.demo.omisego.io/public/uploads/prod/user/avatars/usr_01cj68fvbka7hd4j5fpdg9hk6s/original.png?v=63698608762",
+        "large": "https://ewallet.demo.omisego.io/public/uploads/prod/user/avatars/usr_01cj68fvbka7hd4j5fpdg9hk6s/large.png?v=63698608762"
+      }
+    },
+    "role": "admin",
+    "object": "authentication_token",
+    "master_admin": true,
+    "authentication_token": "PJlNqfEmEfisMdELz8LeB1C0RN7EOU4Z_QegJkNWl9s",
+    "account_id": "acc_01C6CWDS6QW157X8M0FJCPTSB2",
+    "account": {
+      "updated_at": "2018-06-21T08:52:40.733293Z",
+      "socket_topic": "account:acc_01C6CWDS6QW157X8M0FJCPTSB2",
+      "parent_id": null,
+      "object": "account",
+      "name": "master_account",
+      "metadata": {},
+      "master": true,
+      "id": "acc_01C6CWDS6QW157X8M0FJCPTSB2",
+      "encrypted_metadata": {},
+      "description": "Company Master Account",
+      "created_at": "2018-02-15T14:03:24.247694Z",
+      "category_ids": [],
+      "categories": {
+        "object": "list",
+        "data": []
+      },
+      "avatar": {
+        "thumb": null,
+        "small": null,
+        "original": null,
+        "large": null
+      }
+    }
+  }
+}

@@ -1,0 +1,183 @@
+{
+  "version": "1",
+  "success": true,
+  "data": {
+    "pagination": {
+      "per_page": 10,
+      "is_last_page": true,
+      "is_first_page": true,
+      "current_page": 1
+    },
+    "object": "list",
+    "data": [
+      {
+        "updated_at": "2018-06-21T08:52:40.899476Z",
+        "socket_topic": "account:acc_01C6CWDSWMEN7XNVAEYE9FSKJS",
+        "parent_id": "acc_01C6CWDST263MSXHS6KPC55FMV",
+        "object": "account",
+        "name": "branch4",
+        "metadata": {},
+        "master": false,
+        "id": "acc_01C6CWDSWMEN7XNVAEYE9FSKJS",
+        "encrypted_metadata": {},
+        "description": "Branch 4",
+        "created_at": "2018-02-15T14:03:24.948743Z",
+        "category_ids": [],
+        "categories": {
+          "object": "list",
+          "data": []
+        },
+        "avatar": {
+          "thumb": null,
+          "small": null,
+          "original": null,
+          "large": null
+        }
+      },
+      {
+        "updated_at": "2018-06-21T08:52:40.874788Z",
+        "socket_topic": "account:acc_01C6CWDSVETT8PJX0R8VCY74SQ",
+        "parent_id": "acc_01C6CWDST263MSXHS6KPC55FMV",
+        "object": "account",
+        "name": "branch3",
+        "metadata": {},
+        "master": false,
+        "id": "acc_01C6CWDSVETT8PJX0R8VCY74SQ",
+        "encrypted_metadata": {},
+        "description": "Branch 3",
+        "created_at": "2018-02-15T14:03:24.910714Z",
+        "category_ids": [],
+        "categories": {
+          "object": "list",
+          "data": []
+        },
+        "avatar": {
+          "thumb": null,
+          "small": null,
+          "original": null,
+          "large": null
+        }
+      },
+      {
+        "updated_at": "2018-06-21T08:52:40.869214Z",
+        "socket_topic": "account:acc_01C6CWDST263MSXHS6KPC55FMV",
+        "parent_id": "acc_01C6CWDS6QW157X8M0FJCPTSB2",
+        "object": "account",
+        "name": "brand2",
+        "metadata": {},
+        "master": false,
+        "id": "acc_01C6CWDST263MSXHS6KPC55FMV",
+        "encrypted_metadata": {},
+        "description": "Region 2",
+        "created_at": "2018-02-15T14:03:24.866817Z",
+        "category_ids": [],
+        "categories": {
+          "object": "list",
+          "data": []
+        },
+        "avatar": {
+          "thumb": null,
+          "small": null,
+          "original": null,
+          "large": null
+        }
+      },
+      {
+        "updated_at": "2018-06-21T08:52:40.864600Z",
+        "socket_topic": "account:acc_01C6CWDSRTBSBQHFJGK3SBYK1J",
+        "parent_id": "acc_01C6CWDSNNGTKXW6PPMABQ0T3E",
+        "object": "account",
+        "name": "branch2",
+        "metadata": {},
+        "master": false,
+        "id": "acc_01C6CWDSRTBSBQHFJGK3SBYK1J",
+        "encrypted_metadata": {},
+        "description": "Branch 2",
+        "created_at": "2018-02-15T14:03:24.826716Z",
+        "category_ids": [],
+        "categories": {
+          "object": "list",
+          "data": []
+        },
+        "avatar": {
+          "thumb": null,
+          "small": null,
+          "original": null,
+          "large": null
+        }
+      },
+      {
+        "updated_at": "2018-06-21T08:52:40.859879Z",
+        "socket_topic": "account:acc_01C6CWDSQJ6W0KTFMMGANVSASC",
+        "parent_id": "acc_01C6CWDSNNGTKXW6PPMABQ0T3E",
+        "object": "account",
+        "name": "branch1",
+        "metadata": {},
+        "master": false,
+        "id": "acc_01C6CWDSQJ6W0KTFMMGANVSASC",
+        "encrypted_metadata": {},
+        "description": "Branch 1",
+        "created_at": "2018-02-15T14:03:24.786720Z",
+        "category_ids": [],
+        "categories": {
+          "object": "list",
+          "data": []
+        },
+        "avatar": {
+          "thumb": null,
+          "small": null,
+          "original": null,
+          "large": null
+        }
+      },
+      {
+        "updated_at": "2018-06-21T08:52:40.842185Z",
+        "socket_topic": "account:acc_01C6CWDSNNGTKXW6PPMABQ0T3E",
+        "parent_id": "acc_01C6CWDS6QW157X8M0FJCPTSB2",
+        "object": "account",
+        "name": "brand1",
+        "metadata": {},
+        "master": false,
+        "id": "acc_01C6CWDSNNGTKXW6PPMABQ0T3E",
+        "encrypted_metadata": {},
+        "description": "Brand 1",
+        "created_at": "2018-02-15T14:03:24.725717Z",
+        "category_ids": [],
+        "categories": {
+          "object": "list",
+          "data": []
+        },
+        "avatar": {
+          "thumb": null,
+          "small": null,
+          "original": null,
+          "large": null
+        }
+      },
+      {
+        "updated_at": "2018-06-21T08:52:40.733293Z",
+        "socket_topic": "account:acc_01C6CWDS6QW157X8M0FJCPTSB2",
+        "parent_id": null,
+        "object": "account",
+        "name": "master_account",
+        "metadata": {},
+        "master": true,
+        "id": "acc_01C6CWDS6QW157X8M0FJCPTSB2",
+        "encrypted_metadata": {},
+        "description": "Company Master Account",
+        "created_at": "2018-02-15T14:03:24.247694Z",
+        "category_ids": [],
+        "categories": {
+          "object": "list",
+          "data": []
+        },
+        "avatar": {
+          "thumb": null,
+          "small": null,
+          "original": null,
+          "large": null
+        }
+      }
+    ]
+  }
+}

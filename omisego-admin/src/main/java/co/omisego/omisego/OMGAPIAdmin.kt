@@ -58,7 +58,7 @@ import co.omisego.omisego.network.ewallet.EWalletAdmin
  *
  * 3. You're done!
  */
-class OMGAPIAdmin(private val eWalletAdmin: EWalletAdmin) {
+class OMGAPIAdmin(internal val eWalletAdmin: EWalletAdmin) {
     private val eWalletAPI
         get() = eWalletAdmin.eWalletAPI
 

@@ -9,8 +9,6 @@ package co.omisego.omisego.client
 
 import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.client.extension.mockEnqueueWithHttpCode
-import co.omisego.omisego.model.ClientConfiguration
-import co.omisego.omisego.network.ewallet.EWalletClient
 import co.omisego.omisego.client.util.GsonDelegator
 import co.omisego.omisego.client.util.ResourceFile
 import co.omisego.omisego.constant.Versions
@@ -18,6 +16,7 @@ import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.exception.OMGAPIErrorException
 import co.omisego.omisego.model.APIError
+import co.omisego.omisego.model.ClientConfiguration
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
@@ -27,6 +26,7 @@ import co.omisego.omisego.model.pagination.PaginationList
 import co.omisego.omisego.model.transaction.Transaction
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
 import co.omisego.omisego.model.transaction.request.TransactionRequest
+import co.omisego.omisego.network.ewallet.EWalletClient
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
 import com.nhaarman.mockito_kotlin.timeout
@@ -107,7 +107,7 @@ class OMGAPIClientTest : GsonDelegator() {
         val data = result.body()!!.asJsonObject.getAsJsonObject("data").getAsJsonArray("data")
         val transactionList = gson.fromJson<List<Transaction>>(data, object : TypeToken<List<Transaction>>() {}.type)
 
-        val expected = OMGResponse<PaginationList<Transaction>>(
+        val expected = OMGResponse(
             Versions.EWALLET_API,
             true,
             PaginationList(

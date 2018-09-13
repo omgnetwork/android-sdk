@@ -21,7 +21,6 @@ import com.google.gson.Gson
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.internal.Util.UTF_8
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONException
 import org.json.JSONObject
@@ -109,8 +108,24 @@ open class BaseClient {
             return Interceptor { chain ->
                 chain.proceed(chain.request()).also {
                     if (it.header(HTTPHeaders.AUTHORIZATION) != null) return@also
-                    val body = it.body()
-                    val rawBody = body?.source()?.buffer()?.clone()?.readString(UTF_8)?.toString() ?: return@also
+
+                    // Cannot directly read the body response, since the body can be consumed only once.
+                    val body = it.peekBody(Long.MAX_VALUE)
+
+                    val bufferedResponse = body?.source()?.buffer()?.clone()?.readUtf8()
+                    val bodyResponse = body?.source()?.readUtf8()
+
+                    val rawBody = when {
+                        // When perform request asynchronously, the raw body was put in the buffer.
+                        bufferedResponse?.isNotEmpty() == true -> bufferedResponse
+
+                        // When perform request synchronously, the raw body was put directly in the body.
+                        bodyResponse?.isNotEmpty() == true -> bodyResponse
+
+                        // Returns when the response was empty.
+                        else -> return@also
+                    }
+
                     try {
                         val data = JSONObject(rawBody).getJSONObject("data")
                         val objectType = data.getString("object")
