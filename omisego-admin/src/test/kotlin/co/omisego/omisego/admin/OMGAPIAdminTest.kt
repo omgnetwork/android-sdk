@@ -15,7 +15,7 @@ import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.model.Account
 import co.omisego.omisego.model.AdminConfiguration
-import co.omisego.omisego.model.AuthenticationToken
+import co.omisego.omisego.model.AdminAuthenticationToken
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.Wallet
@@ -86,10 +86,10 @@ class OMGAPIAdminTest : GsonDelegator() {
         val result = Response.success(element)
         authenticationTokenFile.mockEnqueueWithHttpCode(mockWebServer)
 
-        val callback: OMGCallback<AuthenticationToken> = mock()
+        val callback: OMGCallback<AdminAuthenticationToken> = mock()
         omgAPIAdmin.login(LoginParams("email", "password")).enqueue(callback)
 
-        val expected = gson.fromJson<OMGResponse<AuthenticationToken>>(result.body(), object : TypeToken<OMGResponse<AuthenticationToken>>() {}.type)
+        val expected = gson.fromJson<OMGResponse<AdminAuthenticationToken>>(result.body(), object : TypeToken<OMGResponse<AdminAuthenticationToken>>() {}.type)
         verify(callback, timeout(connectionTimeout).times(1)).success(expected)
     }
 

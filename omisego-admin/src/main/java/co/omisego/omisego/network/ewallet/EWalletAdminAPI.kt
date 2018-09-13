@@ -18,7 +18,7 @@ import co.omisego.omisego.constant.AdminAPIEndpoints.USER_GET_WALLETS
 import co.omisego.omisego.constant.AdminAPIEndpoints.WALLET_GET
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
 import co.omisego.omisego.model.Account
-import co.omisego.omisego.model.AuthenticationToken
+import co.omisego.omisego.model.AdminAuthenticationToken
 import co.omisego.omisego.model.Logout
 import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.Wallet
@@ -37,7 +37,7 @@ import retrofit2.http.POST
 
 interface EWalletAdminAPI {
     @POST(LOGIN)
-    fun login(@Body params: LoginParams): OMGCall<AuthenticationToken>
+    fun login(@Body params: LoginParams): OMGCall<AdminAuthenticationToken>
 
     @POST(TRANSACTION_CREATE)
     fun transfer(@Body params: TransactionCreateParams): OMGCall<Transaction>
