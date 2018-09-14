@@ -30,12 +30,6 @@ class ClientConfigurationTest {
     }
 
     @Test
-    fun `ClientConfiguration should throws IllegalStateException if authenticationToken is empty`() {
-        val error = { clientConfiguration = ClientConfiguration("baseURL", "apiKey", "") }
-        error shouldThrow IllegalStateException::class withMessage Exceptions.MSG_EMPTY_AUTH_TOKEN
-    }
-
-    @Test
     fun `ClientConfiguration should not throws any Exception if all params are not empty`() {
         clientConfiguration = ClientConfiguration("baseURL", "apiKey", "authToken")
         // If the above statement throws something this test will fail now, so no need to validate.

@@ -9,7 +9,7 @@ package co.omisego.omisego.utils
 
 import co.omisego.omisego.constant.enums.AuthScheme
 import co.omisego.omisego.model.CredentialConfiguration
-import co.omisego.omisego.network.HeaderInterceptor
+import co.omisego.omisego.network.interceptor.HeaderInterceptor
 import okhttp3.Interceptor
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldBe
@@ -47,7 +47,7 @@ class OkHttpHelperTest {
 
     @Test
     fun `createHeader should return HeaderInterceptor correctly`() {
-        val headerInterceptor = okHttpHelper.createHeader(clientConfiguration)
+        val headerInterceptor = okHttpHelper.createHeaderInterceptor(clientConfiguration)
         headerInterceptor shouldBeInstanceOf HeaderInterceptor::class.java
         headerInterceptor.authScheme shouldEqual AuthScheme.Client
         headerInterceptor.authenticationToken shouldEqualTo "YXBpS2V5OmF1dGhlbnRpY2F0aW9uVG9rZW4="

@@ -8,7 +8,7 @@ package co.omisego.omisego.admin.network.ewallet
  */
 
 import co.omisego.omisego.model.AdminConfiguration
-import co.omisego.omisego.network.HeaderInterceptor
+import co.omisego.omisego.network.interceptor.HeaderInterceptor
 import co.omisego.omisego.network.ewallet.EWalletAdmin
 import co.omisego.omisego.network.ewallet.EWalletAdminAPI
 import okhttp3.OkHttpClient
