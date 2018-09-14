@@ -8,6 +8,7 @@ package co.omisego.omisego.network.ewallet
  */
 
 import co.omisego.omisego.network.BaseClient
+import co.omisego.omisego.utils.Base64Encoder
 
 class EWalletAdmin : BaseClient() {
     internal lateinit var eWalletAPI: EWalletAdminAPI
@@ -21,10 +22,14 @@ class EWalletAdmin : BaseClient() {
      */
     class Builder(init: BaseClient.Builder.() -> Unit) : BaseClient.Builder(init) {
 
+        override lateinit var authenticationHeader: AuthenticationHeader
+
         /**
          * Create an [EWalletAdmin] instance.
          */
         override fun build(): EWalletAdmin {
+            authenticationHeader = AdminAuthenticationHeader(Base64Encoder())
+
             with(super.build()) {
                 return EWalletAdmin().also {
                     it.header = header

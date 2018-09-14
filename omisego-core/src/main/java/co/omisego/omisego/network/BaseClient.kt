@@ -8,13 +8,13 @@ package co.omisego.omisego.network
  */
 
 import co.omisego.omisego.constant.Exceptions
-import co.omisego.omisego.constant.HTTPHeaders
-import co.omisego.omisego.constant.enums.AuthScheme
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
 import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.CredentialConfiguration
-import co.omisego.omisego.utils.Base64Encoder
+import co.omisego.omisego.network.ewallet.AuthenticationHeader
+import co.omisego.omisego.network.interceptor.AuthenticationTokenInterceptor
+import co.omisego.omisego.network.interceptor.HeaderInterceptor
 import co.omisego.omisego.utils.GsonProvider
 import co.omisego.omisego.utils.OkHttpHelper
 import com.google.gson.Gson
@@ -22,8 +22,6 @@ import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.json.JSONException
-import org.json.JSONObject
 import retrofit2.Retrofit
 import java.util.concurrent.Executor
 
@@ -70,6 +68,14 @@ open class BaseClient {
         var debug: Boolean = false
 
         /**
+         * A authentication header creator.
+         * It will be used by the [AuthenticationTokenInterceptor] to set a new [AuthenticationHeader] when login successfully.
+         *
+         * This property should not be set by the user, it should be set automatically by the sdk when initialize the EWalletClient or EWalletAdmin.
+         */
+        abstract var authenticationHeader: AuthenticationHeader
+
+        /**
          * The OKHttp interceptor list for debugging purpose.
          */
         var debugOkHttpInterceptors: MutableList<Interceptor> = mutableListOf(
@@ -86,62 +92,31 @@ open class BaseClient {
         private val okHttpHelper: OkHttpHelper by lazy { OkHttpHelper() }
 
         open fun build(): BaseClient {
+            /* Verify if the [CredentialConfiguration] is initialized correctly */
             val config = clientConfiguration ?: throw IllegalStateException(Exceptions.MSG_NULL_CLIENT_CONFIGURATION)
-            val omgHeader = okHttpHelper.createHeader(config)
 
-            val interceptors: List<Interceptor> = when (config.authScheme) {
-                AuthScheme.ADMIN -> listOf(omgHeader, provideAuthenticationTokenInterceptor(omgHeader))
-                AuthScheme.Client -> listOf(omgHeader)
-            }
+            /* For inject the authentication header for each request*/
+            val headerInterceptor = okHttpHelper.createHeaderInterceptor(config)
+
+            /* For set new authentication header to headerInterceptor automatically when login successfully */
+            val authenticationTokenInterceptor = AuthenticationTokenInterceptor(
+                headerInterceptor,
+                authenticationHeader
+            )
+
+            /* Collect all interceptors */
+            val interceptors: List<Interceptor> = listOf(
+                headerInterceptor,
+                authenticationTokenInterceptor
+            )
 
             val client = okHttpHelper.createClient(debug, interceptors, debugOkHttpInterceptors)
             val retrofit = createRetrofit(GsonProvider.create(), client)
 
             return BaseClient().also {
-                it.header = omgHeader
+                it.header = headerInterceptor
                 it.client = client
                 it.retrofit = retrofit
-            }
-        }
-
-        internal fun provideAuthenticationTokenInterceptor(header: HeaderInterceptor): Interceptor {
-            return Interceptor { chain ->
-                chain.proceed(chain.request()).also {
-                    if (it.header(HTTPHeaders.AUTHORIZATION) != null) return@also
-
-                    // Cannot directly read the body response, since the body can be consumed only once.
-                    val body = it.peekBody(Long.MAX_VALUE)
-
-                    val bufferedResponse = body?.source()?.buffer()?.clone()?.readUtf8()
-                    val bodyResponse = body?.source()?.readUtf8()
-
-                    val rawBody = when {
-                        // When perform request asynchronously, the raw body was put in the buffer.
-                        bufferedResponse?.isNotEmpty() == true -> bufferedResponse
-
-                        // When perform request synchronously, the raw body was put directly in the body.
-                        bodyResponse?.isNotEmpty() == true -> bodyResponse
-
-                        // Returns when the response was empty.
-                        else -> return@also
-                    }
-
-                    try {
-                        val data = JSONObject(rawBody).getJSONObject("data")
-                        val objectType = data.getString("object")
-                        if (objectType != "authentication_token") return@also
-
-                        /* Create new authorized header */
-                        val newHeader = Base64Encoder().encode(
-                            data.getString("user_id"),
-                            data.getString("authentication_token")
-                        )
-
-                        /* Replace with authorized header */
-                        header.setHeader(newHeader)
-                    } catch (e: JSONException) {
-                    }
-                }
             }
         }
 

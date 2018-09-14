@@ -7,10 +7,7 @@ package co.omisego.omisego
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.network.ewallet.EWalletClient
-import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
-import co.omisego.omisego.model.Wallet
 import co.omisego.omisego.model.params.LoginParams
 import co.omisego.omisego.model.params.SignUpParams
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionActionParams
@@ -19,6 +16,7 @@ import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
 import co.omisego.omisego.model.transaction.request.TransactionRequestParams
 import co.omisego.omisego.model.transaction.send.TransactionCreateParams
+import co.omisego.omisego.network.ewallet.EWalletClient
 
 /**
  * The class OMGAPIClient represents an object that knows how to interact with OmiseGO API.

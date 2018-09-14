@@ -1,4 +1,4 @@
-package co.omisego.omisego.network
+package co.omisego.omisego.network.interceptor
 
 /*
  * OmiseGO
@@ -15,7 +15,7 @@ import okhttp3.Response
 class HeaderInterceptor(
     internal val authScheme: AuthScheme,
     internal var authenticationToken: String
-) : Interceptor {
+) : Interceptor, HeaderHandler {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         val newRequest = originalRequest.newBuilder().apply {
@@ -26,7 +26,7 @@ class HeaderInterceptor(
         return chain.proceed(newRequest)
     }
 
-    fun setHeader(token: String) {
-        authenticationToken = token
+    override fun setHeader(authenticationToken: String) {
+        this.authenticationToken = authenticationToken
     }
 }

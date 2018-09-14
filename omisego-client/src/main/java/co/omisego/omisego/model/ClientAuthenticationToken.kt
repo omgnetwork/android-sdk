@@ -8,7 +8,7 @@ package co.omisego.omisego.model
  */
 
 data class ClientAuthenticationToken(
-    val authenticationToken: String,
-    val userId: String,
-    val user: User
-)
+    override val authenticationToken: String,
+    override val userId: String,
+    override val user: User
+) : AuthenticationToken(authenticationToken, userId, user)

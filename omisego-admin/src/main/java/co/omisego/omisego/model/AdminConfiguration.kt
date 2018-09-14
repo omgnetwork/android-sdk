@@ -11,18 +11,15 @@ import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.enums.AuthScheme
 
 /**
- * This class will be used for creating an instance of [OMGSocketClient] and [EWalletClient].
+ * This class will be used for creating an instance of [EWalletAdmin].
  *
  * @param baseURL The base URL of the wallet server:
- * When initializing the [EWalletClient], this needs to be an http(s) url
- * When initializing the [OMGSocketClient], this needs to be a ws(s) url
- * Both need to end with '/'
+ * When initializing the [EWalletAdmin], this needs to be an http(s) url and need to be ended with '/'.
  *
  * For example,
- * for [OMGSocketClient], the [baseURL] should end with '/api/socket/'
- * for [EWalletClient], the [baseURL] should end with '/api/client/'
+ * for initialize [EWalletAdmin], the [baseURL] should end with '/api/admin/'
  *
- * @throws IllegalStateException if set with an empty string to [baseURL], [apiKey], or [authenticationToken].
+ * @throws IllegalStateException if set with an empty string to [baseURL].
  */
 
 data class AdminConfiguration internal constructor(

@@ -24,14 +24,14 @@ import co.omisego.omisego.constant.enums.AuthScheme
  *
  * @param apiKey An apiKey is the API key (typically generated on the admin panel)
  * @param authenticationToken An authenticationToken is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
- * @throws IllegalStateException if set with an empty string to [baseURL], [apiKey], or [authenticationToken].
+ * @throws IllegalStateException if set with an empty string to [baseURL] or [apiKey].
  */
 
 data class ClientConfiguration private constructor(
     override val baseURL: String,
-    override val apiKey: String? = null,
+    override val apiKey: String,
     override val userId: String? = null,
-    override val authenticationToken: String
+    override val authenticationToken: String? = null
 ) : CredentialConfiguration {
     override val authScheme: AuthScheme = AuthScheme.Client
 
@@ -43,7 +43,6 @@ data class ClientConfiguration private constructor(
 
     init {
         check(baseURL.isNotEmpty()) { Exceptions.MSG_EMPTY_BASE_URL }
-        check(apiKey?.isNotEmpty() == true) { Exceptions.MSG_EMPTY_API_KEY }
-        check(authenticationToken.isNotEmpty()) { Exceptions.MSG_EMPTY_AUTH_TOKEN }
+        check(apiKey.isNotEmpty()) { Exceptions.MSG_EMPTY_API_KEY }
     }
 }
