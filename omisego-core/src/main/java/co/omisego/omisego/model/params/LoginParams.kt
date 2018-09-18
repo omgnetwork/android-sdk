@@ -7,6 +7,12 @@ package co.omisego.omisego.model.params
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+/**
+ * Represents a structure used to login an existing user.
+ *
+ * @param email The email of the user
+ * @param password The password of the user
+ */
 data class LoginParams(
     val email: String,
     val password: String

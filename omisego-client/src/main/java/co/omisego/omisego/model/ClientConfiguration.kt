@@ -23,7 +23,7 @@ import co.omisego.omisego.constant.enums.AuthScheme
  * for [EWalletClient], the [baseURL] should end with '/api/client/'
  *
  * @param apiKey An apiKey is the API key (typically generated on the admin panel)
- * @param authenticationToken An authenticationToken is the token corresponding to an OmiseGO Wallet user retrievable using one of our server-side SDKs.
+ * @param authenticationToken The token corresponding to the user. Can be null if doing request that don't need authentication
  * @throws IllegalStateException if set with an empty string to [baseURL] or [apiKey].
  */
 

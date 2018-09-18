@@ -19,6 +19,8 @@ import co.omisego.omisego.constant.enums.AuthScheme
  * For example,
  * for initialize [EWalletAdmin], the [baseURL] should end with '/api/admin/'
  *
+ * @param userId The userId of the admin to use for the authenticated calls. Can be null if doing request that don't need authentication.
+ * @param authenticationToken The authentication token of the admin. Can be null if doing request that don't need authentication.
  * @throws IllegalStateException if set with an empty string to [baseURL].
  */
 
