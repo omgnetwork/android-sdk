@@ -20,7 +20,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class ListAccount : LiveTest() {
+class ListAccountTest : LiveTest() {
     private val secret by lazy { loadSecretFile("secret.json") }
 
     @Before

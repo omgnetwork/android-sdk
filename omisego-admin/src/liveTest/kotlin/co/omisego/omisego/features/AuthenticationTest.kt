@@ -18,7 +18,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class Authentication : LiveTest() {
+class AuthenticationTest : LiveTest() {
     private val secret by lazy { loadSecretFile("secret.json") }
 
     @Test

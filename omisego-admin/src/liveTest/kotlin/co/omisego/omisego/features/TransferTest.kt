@@ -21,7 +21,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class Transfer : LiveTest() {
+class TransferTest : LiveTest() {
     private val secret by lazy { loadSecretFile("secret.json") }
 
     @Before

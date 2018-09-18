@@ -9,9 +9,9 @@ package co.omisego.omisego.features
 
 import co.omisego.omisego.LiveTest
 import co.omisego.omisego.model.params.LoginParams
-import co.omisego.omisego.model.params.TokenListParams
+import co.omisego.omisego.model.params.WalletParams
 import org.amshove.kluent.shouldBe
-import org.amshove.kluent.shouldBeGreaterThan
+import org.amshove.kluent.shouldNotBe
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,7 +20,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class ListToken : LiveTest() {
+class GetWalletTest : LiveTest() {
     private val secret by lazy { loadSecretFile("secret.json") }
 
     @Before
@@ -35,16 +35,24 @@ class ListToken : LiveTest() {
     }
 
     @Test
-    fun `list tokens should be returned successfully`() {
-        val response = client.getTokens(
-            TokenListParams.create(
-                searchTerm = null
-            )
+    fun `get a user wallet should be returned associated user of the account`() {
+        val response = client.getWallet(
+            WalletParams(secret.getString("user_address"))
         ).execute()
 
         response.isSuccessful shouldBe true
-        response.body()?.data?.pagination?.perPage shouldBe 10
-        response.body()?.data?.pagination?.currentPage shouldBe 1
-        response.body()?.data?.data?.size!! shouldBeGreaterThan 0
+        response.body()?.data?.user shouldNotBe null
+        response.body()?.data?.account shouldBe null
+    }
+
+    @Test
+    fun `get an account wallet should be returned associated account of the account`() {
+        val response = client.getWallet(
+            WalletParams(secret.getString("account_address"))
+        ).execute()
+
+        response.isSuccessful shouldBe true
+        response.body()?.data?.account shouldNotBe null
+        response.body()?.data?.user shouldBe null
     }
 }
