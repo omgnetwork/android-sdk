@@ -7,8 +7,6 @@ package co.omisego.omisego.utils
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.Exceptions.MSG_EMPTY_API_KEY
-import co.omisego.omisego.constant.Exceptions.MSG_EMPTY_AUTH_TOKEN
 import co.omisego.omisego.constant.enums.AuthScheme.ADMIN
 import co.omisego.omisego.constant.enums.AuthScheme.Client
 import co.omisego.omisego.model.CredentialConfiguration
@@ -27,8 +25,7 @@ class OMGEncryption(
         return with(credentialConfiguration) {
             when (authScheme) {
                 Client -> {
-                    check(!authenticationToken.isNullOrEmpty()) { MSG_EMPTY_AUTH_TOKEN }
-                    check(!apiKey.isNullOrEmpty()) { MSG_EMPTY_API_KEY }
+                    if (apiKey.isNullOrEmpty() || authenticationToken.isNullOrEmpty()) return ""
                     encoder.encode(apiKey!!, authenticationToken!!)
                 }
                 ADMIN -> {
