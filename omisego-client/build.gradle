@@ -11,7 +11,7 @@ apply from: '../config.gradle'
 def constants = project.ext
 
 android {
-    buildToolsVersion '27.0.3'
+    buildToolsVersion constants.buildToolsVersion
     compileSdkVersion constants.compileSdkVersion
     defaultConfig {
         minSdkVersion constants.minSdkVersion
