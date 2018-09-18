@@ -38,7 +38,7 @@ data class ClientConfiguration private constructor(
     constructor(
         baseURL: String,
         apiKey: String,
-        authenticationToken: String
+        authenticationToken: String? = null
     ) : this(baseURL, apiKey, null, authenticationToken)
 
     init {
