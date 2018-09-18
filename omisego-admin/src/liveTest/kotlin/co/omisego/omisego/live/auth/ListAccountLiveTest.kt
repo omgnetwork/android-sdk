@@ -7,7 +7,7 @@ package co.omisego.omisego.live.auth
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.BaseAuthTest
+import co.omisego.omisego.live.BaseAuthTest
 import co.omisego.omisego.model.params.AccountListParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeGreaterThan

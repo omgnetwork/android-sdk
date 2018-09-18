@@ -7,7 +7,7 @@ package co.omisego.omisego.live.auth
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.BaseAuthTest
+import co.omisego.omisego.live.BaseAuthTest
 import co.omisego.omisego.extension.bd
 import co.omisego.omisego.model.transaction.send.TransactionCreateParams
 import org.amshove.kluent.shouldBe

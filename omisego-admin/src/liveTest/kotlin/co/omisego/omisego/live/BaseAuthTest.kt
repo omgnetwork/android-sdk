@@ -1,4 +1,4 @@
-package co.omisego.omisego
+package co.omisego.omisego.live
 
 /*
  * OmiseGO

@@ -7,7 +7,7 @@ package co.omisego.omisego.live.unauth
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.BaseLiveTest
+import co.omisego.omisego.live.BaseLiveTest
 import co.omisego.omisego.model.params.LoginParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldNotBe
