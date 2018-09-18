@@ -203,9 +203,7 @@ There is `PaginationList<Transaction>` inside the `response.data` which contains
 
 Where:
 * `data` is an array of transactions
-* `pagination` is a `Pagination` object
-    
-    Where:
+* `pagination` is a `Pagination` object:
     * `perPage` is the number of results per page.
     * `currentPage` is the retrieved page.
     * `isFirstPage` is a bool indicating if the page received is the first page

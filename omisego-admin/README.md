@@ -81,7 +81,7 @@ omgAPIAdmin.login(params).enqueue(object: OMGCallback<User>{
 })
 ```
 
-> Note: The `Authentication` header will be set automatically when login successfully.
+> Note: The `Authentication` header will be set automatically when logging successfully.
 
 ### Transferring token
 
@@ -108,21 +108,21 @@ omgAPIClient.transfer(request).enqueue(object : OMGCallback<Transaction>{
 There are different ways to initialize a `TransactionCreateParams` by specifying either `toAddress`, `toAccountId` or `toProviderUserId`.
 
 ### PaginationList
-`PaginationList` is an object represents a paginated filtered data set. 
-This object will be returned from any APIs that probably contain multiple objects (e.g. account list, transaction list, token list, etc.).
+`PaginationList` is an object representing a paginated filtered data set.
+This object will be returned from any API listing resources (e.g. accounts, transactions, tokens, etc.).
 
-The general structure of the paginated request parameters is consist of:
+The general structure of the paginated request parameters consist of:
 
 * `page` is the page you wish to receive
 * `perPage` is the number of results per page
-* `sortBy` is the available sorting fields. This value depends on which API is being requested.
-* `sortDir` is the available sorting direction. Available sorting directions are:
+* `sortBy` contains the field used to sort. The value depends on which endpoint is being used.
+* `sortDir` contains the direction for sorting. Available sorting directions are:
     
     `ASCENDING`, `DESCENDING`
     
     > `import co.omisego.omisego.model.pagination.SortDirection.*`
     
-* `searchTerm` *(optional)* is a term to search for all of the searchable fields. 
+* `searchTerm` *(optional)* will search in all the searchable fields.
     Conflict with `searchTerms`, only use one of them.
 * `searchTerms` *(optional)* is a key-value map of fields to search with the available fields (same as `searchTerm`)
     For example:
@@ -135,9 +135,7 @@ There is an generic `PaginationList<T>` inside the `response.data` which contain
 
 Where:
 * `data` is an array of `T` object.
-* `pagination` is a `Pagination` object.
-    
-    Where:
+* `pagination` is a `Pagination` object:
     * `perPage` is the number of results per page.
     * `currentPage` is the retrieved page.
     * `isFirstPage` is a bool indicating if the page received is the first page
@@ -187,7 +185,7 @@ omgAPIAdmin.getTransactions(request).enqueue(object: OMGCallback<PaginationList<
 
 This returns a paginated filtered list of `accounts`.
 
-In order to get the `account list` you will need to create a `AccountListParams` object in the similar way to [Get transaction list](#get-transaction-list)
+In order to get the `account list` you will need to create a `AccountListParams` object in a similar way to [Get transaction list](#get-transaction-list)
 
 Then you can call:
 
@@ -207,7 +205,7 @@ omgAPIAdmin.getAccounts(request).enqueue(object: OMGCallback<PaginationList<Acco
 
 This returns a paginated filtered list of `tokens`.
 
-In order to get the `token list` you will need to create a `TokenListParams` object in the similar way to [Get transaction list](#get-transaction-list)
+In order to get the `token list` you will need to create a `TokenListParams` object in a similar way to [Get transaction list](#get-transaction-list)
                                                                                   
 Then you can call:
 
@@ -227,7 +225,7 @@ omgAPIAdmin.getTokens(request).enqueue(object: OMGCallback<PaginationList<Token>
 
 This returns a paginated filtered list of `account's wallet`.
 
-In order to get the `account's wallet list` you will need to create a `AccountWalletListParams` object in the similar way to [Get transaction list](#get-transaction-list)
+In order to get the `account's wallet list` you will need to create a `AccountWalletListParams` object in a similar way to [Get transaction list](#get-transaction-list)
                                                                                   
 Then you can call:
 
@@ -247,7 +245,7 @@ omgAPIAdmin.getAccountWalletListParams(request).enqueue(object: OMGCallback<Pagi
 
 This returns a paginated filtered list of user's wallet.
 
-In order to get the `user's wallet list` you will need to create a `UserWalletListParams` object in the similar way to [Get transaction list](#get-transaction-list)
+In order to get the `user's wallet list` you will need to create a `UserWalletListParams` object in a similar way to [Get transaction list](#get-transaction-list)
                                                                                   
 Then you can call:
 
