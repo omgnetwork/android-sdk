@@ -15,7 +15,7 @@ import co.omisego.omisego.constant.ClientAPIEndpoints.SIGN_UP
 import co.omisego.omisego.constant.ClientAPIEndpoints.TRANSFER
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
 import co.omisego.omisego.model.ClientAuthenticationToken
-import co.omisego.omisego.model.Logout
+import co.omisego.omisego.model.Empty
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.WalletList
@@ -49,10 +49,10 @@ interface EWalletClientAPI {
     fun login(@Body params: LoginParams): OMGCall<ClientAuthenticationToken>
 
     @POST(SIGN_UP)
-    fun signup(@Body params: SignUpParams): OMGCall<User>
+    fun signup(@Body params: SignUpParams): OMGCall<Empty>
 
     @POST(LOGOUT)
-    fun logout(): OMGCall<Logout>
+    fun logout(): OMGCall<Empty>
 
     @POST(GET_WALLETS)
     fun getWallets(): OMGCall<WalletList>

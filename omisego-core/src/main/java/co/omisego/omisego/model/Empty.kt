@@ -12,4 +12,4 @@ package co.omisego.omisego.model
 *
 * @param data The data of the logout response (currently nothing)
 */
-data class Logout(val data: Nothing)
+data class Empty(val data: Nothing)

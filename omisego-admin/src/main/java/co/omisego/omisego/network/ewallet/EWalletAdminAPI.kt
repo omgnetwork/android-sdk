@@ -19,7 +19,7 @@ import co.omisego.omisego.constant.AdminAPIEndpoints.WALLET_GET
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
 import co.omisego.omisego.model.Account
 import co.omisego.omisego.model.AdminAuthenticationToken
-import co.omisego.omisego.model.Logout
+import co.omisego.omisego.model.Empty
 import co.omisego.omisego.model.Token
 import co.omisego.omisego.model.Wallet
 import co.omisego.omisego.model.pagination.PaginationList
@@ -61,5 +61,5 @@ interface EWalletAdminAPI {
     fun getTokens(@Body params: TokenListParams): OMGCall<PaginationList<Token>>
 
     @POST(LOGOUT)
-    fun logout(): OMGCall<Logout>
+    fun logout(): OMGCall<Empty>
 }
