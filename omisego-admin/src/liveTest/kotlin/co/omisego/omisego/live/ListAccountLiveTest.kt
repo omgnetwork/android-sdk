@@ -1,4 +1,4 @@
-package co.omisego.omisego.features
+package co.omisego.omisego.live
 
 /*
  * OmiseGO
@@ -8,8 +8,8 @@ package co.omisego.omisego.features
  */
 
 import co.omisego.omisego.LiveTest
+import co.omisego.omisego.model.params.AccountListParams
 import co.omisego.omisego.model.params.LoginParams
-import co.omisego.omisego.model.params.TokenListParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeGreaterThan
 import org.junit.Before
@@ -20,7 +20,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class ListTokenTest : LiveTest() {
+class ListAccountLiveTest : LiveTest() {
     private val secret by lazy { loadSecretFile("secret.json") }
 
     @Before
@@ -35,9 +35,9 @@ class ListTokenTest : LiveTest() {
     }
 
     @Test
-    fun `list tokens should be returned successfully`() {
-        val response = client.getTokens(
-            TokenListParams.create(
+    fun `list account should be returned successfully`() {
+        val response = client.getAccounts(
+            AccountListParams.create(
                 searchTerm = null
             )
         ).execute()

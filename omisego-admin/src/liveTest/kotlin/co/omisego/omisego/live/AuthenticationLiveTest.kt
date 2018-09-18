@@ -1,4 +1,4 @@
-package co.omisego.omisego.features
+package co.omisego.omisego.live
 
 /*
  * OmiseGO
@@ -18,7 +18,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class AuthenticationTest : LiveTest() {
+class AuthenticationLiveTest : LiveTest() {
     private val secret by lazy { loadSecretFile("secret.json") }
 
     @Test
