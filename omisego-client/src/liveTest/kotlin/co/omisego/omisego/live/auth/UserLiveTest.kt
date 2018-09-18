@@ -18,7 +18,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class UserLiveTest : LiveTest() {
+class UserLiveTest : BaseAuthTest() {
 
     @Test
     fun `get_current_user should return 200 and parsed the response correctly`() {

@@ -18,7 +18,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class TransactionLiveTest : LiveTest() {
+class TransactionLiveTest : BaseAuthTest() {
 
     @Test
     fun `get_transactions should return 200 and parsed the response correctly`() {

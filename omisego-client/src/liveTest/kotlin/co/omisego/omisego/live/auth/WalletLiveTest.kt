@@ -20,7 +20,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class WalletLiveTest : LiveTest() {
+class WalletLiveTest : BaseAuthTest() {
 
     @Test
     fun `get_wallets should return 200 and parsed the response correctly`() {

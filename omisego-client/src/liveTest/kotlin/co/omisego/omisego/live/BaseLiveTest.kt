@@ -14,13 +14,12 @@ import co.omisego.omisego.utils.ResourceFileLoader
 import co.omisego.omisego.websocket.OMGSocketClient
 import java.util.concurrent.Executor
 
-open class LiveTest : ResourceFileLoader() {
-    private val secret by lazy { loadSecretFile("secret.json") }
+open class BaseLiveTest : ResourceFileLoader() {
+    val secret by lazy { loadSecretFile("secret.json") }
     private val config by lazy {
         ClientConfiguration(
             secret.getString("base_url"),
-            secret.getString("api_key"),
-            secret.getString("auth_token")
+            secret.getString("api_key")
         )
     }
     private val eWalletClient by lazy {
