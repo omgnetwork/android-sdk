@@ -1,4 +1,4 @@
-package co.omisego.omisego.live
+package co.omisego.omisego.live.auth
 
 /*
  * OmiseGO
@@ -7,12 +7,10 @@ package co.omisego.omisego.live
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.LiveTest
-import co.omisego.omisego.model.params.LoginParams
+import co.omisego.omisego.BaseAuthTest
 import co.omisego.omisego.model.params.WalletParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldNotBe
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -20,19 +18,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class GetWalletLiveTest : LiveTest() {
-    private val secret by lazy { loadSecretFile("secret.json") }
-
-    @Before
-    fun setup() {
-        val response = client.login(
-            LoginParams(
-                secret.getString("email"),
-                secret.getString("password")
-            )
-        ).execute()
-        response.isSuccessful shouldBe true
-    }
+class GetWalletLiveTest : BaseAuthTest() {
 
     @Test
     fun `get a user wallet should be returned associated user of the account`() {

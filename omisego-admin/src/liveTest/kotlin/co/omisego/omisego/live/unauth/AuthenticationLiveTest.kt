@@ -1,4 +1,4 @@
-package co.omisego.omisego.live
+package co.omisego.omisego.live.unauth
 
 /*
  * OmiseGO
@@ -7,7 +7,7 @@ package co.omisego.omisego.live
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.LiveTest
+import co.omisego.omisego.BaseLiveTest
 import co.omisego.omisego.model.params.LoginParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldNotBe
@@ -18,9 +18,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class AuthenticationLiveTest : LiveTest() {
-    private val secret by lazy { loadSecretFile("secret.json") }
-
+class AuthenticationLiveTest : BaseLiveTest() {
     @Test
     fun `login should return 200 and parsed the response correctly`() {
         val response = client.login(

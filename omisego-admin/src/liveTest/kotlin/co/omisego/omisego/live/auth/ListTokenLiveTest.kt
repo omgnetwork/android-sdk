@@ -1,4 +1,4 @@
-package co.omisego.omisego.live
+package co.omisego.omisego.live.auth
 
 /*
  * OmiseGO
@@ -7,12 +7,10 @@ package co.omisego.omisego.live
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.LiveTest
-import co.omisego.omisego.model.params.AccountListParams
-import co.omisego.omisego.model.params.LoginParams
+import co.omisego.omisego.BaseAuthTest
+import co.omisego.omisego.model.params.TokenListParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeGreaterThan
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -20,24 +18,12 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class ListAccountLiveTest : LiveTest() {
-    private val secret by lazy { loadSecretFile("secret.json") }
-
-    @Before
-    fun setup() {
-        val response = client.login(
-            LoginParams(
-                secret.getString("email"),
-                secret.getString("password")
-            )
-        ).execute()
-        response.isSuccessful shouldBe true
-    }
+class ListTokenLiveTest : BaseAuthTest() {
 
     @Test
-    fun `list account should be returned successfully`() {
-        val response = client.getAccounts(
-            AccountListParams.create(
+    fun `list tokens should be returned successfully`() {
+        val response = client.getTokens(
+            TokenListParams.create(
                 searchTerm = null
             )
         ).execute()
