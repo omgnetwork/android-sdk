@@ -8,11 +8,11 @@ package co.omisego.omisego.model
  */
 
 data class AdminAuthenticationToken(
-    override val authenticationToken: String,
-    override val userId: String,
-    override val user: User,
+    val authenticationToken: String,
+    val userId: String,
+    val user: User,
     val accountId: String,
     val account: Account,
     val masterAdmin: Boolean,
     val role: String
-) : AuthenticationToken(authenticationToken, userId, user)
+)
