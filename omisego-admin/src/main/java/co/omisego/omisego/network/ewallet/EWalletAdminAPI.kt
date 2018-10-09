@@ -11,10 +11,8 @@ import co.omisego.omisego.constant.AdminAPIEndpoints.ACCOUNT_ALL
 import co.omisego.omisego.constant.AdminAPIEndpoints.ACCOUNT_GET_WALLETS
 import co.omisego.omisego.constant.AdminAPIEndpoints.LOGIN
 import co.omisego.omisego.constant.AdminAPIEndpoints.LOGOUT
-import co.omisego.omisego.constant.AdminAPIEndpoints.SWITCH_ACCOUNT
 import co.omisego.omisego.constant.AdminAPIEndpoints.TOKEN_ALL
 import co.omisego.omisego.constant.AdminAPIEndpoints.TRANSACTION_ALL
-import co.omisego.omisego.constant.AdminAPIEndpoints.TRANSACTION_CALCULATE
 import co.omisego.omisego.constant.AdminAPIEndpoints.TRANSACTION_CREATE
 import co.omisego.omisego.constant.AdminAPIEndpoints.USER_GET_WALLETS
 import co.omisego.omisego.constant.AdminAPIEndpoints.WALLET_GET
@@ -23,15 +21,12 @@ import co.omisego.omisego.model.Account
 import co.omisego.omisego.model.AuthenticationToken
 import co.omisego.omisego.model.Logout
 import co.omisego.omisego.model.Token
-import co.omisego.omisego.model.TransactionCalculation
 import co.omisego.omisego.model.Wallet
 import co.omisego.omisego.model.pagination.PaginationList
 import co.omisego.omisego.model.params.AccountListParams
 import co.omisego.omisego.model.params.AccountWalletListParams
 import co.omisego.omisego.model.params.LoginParams
-import co.omisego.omisego.model.params.SwitchAccountParams
 import co.omisego.omisego.model.params.TokenListParams
-import co.omisego.omisego.model.params.TransactionCalculateParams
 import co.omisego.omisego.model.params.UserWalletListParams
 import co.omisego.omisego.model.params.WalletParams
 import co.omisego.omisego.model.transaction.Transaction
@@ -64,12 +59,6 @@ interface EWalletAdminAPI {
 
     @POST(TOKEN_ALL)
     fun getTokens(@Body params: TokenListParams): OMGCall<PaginationList<Token>>
-
-    @POST(SWITCH_ACCOUNT)
-    fun switchAccount(@Body params: SwitchAccountParams): OMGCall<AuthenticationToken>
-
-    @POST(TRANSACTION_CALCULATE)
-    fun calculateTransaction(@Body params: TransactionCalculateParams): OMGCall<TransactionCalculation>
 
     @POST(LOGOUT)
     fun logout(): OMGCall<Logout>

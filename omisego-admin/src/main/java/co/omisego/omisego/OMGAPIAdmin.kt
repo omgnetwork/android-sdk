@@ -10,9 +10,7 @@ package co.omisego.omisego
 import co.omisego.omisego.model.params.AccountListParams
 import co.omisego.omisego.model.params.AccountWalletListParams
 import co.omisego.omisego.model.params.LoginParams
-import co.omisego.omisego.model.params.SwitchAccountParams
 import co.omisego.omisego.model.params.TokenListParams
-import co.omisego.omisego.model.params.TransactionCalculateParams
 import co.omisego.omisego.model.params.UserWalletListParams
 import co.omisego.omisego.model.params.WalletParams
 import co.omisego.omisego.model.transaction.list.TransactionListParams
@@ -62,27 +60,85 @@ class OMGAPIAdmin(internal val eWalletAdmin: EWalletAdmin) {
     private val eWalletAPI
         get() = eWalletAdmin.eWalletAPI
 
+    /**
+     * Asynchronously send the request to login.
+     * if *success* the `success` function will be invoked with the [OMGResponse<AuthenticationToken>] parameter,
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     * @param params A set of parameters used for login
+     */
     fun login(params: LoginParams) = eWalletAPI.login(params)
 
+    /**
+     * Asynchronously send the request to logout.
+     * if *success* the `success` function will be invoked with the [OMGResponse<Logout>] parameter,
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     */
+    fun logout() = eWalletAPI.logout()
+
+    /**
+     * Asynchronously send the request to send token to an address.
+     * if *success* the `success` function will be invoked with the [OMGResponse<Transaction>] parameter,
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     * @param params A set of parameters used for create a transaction
+     */
     fun transfer(params: TransactionCreateParams) = eWalletAPI.transfer(params)
 
-    fun getTransactions(params: TransactionListParams) = eWalletAPI.getTransactions(params)
-
-    fun getAccounts(params: AccountListParams) = eWalletAPI.getAccounts(params)
-
-    fun getTokens(params: TokenListParams) = eWalletAPI.getTokens(params)
-
-    fun getAccountWallets(params: AccountWalletListParams) = eWalletAPI.getAccountWallets(params)
-
+    /**
+     * Asynchronously send the request to get a wallet corresponding to an address.
+     * if *success* the `success` function will be invoked with the [OMGResponse<Wallet>] parameter,
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     * @param params A set of parameters used for getting a wallet.
+     */
     fun getWallet(params: WalletParams) = eWalletAPI.getWallet(params)
 
+    /**
+     * Asynchronously send the request to get a paginated transaction list.
+     * if *success* the `success` function will be invoked with the [OMGResponse<PaginationList<Transaction>] parameter,
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     * @param params A set of parameters used for get a paginated transaction list
+     */
+    fun getTransactions(params: TransactionListParams) = eWalletAPI.getTransactions(params)
+
+    /**
+     * Asynchronously send the request to get a paginated account list.
+     * if *success* the `success` function will be invoked with the [OMGResponse<PaginationList<Account>>] parameter,
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     * @param params A set of parameters used for get a paginated account list
+     */
+    fun getAccounts(params: AccountListParams) = eWalletAPI.getAccounts(params)
+
+    /**
+     * Asynchronously send the request to get a paginated token list.
+     * if *success* the `success` function will be invoked with the [OMGResponse<PaginationList<Token>>] parameter,
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     * @param params A set of parameters used for get a paginated token list
+     */
+    fun getTokens(params: TokenListParams) = eWalletAPI.getTokens(params)
+
+    /**
+     * Asynchronously send the request to get a paginated account's wallet list.
+     * if *success* the `success` function will be invoked with the [OMGResponse<PaginationList<Wallet>>] parameter,
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     * @param params A set of parameters used for get a paginated account's wallet list
+     */
+    fun getAccountWallets(params: AccountWalletListParams) = eWalletAPI.getAccountWallets(params)
+
+    /**
+     * Asynchronously send the request to get a paginated user's wallet list.
+     * if *success* the `success` function will be invoked with the [OMGResponse<PaginationList<Wallet>>] parameter,
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     * @param params A set of parameters used for get a paginated user's wallet list
+     */
     fun getUserWallets(params: UserWalletListParams) = eWalletAPI.getUserWallets(params)
-
-    fun switchAccount(params: SwitchAccountParams) = eWalletAPI.switchAccount(params)
-
-    fun calculateTransaction(params: TransactionCalculateParams) = eWalletAPI.calculateTransaction(params)
-
-    fun logout() = eWalletAPI.logout()
 
     /**
      * Set new [authenticationToken].

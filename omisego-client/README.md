@@ -71,7 +71,7 @@ Where:
 
 ## Retrieving resources
 
-Once you have a client object in the [initialization section](#initialization), you can retrieve different resources.
+Once you have a client object from the [initialization section](#initialization), you can retrieve different resources.
 Every call takes an `OMGCallback` interface that returns an `OMGResponse` object:
 
 ```kotlin
@@ -203,9 +203,7 @@ There is `PaginationList<Transaction>` inside the `response.data` which contains
 
 Where:
 * `data` is an array of transactions
-* `pagination` is a `Pagination` object
-    
-    Where:
+* `pagination` is a `Pagination` object:
     * `perPage` is the number of results per page.
     * `currentPage` is the retrieved page.
     * `isFirstPage` is a bool indicating if the page received is the first page
