@@ -16,12 +16,19 @@ import java.util.concurrent.Executor
 
 open class BaseLiveTest : ResourceFileLoader() {
     val secret by lazy { loadSecretFile("secret.json") }
-    private val config by lazy {
-        ClientConfiguration(
-            secret.getString("base_url"),
-            secret.getString("api_key")
-        )
-    }
+
+    var config = ClientConfiguration(
+        secret.getString("base_url"),
+        secret.getString("api_key")
+    )
+        set(value) {
+            socketClient = OMGSocketClient.Builder {
+                clientConfiguration = value.copy(baseURL = secret.getString("socket_base_url"))
+                executor = Executor { it.run() }
+            }.build()
+        }
+
+    /* HTTP Client */
     private val eWalletClient by lazy {
         EWalletClient.Builder {
             clientConfiguration = config
@@ -30,10 +37,10 @@ open class BaseLiveTest : ResourceFileLoader() {
     val client by lazy {
         OMGAPIClient(eWalletClient)
     }
-    val socketClient by lazy {
-        OMGSocketClient.Builder {
-            clientConfiguration = config.copy(baseURL = secret.getString("socket_base_url"))
-            executor = Executor { it.run() }
-        }.build()
-    }
+
+    /* Socket Client */
+    var socketClient = OMGSocketClient.Builder {
+        clientConfiguration = config.copy(baseURL = secret.getString("socket_base_url"))
+        executor = Executor { it.run() }
+    }.build()
 }

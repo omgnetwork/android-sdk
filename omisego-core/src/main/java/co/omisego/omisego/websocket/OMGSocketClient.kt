@@ -281,14 +281,13 @@ class OMGSocketClient internal constructor(
          */
         override fun build(): SocketClientContract.Client {
             val config = clientConfiguration ?: throw IllegalStateException(Exceptions.MSG_NULL_CLIENT_CONFIGURATION)
-            val omgHeader = okHttpHelper.createHeaderInterceptor(config)
             val request = Request.Builder().apply {
                 url(config.baseURL)
                 addHeader(HTTPHeaders.AUTHORIZATION, "${config.authScheme} ${encryption.createAuthorizationHeader(config)}")
                 addHeader(HTTPHeaders.ACCEPT, HTTPHeaders.ACCEPT_OMG)
             }.build()
 
-            val okHttpClient = okHttpHelper.createClient(debug, listOf(omgHeader), debugOkHttpInterceptors)
+            val okHttpClient = okHttpHelper.createClient(debug, listOf(), debugOkHttpInterceptors)
 
             val gson = GsonProvider.create()
 

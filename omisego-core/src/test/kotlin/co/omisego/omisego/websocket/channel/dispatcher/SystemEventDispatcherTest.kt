@@ -41,15 +41,6 @@ class SystemEventDispatcherTest {
         success = true
     )
 
-    private val dataPhxClose: SocketReceive<TransactionConsumption> = SocketReceive(
-        "topic",
-        event = Either.Left(SocketSystemEvent.CLOSE),
-        data = null,
-        version = "1",
-        ref = "${SocketMessageRef.SCHEME_JOIN}:1",
-        success = true
-    )
-
     private val dataPhxError: SocketReceive<TransactionConsumption> = SocketReceive(
         "topic",
         event = Either.Left(SocketSystemEvent.ERROR),
@@ -70,14 +61,6 @@ class SystemEventDispatcherTest {
     fun `handleEvent should not invoke any listener if it is a heartbeat event`() {
         systemEventDispatcher.handleEvent(SocketSystemEvent.REPLY, dataHeartbeat)
 
-        verifyNoMoreInteractions(mockSocketChannelListener)
-    }
-
-    @Test
-    fun `handleEvent PHX_CLOSE should invoke onLeftChannel function`() {
-        systemEventDispatcher.handleEvent(SocketSystemEvent.CLOSE, dataPhxClose)
-
-        verify(mockSocketChannelListener, times(1)).onLeftChannel(dataPhxClose.topic)
         verifyNoMoreInteractions(mockSocketChannelListener)
     }
 

@@ -33,6 +33,7 @@ open class BaseAuthTest : BaseLiveTest() {
         ).execute()
         response.isSuccessful shouldBe true
         clientAuthenticationToken = response.body()!!.data
+        config = config.copy(authenticationToken = clientAuthenticationToken.authenticationToken)
     }
 
     @Test

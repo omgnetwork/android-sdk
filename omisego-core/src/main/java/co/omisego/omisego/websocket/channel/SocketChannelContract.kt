@@ -72,7 +72,7 @@ interface SocketChannelContract {
         /**
          * A [SocketMessageRef] is responsible for create unique ref value to be included in the [SocketSend] request.
          */
-        val socketMessageRef: SocketMessageRef
+        var socketMessageRef: SocketMessageRef
 
         /**
          * Create a [SocketSend] instance to be used for join a channel.

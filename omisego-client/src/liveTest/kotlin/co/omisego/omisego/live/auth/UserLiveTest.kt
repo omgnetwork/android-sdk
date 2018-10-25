@@ -8,6 +8,13 @@ package co.omisego.omisego.live
  */
 
 import co.omisego.omisego.model.User
+import co.omisego.omisego.operation.startListeningEvents
+import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
+import co.omisego.omisego.websocket.listener.SocketConnectionListener
+import co.omisego.omisego.websocket.listener.SocketCustomEventListener
+import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verify
+import org.amshove.kluent.mock
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldNotBe
@@ -26,5 +33,19 @@ class UserLiveTest : BaseAuthTest() {
         user.isSuccessful shouldBe true
         user.body()?.data shouldNotBe null
         user.body()?.data shouldBeInstanceOf User::class.java
+    }
+
+    @Test
+    fun `user should be able to join channel`() {
+        val mockConnectListener: SocketConnectionListener = mock()
+        val user = client.getCurrentUser().execute()
+        socketClient.addConnectionListener(mockConnectListener)
+        user.body()?.data?.startListeningEvents(
+            socketClient,
+            listener = SocketCustomEventListener.forEvent<TransactionConsumptionRequestEvent> {
+            })
+
+        Thread.sleep(3000)
+        verify(mockConnectListener, times(1)).onConnected()
     }
 }
