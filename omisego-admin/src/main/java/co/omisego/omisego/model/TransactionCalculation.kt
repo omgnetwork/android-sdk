@@ -7,7 +7,6 @@ package co.omisego.omisego.model
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.transaction.ExchangePair
 import java.math.BigDecimal
 import java.util.Date
 

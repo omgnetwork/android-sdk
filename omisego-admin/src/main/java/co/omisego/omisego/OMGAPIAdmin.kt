@@ -11,10 +11,14 @@ import co.omisego.omisego.model.params.AccountListParams
 import co.omisego.omisego.model.params.AccountWalletListParams
 import co.omisego.omisego.model.params.LoginParams
 import co.omisego.omisego.model.params.TokenListParams
+import co.omisego.omisego.model.params.TransactionConsumptionActionParams
+import co.omisego.omisego.model.params.TransactionCreateParams
+import co.omisego.omisego.model.params.TransactionListParams
+import co.omisego.omisego.model.params.TransactionRequestParams
 import co.omisego.omisego.model.params.UserWalletListParams
 import co.omisego.omisego.model.params.WalletParams
-import co.omisego.omisego.model.transaction.list.TransactionListParams
-import co.omisego.omisego.model.transaction.send.TransactionCreateParams
+import co.omisego.omisego.model.params.admin.TransactionConsumptionParams
+import co.omisego.omisego.model.params.admin.TransactionRequestCreateParams
 import co.omisego.omisego.network.ewallet.EWalletAdmin
 
 /**
@@ -61,21 +65,25 @@ class OMGAPIAdmin(internal val eWalletAdmin: EWalletAdmin) {
         get() = eWalletAdmin.eWalletAPI
 
     /**
-     * Asynchronously send the request to login.
-     * if *success* the `success` function will be invoked with the [OMGResponse<AuthenticationToken>] parameter,
+     * Asynchronously approve a transaction consumption
+     * if *success* the `success` function will be invoked with the [OMGResponse<TransactionConsumption>] parameter,
      * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
-     *
-     * @param params A set of parameters used for login
      */
-    fun login(params: LoginParams) = eWalletAPI.login(params)
+    fun approveTransactionConsumption(params: TransactionConsumptionActionParams) = eWalletAPI.approveTransactionConsumption(params)
 
     /**
-     * Asynchronously send the request to logout.
-     * if *success* the `success` function will be invoked with the [OMGResponse<Logout>] parameter,
+     * Asynchronously reject a transaction consumption
+     * if *success* the `success` function will be invoked with the [OMGResponse<TransactionConsumption>] parameter,
      * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
-     *
      */
-    fun logout() = eWalletAPI.logout()
+    fun rejectTransactionConsumption(params: TransactionConsumptionActionParams) = eWalletAPI.rejectTransactionConsumption(params)
+
+    /**
+     * Asynchronously consume a transaction request
+     * if *success* the `success` function will be invoked with the [OMGResponse<TransactionRequest>] parameter,
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     */
+    fun consumeTransactionRequest(params: TransactionConsumptionParams) = eWalletAPI.consumeTransactionRequest(params)
 
     /**
      * Asynchronously send the request to send token to an address.
@@ -84,7 +92,14 @@ class OMGAPIAdmin(internal val eWalletAdmin: EWalletAdmin) {
      *
      * @param params A set of parameters used for create a transaction
      */
-    fun transfer(params: TransactionCreateParams) = eWalletAPI.transfer(params)
+    fun createTransaction(params: TransactionCreateParams) = eWalletAPI.createTransaction(params)
+
+    /**
+     * Asynchronously create a transaction request
+     * if *success* the `success` function will be invoked with the [OMGResponse<TransactionRequest>] parameter,
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     */
+    fun createTransactionRequest(params: TransactionRequestCreateParams) = eWalletAPI.createTransactionRequest(params)
 
     /**
      * Asynchronously send the request to get a wallet corresponding to an address.
@@ -94,6 +109,15 @@ class OMGAPIAdmin(internal val eWalletAdmin: EWalletAdmin) {
      * @param params A set of parameters used for getting a wallet.
      */
     fun getWallet(params: WalletParams) = eWalletAPI.getWallet(params)
+
+    /**
+     * Asynchronously send the request to get a transaction request corresponding to an id.
+     * if *success* the `success` function will be invoked with the [OMGResponse<TransactionRequest>] parameter,
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     * @param params A set of parameters used for getting a transaction request.
+     */
+    fun getTransactionRequest(params: TransactionRequestParams) = eWalletAPI.getTransactionRequest(params)
 
     /**
      * Asynchronously send the request to get a paginated transaction list.
@@ -139,6 +163,23 @@ class OMGAPIAdmin(internal val eWalletAdmin: EWalletAdmin) {
      * @param params A set of parameters used for get a paginated user's wallet list
      */
     fun getUserWallets(params: UserWalletListParams) = eWalletAPI.getUserWallets(params)
+
+    /**
+     * Asynchronously send the request to login.
+     * if *success* the `success` function will be invoked with the [OMGResponse<AuthenticationToken>] parameter,
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     * @param params A set of parameters used for login
+     */
+    fun login(params: LoginParams) = eWalletAPI.login(params)
+
+    /**
+     * Asynchronously send the request to logout.
+     * if *success* the `success` function will be invoked with the [OMGResponse<Logout>] parameter,
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     */
+    fun logout() = eWalletAPI.logout()
 
     /**
      * Set new [authenticationToken].
