@@ -7,8 +7,13 @@ package co.omisego.omisego.live
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.model.Account
 import co.omisego.omisego.model.AdminAuthenticationToken
+import co.omisego.omisego.model.Wallet
+import co.omisego.omisego.model.params.AccountListParams
+import co.omisego.omisego.model.params.AccountWalletListParams
 import co.omisego.omisego.model.params.LoginParams
+import co.omisego.omisego.model.params.admin.TransactionRequestCreateParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldNotBe
 import org.junit.Before
@@ -21,7 +26,16 @@ import org.robolectric.annotation.Config
 @Config(sdk = [23])
 open class BaseAuthTest : BaseLiveTest() {
 
-    private lateinit var adminAuthenticationToken: AdminAuthenticationToken
+    private lateinit var testAdminAuthenticationToken: AdminAuthenticationToken
+
+    private val testAccountList: List<Account> by lazy {
+        getAccount()
+    }
+    val testTokenId by lazy { secret.getString("token_id") }
+    val testMasterAccount: Account by lazy { testAccountList.find { it.master }!! }
+    val testBrandAccount: Account by lazy { testAccountList.find { !it.master }!! }
+    val testMasterWallet: Wallet by lazy { testMasterAccount.getWallet() }
+    val testBrandWallet: Wallet by lazy { testBrandAccount.getWallet() }
 
     @Before
     open fun setup() {
@@ -32,13 +46,27 @@ open class BaseAuthTest : BaseLiveTest() {
             )
         ).execute()
         response.isSuccessful shouldBe true
-        adminAuthenticationToken = response.body()!!.data
+        testAdminAuthenticationToken = response.body()!!.data
     }
 
     @Test
     fun `should be setup authentication correctly`() {
-        adminAuthenticationToken.authenticationToken.isEmpty() shouldBe false
-        adminAuthenticationToken.accountId.isEmpty() shouldBe false
-        adminAuthenticationToken.account shouldNotBe null
+        testAdminAuthenticationToken.authenticationToken.isEmpty() shouldBe false
+        testAdminAuthenticationToken.accountId.isEmpty() shouldBe false
+        testAdminAuthenticationToken.account shouldNotBe null
+    }
+
+    fun createTransactionRequest(params: TransactionRequestCreateParams): String {
+        val body = client.createTransactionRequest(params).execute().body()
+        return body?.data?.formattedId!!
+    }
+
+    private fun getAccount(params: AccountListParams = AccountListParams()): List<Account> {
+        val accountList = client.getAccounts(params).execute()
+        return accountList.body()?.data?.data!!
+    }
+
+    fun Account.getWallet(): Wallet {
+        return client.getAccountWallets(params = AccountWalletListParams(id = this.id)).execute().body()?.data?.data?.get(1)!!
     }
 }

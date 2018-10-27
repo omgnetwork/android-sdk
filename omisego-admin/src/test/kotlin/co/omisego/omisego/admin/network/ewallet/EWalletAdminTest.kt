@@ -8,9 +8,9 @@ package co.omisego.omisego.admin.network.ewallet
  */
 
 import co.omisego.omisego.model.AdminConfiguration
-import co.omisego.omisego.network.interceptor.HeaderInterceptor
 import co.omisego.omisego.network.ewallet.EWalletAdmin
 import co.omisego.omisego.network.ewallet.EWalletAdminAPI
+import co.omisego.omisego.network.interceptor.HeaderInterceptor
 import okhttp3.OkHttpClient
 import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Test
@@ -22,13 +22,12 @@ import retrofit2.Retrofit
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
 class EWalletAdminTest {
+    private val eWalletAdmin = EWalletAdmin.Builder {
+        this.clientConfiguration = AdminConfiguration("http://localhost")
+    }.build()
 
     @Test
     fun `build should adds the omisego header correctly`() {
-        val eWalletAdmin = EWalletAdmin.Builder {
-            this.clientConfiguration = AdminConfiguration("http://localhost")
-        }.build()
-
         eWalletAdmin.header shouldBeInstanceOf HeaderInterceptor::class
         eWalletAdmin.eWalletAPI shouldBeInstanceOf EWalletAdminAPI::class.java
         eWalletAdmin.retrofit shouldBeInstanceOf Retrofit::class.java
