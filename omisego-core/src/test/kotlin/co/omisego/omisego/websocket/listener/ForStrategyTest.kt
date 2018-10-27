@@ -8,7 +8,7 @@ package co.omisego.omisego.websocket.listener
  */
 
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
+import co.omisego.omisego.model.TransactionConsumption
 import co.omisego.omisego.websocket.event.SocketEvent
 import co.omisego.omisego.websocket.strategy.FilterStrategy
 import com.nhaarman.mockito_kotlin.any

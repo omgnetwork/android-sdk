@@ -1,4 +1,4 @@
-package co.omisego.omisego.extension
+package co.omisego.omisego.admin.extension
 
 import co.omisego.omisego.utils.GsonProvider
 

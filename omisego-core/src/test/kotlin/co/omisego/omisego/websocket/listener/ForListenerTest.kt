@@ -9,7 +9,7 @@ package co.omisego.omisego.websocket.listener
 
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
+import co.omisego.omisego.model.TransactionConsumption
 import co.omisego.omisego.operation.Listenable
 import co.omisego.omisego.websocket.event.SocketEvent
 import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent

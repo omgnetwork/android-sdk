@@ -8,7 +8,7 @@ package co.omisego.omisego.websocket.event
  */
 
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
+import co.omisego.omisego.model.TransactionConsumption
 
 sealed class SocketEvent<T : SocketReceive.SocketData> {
     abstract val socketReceive: SocketReceive<T>

@@ -10,9 +10,9 @@ package co.omisego.omisego.custom.gson
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.pagination.Paginable
-import co.omisego.omisego.model.transaction.Transaction
-import co.omisego.omisego.model.transaction.TransactionExchange
-import co.omisego.omisego.model.transaction.TransactionSource
+import co.omisego.omisego.model.Transaction
+import co.omisego.omisego.model.TransactionExchange
+import co.omisego.omisego.model.TransactionSource
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement

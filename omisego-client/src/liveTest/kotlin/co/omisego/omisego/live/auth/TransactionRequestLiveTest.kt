@@ -1,4 +1,4 @@
-package co.omisego.omisego.live
+package co.omisego.omisego.live.auth
 
 /*
  * OmiseGO
@@ -10,14 +10,15 @@ package co.omisego.omisego.live
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.exception.OMGAPIErrorException
 import co.omisego.omisego.extension.bd
+import co.omisego.omisego.live.BaseAuthTest
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.Token
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionActionParams
-import co.omisego.omisego.model.transaction.request.TransactionRequest
-import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
-import co.omisego.omisego.model.transaction.request.TransactionRequestParams
-import co.omisego.omisego.model.transaction.request.toTransactionConsumptionParams
+import co.omisego.omisego.model.TransactionConsumption
+import co.omisego.omisego.model.TransactionRequest
+import co.omisego.omisego.model.params.TransactionConsumptionActionParams
+import co.omisego.omisego.model.params.TransactionRequestParams
+import co.omisego.omisego.model.params.client.TransactionRequestCreateParams
+import co.omisego.omisego.model.toTransactionConsumptionParams
 import co.omisego.omisego.operation.startListeningEvents
 import co.omisego.omisego.websocket.listener.TransactionRequestListener
 import org.amshove.kluent.shouldBe

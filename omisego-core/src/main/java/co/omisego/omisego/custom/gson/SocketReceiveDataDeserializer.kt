@@ -8,7 +8,7 @@ package co.omisego.omisego.custom.gson
  */
 
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
+import co.omisego.omisego.model.TransactionConsumption
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement

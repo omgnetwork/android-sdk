@@ -13,6 +13,18 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Changed
 - Renamed `Logout` to `Empty`
+- Moved the following classes to package `co.omisego.omisego.model.params`
+    - TransactionConsumptionParams
+    - TransactionConsumptionActionParams
+    - TransactionCreateParams
+    - TransactionListParams
+    - TransactionRequestCreateParams
+    - TransactionRequestParams
+- Moved the following classes to package `co.omisego.omisego.model`
+    - ExchangePair
+    - Transaction
+    - TransactionConsumption
+    - TransactionRequest
 
 ## [1.1.0] - 2018-09-03
 ### Added

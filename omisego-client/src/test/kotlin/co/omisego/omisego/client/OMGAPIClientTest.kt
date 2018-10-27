@@ -23,9 +23,9 @@ import co.omisego.omisego.model.User
 import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.pagination.Pagination
 import co.omisego.omisego.model.pagination.PaginationList
-import co.omisego.omisego.model.transaction.Transaction
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-import co.omisego.omisego.model.transaction.request.TransactionRequest
+import co.omisego.omisego.model.Transaction
+import co.omisego.omisego.model.TransactionConsumption
+import co.omisego.omisego.model.TransactionRequest
 import co.omisego.omisego.network.ewallet.EWalletClient
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken

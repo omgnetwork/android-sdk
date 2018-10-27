@@ -11,10 +11,10 @@ import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionStatus
-import co.omisego.omisego.model.transaction.request.TransactionRequestStatus
-import co.omisego.omisego.model.transaction.request.TransactionRequestType
+import co.omisego.omisego.model.TransactionConsumption
+import co.omisego.omisego.model.TransactionConsumptionStatus
+import co.omisego.omisego.model.TransactionRequestStatus
+import co.omisego.omisego.model.TransactionRequestType
 import co.omisego.omisego.utils.Either
 import co.omisego.omisego.websocket.enum.SocketCustomEvent
 import org.amshove.kluent.shouldBe

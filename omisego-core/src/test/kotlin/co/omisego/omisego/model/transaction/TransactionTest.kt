@@ -11,6 +11,9 @@ import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.APIError
+import co.omisego.omisego.model.Transaction
+import co.omisego.omisego.model.TransactionExchange
+import co.omisego.omisego.model.TransactionSource
 import co.omisego.omisego.model.pagination.Paginable
 import co.omisego.omisego.utils.DateConverter
 import org.amshove.kluent.shouldBe

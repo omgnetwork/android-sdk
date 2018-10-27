@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.transaction.request
+package co.omisego.omisego.model.params
 
 /*
  * OmiseGO

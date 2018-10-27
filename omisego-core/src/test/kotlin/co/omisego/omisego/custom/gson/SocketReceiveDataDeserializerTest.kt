@@ -10,7 +10,7 @@ package co.omisego.omisego.custom.gson
 import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
+import co.omisego.omisego.model.TransactionConsumption
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken

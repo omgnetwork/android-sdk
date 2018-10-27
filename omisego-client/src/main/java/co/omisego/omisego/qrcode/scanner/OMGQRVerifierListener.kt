@@ -9,7 +9,7 @@ package co.omisego.omisego.qrcode.scanner
 
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
-import co.omisego.omisego.model.transaction.request.TransactionRequest
+import co.omisego.omisego.model.TransactionRequest
 
 /**
  * The callback that will receive events from the OMGQRScannerView

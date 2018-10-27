@@ -11,6 +11,9 @@ import android.support.test.runner.AndroidJUnit4
 import co.omisego.omisego.extension.bd
 import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
+import co.omisego.omisego.model.TransactionRequest
+import co.omisego.omisego.model.TransactionRequestStatus
+import co.omisego.omisego.model.TransactionRequestType
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.utils.DateConverter

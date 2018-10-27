@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.transaction.send
+package co.omisego.omisego.model.params
 
 import java.math.BigDecimal
 

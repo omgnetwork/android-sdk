@@ -8,7 +8,7 @@ package co.omisego.omisego.live.auth
  */
 
 import co.omisego.omisego.live.BaseAuthTest
-import co.omisego.omisego.model.transaction.list.TransactionListParams
+import co.omisego.omisego.model.params.TransactionListParams
 import org.amshove.kluent.shouldBe
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -9,8 +9,8 @@ package co.omisego.omisego.operation
 
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-import co.omisego.omisego.model.transaction.request.TransactionRequest
+import co.omisego.omisego.model.TransactionConsumption
+import co.omisego.omisego.model.TransactionRequest
 import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.listener.DelegateSocketCustomEventListener
 import co.omisego.omisego.websocket.listener.SocketCustomEventListener

@@ -10,6 +10,8 @@ package co.omisego.omisego.model.transaction
 import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.Account
+import co.omisego.omisego.model.ExchangePair
+import co.omisego.omisego.model.TransactionExchange
 import co.omisego.omisego.model.Wallet
 import co.omisego.omisego.utils.DateConverter
 import org.amshove.kluent.shouldBeInstanceOf

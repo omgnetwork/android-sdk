@@ -10,7 +10,7 @@ package co.omisego.omisego.model.socket
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import co.omisego.omisego.model.APIError
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
+import co.omisego.omisego.model.TransactionConsumption
 import co.omisego.omisego.utils.Either
 import co.omisego.omisego.websocket.channel.dispatcher.delegator.SocketReceiveParser
 import co.omisego.omisego.websocket.enum.SocketCustomEvent

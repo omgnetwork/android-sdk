@@ -10,12 +10,12 @@ package co.omisego.omisego
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.params.LoginParams
 import co.omisego.omisego.model.params.SignUpParams
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionActionParams
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
-import co.omisego.omisego.model.transaction.list.TransactionListParams
-import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
-import co.omisego.omisego.model.transaction.request.TransactionRequestParams
-import co.omisego.omisego.model.transaction.send.TransactionCreateParams
+import co.omisego.omisego.model.params.TransactionConsumptionActionParams
+import co.omisego.omisego.model.params.client.TransactionConsumptionParams
+import co.omisego.omisego.model.params.TransactionListParams
+import co.omisego.omisego.model.params.client.TransactionRequestCreateParams
+import co.omisego.omisego.model.params.TransactionRequestParams
+import co.omisego.omisego.model.params.TransactionCreateParams
 import co.omisego.omisego.network.ewallet.EWalletClient
 
 /**
