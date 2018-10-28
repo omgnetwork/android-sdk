@@ -7,10 +7,11 @@ package co.omisego.omisego.operation
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.User
-import co.omisego.omisego.model.socket.SocketTopic
+import co.omisego.omisego.model.Account
 import co.omisego.omisego.model.TransactionConsumption
 import co.omisego.omisego.model.TransactionRequest
+import co.omisego.omisego.model.User
+import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.listener.DelegateSocketCustomEventListener
 import co.omisego.omisego.websocket.listener.SocketCustomEventListener
@@ -93,3 +94,23 @@ fun User.startListeningEvents(
         joinChannel(socketTopic, payload)
     }
 }
+
+/**
+ * Opens a websocket connection with the server and starts to listen for any event regarding the current account.
+ *
+ * @param client The correctly initialised client to use for the websocket connection.
+ * @param payload The additional metadata for the consumption
+ * @param listener The delegate that will receive events.
+ */
+fun Account.startListeningEvents(
+    client: SocketClientContract.Client,
+    payload: Map<String, Any> = mapOf(),
+    listener: SocketCustomEventListener
+) {
+    with(client) {
+        val wrapper = DelegateSocketCustomEventListener(FilterStrategy.Topic(socketTopic), listener)
+        addCustomEventListener(wrapper)
+        joinChannel(socketTopic, payload)
+    }
+}
+
