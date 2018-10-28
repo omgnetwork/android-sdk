@@ -254,7 +254,6 @@ class OMGAPIAdminTest : GsonDelegator() {
 
         val expected = gson.fromJson<OMGResponse<TransactionConsumption>>(result.body(), object : TypeToken<OMGResponse<TransactionConsumption>>() {}.type)
         verify(callback, timeout(connectionTimeout).times(1)).success(expected)
-        println(expected.data)
     }
 
     @Test
