@@ -19,7 +19,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class TransferLiveTest : BaseAuthTest() {
+class CreateTransactionLiveTest : BaseAuthTest() {
 
     @Test
     fun `transfer from an account to a user should return 200, 'from' should be an account and 'to' should be a user`() {
