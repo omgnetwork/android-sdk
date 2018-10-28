@@ -46,28 +46,28 @@ class TransactionRequestLiveTest : BaseAuthTest() {
     }
     private val testExpectedAmount: BigDecimal by lazy { 1.bd }
 
-    private val testTransactionRequestTypeReceiveId by lazy {
+    private val testTransactionRequestTypeReceive by lazy {
         createTransactionRequest(params)
     }
-    private val testTransactionRequestTypeSendId by lazy {
+    private val testTransactionRequestTypeSend by lazy {
         createTransactionRequest(params.copy(type = TransactionRequestType.SEND))
     }
-    private val testTransactionRequestTypeReceiveRequiredConfirmationId by lazy {
+    private val testTransactionRequestTypeReceiveRequiredConfirmation by lazy {
         createTransactionRequest(params.copy(requireConfirmation = true))
     }
 
     @Test
     fun `getTransactionRequest should return the corresponding transaction request correctly`() {
-        val response = client.getTransactionRequest(TransactionRequestParams(testTransactionRequestTypeReceiveId)).execute()
+        val response = client.getTransactionRequest(TransactionRequestParams(testTransactionRequestTypeReceive.id)).execute()
         response.isSuccessful shouldBe true
         response.body()?.data shouldBeInstanceOf TransactionRequest::class.java
-        response.body()?.data?.formattedId shouldEqual testTransactionRequestTypeReceiveId
+        response.body()?.data?.formattedId shouldEqual testTransactionRequestTypeReceive
     }
 
     @Test
     fun `another account consume master account's transaction request with type RECEIVE should have less token correctly`() {
         /* Prepare test data */
-        val params = createTransactionConsumptionParams(testTransactionRequestTypeReceiveId)
+        val params = createTransactionConsumptionParams(testTransactionRequestTypeReceive.id)
 
         val amountBeforeConsume = testBrandWallet.balances.find { it.token.id == testTokenId }!!.amount
 
@@ -84,7 +84,7 @@ class TransactionRequestLiveTest : BaseAuthTest() {
     @Test
     fun `another account consume master account's transaction request with type SEND should have more token`() {
         /* Prepare test data */
-        val params = createTransactionConsumptionParams(testTransactionRequestTypeSendId)
+        val params = createTransactionConsumptionParams(testTransactionRequestTypeSend.id)
 
         val amountBeforeConsume = testBrandWallet.balances.find { it.token.id == testTokenId }!!.amount
 
@@ -101,7 +101,7 @@ class TransactionRequestLiveTest : BaseAuthTest() {
     @Test
     fun `another account consume master account's a confirmation-required transaction request with type RECEIVE, the status should be pending`() {
         /* Prepare test data */
-        val params = createTransactionConsumptionParams(testTransactionRequestTypeReceiveRequiredConfirmationId)
+        val params = createTransactionConsumptionParams(testTransactionRequestTypeReceiveRequiredConfirmation.id)
 
         val amountBeforeConsume = testBrandWallet.balances.find { it.token.id == testTokenId }!!.amount
 
@@ -117,15 +117,15 @@ class TransactionRequestLiveTest : BaseAuthTest() {
 
     @Test
     fun `create transaction request with different types should return a valid transaction request`() {
-        testTransactionRequestTypeReceiveId shouldStartWith "txr"
-        testTransactionRequestTypeReceiveRequiredConfirmationId shouldStartWith "txr"
-        testTransactionRequestTypeSendId shouldStartWith "txr"
+        testTransactionRequestTypeReceive.id shouldStartWith "txr"
+        testTransactionRequestTypeReceiveRequiredConfirmation.id shouldStartWith "txr"
+        testTransactionRequestTypeSend.id shouldStartWith "txr"
 
         println(
             """
-                receive, not required confirmation -> $testTransactionRequestTypeReceiveId
-                send, not required confirmation -> $testTransactionRequestTypeSendId
-                receive, required confirmation -> $testTransactionRequestTypeReceiveRequiredConfirmationId
+                receive, not required confirmation -> $testTransactionRequestTypeReceive
+                send, not required confirmation -> $testTransactionRequestTypeSend
+                receive, required confirmation -> $testTransactionRequestTypeReceiveRequiredConfirmation
             """.trimIndent()
         )
     }
@@ -134,7 +134,7 @@ class TransactionRequestLiveTest : BaseAuthTest() {
     fun `approve transaction consumption should return an confirmed-status transaction consumption`() {
         /* Prepare test data */
         val requiredConfirmationTransactionRequest = createTransactionRequest(params.copy(requireConfirmation = true))
-        val transactionConsumptionParams = createTransactionConsumptionParams(requiredConfirmationTransactionRequest)
+        val transactionConsumptionParams = createTransactionConsumptionParams(requiredConfirmationTransactionRequest.id)
         val amountBeforeConsume = testBrandWallet.balances.find { it.token.id == testTokenId }!!.amount
         val responsePendingTransactionConsumption = client.consumeTransactionRequest(transactionConsumptionParams).execute()
 
@@ -159,7 +159,7 @@ class TransactionRequestLiveTest : BaseAuthTest() {
     fun `reject transaction consumption should return an rejected-status transaction consumption`() {
         /* Prepare test data */
         val requiredConfirmationTransactionRequest = createTransactionRequest(params.copy(requireConfirmation = true))
-        val transactionConsumptionParams = createTransactionConsumptionParams(requiredConfirmationTransactionRequest)
+        val transactionConsumptionParams = createTransactionConsumptionParams(requiredConfirmationTransactionRequest.id)
         val amountBeforeConsume = testBrandWallet.balances.find { it.token.id == testTokenId }!!.amount
         val responsePendingTransactionConsumption = client.consumeTransactionRequest(transactionConsumptionParams).execute()
 

@@ -9,10 +9,12 @@ package co.omisego.omisego.live
 
 import co.omisego.omisego.model.Account
 import co.omisego.omisego.model.AdminAuthenticationToken
+import co.omisego.omisego.model.TransactionRequest
 import co.omisego.omisego.model.Wallet
 import co.omisego.omisego.model.params.AccountListParams
 import co.omisego.omisego.model.params.AccountWalletListParams
 import co.omisego.omisego.model.params.LoginParams
+import co.omisego.omisego.model.params.TransactionRequestParams
 import co.omisego.omisego.model.params.admin.TransactionRequestCreateParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldNotBe
@@ -26,14 +28,20 @@ import org.robolectric.annotation.Config
 @Config(sdk = [23])
 open class BaseAuthTest : BaseLiveTest() {
 
-    private lateinit var testAdminAuthenticationToken: AdminAuthenticationToken
+    lateinit var testAdminAuthenticationToken: AdminAuthenticationToken
 
     private val testAccountList: List<Account> by lazy {
         getAccount()
     }
+
+    /* Token for testing */
     val testTokenId by lazy { secret.getString("token_id") }
+
+    /*  Accounts for testing */
     val testMasterAccount: Account by lazy { testAccountList.find { it.master }!! }
     val testBrandAccount: Account by lazy { testAccountList.find { !it.master }!! }
+
+    /* Wallets for testing*/
     val testMasterWallet: Wallet by lazy { testMasterAccount.getWallet() }
     val testBrandWallet: Wallet by lazy { testBrandAccount.getWallet() }
 
@@ -56,9 +64,9 @@ open class BaseAuthTest : BaseLiveTest() {
         testAdminAuthenticationToken.account shouldNotBe null
     }
 
-    fun createTransactionRequest(params: TransactionRequestCreateParams): String {
+    fun createTransactionRequest(params: TransactionRequestCreateParams): TransactionRequest {
         val body = client.createTransactionRequest(params).execute().body()
-        return body?.data?.formattedId!!
+        return body?.data!!
     }
 
     private fun getAccount(params: AccountListParams = AccountListParams()): List<Account> {
