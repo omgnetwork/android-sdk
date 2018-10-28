@@ -36,7 +36,8 @@ enum class ErrorCode constructor(private val code: String) {
     TRANSACTION_CONSUMPTION_UNFINALIZED("transaction_consumption:unfinalized"),
     WEBSOCKET_FORBIDDEN_CHANNEL("websocket:forbidden_channel"),
     WEBSOCKET_CHANNEL_NOT_FOUND("websocket:channel_not_found"),
-    WEB_SOCKET_CONNECT_ERROR("websocket:connect_error"),
+    WEBSOCKET_CONNECT_ERROR("websocket:connect_error"),
+    WEBSOCKET_INVALID_FORMAT("websocket:invalid_format"),
 
     //Error code from OmiseGO user API
     USER_AUTH_TOKEN_EXPIRED("user:auth_token_expired"),
