@@ -9,7 +9,7 @@ package co.omisego.omisego.live.auth
 
 import co.omisego.omisego.extension.bd
 import co.omisego.omisego.live.BaseAuthTest
-import co.omisego.omisego.model.params.TransactionCreateParams
+import co.omisego.omisego.model.params.admin.TransactionCreateParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldNotBe
 import org.junit.Test
