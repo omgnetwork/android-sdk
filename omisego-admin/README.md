@@ -85,8 +85,10 @@ omgAPIAdmin.login(params).enqueue(object: OMGCallback<User>{
 
 ### Transferring token
 
+#### Create a transaction
+
 ```kotlin
-val request = TransactionCreateParams(
+val params = TransactionCreateParams(
     fromAddress = "1e3982f5-4a27-498d-a91b-7bb2e2a8d3d1",
     toAddress = "2e3982f5-4a27-498d-a91b-7bb2e2a8d3d1",
     amount = 1000.bd,
@@ -94,7 +96,7 @@ val request = TransactionCreateParams(
     idempotencyToken = "some token"
 )
 
-omgAPIClient.transfer(request).enqueue(object : OMGCallback<Transaction>{
+omgAPIClient.createTransaction(request).enqueue(object : OMGCallback<Transaction>{
     override fun success(response: OMGResponse<Transaction>) {
         // Do something
     }
@@ -106,6 +108,140 @@ omgAPIClient.transfer(request).enqueue(object : OMGCallback<Transaction>{
 ```
 
 There are different ways to initialize a `TransactionCreateParams` by specifying either `toAddress`, `toAccountId` or `toProviderUserId`.
+
+### Generate a transaction request
+
+A more configurable way to transfer tokens between 2 wallets is to use the transaction request flow. 
+
+To make a transaction happen, a `TransactionRequest` needs to be created and consumed by a `TransactionConsumption`.
+
+To generate a transaction request you can call:
+
+```kotlin
+val params = TransactionRequestCreateParams(
+    type = TransactionRequestType.RECEIVE,
+    tokenId = "a token id",
+    amount = 1.bd, // BigDecimal
+    address = "an address",
+    requireConfirmation = true,
+    allowAmountOverride = true,
+    correlationId = "a correlation id",
+    maxConsumptions = 10,
+    maxConsumptionsPerUser = 5,
+    consumptionLifetime = 60_000,
+    expirationDate = null,
+    metadata = mapOf(),
+    encryptedMetadata = mapOf()
+)
+
+omgAPIClient.createTransactionRequest(params).enqueue(object: OMGCallback<TransactionRequest> {
+    override fun success(response: OMGResponse<TransactionRequest>) {
+        // Do something
+    }
+
+    override fun fail(response: OMGResponse<APIError>) {
+        // Do something
+    }
+})
+```
+
+Where:
+* `params` is a `TransactionRequestCreateParams` data class constructed using:
+  * `type`: The QR code type, `TransactionRequestType.RECEIVE` or `TransactionRequestType.SEND`.
+  * `tokenId`: The id of the desired token.
+  In the case of a type "send", this will be the token taken from the requester. In the case of a type "receive" this will be the token received by the requester
+  * `amount`: (optional) The amount of token to receive. This amount can be either inputted when generating or consuming a transaction request.
+  * `address`: (optional) The address specifying where the transaction should be sent to. If not specified, the current user's primary wallet address will be used.
+  * `correlationId`: (optional) An id that can uniquely identify a transaction. Typically an order id from a provider.
+  * `requireConfirmation`: (optional) A boolean indicating if the request needs a confirmation from the requester before being proceeded
+  * `maxConsumptions`: (optional) The maximum number of time that this request can be consumed
+  * `consumptionLifetime`: (optional) The amount of time in millisecond during which a consumption is valid
+  * `expirationDate`: (optional) The date when the request will expire and not be consumable anymore
+  * `allowAmountOverride`: (optional) Allow or not the consumer to override the amount specified in the request. This needs to be true if the amount is not specified
+  > Note that if `amount` is `null` and `allowAmountOverride` is false the init will fail and throw an exception.
+``
+  * `maxConsumptionsPerUser`: The maximum number of consumptions allowed per unique user
+  * `metadata`: Additional metadata embedded with the request
+  * `encryptedMetadata`: Additional encrypted metadata embedded with the request
+
+#### Consume a transaction request
+
+The previously created `transactionRequest` can then be consumed:
+
+```kotlin
+/* Short version */
+val request = TransactionConsumptionParams.create(
+    transactionRequest
+)
+
+/* Full version */
+val request = TransactionConsumptionParams.create(
+    transactionRequest,
+    amount = 25_000.bd, // BigDecimal
+    address = "an address",
+    tokenId = "A token id",
+    idempotencyToken = "An idempotency token",
+    correlationId = "a correlation id",
+    metadata = mapOf(),
+    encryptedMetadata = mapOf()
+)
+
+omgAPIClient.consumeTransactionRequest(request).enqueue(object : OMGCallback<TransactionConsumption> {
+    override fun success(response: OMGResponse<TransactionConsumption>) {
+        // Handle success
+    }
+
+    override fun fail(response: OMGResponse<APIError>) {
+        // Handle error
+    }
+})
+```
+
+Where 
+* `request` is a `TransactionConsumptionParams` data class constructed using:
+    * `transactionRequest`: The transactionRequest obtained from the QR scanner.
+    * `address`: (optional) The address from which to take the funds. If not specified, the current user's primary wallet address will be used.
+    * `tokenId`: (optional) The token id to use for the consumption.
+    * `amount`: (optional) The amount of token to send. This amount can be either inputted when generating or consuming a transaction request.
+    
+        > Note that if the amount was not specified in the transaction request it needs to be specified here, otherwise the init will fail and throw `IllegalArgumentException`.
+        
+    * `idempotencyToken`: The idempotency token used to ensure that the transaction will be executed one time only on the server. If the network call fails, you should reuse the same idempotencyToken when retrying the request.
+    * `correlationId`: (optional) An id that can uniquely identify a transaction. Typically an order id from a provider.
+    * `metadata`: A dictionary of additional data to be stored for this transaction consumption.
+    * `encryptedMetadata`: A dictionary of additional encrypted data to be stored for this transaction consumption.
+
+### Approve or Reject a transaction consumption
+The `TransactionConsumption` object can be used to `approve` or `reject` the transaction consumption. 
+Once you receive the `transactionConsumption` object, you can call `approve` or `reject` function. 
+The function will then return the `OMGCall<TransactionConsumption>` object to be used for making the actual request to the API.
+ 
+```kotlin
+val approveRequest = transactionConsumption.approve(omgAPIClient)
+val rejectRequest = transactionConsumption.reject(omgAPIClient)
+
+// Approve a transaction consumption
+approveRequest.enqueue(object: OMGCallback<TransactionConsumption>{
+    override fun success(response: OMGResponse<TransactionConsumption>) {
+        // Handle success
+    }
+
+    override fun fail(response: OMGResponse<APIError>) {
+        // Handle error
+    }
+})
+
+// Reject a transaction consumption
+rejectRequest.enqueue(object: OMGCallback<TransactionConsumption>{
+    override fun success(response: OMGResponse<TransactionConsumption>) {
+        // Handle success
+    }
+
+    override fun fail(response: OMGResponse<APIError>) {
+        // Handle error
+    }
+})
+```
 
 ### PaginationList
 `PaginationList` is an object representing a paginated filtered data set.
