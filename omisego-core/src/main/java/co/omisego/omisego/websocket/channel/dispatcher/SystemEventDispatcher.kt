@@ -33,7 +33,10 @@ class SystemEventDispatcher(
                 }
             }
             SocketSystemEvent.ERROR -> {
-                socketChannelListener.onError(APIError(ErrorCode.SDK_SOCKET_ERROR, "Something goes wrong while connecting to the channel"))
+                val error = response.error
+                    ?: APIError(ErrorCode.SDK_SOCKET_ERROR, "Something goes wrong while connecting to the channel")
+                
+                socketChannelListener.onError(error)
             }
         }
     }
