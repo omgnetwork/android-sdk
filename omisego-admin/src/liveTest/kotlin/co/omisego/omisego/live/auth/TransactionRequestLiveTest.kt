@@ -61,7 +61,7 @@ class TransactionRequestLiveTest : BaseAuthTest() {
         val response = client.getTransactionRequest(TransactionRequestParams(testTransactionRequestTypeReceive.id)).execute()
         response.isSuccessful shouldBe true
         response.body()?.data shouldBeInstanceOf TransactionRequest::class.java
-        response.body()?.data?.formattedId shouldEqual testTransactionRequestTypeReceive
+        response.body()?.data?.formattedId shouldEqual testTransactionRequestTypeReceive.formattedId
     }
 
     @Test

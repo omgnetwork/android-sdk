@@ -8,7 +8,6 @@ package co.omisego.omisego.model
  */
 
 import android.os.Parcelable
-import co.omisego.omisego.model.Token
 import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 import java.util.Date

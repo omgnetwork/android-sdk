@@ -100,7 +100,6 @@ data class TransactionConsumptionParams internal constructor(
             )
         }
 
-
         /**
          * Initialize the params used to consume a transaction request
          * Returns null if the amount is null and was not specified in the transaction request

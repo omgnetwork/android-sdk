@@ -14,7 +14,6 @@ import co.omisego.omisego.model.Wallet
 import co.omisego.omisego.model.params.AccountListParams
 import co.omisego.omisego.model.params.AccountWalletListParams
 import co.omisego.omisego.model.params.LoginParams
-import co.omisego.omisego.model.params.TransactionRequestParams
 import co.omisego.omisego.model.params.admin.TransactionRequestCreateParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldNotBe

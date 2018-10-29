@@ -113,4 +113,3 @@ fun Account.startListeningEvents(
         joinChannel(socketTopic, payload)
     }
 }
-
