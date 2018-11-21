@@ -7,6 +7,7 @@ package co.omisego.omisego.model.params
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.model.pagination.Filter
 import co.omisego.omisego.model.pagination.Paginable
 import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
@@ -58,26 +59,27 @@ data class UserWalletListParams internal constructor(
      */
     override val searchTerm: String? = null,
 
-    /**
-     * A key-value map to search with the available fields
-     * See more at [Paginable.Wallet.SearchableFields]
-     *
-     */
-    val searchTerms: Map<Paginable.Wallet.SearchableFields, Any>? = null
-): PaginableParams {
+    override val matchAll: List<Filter>? = null,
+
+    override val matchAny: List<Filter>? = null
+) : PaginableParams {
     companion object {
         fun create(
             providerUserId: String,
             page: Int = 1,
             perPage: Int = 10,
             sortBy: Paginable.Wallet.SortableFields = Paginable.Wallet.SortableFields.CREATED_AT,
-            sortDir: SortDirection = SortDirection.DESCENDING
+            sortDir: SortDirection = SortDirection.DESCENDING,
+            matchAll: List<Filter>? = null,
+            matchAny: List<Filter>? = null
         ) = UserWalletListParams(
             providerUserId = providerUserId,
             page = page,
             perPage = perPage,
             sortBy = sortBy,
-            sortDir = sortDir
+            sortDir = sortDir,
+            matchAll = matchAll,
+            matchAny = matchAny
         )
     }
 }

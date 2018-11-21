@@ -7,6 +7,7 @@ package co.omisego.omisego.model.params
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.model.pagination.Filter
 import co.omisego.omisego.model.pagination.Paginable
 import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
@@ -53,12 +54,9 @@ data class TokenListParams internal constructor(
      */
     override val searchTerm: String? = null,
 
-    /**
-     * A key-value map to search with the available fields
-     * See more at [Paginable.Token.SearchableFields]
-     *
-     */
-    val searchTerms: Map<Paginable.Token.SearchableFields, Any>? = null
+    override val matchAll: List<Filter>? = null,
+
+    override val matchAny: List<Filter>? = null
 ) : PaginableParams {
     companion object {
         fun create(
@@ -66,27 +64,18 @@ data class TokenListParams internal constructor(
             perPage: Int = 10,
             sortBy: Paginable.Token.SortableFields = Paginable.Token.SortableFields.CREATED_AT,
             sortDir: SortDirection = SortDirection.DESCENDING,
-            searchTerm: String? = null
+            searchTerm: String? = null,
+            matchAll: List<Filter>? = null,
+            matchAny: List<Filter>? = null
         ) = TokenListParams(
             page = page,
             perPage = perPage,
             sortBy = sortBy,
             sortDir = sortDir,
-            searchTerm = searchTerm
+            searchTerm = searchTerm,
+            matchAll = matchAll,
+            matchAny = matchAny
         )
 
-        fun create(
-            page: Int = 1,
-            perPage: Int = 10,
-            sortBy: Paginable.Token.SortableFields = Paginable.Token.SortableFields.CREATED_AT,
-            sortDir: SortDirection = SortDirection.DESCENDING,
-            searchTerms: Map<Paginable.Token.SearchableFields, Any>? = null
-        ) = TokenListParams(
-            page = page,
-            perPage = perPage,
-            sortBy = sortBy,
-            sortDir = sortDir,
-            searchTerms = searchTerms
-        )
     }
 }

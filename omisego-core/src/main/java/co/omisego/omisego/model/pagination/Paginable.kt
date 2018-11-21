@@ -23,7 +23,7 @@ sealed class Paginable {
         /**
          * Represents transaction's searchable fields
          */
-        enum class SearchableFields constructor(override val value: String) : OMGEnum {
+        enum class FilterableFields constructor(override val value: String) : OMGEnum {
             ID("id"),
             STATUS("status"),
             FROM("from"),
@@ -66,7 +66,7 @@ sealed class Paginable {
         /**
          * Represents account's searchable fields
          */
-        enum class SearchableFields constructor(override val value: String) : OMGEnum {
+        enum class FilterableFields constructor(override val value: String) : OMGEnum {
             ID("id"),
             NAME("name"),
             DESCRIPTION("description"),
@@ -94,7 +94,7 @@ sealed class Paginable {
         /**
          * Represents token's searchable fields
          */
-        enum class SearchableFields constructor(override val value: String) : OMGEnum {
+        enum class FilterableFields constructor(override val value: String) : OMGEnum {
             SYMBOL("symbol"),
             NAME("name");
 
@@ -117,7 +117,7 @@ sealed class Paginable {
         /**
          * Represents wallet's searchable fields
          */
-        enum class SearchableFields constructor(override val value: String) : OMGEnum {
+        enum class FilterableFields constructor(override val value: String) : OMGEnum {
             ADDRESS("address"),
             NAME("name");
 

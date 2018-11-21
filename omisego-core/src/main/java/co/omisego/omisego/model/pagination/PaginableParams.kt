@@ -10,7 +10,9 @@ package co.omisego.omisego.model.pagination
 interface PaginableParams {
     val page: Int
     val perPage: Int
-    val searchTerm: String?
     val sortDir: SortDirection
     val sortBy: Paginable.SortableFields
+    val searchTerm: String?
+    val matchAny: List<Filter>?
+    val matchAll: List<Filter>?
 }
