@@ -12,7 +12,7 @@ import co.omisego.omisego.model.params.AccountWalletListParams
 import co.omisego.omisego.model.params.LoginParams
 import co.omisego.omisego.model.params.TokenListParams
 import co.omisego.omisego.model.params.TransactionConsumptionActionParams
-import co.omisego.omisego.model.params.TransactionListParams
+import co.omisego.omisego.model.params.admin.TransactionListParams
 import co.omisego.omisego.model.params.TransactionRequestParams
 import co.omisego.omisego.model.params.UserWalletListParams
 import co.omisego.omisego.model.params.WalletParams

@@ -8,6 +8,7 @@ package co.omisego.omisego.model.params
  */
 
 import co.omisego.omisego.model.pagination.Filter
+import co.omisego.omisego.model.pagination.FilterableParams
 import co.omisego.omisego.model.pagination.Paginable
 import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
@@ -64,7 +65,7 @@ data class AccountWalletListParams internal constructor(
     override val matchAll: List<Filter>? = null,
 
     override val matchAny: List<Filter>? = null
-) : PaginableParams {
+) : PaginableParams, FilterableParams {
     companion object {
         fun create(
             id: String,
@@ -74,8 +75,8 @@ data class AccountWalletListParams internal constructor(
             sortBy: Paginable.Wallet.SortableFields = Paginable.Wallet.SortableFields.CREATED_AT,
             sortDir: SortDirection = SortDirection.DESCENDING,
             searchTerm: String? = null,
-            matchAll: List<Filter>?,
-            matchAny: List<Filter>?
+            matchAll: List<Filter>? = null,
+            matchAny: List<Filter>? = null
         ) = AccountWalletListParams(
             id = id,
             owned = owned,

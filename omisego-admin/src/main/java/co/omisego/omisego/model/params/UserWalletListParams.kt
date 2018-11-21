@@ -57,11 +57,7 @@ data class UserWalletListParams internal constructor(
      *
      * Note: Conflict with searchTerms, only use one of them.
      */
-    override val searchTerm: String? = null,
-
-    override val matchAll: List<Filter>? = null,
-
-    override val matchAny: List<Filter>? = null
+    override val searchTerm: String? = null
 ) : PaginableParams {
     companion object {
         fun create(
@@ -77,9 +73,7 @@ data class UserWalletListParams internal constructor(
             page = page,
             perPage = perPage,
             sortBy = sortBy,
-            sortDir = sortDir,
-            matchAll = matchAll,
-            matchAny = matchAny
+            sortDir = sortDir
         )
     }
 }

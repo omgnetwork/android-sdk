@@ -8,6 +8,7 @@ package co.omisego.omisego.model.params
  */
 
 import co.omisego.omisego.model.pagination.Filter
+import co.omisego.omisego.model.pagination.FilterableParams
 import co.omisego.omisego.model.pagination.Paginable
 import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
@@ -59,7 +60,7 @@ data class AccountListParams internal constructor(
     override val matchAll: List<Filter>? = null,
 
     override val matchAny: List<Filter>? = null
-) : PaginableParams {
+) : PaginableParams, FilterableParams {
     companion object {
         fun create(
             page: Int = 1,

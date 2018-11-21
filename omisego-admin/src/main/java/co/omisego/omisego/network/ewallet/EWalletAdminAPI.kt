@@ -36,12 +36,12 @@ import co.omisego.omisego.model.params.AccountWalletListParams
 import co.omisego.omisego.model.params.LoginParams
 import co.omisego.omisego.model.params.TokenListParams
 import co.omisego.omisego.model.params.TransactionConsumptionActionParams
-import co.omisego.omisego.model.params.TransactionListParams
 import co.omisego.omisego.model.params.TransactionRequestParams
 import co.omisego.omisego.model.params.UserWalletListParams
 import co.omisego.omisego.model.params.WalletParams
 import co.omisego.omisego.model.params.admin.TransactionConsumptionParams
 import co.omisego.omisego.model.params.admin.TransactionCreateParams
+import co.omisego.omisego.model.params.admin.TransactionListParams
 import co.omisego.omisego.model.params.admin.TransactionRequestCreateParams
 import retrofit2.http.Body
 import retrofit2.http.POST

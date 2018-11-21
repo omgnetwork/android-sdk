@@ -1,4 +1,4 @@
-package co.omisego.omisego.live
+package co.omisego.omisego.live.auth
 
 /*
  * OmiseGO
@@ -7,8 +7,9 @@ package co.omisego.omisego.live
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.live.BaseAuthTest
 import co.omisego.omisego.model.Transaction
-import co.omisego.omisego.model.params.TransactionListParams
+import co.omisego.omisego.model.params.client.TransactionListParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldNotBe

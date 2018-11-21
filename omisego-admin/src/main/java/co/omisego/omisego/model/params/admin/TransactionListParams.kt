@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.params
+package co.omisego.omisego.model.params.admin
 
 /*
  * OmiseGO
@@ -8,6 +8,7 @@ package co.omisego.omisego.model.params
  */
 
 import co.omisego.omisego.model.pagination.Filter
+import co.omisego.omisego.model.pagination.FilterableParams
 import co.omisego.omisego.model.pagination.Paginable
 import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
@@ -58,7 +59,7 @@ data class TransactionListParams internal constructor(
      * An optional wallet address that belongs to the current user (primary address by default)
      */
     val address: String? = null
-) : PaginableParams {
+) : PaginableParams, FilterableParams {
     companion object {
         fun create(
             page: Int = 1,
@@ -66,21 +67,6 @@ data class TransactionListParams internal constructor(
             sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
             sortDir: SortDirection = SortDirection.DESCENDING,
             searchTerm: String? = null,
-            address: String? = null
-        ) = TransactionListParams(
-            page = page,
-            perPage = perPage,
-            sortBy = sortBy,
-            sortDir = sortDir,
-            searchTerm = searchTerm,
-            address = address
-        )
-
-        fun create(
-            page: Int = 1,
-            perPage: Int = 10,
-            sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
-            sortDir: SortDirection = SortDirection.DESCENDING,
             matchAll: List<Filter>? = null,
             matchAny: List<Filter>? = null,
             address: String? = null
@@ -89,8 +75,9 @@ data class TransactionListParams internal constructor(
             perPage = perPage,
             sortBy = sortBy,
             sortDir = sortDir,
-            matchAll = matchAll,
+            searchTerm = searchTerm,
             matchAny = matchAny,
+            matchAll = matchAll,
             address = address
         )
     }
