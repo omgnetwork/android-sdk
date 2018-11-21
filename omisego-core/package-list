@@ -4,6 +4,7 @@ $dokka.linkExtension:html
 co.omisego.omisego.custom
 co.omisego.omisego.model
 co.omisego.omisego.model.pagination
+co.omisego.omisego.model.params
 co.omisego.omisego.model.socket
 co.omisego.omisego.model.transaction
 co.omisego.omisego.model.transaction.consumption
