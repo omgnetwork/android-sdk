@@ -11,7 +11,7 @@ apply from: '../config.gradle'
 def constants = project.ext
 
 android {
-    buildToolsVersion '27.0.3'
+    buildToolsVersion constants.buildToolsVersion
     compileSdkVersion constants.compileSdkVersion
     defaultConfig {
         minSdkVersion constants.minSdkVersion
@@ -26,12 +26,19 @@ android {
         test.java.srcDirs += 'src/test/kotlin'
         test.java.srcDirs += 'src/liveTest/kotlin'
         test.resources.srcDirs += 'src/liveTest/resources'
-        androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 
     testOptions {
         unitTests {
             includeAndroidResources = true
+            all {
+                if (it.name == "testReleaseUnitTest") return
+                if (project.hasProperty('live') && project.live.toBoolean() == true) {
+                    it.include 'co/omisego/omisego/live/**'
+                } else {
+                    it.exclude 'co/omisego/omisego/live/**'
+                }
+            }
         }
     }
 

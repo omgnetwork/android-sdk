@@ -11,7 +11,7 @@ apply from: '../config.gradle'
 def constants = project.ext
 
 android {
-    buildToolsVersion '27.0.3'
+    buildToolsVersion constants.buildToolsVersion
     compileSdkVersion constants.compileSdkVersion
     defaultConfig {
         minSdkVersion constants.minSdkVersion
@@ -24,8 +24,8 @@ android {
 
     sourceSets {
         test.java.srcDirs += 'src/test/kotlin'
-//        test.java.srcDirs += 'src/liveTest/kotlin'
-//        test.resources.srcDirs += 'src/liveTest/resources'
+        test.java.srcDirs += 'src/liveTest/kotlin'
+        test.resources.srcDirs += 'src/liveTest/resources'
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 

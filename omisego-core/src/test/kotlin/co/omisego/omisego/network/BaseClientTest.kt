@@ -13,9 +13,13 @@ import co.omisego.omisego.custom.retrofit2.adapter.OMGCallAdapterFactory
 import co.omisego.omisego.custom.retrofit2.converter.OMGConverterFactory
 import co.omisego.omisego.custom.retrofit2.executor.MainThreadExecutor
 import co.omisego.omisego.model.CredentialConfiguration
+import co.omisego.omisego.network.ewallet.AuthenticationHeader
+import co.omisego.omisego.network.interceptor.AuthenticationTokenInterceptor
+import co.omisego.omisego.network.interceptor.HeaderInterceptor
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import org.amshove.kluent.mock
+import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldThrow
@@ -29,8 +33,10 @@ import retrofit2.Retrofit
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
 class BaseClientTest {
-
-    class TestBuilder(init: BaseClient.Builder.() -> Unit) : BaseClient.Builder(init)
+    class TestBuilder(
+        override var authenticationHeader: AuthenticationHeader = mock(),
+        init: BaseClient.Builder.() -> Unit
+    ) : BaseClient.Builder(init)
 
     class TestCredentialConfiguration(
         override val baseURL: String,
@@ -59,6 +65,10 @@ class BaseClientTest {
     @Test
     fun `build should return BaseClient correctly`() {
         val baseClient = TestBuilder { clientConfiguration = testCredentialConfiguration }.build()
+
+        baseClient.client.interceptors().size shouldBe 2
+        baseClient.client.interceptors()[0] shouldBeInstanceOf HeaderInterceptor::class
+        baseClient.client.interceptors()[1] shouldBeInstanceOf AuthenticationTokenInterceptor::class
         baseClient.client shouldBeInstanceOf OkHttpClient::class
         baseClient.retrofit shouldBeInstanceOf Retrofit::class
         baseClient.header shouldBeInstanceOf HeaderInterceptor::class

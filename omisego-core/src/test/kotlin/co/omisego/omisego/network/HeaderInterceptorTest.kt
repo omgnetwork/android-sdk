@@ -9,6 +9,7 @@ package co.omisego.omisego.network
 
 import co.omisego.omisego.constant.HTTPHeaders
 import co.omisego.omisego.constant.enums.AuthScheme
+import co.omisego.omisego.network.interceptor.HeaderInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.mockwebserver.MockResponse

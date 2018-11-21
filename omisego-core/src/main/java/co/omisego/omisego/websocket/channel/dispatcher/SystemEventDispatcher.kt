@@ -10,10 +10,10 @@ package co.omisego.omisego.websocket.channel.dispatcher
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.websocket.listener.SocketChannelListener
-import co.omisego.omisego.websocket.listener.SocketConnectionListener
 import co.omisego.omisego.websocket.channel.SocketMessageRef
 import co.omisego.omisego.websocket.enum.SocketSystemEvent
+import co.omisego.omisego.websocket.listener.SocketChannelListener
+import co.omisego.omisego.websocket.listener.SocketConnectionListener
 
 /**
  * A listener for dispatcher the [SocketConnectionListener] and [SocketChannelListener] events.
@@ -24,14 +24,12 @@ class SystemEventDispatcher(
 
     override fun handleEvent(systemEvent: SocketSystemEvent, response: SocketReceive<*>) {
         when (systemEvent) {
-            SocketSystemEvent.CLOSE -> {
-                response.runIfRefSchemeIs(SocketMessageRef.SCHEME_JOIN) {
-                    socketChannelListener.onLeftChannel(response.topic)
-                }
-            }
             SocketSystemEvent.REPLY -> {
                 response.runIfRefSchemeIs(SocketMessageRef.SCHEME_JOIN) {
                     socketChannelListener.onJoinedChannel(response.topic)
+                }
+                response.runIfRefSchemeIs(SocketMessageRef.SCHEME_LEAVE) {
+                    socketChannelListener.onLeftChannel(response.topic)
                 }
             }
             SocketSystemEvent.ERROR -> {

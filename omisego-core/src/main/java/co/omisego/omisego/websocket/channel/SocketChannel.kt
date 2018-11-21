@@ -59,6 +59,7 @@ internal class SocketChannel(
 
     override fun join(topic: String, payload: Map<String, Any>): Boolean {
         whenNeverJoinedChannel(topic) {
+            socketSendCreator.socketMessageRef = SocketMessageRef(SocketMessageRef.SCHEME_JOIN)
             val socketSend = socketSendCreator.createJoinMessage(topic, payload)
 
             whenLeavingAllChannelsInProgress {
@@ -74,6 +75,7 @@ internal class SocketChannel(
 
     override fun leave(topic: String, payload: Map<String, Any>) {
         if (joined(topic)) {
+            socketSendCreator.socketMessageRef = SocketMessageRef(SocketMessageRef.SCHEME_LEAVE)
             socketClient.send(socketSendCreator.createLeaveMessage(topic, payload))
         }
     }

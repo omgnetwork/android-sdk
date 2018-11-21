@@ -7,7 +7,14 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
-## [1.1.0] - 2018-08-xx
+### Added
+- Added `signup` endpoint to `omisego-client`
+- Added `login` endpoint to `omisego-client`
+
+### Changed
+- Renamed `Logout` to `Empty`
+
+## [1.1.0] - 2018-09-03
 ### Added
 - Added `email` to `User`
 - Added more properties for `TransactionSource`
@@ -118,7 +125,8 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Logout the current user
 - [OMGKeyManager - encryption and decryption helpers](https://github.com/omisego/android-sdk/pull/11)
 
-[Unreleased]: https://github.com/omisego/android-sdk/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/omisego/android-sdk/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/omisego/android-sdk/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/omisego/android-sdk/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/omisego/android-sdk/compare/v0.9.6...v1.0.0
 [0.9.6]: https://github.com/omisego/android-sdk/compare/v0.9.52...v0.9.6

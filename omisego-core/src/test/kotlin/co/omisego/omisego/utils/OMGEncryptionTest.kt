@@ -7,14 +7,11 @@ package co.omisego.omisego.utils
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.constant.enums.AuthScheme
 import co.omisego.omisego.constant.enums.AuthScheme.ADMIN
 import co.omisego.omisego.constant.enums.AuthScheme.Client
 import co.omisego.omisego.model.CredentialConfiguration
 import org.amshove.kluent.shouldEqualTo
-import org.amshove.kluent.shouldThrow
-import org.amshove.kluent.withMessage
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -85,12 +82,9 @@ class OMGEncryptionTest {
     }
 
     @Test
-    fun `createAuthorizationHeader should throw IllegalStateException if apiKey is null or empty`() {
-        val exception = { omgEncryption.createAuthorizationHeader(nullAPIKeyClientConfiguration) }
-        val exception2 = { omgEncryption.createAuthorizationHeader(nullAPIKeyClientConfiguration.copy(apiKey = "")) }
-
-        exception shouldThrow IllegalStateException::class withMessage Exceptions.MSG_EMPTY_API_KEY
-        exception2 shouldThrow IllegalStateException::class withMessage Exceptions.MSG_EMPTY_API_KEY
+    fun `createAuthorizationHeader should return empty string if authScheme is OMGClient and apiKey is nullOrEmpty`() {
+        omgEncryption.createAuthorizationHeader(nullAPIKeyClientConfiguration) shouldEqualTo ""
+        omgEncryption.createAuthorizationHeader(nullAPIKeyClientConfiguration.copy(apiKey = "")) shouldEqualTo ""
     }
 
     @Test

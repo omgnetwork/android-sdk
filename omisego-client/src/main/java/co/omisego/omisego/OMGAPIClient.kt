@@ -7,16 +7,16 @@ package co.omisego.omisego
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.network.ewallet.EWalletClient
-import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
-import co.omisego.omisego.model.Wallet
+import co.omisego.omisego.model.params.LoginParams
+import co.omisego.omisego.model.params.SignUpParams
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionActionParams
 import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
 import co.omisego.omisego.model.transaction.list.TransactionListParams
 import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
 import co.omisego.omisego.model.transaction.request.TransactionRequestParams
 import co.omisego.omisego.model.transaction.send.TransactionCreateParams
+import co.omisego.omisego.network.ewallet.EWalletClient
 
 /**
  * The class OMGAPIClient represents an object that knows how to interact with OmiseGO API.
@@ -62,9 +62,34 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
         get() = eWalletClient.eWalletAPI
 
     /**
+     * Asynchronously send the request to login to get an authentication token.
+     * if *success* the `success` function will be invoked with the [OMGResponse<UserAuthenticationToken>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     * @param params A set of parameters used for login
+     */
+    fun login(params: LoginParams) = eWalletAPI.login(params)
+
+    /**
+     * Asynchronously send the request to signup
+     * if *success* the `success` function will be invoked with the [OMGResponse<User>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     * @param params A set of parameters used for signup
+     */
+    fun signup(params: SignUpParams) = eWalletAPI.signup(params)
+
+    /**
+     * Asynchronously send the request to expire a user's authentication_token.
+     * if *success* the `success` function will be invoked with the [OMGResponse<String>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     */
+    fun logout() = eWalletAPI.logout()
+
+    /**
      * Asynchronously send the request to transform the [User] corresponding to the provided authentication token.
-     * if *success* the [OMGCallback<User>] will be invoked with the [User] parameter,
-     * if *fail* [OMGCallback<User>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
+     * if *success* the `success` function will be invoked with the [OMGResponse<User>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
      */
     fun getCurrentUser() = eWalletAPI.getCurrentUser()
 
@@ -72,29 +97,22 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      * Asynchronously send the request to get the global settings of the provider.
      * The global settings will contain a list of an available tokens to be used.
      *
-     * if *success* the [OMGCallback<Setting>] callback will be invoked with [Setting] parameter,
-     * if *fail* [OMGCallback<Setting>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
+     * if *success* the `success` function will be invoked with the [OMGResponse<Setting>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
      */
     fun getSettings() = eWalletAPI.getSettings()
 
     /**
-     * Asynchronously send the request to expire a user's authentication_token.
-     * if *success* the [OMGCallback<String>] will be invoked with the empty [String] parameter,
-     * if *fail* [OMGCallback<String>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
-     */
-    fun logout() = eWalletAPI.logout()
-
-    /**
      * Asynchronously send the request to retrieve wallets of a user corresponding to the provided authentication token.
-     * if *success* the [OMGCallback<WalletList>] will be invoked with the list of [Wallet] parameter,
-     * if *fail* [OMGCallback<WalletList>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
+     * if *success* the `success` function will be invoked with the [OMGResponse<WalletList>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
      */
     fun getWallets() = eWalletAPI.getWallets()
 
     /**
      * Asynchronously get a paginated list of transactions of a user corresponding to the provided authentication token.
-     * if *success* the [OMGCallback<PaginationList<Transaction>>] will be invoked with the [PaginationList<Transaction>],
-     * if *fail* the [OMGCallback<PaginationList<Transaction>>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
+     * if *success* the `success` function will be invoked with the [OMGResponse<PaginationList<Transaction>>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
      *
      * @param request A structure used to query a list of transactions for the current user
      */
@@ -102,9 +120,9 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
         eWalletAPI.getTransactions(request)
 
     /**
-     * Asynchronously create a transaction request from the given [TransactionRequestCreateParams] object
-     * if *success* the [OMGCallback<TransactionRequest>] will be invoked with the [co.omisego.omisego.model.transaction.request.TransactionRequest] parameter,
-     * if *fail* the [OMGCallback<TransactionRequest>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
+     * Asynchronously create a transaction request from the given [TransactionRequestCreateParams] object.
+     * if *success* the `success` function will be invoked with the [OMGResponse<TransactionRequest>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
      *
      * @param request The [TransactionRequestCreateParams] object describing the transaction request to be made.
      */
@@ -112,9 +130,9 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
         eWalletAPI.createTransactionRequest(request)
 
     /**
-     * Asynchronously retrieve a transaction request from its formattedId
-     * if *success* the [OMGCallback<TransactionRequest>] will be invoked with the [co.omisego.omisego.model.transaction.request.TransactionRequest] parameter,
-     * if *fail* the [OMGCallback<TransactionRequest>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
+     * Asynchronously retrieve a transaction request from its formattedId.
+     * if *success* the `success` function will be invoked with the [OMGResponse<TransactionRequest>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
      *
      * @param request The formattedId of the TransactionRequest to be retrieved
      */
@@ -122,9 +140,9 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
         eWalletAPI.retrieveTransactionRequest(request)
 
     /**
-     * Asynchronously consume a transaction request from the given [TransactionConsumptionParams] object
-     * if *success* the [OMGCallback<TransactionConsumption>] will be invoked with the [co.omisego.omisego.model.transaction.consumption.TransactionConsumption] parameter,
-     * if *fail* the [OMGCallback<TransactionConsumption>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
+     * Asynchronously consume a transaction request from the given [TransactionConsumptionParams] object.
+     * if *success* the `success` function will be invoked with the [OMGResponse<TransactionConsumption>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
      *
      * @param request The TransactionConsumptionParams object describing the transaction request to be consumed.
      */
@@ -132,9 +150,9 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
         eWalletAPI.consumeTransactionRequest(request)
 
     /**
-     * Asynchronously approve the transaction consumption from the given [TransactionConsumptionActionParams] object
-     * if *success* the [OMGCallback<TransactionConsumption>] will be invoked with the [co.omisego.omisego.model.transaction.consumption.TransactionConsumption] parameter,
-     * if *fail* the [OMGCallback<TransactionConsumption>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
+     * Asynchronously approve the transaction consumption from the given [TransactionConsumptionActionParams] object.
+     * if *success* the `success` function will be invoked with the [OMGResponse<TransactionConsumption>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
      *
      * @param request The TransactionConsumptionActionParams object containing the transaction consumption id to be approved.
      */
@@ -142,9 +160,9 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
         eWalletAPI.approveTransactionConsumption(request)
 
     /**
-     * Asynchronously reject the transaction consumption from the given [TransactionConsumptionActionParams] object
-     * if *success* the [OMGCallback<TransactionConsumption>] will be invoked with the [co.omisego.omisego.model.transaction.consumption.TransactionConsumption] parameter,
-     * if *fail* the [OMGCallback<TransactionConsumption>] will be invoked with the [co.omisego.omisego.model.APIError] parameter.
+     * Asynchronously reject the transaction consumption from the given [TransactionConsumptionActionParams] object.
+     * if *success* the `success` function will be invoked with the [OMGResponse<TransactionConsumption>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
      *
      * @param request The TransactionConsumptionActionParams object containing the transaction consumption id to be rejected.
      */
@@ -152,7 +170,9 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
         eWalletAPI.rejectTransactionConsumption(request)
 
     /**
-     * Send tokens to an address
+     * Send tokens to an address.
+     * if *success* the `success` function will be invoked with the [OMGResponse<Transaction>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
      *
      * @param request The TransactionCreateParams object to customize the transaction
      */

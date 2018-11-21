@@ -16,6 +16,7 @@ class SocketMessageRef(override val scheme: String) : SocketChannelContract.Mess
 
     companion object {
         const val SCHEME_JOIN: String = "join"
+        const val SCHEME_LEAVE: String = "leave"
         const val SCHEME_HEARTBEAT: String = "heartbeat"
     }
 }

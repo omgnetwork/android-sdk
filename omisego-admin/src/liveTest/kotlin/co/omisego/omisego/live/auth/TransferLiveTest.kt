@@ -1,4 +1,4 @@
-package co.omisego.omisego.features
+package co.omisego.omisego.live.auth
 
 /*
  * OmiseGO
@@ -7,13 +7,11 @@ package co.omisego.omisego.features
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.LiveTest
+import co.omisego.omisego.live.BaseAuthTest
 import co.omisego.omisego.extension.bd
-import co.omisego.omisego.model.params.LoginParams
 import co.omisego.omisego.model.transaction.send.TransactionCreateParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldNotBe
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -21,19 +19,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class Transfer : LiveTest() {
-    private val secret by lazy { loadSecretFile("secret.json") }
-
-    @Before
-    fun setup() {
-        val response = client.login(
-            LoginParams(
-                secret.getString("email"),
-                secret.getString("password")
-            )
-        ).execute()
-        response.isSuccessful shouldBe true
-    }
+class TransferLiveTest : BaseAuthTest() {
 
     @Test
     fun `transfer from an account to a user should return 200, 'from' should be an account and 'to' should be a user`() {

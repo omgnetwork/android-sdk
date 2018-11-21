@@ -7,7 +7,7 @@ package co.omisego.omisego.model
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-data class AuthenticationToken(
+data class AdminAuthenticationToken(
     val authenticationToken: String,
     val userId: String,
     val user: User,

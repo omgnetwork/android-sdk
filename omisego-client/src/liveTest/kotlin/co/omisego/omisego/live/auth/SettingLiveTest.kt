@@ -20,7 +20,8 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class SettingLiveTest : LiveTest() {
+class SettingLiveTest : BaseAuthTest() {
+
     @Test
     fun `get_settings should return 200 and parsed the response correctly`() {
         val setting = client.getSettings().execute()

@@ -8,14 +8,14 @@ package co.omisego.omisego.utils
  */
 
 import co.omisego.omisego.model.CredentialConfiguration
-import co.omisego.omisego.network.HeaderInterceptor
+import co.omisego.omisego.network.interceptor.HeaderInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 
 class OkHttpHelper(
     private val encryption: OMGEncryption = OMGEncryption()
 ) {
-    fun createHeader(clientConfiguration: CredentialConfiguration): HeaderInterceptor = HeaderInterceptor(
+    fun createHeaderInterceptor(clientConfiguration: CredentialConfiguration): HeaderInterceptor = HeaderInterceptor(
         clientConfiguration.authScheme,
         encryption.createAuthorizationHeader(clientConfiguration)
     )

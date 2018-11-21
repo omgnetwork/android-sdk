@@ -32,12 +32,12 @@ import kotlin.test.fail
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class TransactionRequestLiveTest : LiveTest() {
-
+class TransactionRequestLiveTest : BaseAuthTest() {
     private lateinit var token: Token
 
     @Before
-    fun setup() {
+    override fun setup() {
+        super.setup()
         val setting = client.getSettings().execute()
         token = setting.body()?.data?.tokens?.get(0) ?: fail("There's no tokens available.")
     }

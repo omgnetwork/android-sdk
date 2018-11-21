@@ -1,4 +1,4 @@
-package co.omisego.omisego
+package co.omisego.omisego.live
 
 /*
  * OmiseGO
@@ -7,12 +7,13 @@ package co.omisego.omisego
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.OMGAPIAdmin
 import co.omisego.omisego.model.AdminConfiguration
 import co.omisego.omisego.network.ewallet.EWalletAdmin
 import co.omisego.omisego.utils.ResourceFileLoader
 
-open class LiveTest : ResourceFileLoader() {
-    private val secret by lazy { loadSecretFile("secret.json") }
+open class BaseLiveTest : ResourceFileLoader() {
+    val secret by lazy { loadSecretFile("secret.json") }
     private val config by lazy {
         AdminConfiguration(
             secret.getString("base_url")

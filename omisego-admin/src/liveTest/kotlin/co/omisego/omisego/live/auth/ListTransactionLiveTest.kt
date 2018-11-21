@@ -1,4 +1,4 @@
-package co.omisego.omisego.features
+package co.omisego.omisego.live.auth
 
 /*
  * OmiseGO
@@ -7,11 +7,9 @@ package co.omisego.omisego.features
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.LiveTest
-import co.omisego.omisego.model.params.LoginParams
+import co.omisego.omisego.live.BaseAuthTest
 import co.omisego.omisego.model.transaction.list.TransactionListParams
 import org.amshove.kluent.shouldBe
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -19,19 +17,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class ListTransaction : LiveTest() {
-    private val secret by lazy { loadSecretFile("secret.json") }
-
-    @Before
-    fun setup() {
-        val response = client.login(
-            LoginParams(
-                secret.getString("email"),
-                secret.getString("password")
-            )
-        ).execute()
-        response.isSuccessful shouldBe true
-    }
+class ListTransactionLiveTest : BaseAuthTest() {
 
     @Test
     fun `list transaction should be returned successfully`() {

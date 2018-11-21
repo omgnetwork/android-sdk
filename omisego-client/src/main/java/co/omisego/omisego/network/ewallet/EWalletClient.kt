@@ -7,7 +7,9 @@ package co.omisego.omisego.network.ewallet
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.constant.Exceptions
 import co.omisego.omisego.network.BaseClient
+import co.omisego.omisego.utils.Base64Encoder
 
 class EWalletClient : BaseClient() {
     internal lateinit var eWalletAPI: EWalletClientAPI
@@ -21,10 +23,14 @@ class EWalletClient : BaseClient() {
      */
     class Builder(init: BaseClient.Builder.() -> Unit) : BaseClient.Builder(init) {
 
-        /**
-         * Create an [EWalletClient] instance.
-         */
+        override lateinit var authenticationHeader: AuthenticationHeader
+
         override fun build(): EWalletClient {
+            /* Verify if the [CredentialConfiguration] is initialized correctly */
+            val config = clientConfiguration ?: throw IllegalStateException(Exceptions.MSG_NULL_CLIENT_CONFIGURATION)
+
+            authenticationHeader = ClientAuthenticationHeader(config.apiKey!!, Base64Encoder())
+
             with(super.build()) {
                 return EWalletClient().also {
                     it.header = header
