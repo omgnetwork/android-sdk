@@ -15,6 +15,9 @@ enum class SortDirection constructor(override val value: String) : OMGEnum {
 }
 
 sealed class Paginable {
+
+    interface SortableFields : OMGEnum
+
     open class Transaction : Paginable() {
 
         /**
@@ -34,7 +37,7 @@ sealed class Paginable {
         /**
          * Represents transaction's sortable fields.
          */
-        enum class SortableFields constructor(override val value: String) : OMGEnum {
+        enum class SortableFields constructor(override val value: String) : Paginable.SortableFields {
             ID("id"),
             STATUS("status"),
             FROM("from"),
@@ -76,7 +79,7 @@ sealed class Paginable {
         /**
          * Represents account's sortable fields.
          */
-        enum class SortableFields constructor(override val value: String) : OMGEnum {
+        enum class SortableFields constructor(override val value: String) : Paginable.SortableFields {
             ID("id"),
             NAME("name"),
             DESCRIPTION("description"),
@@ -101,7 +104,7 @@ sealed class Paginable {
         /**
          * Represents token's sortable fields.
          */
-        enum class SortableFields constructor(override val value: String) : OMGEnum {
+        enum class SortableFields constructor(override val value: String) : Paginable.SortableFields {
             NAME("name"),
             SYMBOL("symbol"),
             CREATED_AT("created_at");
@@ -124,7 +127,7 @@ sealed class Paginable {
         /**
          * Represents wallet's sortable fields.
          */
-        enum class SortableFields constructor(override val value: String) : OMGEnum {
+        enum class SortableFields constructor(override val value: String) : Paginable.SortableFields {
             NAME("name"),
             ADDRESS("address"),
             CREATED_AT("created_at");

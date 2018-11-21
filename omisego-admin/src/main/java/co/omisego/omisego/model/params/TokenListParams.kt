@@ -8,6 +8,7 @@ package co.omisego.omisego.model.params
  */
 
 import co.omisego.omisego.model.pagination.Paginable
+import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
 
 /**
@@ -18,12 +19,12 @@ data class TokenListParams internal constructor(
     /**
      * A page number
      */
-    val page: Int = 1,
+    override val page: Int = 1,
 
     /**
      * A number of results per page.
      */
-    val perPage: Int = 10,
+    override val perPage: Int = 10,
 
     /**
      * The sorting field
@@ -33,7 +34,7 @@ data class TokenListParams internal constructor(
      * - [Paginable.Token.SortableFields.SYMBOL]
      * - [Paginable.Token.SortableFields.CREATED_AT]
      */
-    val sortBy: Paginable.Token.SortableFields = Paginable.Token.SortableFields.CREATED_AT,
+    override val sortBy: Paginable.Token.SortableFields = Paginable.Token.SortableFields.CREATED_AT,
 
     /**
      * The desired sort direction
@@ -42,7 +43,7 @@ data class TokenListParams internal constructor(
      * - [SortDirection.ASCENDING]
      * - [SortDirection.DESCENDING]
      */
-    val sortDir: SortDirection = SortDirection.DESCENDING,
+    override val sortDir: SortDirection = SortDirection.DESCENDING,
 
     /**
      * A term to search for in all of the searchable fields.
@@ -50,7 +51,7 @@ data class TokenListParams internal constructor(
      *
      * Note: Conflict with searchTerms, only use one of them.
      */
-    val searchTerm: String? = null,
+    override val searchTerm: String? = null,
 
     /**
      * A key-value map to search with the available fields
@@ -58,7 +59,7 @@ data class TokenListParams internal constructor(
      *
      */
     val searchTerms: Map<Paginable.Token.SearchableFields, Any>? = null
-) {
+) : PaginableParams {
     companion object {
         fun create(
             page: Int = 1,

@@ -8,6 +8,7 @@ package co.omisego.omisego.model.params
  */
 
 import co.omisego.omisego.model.pagination.Paginable
+import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
 
 /**
@@ -15,15 +16,11 @@ import co.omisego.omisego.model.pagination.SortDirection
  */
 
 data class TransactionListParams internal constructor(
-    /**
-     * A page number
-     */
-    val page: Int = 1,
 
-    /**
-     * A number of results per page.
-     */
-    val perPage: Int = 10,
+    override val page: Int = 1,
+
+
+    override val perPage: Int = 10,
 
     /**
      * The sorting field
@@ -34,7 +31,7 @@ data class TransactionListParams internal constructor(
      * - [Paginable.Transaction.SortableFields.FROM]
      * - [Paginable.Transaction.SortableFields.CREATED_AT]
      */
-    val sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
+    override val sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
 
     /**
      * The desired sort direction
@@ -43,7 +40,7 @@ data class TransactionListParams internal constructor(
      * - [SortDirection.ASCENDING]
      * - [SortDirection.DESCENDING]
      */
-    val sortDir: SortDirection = SortDirection.DESCENDING,
+    override val sortDir: SortDirection = SortDirection.DESCENDING,
 
     /**
      * A term to search for in all of the searchable fields.
@@ -51,7 +48,7 @@ data class TransactionListParams internal constructor(
      *
      * Note: Conflict with searchTerms, only use one of them.
      */
-    val searchTerm: String? = null,
+    override val searchTerm: String? = null,
 
     /**
      * A key-value map to search with the available fields
@@ -64,7 +61,7 @@ data class TransactionListParams internal constructor(
      * An optional wallet address that belongs to the current user (primary address by default)
      */
     val address: String? = null
-) {
+) : PaginableParams {
     companion object {
         fun create(
             page: Int = 1,

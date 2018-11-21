@@ -8,6 +8,7 @@ package co.omisego.omisego.model.params
  */
 
 import co.omisego.omisego.model.pagination.Paginable
+import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
 
 /**
@@ -18,12 +19,12 @@ data class AccountListParams internal constructor(
     /**
      * A page number
      */
-    val page: Int = 1,
+    override val page: Int = 1,
 
     /**
      * A number of results per page.
      */
-    val perPage: Int = 10,
+    override val perPage: Int = 10,
 
     /**
      * The sorting field
@@ -35,7 +36,7 @@ data class AccountListParams internal constructor(
      * - [Paginable.Account.SortableFields.CREATED_AT]
      * - [Paginable.Account.SortableFields.UPDATED_AT]
      */
-    val sortBy: Paginable.Account.SortableFields = Paginable.Account.SortableFields.CREATED_AT,
+    override val sortBy: Paginable.Account.SortableFields = Paginable.Account.SortableFields.CREATED_AT,
 
     /**
      * The desired sort direction
@@ -44,7 +45,7 @@ data class AccountListParams internal constructor(
      * - [SortDirection.ASCENDING]
      * - [SortDirection.DESCENDING]
      */
-    val sortDir: SortDirection = SortDirection.DESCENDING,
+    override val sortDir: SortDirection = SortDirection.DESCENDING,
 
     /**
      * A term to search for in all of the searchable fields.
@@ -52,7 +53,7 @@ data class AccountListParams internal constructor(
      *
      * Note: Conflict with searchTerms, only use one of them.
      */
-    val searchTerm: String? = null,
+    override val searchTerm: String? = null,
 
     /**
      * A key-value map to search with the available fields
@@ -60,7 +61,7 @@ data class AccountListParams internal constructor(
      *
      */
     val searchTerms: Map<Paginable.Account.SearchableFields, Any>? = null
-) {
+) : PaginableParams {
     companion object {
         fun create(
             page: Int = 1,
