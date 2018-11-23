@@ -43,9 +43,7 @@ data class TransactionListParams internal constructor(
 
     /**
      * A term to search for in all of the searchable fields.
-     * See more at [Paginable.Transaction.SearchableFields]
      *
-     * Note: Conflict with searchTerms, only use one of them.
      */
     override val searchTerm: String? = null,
 

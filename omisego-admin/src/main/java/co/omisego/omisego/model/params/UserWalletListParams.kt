@@ -7,7 +7,7 @@ package co.omisego.omisego.model.params
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.pagination.Filter
+import co.omisego.omisego.model.filterable.Filter
 import co.omisego.omisego.model.pagination.Paginable
 import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
@@ -53,9 +53,6 @@ data class UserWalletListParams internal constructor(
 
     /**
      * A term to search for in all of the searchable fields.
-     * See more at [Paginable.Wallet.SearchableFields]
-     *
-     * Note: Conflict with searchTerms, only use one of them.
      */
     override val searchTerm: String? = null
 ) : PaginableParams {

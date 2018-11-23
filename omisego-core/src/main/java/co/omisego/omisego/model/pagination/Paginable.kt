@@ -21,20 +21,6 @@ sealed class Paginable {
     open class Transaction : Paginable() {
 
         /**
-         * Represents transaction's searchable fields
-         */
-        enum class FilterableFields constructor(override val value: String) : OMGEnum {
-            ID("id"),
-            STATUS("status"),
-            FROM("from"),
-            TO("to"),
-            CREATED_AT("created_at"),
-            UPDATED_AT("updated_at");
-
-            override fun toString(): String = value
-        }
-
-        /**
          * Represents transaction's sortable fields.
          */
         enum class SortableFields constructor(override val value: String) : Paginable.SortableFields {

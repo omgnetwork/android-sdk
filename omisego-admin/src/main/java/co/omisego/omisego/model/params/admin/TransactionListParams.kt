@@ -7,8 +7,8 @@ package co.omisego.omisego.model.params.admin
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.pagination.Filter
-import co.omisego.omisego.model.pagination.FilterableParams
+import co.omisego.omisego.model.filterable.Filter
+import co.omisego.omisego.model.filterable.FilterableParams
 import co.omisego.omisego.model.pagination.Paginable
 import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
@@ -45,9 +45,6 @@ data class TransactionListParams internal constructor(
 
     /**
      * A term to search for in all of the searchable fields.
-     * See more at [Paginable.Transaction.SearchableFields]
-     *
-     * Note: Conflict with searchTerms, only use one of them.
      */
     override val searchTerm: String? = null,
 
@@ -59,7 +56,8 @@ data class TransactionListParams internal constructor(
      * An optional wallet address that belongs to the current user (primary address by default)
      */
     val address: String? = null
-) : PaginableParams, FilterableParams {
+) : FilterableParams, PaginableParams  {
+
     companion object {
         fun create(
             page: Int = 1,

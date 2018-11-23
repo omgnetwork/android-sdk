@@ -7,8 +7,8 @@ package co.omisego.omisego.model.params
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.pagination.Filter
-import co.omisego.omisego.model.pagination.FilterableParams
+import co.omisego.omisego.model.filterable.Filter
+import co.omisego.omisego.model.filterable.FilterableParams
 import co.omisego.omisego.model.pagination.Paginable
 import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection

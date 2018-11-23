@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.pagination
+package co.omisego.omisego.model.filterable
 
 /*
  * OmiseGO
