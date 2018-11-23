@@ -9,17 +9,18 @@ package co.omisego.omisego.admin
 
 import co.omisego.omisego.OMGAPIAdmin
 import co.omisego.omisego.admin.extension.mockEnqueueWithHttpCode
+import co.omisego.omisego.admin.utils.GsonDelegator
 import co.omisego.omisego.admin.utils.ResourceFile
 import co.omisego.omisego.model.AdminConfiguration
-import co.omisego.omisego.model.pagination.Filter
+import co.omisego.omisego.model.filterable.Filterable
+import co.omisego.omisego.model.filterable.buildFilterList
+import co.omisego.omisego.model.pagination.Paginable
 import co.omisego.omisego.model.params.admin.TransactionListParams
 import co.omisego.omisego.network.ewallet.EWalletAdmin
-import co.omisego.omisego.utils.GsonProvider
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
 import org.amshove.kluent.shouldBe
-import org.amshove.kluent.shouldEqual
-import org.amshove.kluent.shouldNotContain
+import org.amshove.kluent.shouldEqualTo
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -31,7 +32,7 @@ import java.util.concurrent.Executor
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class FilteringTest {
+class FilteringTest : GsonDelegator() {
     private lateinit var eWalletAdmin: EWalletAdmin
     private lateinit var mockWebServer: MockWebServer
     private lateinit var mockUrl: HttpUrl
@@ -60,45 +61,135 @@ class FilteringTest {
     }
 
     @Test
-    fun `test filtering request type match_any should be sent correctly`() {
-        getTransactionsFile.mockEnqueueWithHttpCode(mockWebServer)
+    fun `test a filter list builder should create a filter list correctly`() {
+        val filterList = buildFilterList<Filterable.TransactionFields> { field ->
+            /* Test number comparator */
+            add(field.fromAmount eq 100)
+            add(field.fromAmount neq 101)
+            add(field.toAmount gt 1.3)
+            add(field.toAmount gte 2.8)
+            add(field.toAmount lt 10)
+            add(field.toAmount lte 1.0)
 
-        val filters = listOf(
-            Filter("id", "eq", "1234"),
-            Filter("from.token.id", "eq", "12345")
-        )
+            /* Test string comparator */
+            add(field.status eq Paginable.Transaction.TransactionStatus.CONFIRMED)
+            add(field.type eq "some_type")
+            add(field.id startsWith "123")
+            add(field.status contains "confirm")
 
-        omgAPIAdmin.getTransactions(TransactionListParams.create(
-            matchAny = filters
-        )).execute()
+            /* Test boolean comparator */
+            add("success" eq true)
+            add("fail" neq true)
+        }
 
-        val body = mockWebServer.takeRequest().body.readUtf8()
-        val request = GsonProvider.create().fromJson(body, TransactionListParams::class.java)
+        val expectedJson = """
+            [
+              {
+                "field": "from_amount",
+                "comparator": "eq",
+                "value": 100
+              },
+              {
+                "field": "from_amount",
+                "comparator": "neq",
+                "value": 101
+              },
+              {
+                "field": "to_amount",
+                "comparator": "gt",
+                "value": 1.3
+              },
+              {
+                "field": "to_amount",
+                "comparator": "gte",
+                "value": 2.8
+              },
+              {
+                "field": "to_amount",
+                "comparator": "lt",
+                "value": 10
+              },
+              {
+                "field": "to_amount",
+                "comparator": "lte",
+                "value": 1.0
+              },
+              {
+                "field": "status",
+                "comparator": "eq",
+                "value": "confirmed"
+              },
+              {
+                "field": "type",
+                "comparator": "eq",
+                "value": "some_type"
+              },
+              {
+                "field": "id",
+                "comparator": "starts_with",
+                "value": "123"
+              },
+              {
+                "field": "status",
+                "comparator": "contains",
+                "value": "confirm"
+              },
+              {
+                "field": "success",
+                "comparator": "eq",
+                "value": true
+              },
+              {
+                "field": "fail",
+                "comparator": "neq",
+                "value": true
+              }
+            ]
+        """.trimIndent()
 
-        mockWebServer.requestCount shouldBe 1
-        body shouldNotContain "match_all" // should not send match_all
-        request.matchAny shouldEqual filters
+        gson.toJson(filterList) shouldEqualTo expectedJson
     }
 
     @Test
-    fun `test filtering request type match_all should be sent correctly`() {
+    fun `test filtering request should be sent correctly`() {
         getTransactionsFile.mockEnqueueWithHttpCode(mockWebServer)
 
-        val filters = listOf(
-            Filter("id", "eq", "1234"),
-            Filter("from.token.id", "eq", "12345")
+        val filters = buildFilterList {
+            add("id" eq "1234")
+            add("from.token.id" eq "12345")
+        }
+
+        val transactionListParams = TransactionListParams.create(
+            matchAny = filters
         )
 
-        omgAPIAdmin.getTransactions(TransactionListParams.create(
-            matchAll = filters
-        )).execute()
+        omgAPIAdmin.getTransactions(transactionListParams).execute()
 
-        val body = mockWebServer.takeRequest().body.readUtf8()
-        val request = GsonProvider.create().fromJson(body, TransactionListParams::class.java)
+        val params = mockWebServer.takeRequest().body.readUtf8()
+
+        val expectedRequestParams = """
+            {
+              "page": 1,
+              "per_page": 10,
+              "sort_by": "created_at",
+              "sort_dir": "desc",
+              "match_any": [
+                {
+                  "field": "id",
+                  "comparator": "eq",
+                  "value": "1234"
+                },
+                {
+                  "field": "from.token.id",
+                  "comparator": "eq",
+                  "value": "12345"
+                }
+              ]
+            }
+        """.trimIndent()
 
         mockWebServer.requestCount shouldBe 1
-        body shouldNotContain "match_any" // should not send match_all
-        request.matchAll shouldEqual filters
+        params shouldEqualTo expectedRequestParams
     }
 
     private fun initMockWebServer() {
