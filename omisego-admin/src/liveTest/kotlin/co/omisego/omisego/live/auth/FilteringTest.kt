@@ -8,9 +8,12 @@ package co.omisego.omisego.live.auth
  */
 
 import co.omisego.omisego.live.BaseAuthTest
-import co.omisego.omisego.model.pagination.Filter
+import co.omisego.omisego.model.filterable.Filterable
+import co.omisego.omisego.model.filterable.buildFilterList
 import co.omisego.omisego.model.params.admin.TransactionListParams
+import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldNotBe
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -22,30 +25,36 @@ class FilteringTest : BaseAuthTest() {
 
     @Test
     fun `test match_any should be able to filter correctly`() {
+        val testTransactions = client.getTransactions(TransactionListParams.create()).execute().body()?.data?.data
+        val txId1 = testTransactions?.first()?.id
+        val txId2 = testTransactions?.last()?.id
+
         val response = client.getTransactions(TransactionListParams.create(
             perPage = 10,
-            matchAny = listOf(
-                Filter("id", "eq", "txn_01cwtfqywgk3nnt8r1w38wvfxf"),
-                Filter("id", "eq", "txn_01cwtfqg3djf906v4fasxrqe0s")
-            ))
+            matchAny = buildFilterList<Filterable.TransactionFields> { field ->
+                add(field.id eq txId1!!)
+                add(field.id eq txId2!!)
+            })
         ).execute()
 
-        println(response.body()?.data?.data?.map { it.id })
-
-        response.body()?.data?.data?.count { it.id == "txn_01cwtfqywgk3nnt8r1w38wvfxf" } shouldEqual 1
-        response.body()?.data?.data?.count { it.id == "txn_01cwtfqg3djf906v4fasxrqe0s" } shouldEqual 1
+        response.body()?.data?.data?.size shouldBe 2
+        response.body()?.data?.data?.find { it.id == txId1!! } shouldNotBe null
+        response.body()?.data?.data?.find { it.id == txId2 } shouldNotBe null
     }
 
     @Test
     fun `test match_all should be able to filter correctly`() {
+        val testTransactions = client.getTransactions(TransactionListParams.create()).execute().body()?.data?.data
+        val txId1 = testTransactions?.first()?.id
+        val txId2 = testTransactions?.last()?.id
+
         val response = client.getTransactions(TransactionListParams.create(
             perPage = 10,
-            matchAll = listOf(
-                Filter("id", "eq", "txn_01cwtfqywgk3nnt8r1w38wvfxf"),
-                Filter("id", "eq", "txn_01cwtfqg3djf906v4fasxrqe0s")
-            ))
+            matchAll = buildFilterList<Filterable.TransactionFields> { field ->
+                add(field.id eq txId1!!)
+                add(field.id eq txId2!!)
+            })
         ).execute()
-
         println(response.body()?.data?.data?.map { it.id })
 
         response.body()?.data?.data?.size shouldEqual 0
