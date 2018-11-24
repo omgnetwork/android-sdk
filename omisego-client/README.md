@@ -148,7 +148,6 @@ val request = ListTransactionParams.create(
     perPage = 10,
     sortBy = Paginable.Transaction.SortableFields.CREATE_AT,
     sortDir = SortDirection.ASCENDING,
-    searchTerm = "confirmed", // or searchTerms = mapOf(STATUS to "completed")
     address = null
 )
 ```
@@ -169,20 +168,6 @@ Where
     
     > `import co.omisego.omisego.model.pagination.SortDirection.*`
     
-* `searchTerm` *(optional)* is a term to search for all of the searchable fields. 
-      Conflict with `searchTerms`, only use one of them. The available values are:
-    
-    `ID`, `STATUS`, `FROM`, `TO`,
-      
-    > `import co.omisego.omisego.model.pagination.Paginable.Transaction.SearchableFields.*`
-    
-* `searchTerms` *(optional)* is a key-value map of fields to search with the available fields (same as `searchTerm`)
-    For example:
-    
-    ```kotlin
-    mapOf(FROM to "some_address", ID to "some_id")
-    ```
-
 * `address` *(optional)* is an optional address that belongs to the current user (primary wallet address by default)
 
 Then you can call:

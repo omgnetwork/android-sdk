@@ -48,15 +48,13 @@ data class TokenListParams internal constructor(
     override val sortDir: SortDirection = SortDirection.DESCENDING,
 
     /**
-     * A term to search for in all of the searchable fields.
-     * See more at [Paginable.Token.SearchableFields]
-     *
-     * Note: Conflict with searchTerms, only use one of them.
+     * All provided conditions are matched for a record to be returned
      */
-    override val searchTerm: String? = null,
-
     override val matchAll: List<Filter>? = null,
 
+    /**
+     * All provided conditions are matched for a record to be returned
+     */
     override val matchAny: List<Filter>? = null
 ) : PaginableParams, FilterableParams {
     companion object {
@@ -65,7 +63,6 @@ data class TokenListParams internal constructor(
             perPage: Int = 10,
             sortBy: Paginable.Token.SortableFields = Paginable.Token.SortableFields.CREATED_AT,
             sortDir: SortDirection = SortDirection.DESCENDING,
-            searchTerm: String? = null,
             matchAll: List<Filter>? = null,
             matchAny: List<Filter>? = null
         ) = TokenListParams(
@@ -73,7 +70,6 @@ data class TokenListParams internal constructor(
             perPage = perPage,
             sortBy = sortBy,
             sortDir = sortDir,
-            searchTerm = searchTerm,
             matchAll = matchAll,
             matchAny = matchAny
         )

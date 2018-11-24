@@ -12,5 +12,4 @@ interface PaginableParams {
     val perPage: Int
     val sortDir: SortDirection
     val sortBy: Paginable.SortableFields
-    val searchTerm: String?
 }

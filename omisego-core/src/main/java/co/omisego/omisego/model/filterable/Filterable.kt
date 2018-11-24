@@ -7,6 +7,7 @@ package co.omisego.omisego.model.filterable
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+
 sealed class Filterable {
     /**
      * Represents transaction's filterable fields
@@ -23,5 +24,23 @@ sealed class Filterable {
         val insertedAt = "inserted_at"
         val createdAt = "created_at"
         val updatedAt = "updated_at"
+    }
+
+    class AccountFields : Filterable() {
+        val id = "id"
+        val name = "name"
+        val description = "description"
+        val createdAt = "created_at"
+        val updatedAt = "updated_at"
+        val metadata = "metadata"
+    }
+
+    class WalletFields : Filterable() {
+        val address = "address"
+        val name = "name"
+        val identifier = "identifier"
+        val enabled = "enabled"
+        val updatedAt = "updated_at"
+        val metadata = "metadata"
     }
 }

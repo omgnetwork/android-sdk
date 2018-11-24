@@ -7,7 +7,6 @@ package co.omisego.omisego.model.params
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.filterable.Filter
 import co.omisego.omisego.model.pagination.Paginable
 import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
@@ -49,12 +48,7 @@ data class UserWalletListParams internal constructor(
      * - [SortDirection.ASCENDING]
      * - [SortDirection.DESCENDING]
      */
-    override val sortDir: SortDirection = SortDirection.DESCENDING,
-
-    /**
-     * A term to search for in all of the searchable fields.
-     */
-    override val searchTerm: String? = null
+    override val sortDir: SortDirection = SortDirection.DESCENDING
 ) : PaginableParams {
     companion object {
         fun create(
@@ -62,9 +56,7 @@ data class UserWalletListParams internal constructor(
             page: Int = 1,
             perPage: Int = 10,
             sortBy: Paginable.Wallet.SortableFields = Paginable.Wallet.SortableFields.CREATED_AT,
-            sortDir: SortDirection = SortDirection.DESCENDING,
-            matchAll: List<Filter>? = null,
-            matchAny: List<Filter>? = null
+            sortDir: SortDirection = SortDirection.DESCENDING
         ) = UserWalletListParams(
             providerUserId = providerUserId,
             page = page,

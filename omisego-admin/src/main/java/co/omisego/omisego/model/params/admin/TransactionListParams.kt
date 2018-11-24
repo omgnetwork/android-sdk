@@ -44,19 +44,20 @@ data class TransactionListParams internal constructor(
     override val sortDir: SortDirection = SortDirection.DESCENDING,
 
     /**
-     * A term to search for in all of the searchable fields.
+     * All provided conditions are matched for a record to be returned
      */
-    override val searchTerm: String? = null,
-
     override val matchAll: List<Filter>? = null,
 
+    /**
+     * At least one of the provided conditions is matched for a record to be returned
+     */
     override val matchAny: List<Filter>? = null,
 
     /**
      * An optional wallet address that belongs to the current user (primary address by default)
      */
     val address: String? = null
-) : FilterableParams, PaginableParams  {
+) : FilterableParams, PaginableParams {
 
     companion object {
         fun create(
@@ -64,7 +65,6 @@ data class TransactionListParams internal constructor(
             perPage: Int = 10,
             sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
             sortDir: SortDirection = SortDirection.DESCENDING,
-            searchTerm: String? = null,
             matchAll: List<Filter>? = null,
             matchAny: List<Filter>? = null,
             address: String? = null
@@ -73,7 +73,6 @@ data class TransactionListParams internal constructor(
             perPage = perPage,
             sortBy = sortBy,
             sortDir = sortDir,
-            searchTerm = searchTerm,
             matchAny = matchAny,
             matchAll = matchAll,
             address = address
