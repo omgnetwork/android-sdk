@@ -149,7 +149,6 @@ class FilteringTest : GsonDelegator() {
 
         gson.toJson(filterList) shouldEqualTo expectedJson
     }
-
     @Test
     fun `test filtering request should be sent correctly`() {
         getTransactionsFile.mockEnqueueWithHttpCode(mockWebServer)

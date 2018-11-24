@@ -7,7 +7,6 @@ package co.omisego.omisego.model.filterable
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-
 sealed class Filterable {
     /**
      * Represents transaction's filterable fields
