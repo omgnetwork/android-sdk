@@ -23,9 +23,7 @@ class ListTokenLiveTest : BaseAuthTest() {
     @Test
     fun `list tokens should be returned successfully`() {
         val response = client.getTokens(
-            TokenListParams.create(
-                searchTerm = null
-            )
+            TokenListParams.create()
         ).execute()
 
         response.isSuccessful shouldBe true

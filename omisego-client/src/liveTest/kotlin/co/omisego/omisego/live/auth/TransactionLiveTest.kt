@@ -24,7 +24,7 @@ class TransactionLiveTest : BaseAuthTest() {
 
     @Test
     fun `get_transactions should return 200 and parsed the response correctly`() {
-        val transactions = client.getTransactions(TransactionListParams.create(searchTerm = null)).execute()
+        val transactions = client.getTransactions(TransactionListParams.create()).execute()
         transactions.isSuccessful shouldBe true
         transactions.body()?.data shouldNotBe null
         with(transactions.body()?.data!!) {

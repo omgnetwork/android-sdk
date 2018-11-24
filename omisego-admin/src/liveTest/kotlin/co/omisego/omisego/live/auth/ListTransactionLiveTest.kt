@@ -8,6 +8,7 @@ package co.omisego.omisego.live.auth
  */
 
 import co.omisego.omisego.live.BaseAuthTest
+import co.omisego.omisego.model.filterable.buildFilterList
 import co.omisego.omisego.model.params.admin.TransactionListParams
 import org.amshove.kluent.shouldBe
 import org.junit.Test
@@ -22,9 +23,7 @@ class ListTransactionLiveTest : BaseAuthTest() {
     @Test
     fun `list transaction should be returned successfully`() {
         val response = client.getTransactions(
-            TransactionListParams.create(
-                searchTerm = null
-            )
+            TransactionListParams.create()
         ).execute()
 
         response.isSuccessful shouldBe true
@@ -35,15 +34,20 @@ class ListTransactionLiveTest : BaseAuthTest() {
 
     @Test
     fun `list transaction with a specific account should return transactions associated with the account`() {
+        val accountId = secret.getString("account_id")
+
         val response = client.getTransactions(
             TransactionListParams.create(
-                searchTerm = secret.getString("account_address")
+                matchAny = buildFilterList {
+                    add("from_account.id" eq accountId)
+                    add("to_account.id" eq accountId)
+                }
             )
         ).execute()
 
         response.isSuccessful shouldBe true
         response.body()?.data?.data?.forEach {
-            (secret.getString("account_address") in arrayOf(it.from.address, it.to.address)) shouldBe true
+            (accountId in arrayOf(it.from.accountId, it.to.accountId)) shouldBe true
         }
     }
 }

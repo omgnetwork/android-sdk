@@ -45,7 +45,7 @@ data class TransactionListParams internal constructor(
      * A term to search for in all of the searchable fields.
      *
      */
-    override val searchTerm: String? = null,
+    val searchTerm: String? = null,
 
     /**
      * An optional wallet address that belongs to the current user (primary address by default)
