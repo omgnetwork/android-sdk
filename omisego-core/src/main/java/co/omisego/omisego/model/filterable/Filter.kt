@@ -12,7 +12,7 @@ import co.omisego.omisego.constant.enums.OMGEnum
 /**
  * Represents a filter that can be used in filterable queries
  *
- * @param field A field name of the object.
+ * @param field A field name of the object. It supports nested relations snake_cased.
  * This param should specify the field name of the filterable response object.
  * Read full specifications [in our advanced filtering guide](https://github.com/omisego/ewallet/blob/master/docs/guides/advanced_filtering.md)
  * @param comparator A [Comparator] object that will be used for filtering, depending on the object type.

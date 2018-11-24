@@ -258,15 +258,6 @@ The general structure of the paginated request parameters consist of:
     
     > `import co.omisego.omisego.model.pagination.SortDirection.*`
     
-* `searchTerm` *(optional)* will search in all the searchable fields.
-    Conflict with `searchTerms`, only use one of them.
-* `searchTerms` *(optional)* is a key-value map of fields to search with the available fields (same as `searchTerm`)
-    For example:
-    
-    ```kotlin
-    mapOf(FROM to "some_address", ID to "some_id")
-    ```
-
 There is an generic `PaginationList<T>` inside the `response.data` which contains `data: List<T>` and `pagination: Pagination`
 
 Where:
@@ -276,6 +267,62 @@ Where:
     * `currentPage` is the retrieved page.
     * `isFirstPage` is a bool indicating if the page received is the first page
     * `isLastPage` is a bool indicating if the page received is the last page
+
+Optionally you can add either a `matchAll` or `matchAny` params which provides customizable way to filter the results.
+
+### Filter
+
+Read full specifications [in our advanced filtering guide](https://github.com/omisego/ewallet/blob/master/docs/guides/advanced_filtering.md)
+
+### Basic filtering
+In order to filter a collection, you will need to instantiate an array of `Filter` objects.
+ 
+A `Filter` contains a `field` to filter, a `comparator` and a `value`.
+
+The `field` depends on the collection to filter and a list of simple supported fields is available directly in the SDK.
+ 
+The `comparator` is a sealed class with defined values depending on the type of the `value` (`String`, `Number` or `Boolean`)
+ 
+For example a `Boolean` value can only use the `EQUAL` and `NOT_EQUAL` comparators, but a `String` value can use `EQUAL`, `CONTAINS` or `STARTS_WITH` comparators.
+
+The SDK provides a convenient function `buildFilterList` to build a list of [Filter] object easier like below.
+
+```kotlin
+val transactionFilterList = buildFilterList<Filterable.TransactionFields> { field ->
+  add(field.fromAmount gte 10.bd)
+  add(field.status eq Paginable.Transaction.TransactionStatus.CONFIRMED)
+}
+```
+
+This example will filter transactions with `status` matching `confirmed` OR/AND `from_amount` is greater than or equal to 10 (BigDecimal).
+
+The filter list can then be included in the `FilterableParams` like so (example for `TransactionListParams`):
+
+```kotlin
+val request = TransactionListParams.create(
+   page = 1,
+   perPage = 10,
+   sortBy = Paginable.Transaction.SortableFields.CREATE_AT,
+   sortDir = SortDirection.ASCENDING,
+   matchAll = transactionFilterList,
+   // OR matchAny = transactionFilterList,
+   address = null
+) 
+```
+
+#### Advanced relation filtering
+In addition to the provided `fields` you can perform more advanced field filtering on child objects by providing a path of relations separated with a `.`.
+For example you can create a filter for a transaction `fromToken` `symbol` like so:
+ 
+```kotlin
+val transactionFilterList = buildFilterList<Filterable.TransactionFields> { field ->
+  add("from_token.symbol" eq "OMG")
+}
+```
+
+This will filter transactions that have a sender token symbol equal to OMG.
+
+Note however that the `field` path attributes are snake cased as they match the JSON response object.
 
 #### Get transaction list
 This returns a paginated filtered list of `transactions`.
@@ -288,7 +335,6 @@ val request = TransactionListParams.create(
     perPage = 10,
     sortBy = Paginable.Transaction.SortableFields.CREATE_AT,
     sortDir = SortDirection.ASCENDING,
-    searchTerm = "confirmed", // or searchTerms = mapOf(STATUS to "completed")
     address = null
 )
 ```
