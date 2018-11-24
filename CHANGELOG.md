@@ -5,7 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unrelease]
+
+### Added
+- Added new `filtering` system.
+
+### Removed
+- `searchTerm` and `searchTerms` in `Paginable` object.
+
+## [1.2.0]
 
 ### Added
 - Added `signup` endpoint to `omisego-client`
@@ -144,7 +152,8 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Logout the current user
 - [OMGKeyManager - encryption and decryption helpers](https://github.com/omisego/android-sdk/pull/11)
 
-[Unreleased]: https://github.com/omisego/android-sdk/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/omisego/android-sdk/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/omisego/android-sdk/compare/v1.1.0...1.2.0
 [1.1.0]: https://github.com/omisego/android-sdk/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/omisego/android-sdk/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/omisego/android-sdk/compare/v0.9.6...v1.0.0
