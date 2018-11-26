@@ -35,11 +35,14 @@ android {
 
     lintOptions {
         disable 'ParcelCreator'
+        checkAllWarnings false
+        ignoreWarnings true
+        disable 'GradleDependency'
     }
 }
 
 androidExtensions {
-    experimental = true
+    experimental = true // For Parcelize
 }
 
 publish {

@@ -16,23 +16,25 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.annotation.ColorInt
-import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
 import co.omisego.omisego.R
 import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.ui.OMGCameraPreview
 import co.omisego.omisego.custom.camera.utils.DisplayUtils
 import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 /**
  * [OMGQRScannerView] is responsible for scanning the QRCode with customizable border color and loading view
@@ -122,6 +124,9 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
      */
     internal var omgScannerPreview: OMGQRScannerContract.Preview? = null
 
+    private val job by lazy { Job() }
+    private val uiScope by lazy { CoroutineScope(Dispatchers.Main + job) }
+
     /**
      * A flag to indicate that the QR code is currently processing or not
      */
@@ -160,10 +165,6 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
         } finally {
             a.recycle()
         }
-    }
-
-    companion object {
-        private const val TAG = "OMGQRScannerView"
     }
 
     internal fun setupCameraPreview(cameraWrapper: CameraWrapper) {
@@ -228,13 +229,14 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
         cameraHandlerThread?.quit()
         cameraHandlerThread = null
         /* This method is very time-consuming. Let's use background thread to handle this*/
-        return async { cameraWrapper?.camera?.release() }
+        return uiScope.async(Dispatchers.IO) { cameraWrapper?.camera?.release() }
     }
 
     override fun onPreviewFrame(data: ByteArray, camera: Camera) {
         omgScannerPreview?.onPreviewFrame(data, camera)
     }
 
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     override fun onSaveInstanceState(): Parcelable {
         val superState = super.onSaveInstanceState()
         return SavedState(superState).apply {
@@ -268,9 +270,9 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
         fun startCamera() {
             val localHandler = Handler(looper)
             localHandler.post {
-                launch(UI) {
-                    val wrapper = async { CameraWrapper.newInstance() }
-                    scannerView.setupCameraPreview(wrapper.await())
+                uiScope.launch {
+                    val wrapper = CameraWrapper.newInstance()
+                    scannerView.setupCameraPreview(wrapper)
                 }
             }
         }

@@ -7,7 +7,7 @@ allprojects {
 }
 
 ext {
-    coroutinesVersion = '0.25.0'
+    coroutinesVersion = '1.0.0'
     kotlinVersion = '1.3.10'
     retrofitVersion = '2.5.0'
     deps = [
@@ -23,7 +23,7 @@ ext {
         ],
         scanner    : [
             "com.google.zxing:core:3.3.0",
-            "com.android.support:appcompat-v7:27.1.1",
+            "androidx.appcompat:appcompat:1.0.2",
         ],
         test       : [
             "org.json:json:20160810",
@@ -37,8 +37,14 @@ ext {
             "com.android.support.test:runner:1.0.2",
         ],
         androidTest: [
-            "com.android.support.test.espresso:espresso-core:3.0.2",
-            "com.android.support.test:rules:1.0.2",
+            "androidx.test.espresso:espresso-core:3.1.0",
+            "androidx.test:rules:1.1.0",
+            "androidx.test:core:1.0.0",
+            "androidx.test.ext:junit:1.0.0",
+            "androidx.arch.core:core-testing:2.0.0-alpha1"
+        ],
+        appCompat: [
+            "androidx.appcompat:appcompat:1.0.2"
         ]
     ]
 }

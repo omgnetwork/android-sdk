@@ -16,7 +16,7 @@ import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.ui.OMGCameraPreview
 import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI
 import com.google.zxing.Result
-import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.Deferred
 
 interface OMGQRScannerContract {
     interface View : Camera.PreviewCallback {

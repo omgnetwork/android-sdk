@@ -23,20 +23,18 @@ class SystemEventDispatcher(
 ) : SocketDispatcherContract.SystemEventDispatcher {
 
     override fun handleEvent(systemEvent: SocketSystemEvent, response: SocketReceive<*>) {
-        when (systemEvent) {
-            SocketSystemEvent.REPLY -> {
-                response.runIfRefSchemeIs(SocketMessageRef.SCHEME_JOIN) {
-                    socketChannelListener.onJoinedChannel(response.topic)
-                }
-                response.runIfRefSchemeIs(SocketMessageRef.SCHEME_LEAVE) {
-                    socketChannelListener.onLeftChannel(response.topic)
-                }
+        if (systemEvent == SocketSystemEvent.REPLY) {
+            response.runIfRefSchemeIs(SocketMessageRef.SCHEME_JOIN) {
+                socketChannelListener.onJoinedChannel(response.topic)
             }
-            SocketSystemEvent.ERROR -> {
-                val error = response.error
-                    ?: APIError(ErrorCode.SDK_SOCKET_ERROR, "Something goes wrong while connecting to the channel")
-                socketChannelListener.onError(error)
+            response.runIfRefSchemeIs(SocketMessageRef.SCHEME_LEAVE) {
+                socketChannelListener.onLeftChannel(response.topic)
             }
+        }
+        else if (systemEvent == SocketSystemEvent.ERROR) {
+            val error = response.error
+                ?: APIError(ErrorCode.SDK_SOCKET_ERROR, "Something goes wrong while connecting to the channel")
+            socketChannelListener.onError(error)
         }
     }
 

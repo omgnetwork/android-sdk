@@ -29,6 +29,7 @@ fun marshall(bundle: Bundle): ByteArray =
         it.marshall()
     }
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 inline fun <reified R : Parcelable> unmarshallParcelable(bytes: ByteArray): R = unmarshall(bytes)
     .readBundle()
     .run {

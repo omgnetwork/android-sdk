@@ -2,7 +2,7 @@ package co.omisego.omisego.custom.zxing.ui.decorator
 
 import android.graphics.Canvas
 import android.graphics.Rect
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import androidx.test.core.app.ApplicationProvider
 import co.omisego.omisego.R
 import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI

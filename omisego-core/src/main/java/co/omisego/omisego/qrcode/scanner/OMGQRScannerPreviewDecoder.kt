@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package co.omisego.omisego.qrcode.scanner
 
 /*
@@ -22,7 +24,9 @@ import com.google.zxing.PlanarYUVLuminanceSource
 import com.google.zxing.Reader
 import com.google.zxing.Result
 import com.google.zxing.common.HybridBinarizer
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import java.util.EnumMap
 
 class OMGQRScannerPreviewDecoder(
@@ -37,6 +41,8 @@ class OMGQRScannerPreviewDecoder(
     }
 ) : OMGQRScannerContract.Preview.Decoder {
     private var mQRFrameExtractor: QRFrameExtractor? = null
+
+    private val uiScope by lazy { CoroutineScope(Dispatchers.Main) }
 
     /**
      * Resize the frame to fit in the preview frame correctly
@@ -133,10 +139,10 @@ class OMGQRScannerPreviewDecoder(
     }
 
     override suspend fun decode(data: ByteArray, orientation: Int?, cameraPreviewSize: Camera.Size): Result? {
-        val previewSizePair = async { getPreviewSize(cameraPreviewSize) }
+        val previewSizePair = uiScope.async(Dispatchers.IO) { getPreviewSize(cameraPreviewSize) }
 
         /* Rotate the data to correct the orientation */
-        val newData = async {
+        val newData = uiScope.async(Dispatchers.IO) {
             adjustRotation(
                 data,
                 cameraPreviewSize.width to cameraPreviewSize.height,

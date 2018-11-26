@@ -1,4 +1,4 @@
-include ':omisego-core',
+include ':omisego-core', ':myapplication',
         ':omisego-admin',
         ':omisego-client',
         ':app'

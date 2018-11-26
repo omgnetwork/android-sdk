@@ -8,10 +8,10 @@ package co.omisego.omisego.operation
  */
 
 import co.omisego.omisego.model.APIError
-import co.omisego.omisego.model.User
-import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.model.TransactionConsumption
 import co.omisego.omisego.model.TransactionRequest
+import co.omisego.omisego.model.User
+import co.omisego.omisego.model.socket.SocketTopic
 import co.omisego.omisego.websocket.SocketClientContract
 import co.omisego.omisego.websocket.event.TransactionConsumptionRequestEvent
 import co.omisego.omisego.websocket.listener.DelegateSocketCustomEventListener
@@ -42,7 +42,7 @@ class ListenableTest {
     fun `when the user call startListenerEvents, the client should add the listener and join channel correctly`() {
         mockUser.startListeningEvents(
             mockClient,
-            listener = SocketCustomEventListener.forEvent<TransactionConsumptionRequestEvent> { event ->
+            listener = SocketCustomEventListener.forEvent<TransactionConsumptionRequestEvent> { _ ->
                 // Do something
             }
         )

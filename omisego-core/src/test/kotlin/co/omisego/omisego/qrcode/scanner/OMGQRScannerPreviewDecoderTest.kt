@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package co.omisego.omisego.qrcode.scanner
 
 /*
@@ -14,7 +16,7 @@ import android.hardware.Camera
 import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldEqual

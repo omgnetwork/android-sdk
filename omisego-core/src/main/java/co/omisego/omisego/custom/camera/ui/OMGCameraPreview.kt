@@ -21,13 +21,15 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import co.omisego.omisego.custom.camera.AutoFocusManager
 import co.omisego.omisego.custom.camera.CameraWrapper
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
-import java.lang.Exception
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 @SuppressLint("ViewConstructor")
 class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
+    private val jobCameraPreview by lazy { Job() }
+    private val uiScope by lazy { CoroutineScope(Dispatchers.Main + jobCameraPreview) }
     private var mPreviewCallback: Camera.PreviewCallback? = null
     private var mPreviewing: Boolean = false
     private var mSafeFocus: Boolean = false
@@ -88,11 +90,11 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
 
             /* Setup camera display */
             cameraWrapper?.camera?.let {
-                launch(UI) {
-                    async { it.setDisplayOrientation(mOMGCameraLogic.getDisplayOrientation(cameraWrapper != null)) }
-                    async { it.setPreviewDisplay(holder) }
-                    async { it.setPreviewCallback(mPreviewCallback) }
-                    async { it.startPreview() }
+                uiScope.launch {
+                    it.setDisplayOrientation(mOMGCameraLogic.getDisplayOrientation(cameraWrapper != null))
+                    it.setPreviewDisplay(holder)
+                    it.setPreviewCallback(mPreviewCallback)
+                    it.startPreview()
                 }
             }
 
@@ -110,10 +112,12 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
             mPreviewing = false
             holder.removeCallback(this)
             mFocusManager.stop()
-            async { cameraWrapper?.camera?.stopPreview() }
+            uiScope.launch { cameraWrapper?.camera?.stopPreview() }
             cameraWrapper?.camera?.setPreviewCallback(null)
         } catch (e: Exception) {
             Log.d(OMGCameraPreview.TAG, e.toString(), e)
+        } finally {
+            jobCameraPreview.cancel()
         }
     }
 
