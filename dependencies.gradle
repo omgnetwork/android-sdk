@@ -7,9 +7,9 @@ allprojects {
 }
 
 ext {
-    kotlinVersion = '1.2.61'
-    retrofitVersion = '2.4.0'
     coroutinesVersion = '0.25.0'
+    kotlinVersion = '1.3.10'
+    retrofitVersion = '2.5.0'
     deps = [
         kotlin     : [
             "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
@@ -30,7 +30,7 @@ ext {
             "junit:junit:4.12",
             "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion",
             "org.amshove.kluent:kluent-android:1.30",
-            "org.robolectric:robolectric:3.5.1",
+            "org.robolectric:robolectric:4.0.2",
             "com.squareup.okhttp3:mockwebserver:3.9.1",
             "com.squareup.retrofit2:retrofit-mock:$retrofitVersion",
             "com.android.support.test:runner:1.0.2",

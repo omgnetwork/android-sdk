@@ -3,7 +3,7 @@ project.ext {
     versionName = "1.2.1"
 
     /* android compile tools */
-    buildToolsVersion = '27.0.3'
+    buildToolsVersion = '28.0.3'
     compileSdkVersion = 28
 
     /* android default config */
