@@ -30,8 +30,7 @@ class SystemEventDispatcher(
             response.runIfRefSchemeIs(SocketMessageRef.SCHEME_LEAVE) {
                 socketChannelListener.onLeftChannel(response.topic)
             }
-        }
-        else if (systemEvent == SocketSystemEvent.ERROR) {
+        } else if (systemEvent == SocketSystemEvent.ERROR) {
             val error = response.error
                 ?: APIError(ErrorCode.SDK_SOCKET_ERROR, "Something goes wrong while connecting to the channel")
             socketChannelListener.onError(error)

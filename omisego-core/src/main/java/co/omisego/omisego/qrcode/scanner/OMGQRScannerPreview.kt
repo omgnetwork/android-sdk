@@ -64,7 +64,6 @@ internal class OMGQRScannerPreview(
                 }
             }
 
-
             val previewOrientation = uiScope.async(Dispatchers.IO) { getPreviewOrientation() }
             val previewSize = nullablePreviewSize?.await() ?: return@launch
             val rawResult = uiScope.async(Dispatchers.IO) {

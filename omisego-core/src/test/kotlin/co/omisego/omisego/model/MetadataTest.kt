@@ -34,7 +34,7 @@ class MetadataTest : GsonDelegator() {
 
             this["an_array"] shouldBeInstanceOf List::class.java
             val customArray = this["an_array"]
-            if(customArray is List<*>) {
+            if (customArray is List<*>) {
                 customArray[0] shouldEqual "value_1"
                 customArray[1] shouldEqual "value_2"
             }
