@@ -8,6 +8,7 @@ package co.omisego.omisego.model.filterable
  */
 
 import co.omisego.omisego.constant.enums.OMGEnum
+import com.google.gson.annotations.Expose
 
 /**
  * Represents a filter that can be used in filterable queries
@@ -25,27 +26,34 @@ import co.omisego.omisego.constant.enums.OMGEnum
 data class Filter internal constructor(
     val field: String,
     val comparator: Comparator,
-    val value: Any
+    @Expose(serialize = true) // serialize null value specific for this field
+    val value: Any? = null
 ) {
     companion object {
 
         /**
          * A static function for create a [Filter] object from [String] value.
          */
-        fun create(field: String, comparator: Comparator, value: String) =
+        fun create(field: String, comparator: Comparator.StringComparator, value: String) =
             Filter(field, comparator, value)
 
         /**
          * A static function for create a [Filter] object from [Boolean] value.
          */
-        fun create(field: String, comparator: Comparator, value: Boolean) =
+        fun create(field: String, comparator: Comparator.BooleanComparator, value: Boolean) =
             Filter(field, comparator, value)
 
         /**
          * A static function for create a [Filter] object from [Number] value.
          */
-        fun create(field: String, comparator: Comparator, value: Number) =
+        fun create(field: String, comparator: Comparator.NumberComparator, value: Number) =
             Filter(field, comparator, value)
+
+        /**
+         * A static function for create a [Filter] object from null value.
+         */
+        fun create(field: String, comparator: Comparator.NullComparator) =
+            Filter(field, comparator)
     }
 }
 
@@ -119,6 +127,22 @@ class FilterListBuilder {
      * @return a [Filter] object with [Comparator.StringComparator.EQUAL]
      */
     infix fun String.eq(value: OMGEnum) = Filter(this, Comparator.StringComparator.EQUAL(), value.value)
+
+    /**
+     * A convenient infix function to create a [Filter] object for [String] value.
+     *
+     * @param value A [String] value.
+     * @return a [Filter] object with [Comparator.StringComparator.NOT_EQUAL]
+     */
+    infix fun String.neq(value: String) = Filter(this, Comparator.StringComparator.NOT_EQUAL(), value)
+
+    /**
+     * A convenient infix function to create a [Filter] object for [String] value.
+     *
+     * @param value [OMGEnum] value
+     * @return a [Filter] object with [Comparator.StringComparator.NOT_EQUAL]
+     */
+    infix fun String.neq(value: OMGEnum) = Filter(this, Comparator.StringComparator.NOT_EQUAL(), value.value)
 
     /**
      * A convenient infix function to create a [Filter] object for [String] value.
@@ -199,6 +223,22 @@ class FilterListBuilder {
      * @return A [Filter] object with [Comparator.NumberComparator.GREATER_THAN_OR_EQUAL]
      */
     infix fun String.gte(value: Number) = Filter(this, Comparator.NumberComparator.GREATER_THAN_OR_EQUAL(), value)
+
+    /**
+     * A convenient infix function to create a [Filter] object for null value.
+     *
+     * @param value A nullable value
+     * @return A [Filter] object with [Comparator.NullComparator.NULL]
+     */
+    infix fun String.eq(value: Any?) = Filter(this, Comparator.NullComparator.NULL(), null)
+
+    /**
+     * A convenient infix function to create a [Filter] object for null value.
+     *
+     * @param value A nullable value
+     * @return A [Filter] object with [Comparator.NullComparator.NOT_NULL]
+     */
+    infix fun String.neq(value: Any?) = Filter(this, Comparator.NullComparator.NOT_NULL(), null)
 }
 
 sealed class Comparator(override val value: String) : OMGEnum {
@@ -228,6 +268,7 @@ sealed class Comparator(override val value: String) : OMGEnum {
      */
     sealed class StringComparator(comparator: String) : Comparator(comparator) {
         class EQUAL : StringComparator("eq")
+        class NOT_EQUAL : StringComparator("neq")
         class CONTAINS : StringComparator("contains")
         class STARTS_WITH : StringComparator("starts_with")
     }
@@ -249,5 +290,15 @@ sealed class Comparator(override val value: String) : OMGEnum {
         class LESS_THAN_OR_EQUAL : NumberComparator("lte")
         class GREATER_THAN : NumberComparator("gt")
         class GREATER_THAN_OR_EQUAL : NumberComparator("gte")
+    }
+
+    /**
+     * A comparator for null value
+     * - NULL: the value must be null
+     * - NOT_NULL: the value must be not null
+     */
+    sealed class NullComparator(comparator: String) : Comparator(comparator) {
+        class NULL : NullComparator("eq")
+        class NOT_NULL : NullComparator("neq")
     }
 }

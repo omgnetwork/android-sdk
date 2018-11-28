@@ -77,6 +77,10 @@ class FilteringTest : GsonDelegator() {
             add(field.id startsWith "123")
             add(field.status contains "confirm")
 
+            /* Test null comparator */
+            add("unknown" eq null)
+            add("unknown" neq null)
+
             /* Test boolean comparator */
             add("success" eq true)
             add("fail" neq true)
@@ -133,6 +137,16 @@ class FilteringTest : GsonDelegator() {
                 "field": "status",
                 "comparator": "contains",
                 "value": "confirm"
+              },
+              {
+                "field": "unknown",
+                "comparator": "eq",
+                "value": null
+              },
+              {
+                "field": "unknown",
+                "comparator": "neq",
+                "value": null
               },
               {
                 "field": "success",
