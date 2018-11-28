@@ -25,7 +25,7 @@
 <p><a href="-account/index.html">Account</a></p>
 </td>
 <td>
-<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Account</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a></code>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Account</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a><span class="symbol">, </span><a href="../co.omisego.omisego.operation/-listenable/index.html"><span class="identifier">Listenable</span></a></code>
 <p>Represents an account.</p>
 </td>
 </tr>
@@ -65,6 +65,15 @@
 </tr>
 <tr>
 <td>
+<p><a href="-exchange-pair/index.html">ExchangePair</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">ExchangePair</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a></code>
+<p>Represents an ExchangePair.</p>
+</td>
+</tr>
+<tr>
+<td>
 <p><a href="-o-m-g-response/index.html">OMGResponse</a></p>
 </td>
 <td>
@@ -89,6 +98,74 @@
 <code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Token</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a></code>
 <p>Represents a token</p>
 </td>
+</tr>
+<tr>
+<td>
+<p><a href="-transaction/index.html">Transaction</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Transaction</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../co.omisego.omisego.model.pagination/-paginable/-transaction/index.html"><span class="identifier">Transaction</span></a><span class="symbol">, </span><a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a></code>
+<p>Represents a transaction.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-transaction-consumption/index.html">TransactionConsumption</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">TransactionConsumption</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a><span class="symbol">, </span><a href="../co.omisego.omisego.operation/-listenable/index.html"><span class="identifier">Listenable</span></a><span class="symbol">, </span><a href="../co.omisego.omisego.model.socket/-socket-receive/-socket-data.html"><span class="identifier">SocketData</span></a></code>
+<p>Represents a transaction consumption</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-transaction-consumption-status/index.html">TransactionConsumptionStatus</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">TransactionConsumptionStatus</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">OMGEnum</span></code>
+<p>Represents transaction consumption statuses.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-transaction-exchange/index.html">TransactionExchange</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">TransactionExchange</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-transaction-request/index.html">TransactionRequest</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">TransactionRequest</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a><span class="symbol">, </span><a href="../co.omisego.omisego.operation/-listenable/index.html"><span class="identifier">Listenable</span></a></code>
+<p>Represents a transaction request</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-transaction-request-status/index.html">TransactionRequestStatus</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">TransactionRequestStatus</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">OMGEnum</span></code>
+<p>The status of the transaction request</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-transaction-request-type/index.html">TransactionRequestType</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">TransactionRequestType</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">OMGEnum</span></code>
+<p>The different types of request that can be generated</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-transaction-source/index.html">TransactionSource</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">TransactionSource</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/os/Parcelable.html"><span class="identifier">Parcelable</span></a></code></td>
 </tr>
 <tr>
 <td>
