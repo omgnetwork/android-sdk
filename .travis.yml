@@ -40,7 +40,6 @@ script:
   - ./gradlew lint # android lint
   - ./gradlew ktlintCheck # kotlin lint
   - ./gradlew clean testDebugUnitTest # unit test for all modules in parallel
-  - ./gradlew dokka > /dev/null # generate kotlin doc
 
 before_deploy:
   - touch $CODE_DOCUMENTATION_LOCATION/.nojekyll
