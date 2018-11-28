@@ -78,8 +78,8 @@ class FilteringTest : GsonDelegator() {
             add(field.status contains "confirm")
 
             /* Test null comparator */
-            add("unknown" eq null)
-            add("unknown" neq null)
+            add("unknown".eqNull())
+            add("unknown".neqNull())
 
             /* Test boolean comparator */
             add("success" eq true)

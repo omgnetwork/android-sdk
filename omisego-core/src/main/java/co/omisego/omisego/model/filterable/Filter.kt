@@ -230,7 +230,7 @@ class FilterListBuilder {
      * @param value A nullable value
      * @return A [Filter] object with [Comparator.NullComparator.NULL]
      */
-    infix fun String.eq(value: Any?) = Filter(this, Comparator.NullComparator.NULL(), null)
+    fun String.eqNull() = Filter(this, Comparator.NullComparator.NULL(), null)
 
     /**
      * A convenient infix function to create a [Filter] object for null value.
@@ -238,7 +238,7 @@ class FilterListBuilder {
      * @param value A nullable value
      * @return A [Filter] object with [Comparator.NullComparator.NOT_NULL]
      */
-    infix fun String.neq(value: Any?) = Filter(this, Comparator.NullComparator.NOT_NULL(), null)
+    fun String.neqNull() = Filter(this, Comparator.NullComparator.NOT_NULL(), null)
 }
 
 sealed class Comparator(override val value: String) : OMGEnum {
