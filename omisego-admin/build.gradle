@@ -80,6 +80,4 @@ dependencies {
     testImplementation("com.nhaarman:mockito-kotlin:1.5.0", {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
     })
-    // Instrumental test
-    androidTestImplementation deps.androidTest
 }

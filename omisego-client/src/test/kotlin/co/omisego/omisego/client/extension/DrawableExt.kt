@@ -10,7 +10,7 @@ package co.omisego.omisego.client.extension
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
-import android.support.annotation.Px
+import androidx.annotation.Px
 import java.nio.ByteBuffer
 
 internal fun Drawable.toByteArray(

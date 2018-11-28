@@ -228,7 +228,7 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
         cameraPreview?.stopCameraPreview()
         cameraHandlerThread?.quit()
         cameraHandlerThread = null
-        /* This method is very time-consuming. Let's use background thread to handle this*/
+        // Time consuming!
         return uiScope.async(Dispatchers.IO) { cameraWrapper?.camera?.release() }
     }
 

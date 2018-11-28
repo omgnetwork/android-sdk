@@ -26,9 +26,7 @@ android {
         test.java.srcDirs += 'src/test/kotlin'
         test.java.srcDirs += 'src/liveTest/kotlin'
         test.resources.srcDirs += 'src/liveTest/resources'
-        main.res.srcDirs += 'src/androidTest/res'
-        androidTest.java.srcDirs += 'src/androidTest/kotlin'
-        androidTest.res.srcDirs += 'src/androidTest/res'
+        main.res.srcDirs += 'src/test/res'
     }
 
     testOptions {
@@ -82,12 +80,10 @@ dependencies {
     implementation deps.networking
 
     // Unit test
-    testImplementation deps.test
     testImplementation project(':omisego-core')
+    testImplementation deps.test
+    testImplementation deps.appCompat
     testImplementation("com.nhaarman:mockito-kotlin:1.5.0", {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
     })
-
-    androidTestImplementation deps.androidTest
-    androidTestImplementation deps.appCompat
 }
