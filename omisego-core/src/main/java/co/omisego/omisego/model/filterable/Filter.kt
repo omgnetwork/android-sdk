@@ -17,16 +17,16 @@ import com.google.gson.annotations.Expose
  * This param should specify the field name of the filterable response object.
  * Read full specifications [in our advanced filtering guide](https://github.com/omisego/ewallet/blob/master/docs/guides/advanced_filtering.md)
  * @param comparator A [Comparator] object that will be used for filtering, depending on the object type.
- * There're currently 3 types supported:
+ * There're currently 4 types supported:
  * - [Comparator.StringComparator]
  * - [Comparator.BooleanComparator]
  * - [Comparator.NumberComparator]
+ * - [Comparator.NullComparator]
  * @param value A value to be used for comparing.
  */
 data class Filter internal constructor(
     val field: String,
     val comparator: Comparator,
-    @Expose(serialize = true) // serialize null value specific for this field
     val value: Any? = null
 ) {
     companion object {
@@ -263,6 +263,7 @@ sealed class Comparator(override val value: String) : OMGEnum {
      * A comparator for [String] values
      *
      * - EQUAL: The value must match exactly fhe field
+     * - NOT_EQUAL: The value must be different from the field
      * - CONTAINS: The value must be a substring of the field
      * - STARTS_WITH: The field must start with the value
      */
