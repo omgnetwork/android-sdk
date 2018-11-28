@@ -1,6 +1,6 @@
 project.ext {
     /* package version */
-    versionName = "1.2.1"
+    versionName = "1.2.1-alpha1"
 
     /* android compile tools */
     buildToolsVersion = '28.0.3'
