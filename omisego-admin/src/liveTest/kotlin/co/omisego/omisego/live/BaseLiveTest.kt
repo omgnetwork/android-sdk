@@ -14,16 +14,20 @@ import co.omisego.omisego.utils.ResourceFileLoader
 
 open class BaseLiveTest : ResourceFileLoader() {
     val secret by lazy { loadSecretFile("secret.json") }
-    private val config by lazy {
+    val config by lazy {
         AdminConfiguration(
             secret.getString("base_url")
         )
     }
+
+    /* object to be used for create HTTP request client */
     private val eWalletAdmin by lazy {
         EWalletAdmin.Builder {
             clientConfiguration = config
         }.build()
     }
+
+    /* HTTP request client */
     val client by lazy {
         OMGAPIAdmin(eWalletAdmin)
     }

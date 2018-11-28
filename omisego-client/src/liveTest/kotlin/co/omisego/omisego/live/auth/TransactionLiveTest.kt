@@ -7,7 +7,8 @@ package co.omisego.omisego.live
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.transaction.list.TransactionListParams
+import co.omisego.omisego.model.Transaction
+import co.omisego.omisego.model.params.TransactionListParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldNotBe
@@ -29,7 +30,7 @@ class TransactionLiveTest : BaseAuthTest() {
             this.pagination shouldBeInstanceOf co.omisego.omisego.model.pagination.Pagination::class.java
             this.data shouldBeInstanceOf kotlin.collections.List::class.java
             if (this.data.isNotEmpty()) {
-                this.data[0] shouldBeInstanceOf co.omisego.omisego.model.transaction.Transaction::class.java
+                this.data[0] shouldBeInstanceOf Transaction::class.java
             }
         }
     }

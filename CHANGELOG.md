@@ -10,9 +10,28 @@ and `OmiseGO` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ### Added
 - Added `signup` endpoint to `omisego-client`
 - Added `login` endpoint to `omisego-client`
+- Added `createTransactionRequest`, `getTransactionRequest`, `consumeTransactionRequest`, 
+`approveTransactionConsumption`, `rejectTransactionConsumption` to `omisego-admin`
 
 ### Changed
 - Renamed `Logout` to `Empty`
+- Moved the following classes to package `co.omisego.omisego.model.params`
+    - TransactionConsumptionActionParams
+    - TransactionListParams
+    - TransactionRequestParams
+- Moved the following classes to package `co.omisego.omisego.model`
+    - ExchangePair
+    - Transaction
+    - TransactionConsumption
+    - TransactionRequest
+- Added the following classes to package `co.omisego.omisego.model.params.admin`
+    - TransactionConsumptionParams
+    - TransactionCreateParams
+    - TransactionRequestCreateParams
+- Added the following classes to package `co.omisego.omisego.model.params.client`
+    - TransactionConsumptionParams
+    - TransactionCreateParams
+    - TransactionRequestCreateParams
 
 ## [1.1.0] - 2018-09-03
 ### Added

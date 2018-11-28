@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.transaction
+package co.omisego.omisego.model
 
 /*
  * OmiseGO
@@ -8,11 +8,6 @@ package co.omisego.omisego.model.transaction
  */
 
 import android.os.Parcelable
-import co.omisego.omisego.model.APIError
-import co.omisego.omisego.model.Account
-import co.omisego.omisego.model.Token
-import co.omisego.omisego.model.User
-import co.omisego.omisego.model.Wallet
 import co.omisego.omisego.model.pagination.Paginable
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue

@@ -1,4 +1,4 @@
-package co.omisego.omisego.network.ewallet
+package co.omisego.omisego.client.network.ewallet
 
 /*
  * OmiseGO
@@ -7,6 +7,7 @@ package co.omisego.omisego.network.ewallet
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.network.ewallet.ClientAuthenticationHeader
 import co.omisego.omisego.utils.Base64Encoder
 import com.nhaarman.mockito_kotlin.verify
 import org.amshove.kluent.mock

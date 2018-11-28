@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.transaction.consumption
+package co.omisego.omisego.model.params.client
 
 /*
  * OmiseGO
@@ -7,7 +7,7 @@ package co.omisego.omisego.model.transaction.consumption
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.model.transaction.request.TransactionRequest
+import co.omisego.omisego.model.TransactionRequest
 import java.math.BigDecimal
 
 /**
@@ -81,6 +81,40 @@ data class TransactionConsumptionParams internal constructor(
             return TransactionConsumptionParams(
                 transactionRequest.formattedId,
                 if (transactionRequest.amount?.stripTrailingZeros() == amount?.stripTrailingZeros()) null else amount,
+                address,
+                idempotencyToken,
+                correlationId,
+                metadata,
+                encryptedMetadata
+            )
+        }
+
+        /**
+         * Initialize the params used to consume a transaction request
+         * Throws [IllegalArgumentException] if the amount is null and was not specified in the transaction request
+         *
+         * @param transactionRequest The transaction request to consume
+         * @param amount The amount of token to transfer (down to subunit to unit)
+         * @param address The address to use for the consumption
+         * @param idempotencyToken The idempotency token to use for the consumption
+         * @param correlationId An id that can uniquely identify a transaction. Typically an order id from a provider.
+         * @param metadata Additional metadata for the consumption
+         * @param encryptedMetadata Additional encrypted metadata for the consumption
+         *
+         * @return The [TransactionConsumptionParams] used for consume the a transaction request
+         */
+        fun create(
+            formattedTransactionRequestId: String,
+            amount: BigDecimal? = null,
+            address: String? = null,
+            idempotencyToken: String = "$formattedTransactionRequestId-${System.nanoTime()}",
+            correlationId: String? = null,
+            metadata: Map<String, Any> = mapOf(),
+            encryptedMetadata: Map<String, Any> = mapOf()
+        ): TransactionConsumptionParams {
+            return TransactionConsumptionParams(
+                formattedTransactionRequestId,
+                amount,
                 address,
                 idempotencyToken,
                 correlationId,

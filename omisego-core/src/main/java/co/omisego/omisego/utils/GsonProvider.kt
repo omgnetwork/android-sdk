@@ -8,9 +8,9 @@ import co.omisego.omisego.custom.gson.OMGEnumAdapter
 import co.omisego.omisego.custom.gson.SocketReceiveDataDeserializer
 import co.omisego.omisego.custom.gson.SocketTopicDeserializer
 import co.omisego.omisego.custom.gson.TransactionDeserializer
+import co.omisego.omisego.model.Transaction
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.model.transaction.Transaction
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -32,7 +32,7 @@ class GsonProvider {
                 .registerTypeAdapter(Either::class.java, EitherEnumDeserializer<OMGEnum, OMGEnum>())
                 .registerTypeAdapter(SocketReceive.SocketData::class.java, SocketReceiveDataDeserializer())
                 .registerTypeHierarchyAdapter(OMGEnum::class.java, OMGEnumAdapter<OMGEnum>())
-                .serializeNulls()
+                .setPrettyPrinting()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create()
         }

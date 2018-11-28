@@ -9,7 +9,7 @@ package co.omisego.omisego.websocket.enum
 
 import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.model.socket.SocketReceive
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
+import co.omisego.omisego.model.TransactionConsumption
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldBe
 import org.junit.Test

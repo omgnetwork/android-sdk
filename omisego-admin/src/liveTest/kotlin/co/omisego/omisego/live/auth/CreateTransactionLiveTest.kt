@@ -7,9 +7,9 @@ package co.omisego.omisego.live.auth
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import co.omisego.omisego.live.BaseAuthTest
 import co.omisego.omisego.extension.bd
-import co.omisego.omisego.model.transaction.send.TransactionCreateParams
+import co.omisego.omisego.live.BaseAuthTest
+import co.omisego.omisego.model.params.admin.TransactionCreateParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldNotBe
 import org.junit.Test
@@ -19,11 +19,11 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
-class TransferLiveTest : BaseAuthTest() {
+class CreateTransactionLiveTest : BaseAuthTest() {
 
     @Test
     fun `transfer from an account to a user should return 200, 'from' should be an account and 'to' should be a user`() {
-        val response = client.transfer(
+        val response = client.createTransaction(
             TransactionCreateParams(
                 fromAddress = secret.getString("account_address"),
                 toAddress = secret.getString("user_address"),
@@ -45,7 +45,7 @@ class TransferLiveTest : BaseAuthTest() {
 
     @Test
     fun `transfer from a user to an account should return 200, 'from' should be a user and 'to' should be an account`() {
-        val response = client.transfer(
+        val response = client.createTransaction(
             TransactionCreateParams(
                 fromAddress = secret.getString("user_address"),
                 toAddress = secret.getString("account_address"),

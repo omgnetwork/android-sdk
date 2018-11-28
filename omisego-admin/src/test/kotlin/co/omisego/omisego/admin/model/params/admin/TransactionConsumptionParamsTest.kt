@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.transaction.consumption
+package co.omisego.omisego.admin.model.params.admin
 
 /*
  * OmiseGO
@@ -7,9 +7,11 @@ package co.omisego.omisego.model.transaction.consumption
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.admin.utils.GsonDelegator
 import co.omisego.omisego.extension.bd
 import co.omisego.omisego.model.Token
-import co.omisego.omisego.model.transaction.request.TransactionRequest
+import co.omisego.omisego.model.TransactionRequest
+import co.omisego.omisego.model.params.admin.TransactionConsumptionParams
 import com.nhaarman.mockito_kotlin.whenever
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldBe
@@ -18,7 +20,7 @@ import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.withMessage
 import org.junit.Test
 
-class TransactionConsumptionParamsTest {
+class TransactionConsumptionParamsTest : GsonDelegator() {
 
     @Test
     fun `TransactionConsumptionParams should be return null if the transactionRequest amount is null`() {
@@ -30,7 +32,7 @@ class TransactionConsumptionParamsTest {
         val result = { TransactionConsumptionParams.create(transactionRequest) }
 
         result shouldThrow IllegalArgumentException::class withMessage
-            "The transactionRequest amount or the amount of token to transfer should be provided"
+            "The transactionRequest amount or the amount of token to createTransaction should be provided"
     }
 
     @Test
@@ -84,5 +86,38 @@ class TransactionConsumptionParamsTest {
         }
 
         idempotencyTokenSet.size shouldEqual 1000
+    }
+
+    @Test
+    fun `TransactionConsumptionParams should be created correctly`() {
+        val expectedJson = """
+            {
+              "formatted_transaction_request_id": "fmt:txr_id",
+              "amount": 1,
+              "address": null,
+              "idempotency_token": "fmt:txr_id-55366101236611",
+              "correlation_id": null,
+              "metadata": {},
+              "encrypted_metadata": {},
+              "account_id": "account_id",
+              "user_id": "user_id",
+              "provider_user_id": null,
+              "token_id": null,
+              "exchange_account_id": "exchange_account_id",
+              "exchange_wallet_address": "exchange_wallet_address"
+            }
+            """
+
+        val params = TransactionConsumptionParams.create(
+            "fmt:txr_id",
+            amount = 1.bd,
+            exchangeAccountId = "exchange_account_id",
+            exchangeWalletAddress = "exchange_wallet_address",
+            userId = "user_id",
+            accountId = "account_id"
+        )
+
+        val expected = gson.fromJson(expectedJson, TransactionConsumptionParams::class.java)
+        params.copy(idempotencyToken = "") shouldEqual expected.copy(idempotencyToken = "")
     }
 }

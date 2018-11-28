@@ -61,7 +61,8 @@ class ErrorCodeTest {
                 "transaction_consumption:unfinalized" -> ErrorCode.TRANSACTION_CONSUMPTION_UNFINALIZED
                 "websocket:forbidden_channel" -> ErrorCode.WEBSOCKET_FORBIDDEN_CHANNEL
                 "websocket:channel_not_found" -> ErrorCode.WEBSOCKET_CHANNEL_NOT_FOUND
-                "websocket:connect_error" -> ErrorCode.WEB_SOCKET_CONNECT_ERROR
+                "websocket:connect_error" -> ErrorCode.WEBSOCKET_CONNECT_ERROR
+                "websocket:invalid_format" -> ErrorCode.WEBSOCKET_INVALID_FORMAT
                 else -> ErrorCode.SDK_UNEXPECTED_ERROR
             }
             actual shouldEqual expected

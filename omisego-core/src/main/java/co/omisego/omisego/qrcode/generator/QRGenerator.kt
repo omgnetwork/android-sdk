@@ -8,7 +8,7 @@ package co.omisego.omisego.qrcode.generator
  */
 
 import android.graphics.Bitmap
-import co.omisego.omisego.model.transaction.request.TransactionRequest
+import co.omisego.omisego.model.TransactionRequest
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException

@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.transaction.consumption
+package co.omisego.omisego.model
 
 /*
  * OmiseGO
@@ -10,12 +10,8 @@ package co.omisego.omisego.model.transaction.consumption
 import android.accounts.Account
 import android.os.Parcelable
 import co.omisego.omisego.constant.enums.OMGEnum
-import co.omisego.omisego.model.Token
-import co.omisego.omisego.model.User
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
-import co.omisego.omisego.model.transaction.Transaction
-import co.omisego.omisego.model.transaction.request.TransactionRequest
 import co.omisego.omisego.operation.Listenable
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue

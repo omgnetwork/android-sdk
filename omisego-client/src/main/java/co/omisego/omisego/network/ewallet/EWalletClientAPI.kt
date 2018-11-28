@@ -2,6 +2,7 @@ package co.omisego.omisego.network.ewallet
 
 import co.omisego.omisego.constant.ClientAPIEndpoints.APPROVE_TRANSACTION
 import co.omisego.omisego.constant.ClientAPIEndpoints.CONSUME_TRANSACTION_REQUEST
+import co.omisego.omisego.constant.ClientAPIEndpoints.CREATE_TRANSACTION
 import co.omisego.omisego.constant.ClientAPIEndpoints.CREATE_TRANSACTION_REQUEST
 import co.omisego.omisego.constant.ClientAPIEndpoints.GET_CURRENT_USER
 import co.omisego.omisego.constant.ClientAPIEndpoints.GET_SETTINGS
@@ -12,25 +13,24 @@ import co.omisego.omisego.constant.ClientAPIEndpoints.LOGOUT
 import co.omisego.omisego.constant.ClientAPIEndpoints.REJECT_TRANSACTION
 import co.omisego.omisego.constant.ClientAPIEndpoints.RETRIEVE_TRANSACTION_REQUEST
 import co.omisego.omisego.constant.ClientAPIEndpoints.SIGN_UP
-import co.omisego.omisego.constant.ClientAPIEndpoints.TRANSFER
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
 import co.omisego.omisego.model.ClientAuthenticationToken
 import co.omisego.omisego.model.Empty
 import co.omisego.omisego.model.Setting
+import co.omisego.omisego.model.Transaction
+import co.omisego.omisego.model.TransactionConsumption
+import co.omisego.omisego.model.TransactionRequest
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.pagination.PaginationList
 import co.omisego.omisego.model.params.LoginParams
 import co.omisego.omisego.model.params.SignUpParams
-import co.omisego.omisego.model.transaction.Transaction
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionActionParams
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionParams
-import co.omisego.omisego.model.transaction.list.TransactionListParams
-import co.omisego.omisego.model.transaction.request.TransactionRequest
-import co.omisego.omisego.model.transaction.request.TransactionRequestCreateParams
-import co.omisego.omisego.model.transaction.request.TransactionRequestParams
-import co.omisego.omisego.model.transaction.send.TransactionCreateParams
+import co.omisego.omisego.model.params.TransactionConsumptionActionParams
+import co.omisego.omisego.model.params.TransactionListParams
+import co.omisego.omisego.model.params.TransactionRequestParams
+import co.omisego.omisego.model.params.client.TransactionConsumptionParams
+import co.omisego.omisego.model.params.client.TransactionCreateParams
+import co.omisego.omisego.model.params.client.TransactionRequestCreateParams
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -84,8 +84,8 @@ interface EWalletClientAPI {
         @Body request: TransactionConsumptionActionParams
     ): OMGCall<TransactionConsumption>
 
-    @POST(TRANSFER)
-    fun transfer(
+    @POST(CREATE_TRANSACTION)
+    fun createTransaction(
         @Body request: TransactionCreateParams
     ): OMGCall<Transaction>
 }

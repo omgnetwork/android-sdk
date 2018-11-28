@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.transaction
+package co.omisego.omisego.model
 
 /*
  * OmiseGO
@@ -8,7 +8,6 @@ package co.omisego.omisego.model.transaction
  */
 
 import android.os.Parcelable
-import co.omisego.omisego.model.Token
 import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 import java.util.Date

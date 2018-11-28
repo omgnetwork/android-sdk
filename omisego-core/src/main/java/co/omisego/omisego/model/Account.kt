@@ -8,6 +8,8 @@ package co.omisego.omisego.model
  */
 
 import android.os.Parcelable
+import co.omisego.omisego.model.socket.SocketTopic
+import co.omisego.omisego.operation.Listenable
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import java.util.Date
@@ -37,5 +39,6 @@ data class Account(
     val metadata: @RawValue Map<String, Any> = mapOf(),
     val encryptedMetadata: @RawValue Map<String, Any> = mapOf(),
     val createdAt: Date? = null,
-    val updatedAt: Date? = null
-) : Parcelable
+    val updatedAt: Date? = null,
+    override val socketTopic: SocketTopic
+) : Parcelable, Listenable

@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.transaction.request
+package co.omisego.omisego.model.params.client
 
 /*
  * OmiseGO
@@ -7,6 +7,7 @@ package co.omisego.omisego.model.transaction.request
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.model.TransactionRequestType
 import java.math.BigDecimal
 import java.util.Date
 

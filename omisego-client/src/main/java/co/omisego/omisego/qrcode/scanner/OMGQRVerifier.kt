@@ -15,8 +15,8 @@ import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.OMGResponse
-import co.omisego.omisego.model.transaction.request.TransactionRequest
-import co.omisego.omisego.model.transaction.request.TransactionRequestParams
+import co.omisego.omisego.model.TransactionRequest
+import co.omisego.omisego.model.params.TransactionRequestParams
 
 class OMGQRVerifier(
     val scannerView: OMGQRScannerContract.View,

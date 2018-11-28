@@ -9,8 +9,7 @@ package co.omisego.omisego.model
 
 import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumption
-import co.omisego.omisego.model.transaction.consumption.TransactionConsumptionActionParams
+import co.omisego.omisego.model.params.TransactionConsumptionActionParams
 
 /**
  * An extension function that uses the id from `TransactionConsumption` object to approve the transaction

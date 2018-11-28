@@ -14,16 +14,18 @@ import co.omisego.omisego.admin.utils.ResourceFile
 import co.omisego.omisego.constant.Versions
 import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.model.Account
-import co.omisego.omisego.model.AdminConfiguration
 import co.omisego.omisego.model.AdminAuthenticationToken
+import co.omisego.omisego.model.AdminConfiguration
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Token
+import co.omisego.omisego.model.Transaction
+import co.omisego.omisego.model.TransactionConsumption
+import co.omisego.omisego.model.TransactionRequest
 import co.omisego.omisego.model.Wallet
 import co.omisego.omisego.model.pagination.Pagination
 import co.omisego.omisego.model.pagination.PaginationList
 import co.omisego.omisego.model.params.LoginParams
 import co.omisego.omisego.model.params.WalletParams
-import co.omisego.omisego.model.transaction.Transaction
 import co.omisego.omisego.network.ewallet.EWalletAdmin
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
@@ -57,6 +59,8 @@ class OMGAPIAdminTest : GsonDelegator() {
     private val getWalletsFile: File by ResourceFile("paginated_wallet.json", "object")
     private val getWalletFile: File by ResourceFile("wallet.json", "object")
     private val transactionFile: File by ResourceFile("transaction.json", "object")
+    private val transactionConsumptionFile: File by ResourceFile("transaction_consumption.json", "object")
+    private val transactionRequestFile: File by ResourceFile("transaction_request.json", "object")
 
     @Before
     fun setup() {
@@ -227,15 +231,67 @@ class OMGAPIAdminTest : GsonDelegator() {
     }
 
     @Test
-    fun `OMGAPIAdmin call transfer and success callback should be invoked successfully`() {
+    fun `OMGAPIAdmin call createTransaction and success callback should be invoked successfully`() {
         val element = gson.fromJson(transactionFile.readText(), JsonElement::class.java)
         val result = Response.success(element)
         transactionFile.mockEnqueueWithHttpCode(mockWebServer)
 
         val callback: OMGCallback<Transaction> = mock()
-        omgAPIAdmin.transfer(mock()).enqueue(callback)
+        omgAPIAdmin.createTransaction(mock()).enqueue(callback)
 
         val expected = gson.fromJson<OMGResponse<Transaction>>(result.body(), object : TypeToken<OMGResponse<Transaction>>() {}.type)
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
+    }
+
+    @Test
+    fun `OMGAPIAdmin call consumeTransactionRequest and success callback should be invoked successfully`() {
+        val element = gson.fromJson(transactionConsumptionFile.readText(), JsonElement::class.java)
+        val result = Response.success(element)
+        transactionConsumptionFile.mockEnqueueWithHttpCode(mockWebServer)
+
+        val callback: OMGCallback<TransactionConsumption> = mock()
+        omgAPIAdmin.consumeTransactionRequest(mock()).enqueue(callback)
+
+        val expected = gson.fromJson<OMGResponse<TransactionConsumption>>(result.body(), object : TypeToken<OMGResponse<TransactionConsumption>>() {}.type)
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
+    }
+
+    @Test
+    fun `OMGAPIAdmin should call approveTransactionRequest and success callback should be invoked successfully`() {
+        val element = gson.fromJson(transactionConsumptionFile.readText(), JsonElement::class.java)
+        val result = Response.success(element)
+        transactionConsumptionFile.mockEnqueueWithHttpCode(mockWebServer)
+
+        val callback: OMGCallback<TransactionConsumption> = mock()
+        omgAPIAdmin.approveTransactionConsumption(mock()).enqueue(callback)
+
+        val expected = gson.fromJson<OMGResponse<TransactionConsumption>>(result.body(), object : TypeToken<OMGResponse<TransactionConsumption>>() {}.type)
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
+    }
+
+    @Test
+    fun `OMGAPIAdmin should call rejectTransactionRequest and success callback should be invoked successfully`() {
+        val element = gson.fromJson(transactionConsumptionFile.readText(), JsonElement::class.java)
+        val result = Response.success(element)
+        transactionConsumptionFile.mockEnqueueWithHttpCode(mockWebServer)
+
+        val callback: OMGCallback<TransactionConsumption> = mock()
+        omgAPIAdmin.rejectTransactionConsumption(mock()).enqueue(callback)
+
+        val expected = gson.fromJson<OMGResponse<TransactionConsumption>>(result.body(), object : TypeToken<OMGResponse<TransactionConsumption>>() {}.type)
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
+    }
+
+    @Test
+    fun `OMGAPIAdmin should call createTransactionRequest and success callback should be invoked successfully`() {
+        val element = gson.fromJson(transactionRequestFile.readText(), JsonElement::class.java)
+        val result = Response.success(element)
+        transactionRequestFile.mockEnqueueWithHttpCode(mockWebServer)
+
+        val callback: OMGCallback<TransactionRequest> = mock()
+        omgAPIAdmin.createTransactionRequest(mock()).enqueue(callback)
+
+        val expected = gson.fromJson<OMGResponse<TransactionRequest>>(result.body(), object : TypeToken<OMGResponse<TransactionRequest>>() {}.type)
         verify(callback, timeout(connectionTimeout).times(1)).success(expected)
     }
 }
