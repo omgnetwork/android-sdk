@@ -29,11 +29,11 @@ import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.ui.OMGCameraPreview
 import co.omisego.omisego.custom.camera.utils.DisplayUtils
 import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 /**
@@ -123,9 +123,6 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
      * The [OMGQRScannerContract.Preview] class to handle main logic
      */
     internal var omgScannerPreview: OMGQRScannerContract.Preview? = null
-
-    private val job by lazy { Job() }
-    private val uiScope by lazy { CoroutineScope(Dispatchers.Main + job) }
 
     /**
      * A flag to indicate that the QR code is currently processing or not
@@ -229,7 +226,7 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
         cameraHandlerThread?.quit()
         cameraHandlerThread = null
         // Time consuming!
-        return uiScope.async(Dispatchers.IO) { cameraWrapper?.camera?.release() }
+        return GlobalScope.async(Dispatchers.IO) { cameraWrapper?.camera?.release() }
     }
 
     override fun onPreviewFrame(data: ByteArray, camera: Camera) {
@@ -270,7 +267,7 @@ class OMGQRScannerView : FrameLayout, OMGQRScannerContract.View {
         fun startCamera() {
             val localHandler = Handler(looper)
             localHandler.post {
-                uiScope.launch {
+                GlobalScope.launch(Dispatchers.Main) {
                     val wrapper = CameraWrapper.newInstance()
                     scannerView.setupCameraPreview(wrapper)
                 }

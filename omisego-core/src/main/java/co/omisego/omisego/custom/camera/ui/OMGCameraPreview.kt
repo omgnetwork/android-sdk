@@ -21,15 +21,14 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import co.omisego.omisego.custom.camera.AutoFocusManager
 import co.omisego.omisego.custom.camera.CameraWrapper
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 @SuppressLint("ViewConstructor")
 class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
-    private val jobCameraPreview by lazy { Job() }
-    private val uiScope by lazy { CoroutineScope(Dispatchers.Main + jobCameraPreview) }
     private var mPreviewCallback: Camera.PreviewCallback? = null
     private var mPreviewing: Boolean = false
     private var mSafeFocus: Boolean = false
@@ -88,13 +87,24 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
 
             setupCameraParameters()
 
+            /* Make sure we're cancel any pending work first */
+            GlobalScope.coroutineContext.cancel()
+
             /* Setup camera display */
             cameraWrapper?.camera?.let {
-                uiScope.launch {
-                    it.setDisplayOrientation(mOMGCameraLogic.getDisplayOrientation(cameraWrapper != null))
-                    it.setPreviewDisplay(holder)
-                    it.setPreviewCallback(mPreviewCallback)
-                    it.startPreview()
+                GlobalScope.launch(Dispatchers.Main) {
+                    GlobalScope.async(Dispatchers.IO) {
+                        it.setDisplayOrientation(mOMGCameraLogic.getDisplayOrientation(cameraWrapper != null))
+                    }
+                    GlobalScope.async(Dispatchers.IO) {
+                        it.setPreviewDisplay(holder)
+                    }
+                    GlobalScope.async(Dispatchers.IO) {
+                        it.setPreviewCallback(mPreviewCallback)
+                    }
+                    GlobalScope.async(Dispatchers.IO) {
+                        it.startPreview()
+                    }
                 }
             }
 
@@ -112,12 +122,14 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
             mPreviewing = false
             holder.removeCallback(this)
             mFocusManager.stop()
-            uiScope.launch { cameraWrapper?.camera?.stopPreview() }
             cameraWrapper?.camera?.setPreviewCallback(null)
+            GlobalScope.launch(Dispatchers.Main) {
+                GlobalScope.async(Dispatchers.IO) {
+                    cameraWrapper?.camera?.stopPreview()
+                }
+            }
         } catch (e: Exception) {
             Log.d(OMGCameraPreview.TAG, e.toString(), e)
-        } finally {
-            jobCameraPreview.cancel()
         }
     }
 
