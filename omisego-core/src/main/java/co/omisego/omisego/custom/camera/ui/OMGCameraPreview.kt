@@ -93,18 +93,10 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
             /* Setup camera display */
             cameraWrapper?.camera?.let {
                 GlobalScope.launch(Dispatchers.Main) {
-                    GlobalScope.async(Dispatchers.IO) {
-                        it.setDisplayOrientation(mOMGCameraLogic.getDisplayOrientation(cameraWrapper != null))
-                    }
-                    GlobalScope.async(Dispatchers.IO) {
-                        it.setPreviewDisplay(holder)
-                    }
-                    GlobalScope.async(Dispatchers.IO) {
-                        it.setPreviewCallback(mPreviewCallback)
-                    }
-                    GlobalScope.async(Dispatchers.IO) {
-                        it.startPreview()
-                    }
+                    it.setDisplayOrientation(mOMGCameraLogic.getDisplayOrientation(cameraWrapper != null))
+                    it.setPreviewDisplay(holder)
+                    it.setPreviewCallback(mPreviewCallback)
+                    it.startPreview()
                 }
             }
 
@@ -169,7 +161,6 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
 
     /* Override surface callback */
     override fun surfaceChanged(surfaceHolder: SurfaceHolder?, format: Int, width: Int, height: Int) {
-        Log.d("OMGCameraPreview", "surfaceChanged")
         surfaceHolder?.surface.let {
             if (!mPreviewing) {
                 stopCameraPreview()
@@ -179,13 +170,11 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
-        Log.d("OMGCameraPreview", "surfaceDestroyed")
         mSurfaceCreated = false
         stopCameraPreview()
     }
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
-        Log.d("OMGCameraPreview", "surfaceCreated")
         mSurfaceCreated = true
     }
 }

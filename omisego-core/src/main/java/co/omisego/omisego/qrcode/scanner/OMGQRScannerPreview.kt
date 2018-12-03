@@ -10,10 +10,10 @@ package co.omisego.omisego.qrcode.scanner
  */
 
 import android.hardware.Camera
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.isActive
@@ -26,9 +26,6 @@ internal class OMGQRScannerPreview(
     private val decoder: OMGQRScannerContract.Preview.Decoder = OMGQRScannerPreviewDecoder(omgQRScannerView)
 ) : OMGQRScannerContract.Preview, OMGQRScannerContract.Preview.PostVerification {
     private var nullablePreviewSize: Deferred<Camera.Size?>? = null
-
-    private val jobScanner by lazy { Job() }
-    private val uiScope by lazy { CoroutineScope(Dispatchers.Main + jobScanner) }
 
     /* Keep the QR payload that being sent to the server to prevent spamming */
     override val qrPayloadCache: MutableSet<String> = mutableSetOf()
@@ -52,11 +49,11 @@ internal class OMGQRScannerPreview(
         /* Don't process anything if currently loading */
         if (omgQRScannerView.isLoading) return
 
-        previewJob = uiScope.launch(start = CoroutineStart.LAZY) {
+        previewJob = GlobalScope.launch(start = CoroutineStart.LAZY) {
             if (!isActive) return@launch
 
             /* Process in background thread */
-            nullablePreviewSize = nullablePreviewSize ?: uiScope.async(Dispatchers.IO) {
+            nullablePreviewSize = nullablePreviewSize ?: GlobalScope.async(Dispatchers.IO) {
                 try {
                     camera.parameters.previewSize
                 } catch (ex: Exception) {
@@ -64,9 +61,9 @@ internal class OMGQRScannerPreview(
                 }
             }
 
-            val previewOrientation = uiScope.async(Dispatchers.IO) { getPreviewOrientation() }
+            val previewOrientation = GlobalScope.async(Dispatchers.IO) { getPreviewOrientation() }
             val previewSize = nullablePreviewSize?.await() ?: return@launch
-            val rawResult = uiScope.async(Dispatchers.IO) {
+            val rawResult = GlobalScope.async(Dispatchers.IO) {
                 decoder.decode(data, previewOrientation.await(), previewSize)
             }.await()
 
