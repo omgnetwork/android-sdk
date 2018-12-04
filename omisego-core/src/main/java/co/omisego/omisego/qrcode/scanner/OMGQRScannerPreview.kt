@@ -49,7 +49,7 @@ internal class OMGQRScannerPreview(
         /* Don't process anything if currently loading */
         if (omgQRScannerView.isLoading) return
 
-        previewJob = GlobalScope.launch(start = CoroutineStart.LAZY) {
+        previewJob = GlobalScope.launch(context = Dispatchers.Main, start = CoroutineStart.LAZY) {
             if (!isActive) return@launch
 
             /* Process in background thread */
