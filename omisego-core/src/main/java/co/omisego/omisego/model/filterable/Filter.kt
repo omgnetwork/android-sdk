@@ -8,7 +8,6 @@ package co.omisego.omisego.model.filterable
  */
 
 import co.omisego.omisego.constant.enums.OMGEnum
-import com.google.gson.annotations.Expose
 
 /**
  * Represents a filter that can be used in filterable queries
