@@ -63,9 +63,7 @@ internal class OMGQRScannerPreview(
 
             val previewOrientation = GlobalScope.async(Dispatchers.IO) { getPreviewOrientation() }
             val previewSize = nullablePreviewSize?.await() ?: return@launch
-            val rawResult = GlobalScope.async(Dispatchers.IO) {
-                decoder.decode(data, previewOrientation.await(), previewSize)
-            }.await()
+            val rawResult = decoder.decode(data, previewOrientation.await(), previewSize)
 
             /* Wait result in the UI thread */
             rawResult?.text?.let { text ->
