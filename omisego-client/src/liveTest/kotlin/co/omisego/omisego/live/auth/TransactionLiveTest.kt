@@ -1,4 +1,4 @@
-package co.omisego.omisego.live
+package co.omisego.omisego.live.auth
 
 /*
  * OmiseGO
@@ -7,8 +7,9 @@ package co.omisego.omisego.live
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.live.BaseAuthTest
 import co.omisego.omisego.model.Transaction
-import co.omisego.omisego.model.params.TransactionListParams
+import co.omisego.omisego.model.params.client.TransactionListParams
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldNotBe
@@ -23,7 +24,7 @@ class TransactionLiveTest : BaseAuthTest() {
 
     @Test
     fun `get_transactions should return 200 and parsed the response correctly`() {
-        val transactions = client.getTransactions(TransactionListParams.create(searchTerm = null)).execute()
+        val transactions = client.getTransactions(TransactionListParams.create()).execute()
         transactions.isSuccessful shouldBe true
         transactions.body()?.data shouldNotBe null
         with(transactions.body()?.data!!) {

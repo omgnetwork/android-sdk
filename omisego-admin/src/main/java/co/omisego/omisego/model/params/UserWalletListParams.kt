@@ -8,6 +8,7 @@ package co.omisego.omisego.model.params
  */
 
 import co.omisego.omisego.model.pagination.Paginable
+import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
 
 /**
@@ -23,12 +24,12 @@ data class UserWalletListParams internal constructor(
     /**
      * A page number
      */
-    val page: Int = 1,
+    override val page: Int = 1,
 
     /**
      * A number of results per page.
      */
-    val perPage: Int = 10,
+    override val perPage: Int = 10,
 
     /**
      * The sorting field
@@ -38,7 +39,7 @@ data class UserWalletListParams internal constructor(
      * - [Paginable.Wallet.SortableFields.ADDRESS]
      * - [Paginable.Wallet.SortableFields.CREATED_AT]
      */
-    val sortBy: Paginable.Wallet.SortableFields = Paginable.Wallet.SortableFields.CREATED_AT,
+    override val sortBy: Paginable.Wallet.SortableFields = Paginable.Wallet.SortableFields.CREATED_AT,
 
     /**
      * The desired sort direction
@@ -47,23 +48,8 @@ data class UserWalletListParams internal constructor(
      * - [SortDirection.ASCENDING]
      * - [SortDirection.DESCENDING]
      */
-    val sortDir: SortDirection = SortDirection.DESCENDING,
-
-    /**
-     * A term to search for in all of the searchable fields.
-     * See more at [Paginable.Wallet.SearchableFields]
-     *
-     * Note: Conflict with searchTerms, only use one of them.
-     */
-    val searchTerm: String? = null,
-
-    /**
-     * A key-value map to search with the available fields
-     * See more at [Paginable.Wallet.SearchableFields]
-     *
-     */
-    val searchTerms: Map<Paginable.Wallet.SearchableFields, Any>? = null
-) {
+    override val sortDir: SortDirection = SortDirection.DESCENDING
+) : PaginableParams {
     companion object {
         fun create(
             providerUserId: String,

@@ -23,9 +23,7 @@ class ListAccountLiveTest : BaseAuthTest() {
     @Test
     fun `list account should be returned successfully`() {
         val response = client.getAccounts(
-            AccountListParams.create(
-                searchTerm = null
-            )
+            AccountListParams.create()
         ).execute()
 
         response.isSuccessful shouldBe true

@@ -54,7 +54,7 @@ data class TransactionSource(
 @Parcelize
 data class Transaction(
     val id: String,
-    val status: TransactionStatus,
+    val status: Paginable.Transaction.TransactionStatus,
     val from: TransactionSource,
     val to: TransactionSource,
     val exchange: TransactionExchange,
@@ -62,4 +62,4 @@ data class Transaction(
     val encryptedMetadata: @RawValue Map<String, Any>,
     val createdAt: Date,
     val error: APIError?
-) : Paginable.Transaction(), Parcelable
+) : Parcelable

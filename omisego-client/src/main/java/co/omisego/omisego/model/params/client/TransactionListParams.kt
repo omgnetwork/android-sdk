@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.params
+package co.omisego.omisego.model.params.client
 
 /*
  * OmiseGO
@@ -8,6 +8,7 @@ package co.omisego.omisego.model.params
  */
 
 import co.omisego.omisego.model.pagination.Paginable
+import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
 
 /**
@@ -15,15 +16,10 @@ import co.omisego.omisego.model.pagination.SortDirection
  */
 
 data class TransactionListParams internal constructor(
-    /**
-     * A page number
-     */
-    val page: Int = 1,
 
-    /**
-     * A number of results per page.
-     */
-    val perPage: Int = 10,
+    override val page: Int = 1,
+
+    override val perPage: Int = 10,
 
     /**
      * The sorting field
@@ -34,7 +30,7 @@ data class TransactionListParams internal constructor(
      * - [Paginable.Transaction.SortableFields.FROM]
      * - [Paginable.Transaction.SortableFields.CREATED_AT]
      */
-    val sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
+    override val sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
 
     /**
      * The desired sort direction
@@ -43,28 +39,19 @@ data class TransactionListParams internal constructor(
      * - [SortDirection.ASCENDING]
      * - [SortDirection.DESCENDING]
      */
-    val sortDir: SortDirection = SortDirection.DESCENDING,
+    override val sortDir: SortDirection = SortDirection.DESCENDING,
 
     /**
      * A term to search for in all of the searchable fields.
-     * See more at [Paginable.Transaction.SearchableFields]
      *
-     * Note: Conflict with searchTerms, only use one of them.
      */
     val searchTerm: String? = null,
-
-    /**
-     * A key-value map to search with the available fields
-     * See more at [Paginable.Transaction.SearchableFields]
-     *
-     */
-    val searchTerms: Map<Paginable.Transaction.SearchableFields, Any>? = null,
 
     /**
      * An optional wallet address that belongs to the current user (primary address by default)
      */
     val address: String? = null
-) {
+) : PaginableParams {
     companion object {
         fun create(
             page: Int = 1,
@@ -79,22 +66,6 @@ data class TransactionListParams internal constructor(
             sortBy = sortBy,
             sortDir = sortDir,
             searchTerm = searchTerm,
-            address = address
-        )
-
-        fun create(
-            page: Int = 1,
-            perPage: Int = 10,
-            sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
-            sortDir: SortDirection = SortDirection.DESCENDING,
-            searchTerms: Map<Paginable.Transaction.SearchableFields, Any>? = null,
-            address: String? = null
-        ) = TransactionListParams(
-            page = page,
-            perPage = perPage,
-            sortBy = sortBy,
-            sortDir = sortDir,
-            searchTerms = searchTerms,
             address = address
         )
     }

@@ -4,11 +4,13 @@ import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.constant.enums.OMGEnum
 import co.omisego.omisego.custom.gson.EitherEnumDeserializer
 import co.omisego.omisego.custom.gson.ErrorCodeDeserializer
+import co.omisego.omisego.custom.gson.FilterSerializer
 import co.omisego.omisego.custom.gson.OMGEnumAdapter
 import co.omisego.omisego.custom.gson.SocketReceiveDataDeserializer
 import co.omisego.omisego.custom.gson.SocketTopicDeserializer
 import co.omisego.omisego.custom.gson.TransactionDeserializer
 import co.omisego.omisego.model.Transaction
+import co.omisego.omisego.model.filterable.Filter
 import co.omisego.omisego.model.socket.SocketReceive
 import co.omisego.omisego.model.socket.SocketTopic
 import com.google.gson.FieldNamingPolicy
@@ -31,6 +33,7 @@ class GsonProvider {
                 .registerTypeAdapter(Transaction::class.java, TransactionDeserializer())
                 .registerTypeAdapter(Either::class.java, EitherEnumDeserializer<OMGEnum, OMGEnum>())
                 .registerTypeAdapter(SocketReceive.SocketData::class.java, SocketReceiveDataDeserializer())
+                .registerTypeAdapter(Filter::class.java, FilterSerializer())
                 .registerTypeHierarchyAdapter(OMGEnum::class.java, OMGEnumAdapter<OMGEnum>())
                 .setPrettyPrinting()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)

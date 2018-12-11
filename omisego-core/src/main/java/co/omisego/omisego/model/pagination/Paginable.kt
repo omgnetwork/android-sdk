@@ -15,26 +15,15 @@ enum class SortDirection constructor(override val value: String) : OMGEnum {
 }
 
 sealed class Paginable {
+
+    interface SortableFields : OMGEnum
+
     open class Transaction : Paginable() {
-
-        /**
-         * Represents transaction's searchable fields
-         */
-        enum class SearchableFields constructor(override val value: String) : OMGEnum {
-            ID("id"),
-            STATUS("status"),
-            FROM("from"),
-            TO("to"),
-            CREATED_AT("created_at"),
-            UPDATED_AT("updated_at");
-
-            override fun toString(): String = value
-        }
 
         /**
          * Represents transaction's sortable fields.
          */
-        enum class SortableFields constructor(override val value: String) : OMGEnum {
+        enum class SortableFields constructor(override val value: String) : Paginable.SortableFields {
             ID("id"),
             STATUS("status"),
             FROM("from"),
@@ -59,24 +48,10 @@ sealed class Paginable {
     }
 
     open class Account : Paginable() {
-
-        /**
-         * Represents account's searchable fields
-         */
-        enum class SearchableFields constructor(override val value: String) : OMGEnum {
-            ID("id"),
-            NAME("name"),
-            DESCRIPTION("description"),
-            CREATED_AT("created_at"),
-            UPDATED_AT("updated_at");
-
-            override fun toString(): String = value
-        }
-
         /**
          * Represents account's sortable fields.
          */
-        enum class SortableFields constructor(override val value: String) : OMGEnum {
+        enum class SortableFields constructor(override val value: String) : Paginable.SortableFields {
             ID("id"),
             NAME("name"),
             DESCRIPTION("description"),
@@ -89,19 +64,10 @@ sealed class Paginable {
 
     open class Token : Paginable() {
         /**
-         * Represents token's searchable fields
-         */
-        enum class SearchableFields constructor(override val value: String) : OMGEnum {
-            SYMBOL("symbol"),
-            NAME("name");
-
-            override fun toString(): String = value
-        }
-
-        /**
          * Represents token's sortable fields.
          */
-        enum class SortableFields constructor(override val value: String) : OMGEnum {
+        enum class SortableFields constructor(override val value: String) : Paginable.SortableFields {
+            ID("id"),
             NAME("name"),
             SYMBOL("symbol"),
             CREATED_AT("created_at");
@@ -112,22 +78,14 @@ sealed class Paginable {
 
     open class Wallet : Paginable() {
         /**
-         * Represents wallet's searchable fields
-         */
-        enum class SearchableFields constructor(override val value: String) : OMGEnum {
-            ADDRESS("address"),
-            NAME("name");
-
-            override fun toString(): String = value
-        }
-
-        /**
          * Represents wallet's sortable fields.
          */
-        enum class SortableFields constructor(override val value: String) : OMGEnum {
+        enum class SortableFields constructor(override val value: String) : Paginable.SortableFields {
             NAME("name"),
             ADDRESS("address"),
-            CREATED_AT("created_at");
+            IDENTIFIER("identifier"),
+            CREATED_AT("created_at"),
+            UPDATED_AT("updated_at");
 
             override fun toString(): String = value
         }

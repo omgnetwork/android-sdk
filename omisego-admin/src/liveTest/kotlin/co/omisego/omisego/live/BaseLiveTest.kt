@@ -11,6 +11,7 @@ import co.omisego.omisego.OMGAPIAdmin
 import co.omisego.omisego.model.AdminConfiguration
 import co.omisego.omisego.network.ewallet.EWalletAdmin
 import co.omisego.omisego.utils.ResourceFileLoader
+import okhttp3.logging.HttpLoggingInterceptor
 
 open class BaseLiveTest : ResourceFileLoader() {
     val secret by lazy { loadSecretFile("secret.json") }
@@ -24,6 +25,12 @@ open class BaseLiveTest : ResourceFileLoader() {
     private val eWalletAdmin by lazy {
         EWalletAdmin.Builder {
             clientConfiguration = config
+            debug = true
+            debugOkHttpInterceptors = mutableListOf(
+                HttpLoggingInterceptor {
+                    println(it)
+                }.setLevel(HttpLoggingInterceptor.Level.BODY)
+            )
         }.build()
     }
 

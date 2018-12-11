@@ -1,4 +1,4 @@
-package co.omisego.omisego.model.params
+package co.omisego.omisego.model.params.admin
 
 /*
  * OmiseGO
@@ -14,36 +14,25 @@ import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
 
 /**
- *  Represent a structure used to query a list of wallets
+ *  Represent a structure used to query a list of transactions
  */
 
-data class AccountWalletListParams internal constructor(
-    /**
-     * An account id
-     */
-    val id: String,
+data class TransactionListParams internal constructor(
 
-    val owned: Boolean = true,
-
-    /**
-     * A page number
-     */
     override val page: Int = 1,
 
-    /**
-     * A number of results per page.
-     */
     override val perPage: Int = 10,
 
     /**
      * The sorting field
      *
      * The available values are
-     * - [Paginable.Wallet.SortableFields.NAME]
-     * - [Paginable.Wallet.SortableFields.ADDRESS]
-     * - [Paginable.Wallet.SortableFields.CREATED_AT]
+     * - [Paginable.Transaction.SortableFields.ID]
+     * - [Paginable.Transaction.SortableFields.STATUS]
+     * - [Paginable.Transaction.SortableFields.FROM]
+     * - [Paginable.Transaction.SortableFields.CREATED_AT]
      */
-    override val sortBy: Paginable.Wallet.SortableFields = Paginable.Wallet.SortableFields.CREATED_AT,
+    override val sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
 
     /**
      * The desired sort direction
@@ -60,29 +49,33 @@ data class AccountWalletListParams internal constructor(
     override val matchAll: List<Filter>? = null,
 
     /**
-     * All provided conditions are matched for a record to be returned
+     * At least one of the provided conditions is matched for a record to be returned
      */
-    override val matchAny: List<Filter>? = null
-) : PaginableParams, FilterableParams {
+    override val matchAny: List<Filter>? = null,
+
+    /**
+     * An optional wallet address that belongs to the current user (primary address by default)
+     */
+    val address: String? = null
+) : FilterableParams, PaginableParams {
+
     companion object {
         fun create(
-            id: String,
-            owned: Boolean = true,
             page: Int = 1,
             perPage: Int = 10,
-            sortBy: Paginable.Wallet.SortableFields = Paginable.Wallet.SortableFields.CREATED_AT,
+            sortBy: Paginable.Transaction.SortableFields = Paginable.Transaction.SortableFields.CREATED_AT,
             sortDir: SortDirection = SortDirection.DESCENDING,
             matchAll: List<Filter>? = null,
-            matchAny: List<Filter>? = null
-        ) = AccountWalletListParams(
-            id = id,
-            owned = owned,
+            matchAny: List<Filter>? = null,
+            address: String? = null
+        ) = TransactionListParams(
             page = page,
             perPage = perPage,
             sortBy = sortBy,
             sortDir = sortDir,
+            matchAny = matchAny,
             matchAll = matchAll,
-            matchAny = matchAny
+            address = address
         )
     }
 }

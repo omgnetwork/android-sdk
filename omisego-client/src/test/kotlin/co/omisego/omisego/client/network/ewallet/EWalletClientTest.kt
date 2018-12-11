@@ -21,7 +21,7 @@ import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.WalletList
-import co.omisego.omisego.model.params.TransactionListParams
+import co.omisego.omisego.model.params.client.TransactionListParams
 import co.omisego.omisego.network.ewallet.EWalletClient
 import okhttp3.HttpUrl
 import okhttp3.Interceptor

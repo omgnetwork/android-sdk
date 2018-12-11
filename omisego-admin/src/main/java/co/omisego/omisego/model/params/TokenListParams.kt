@@ -7,7 +7,10 @@ package co.omisego.omisego.model.params
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.model.filterable.Filter
+import co.omisego.omisego.model.filterable.FilterableParams
 import co.omisego.omisego.model.pagination.Paginable
+import co.omisego.omisego.model.pagination.PaginableParams
 import co.omisego.omisego.model.pagination.SortDirection
 
 /**
@@ -18,12 +21,12 @@ data class TokenListParams internal constructor(
     /**
      * A page number
      */
-    val page: Int = 1,
+    override val page: Int = 1,
 
     /**
      * A number of results per page.
      */
-    val perPage: Int = 10,
+    override val perPage: Int = 10,
 
     /**
      * The sorting field
@@ -33,7 +36,7 @@ data class TokenListParams internal constructor(
      * - [Paginable.Token.SortableFields.SYMBOL]
      * - [Paginable.Token.SortableFields.CREATED_AT]
      */
-    val sortBy: Paginable.Token.SortableFields = Paginable.Token.SortableFields.CREATED_AT,
+    override val sortBy: Paginable.Token.SortableFields = Paginable.Token.SortableFields.CREATED_AT,
 
     /**
      * The desired sort direction
@@ -42,50 +45,33 @@ data class TokenListParams internal constructor(
      * - [SortDirection.ASCENDING]
      * - [SortDirection.DESCENDING]
      */
-    val sortDir: SortDirection = SortDirection.DESCENDING,
+    override val sortDir: SortDirection = SortDirection.DESCENDING,
 
     /**
-     * A term to search for in all of the searchable fields.
-     * See more at [Paginable.Token.SearchableFields]
-     *
-     * Note: Conflict with searchTerms, only use one of them.
+     * All provided conditions are matched for a record to be returned
      */
-    val searchTerm: String? = null,
+    override val matchAll: List<Filter>? = null,
 
     /**
-     * A key-value map to search with the available fields
-     * See more at [Paginable.Token.SearchableFields]
-     *
+     * All provided conditions are matched for a record to be returned
      */
-    val searchTerms: Map<Paginable.Token.SearchableFields, Any>? = null
-) {
+    override val matchAny: List<Filter>? = null
+) : PaginableParams, FilterableParams {
     companion object {
         fun create(
             page: Int = 1,
             perPage: Int = 10,
             sortBy: Paginable.Token.SortableFields = Paginable.Token.SortableFields.CREATED_AT,
             sortDir: SortDirection = SortDirection.DESCENDING,
-            searchTerm: String? = null
+            matchAll: List<Filter>? = null,
+            matchAny: List<Filter>? = null
         ) = TokenListParams(
             page = page,
             perPage = perPage,
             sortBy = sortBy,
             sortDir = sortDir,
-            searchTerm = searchTerm
-        )
-
-        fun create(
-            page: Int = 1,
-            perPage: Int = 10,
-            sortBy: Paginable.Token.SortableFields = Paginable.Token.SortableFields.CREATED_AT,
-            sortDir: SortDirection = SortDirection.DESCENDING,
-            searchTerms: Map<Paginable.Token.SearchableFields, Any>? = null
-        ) = TokenListParams(
-            page = page,
-            perPage = perPage,
-            sortBy = sortBy,
-            sortDir = sortDir,
-            searchTerms = searchTerms
+            matchAll = matchAll,
+            matchAny = matchAny
         )
     }
 }
