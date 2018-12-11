@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Comparator.BooleanComparator - omisego-core</title>
+<link rel="stylesheet" href="../../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../../index.html">omisego-core</a>&nbsp;/&nbsp;<a href="../../index.html">co.omisego.omisego.model.filterable</a>&nbsp;/&nbsp;<a href="../index.html">Comparator</a>&nbsp;/&nbsp;<a href="./index.html">BooleanComparator</a><br/>
+<br/>
+<h1>BooleanComparator</h1>
+<code><span class="keyword">sealed</span> <span class="keyword">class </span><span class="identifier">BooleanComparator</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../index.html"><span class="identifier">Comparator</span></a></code>
+<p>A comparator for <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> value</p>
+<ul><li>EQUAL: The value must match exactly fhe field</li>
+<li>NOT_EQUAL: The value must be different from the field</li>
+</ul>
+<p>Note: EQUAL with a true value is the same as NOT_EQUAL with a false value</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-e-q-u-a-l/index.html">EQUAL</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">EQUAL</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BooleanComparator</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-n-o-t_-e-q-u-a-l/index.html">NOT_EQUAL</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">NOT_EQUAL</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BooleanComparator</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../value.html">value</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">val </span><span class="identifier">value</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../to-string.html">toString</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">toString</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-e-q-u-a-l/index.html">EQUAL</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">EQUAL</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BooleanComparator</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-n-o-t_-e-q-u-a-l/index.html">NOT_EQUAL</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">NOT_EQUAL</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">BooleanComparator</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

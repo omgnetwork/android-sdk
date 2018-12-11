@@ -1,0 +1,70 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>co.omisego.omisego.model.filterable - omisego-core</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">omisego-core</a>&nbsp;/&nbsp;<a href="./index.html">co.omisego.omisego.model.filterable</a><br/>
+<br/>
+<h2>Package co.omisego.omisego.model.filterable</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-comparator/index.html">Comparator</a></p>
+</td>
+<td>
+<code><span class="keyword">sealed</span> <span class="keyword">class </span><span class="identifier">Comparator</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">OMGEnum</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-filter/index.html">Filter</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">Filter</span></code>
+<p>Represents a filter that can be used in filterable queries</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-filter-list-builder/index.html">FilterListBuilder</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">FilterListBuilder</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-filterable/index.html">Filterable</a></p>
+</td>
+<td>
+<code><span class="keyword">sealed</span> <span class="keyword">class </span><span class="identifier">Filterable</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="-filterable-params/index.html">FilterableParams</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">FilterableParams</span></code>
+<p>A type that represents a filterable resource</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="build-filter-list.html">buildFilterList</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-filterable/index.html"><span class="identifier">Filterable</span></a><span class="symbol">&gt;</span> <span class="identifier">buildFilterList</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.model.filterable$buildFilterList(kotlin.Function2((co.omisego.omisego.model.filterable.FilterListBuilder, co.omisego.omisego.model.filterable.buildFilterList.T, kotlin.Unit)))/lambda">lambda</span><span class="symbol">:</span>&nbsp;<a href="-filter-list-builder/index.html"><span class="identifier">FilterListBuilder</span></a><span class="symbol">.</span><span class="symbol">(</span><a href="build-filter-list.html#T"><span class="identifier">T</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="-filter/index.html"><span class="identifier">Filter</span></a><span class="symbol">&gt;</span></code>
+<p>A convenient function to build a collection of <a href="-filter/index.html">Filter</a> object with the <a href="-filterable/index.html">Filterable</a> scope.</p>
+<code><span class="keyword">fun </span><span class="identifier">buildFilterList</span><span class="symbol">(</span><span class="identifier" id="co.omisego.omisego.model.filterable$buildFilterList(kotlin.Function1((co.omisego.omisego.model.filterable.FilterListBuilder, kotlin.Unit)))/lambda">lambda</span><span class="symbol">:</span>&nbsp;<a href="-filter-list-builder/index.html"><span class="identifier">FilterListBuilder</span></a><span class="symbol">.</span><span class="symbol">(</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="-filter/index.html"><span class="identifier">Filter</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
