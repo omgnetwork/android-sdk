@@ -13,6 +13,6 @@ import kotlin.reflect.KProperty
 
 class ResourceFile(private val fileName: String, val base: String = "fixture") : ReadOnlyProperty<Any, File> {
     override fun getValue(thisRef: Any, property: KProperty<*>): File {
-        return File(javaClass.classLoader.getResource("$base/$fileName").path)
+        return File(javaClass.classLoader?.getResource("$base/$fileName")?.path)
     }
 }

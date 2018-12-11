@@ -7,7 +7,6 @@ package co.omisego.omisego.model
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import android.support.test.runner.AndroidJUnit4
 import co.omisego.omisego.constant.enums.ErrorCode
 import co.omisego.omisego.utils.validateParcel
 import org.amshove.kluent.shouldEqual
@@ -15,9 +14,10 @@ import org.amshove.kluent.shouldNotBe
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
 class APIErrorTest {
     private lateinit var apiError: APIError

@@ -9,9 +9,9 @@ package co.omisego.omisego.custom.zxing.ui.decorator
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.ProgressBar
+import androidx.core.content.ContextCompat
 import co.omisego.omisego.R
 import co.omisego.omisego.custom.camera.CameraWrapper
 import co.omisego.omisego.custom.camera.ui.CameraPreviewContract
@@ -21,7 +21,7 @@ import co.omisego.omisego.qrcode.scanner.SimpleVerifier
 import co.omisego.omisego.qrcode.scanner.ui.OMGScannerUI
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.mock
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf

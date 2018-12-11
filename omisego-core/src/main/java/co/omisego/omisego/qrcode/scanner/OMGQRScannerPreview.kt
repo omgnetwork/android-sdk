@@ -10,14 +10,14 @@ package co.omisego.omisego.qrcode.scanner
  */
 
 import android.hardware.Camera
-import kotlinx.coroutines.experimental.CoroutineStart
-import kotlinx.coroutines.experimental.DefaultDispatcher
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 internal class OMGQRScannerPreview(
     private val omgQRScannerView: OMGQRScannerContract.View,
@@ -49,11 +49,11 @@ internal class OMGQRScannerPreview(
         /* Don't process anything if currently loading */
         if (omgQRScannerView.isLoading) return
 
-        previewJob = launch(UI, start = CoroutineStart.LAZY) {
+        previewJob = GlobalScope.launch(context = Dispatchers.Main, start = CoroutineStart.LAZY) {
             if (!isActive) return@launch
 
             /* Process in background thread */
-            nullablePreviewSize = nullablePreviewSize ?: async {
+            nullablePreviewSize = nullablePreviewSize ?: GlobalScope.async(Dispatchers.IO) {
                 try {
                     camera.parameters.previewSize
                 } catch (ex: Exception) {
@@ -61,11 +61,11 @@ internal class OMGQRScannerPreview(
                 }
             }
 
-            val previewOrientation = withContext(DefaultDispatcher) { getPreviewOrientation() }
+            val previewOrientation = GlobalScope.async(Dispatchers.IO) { getPreviewOrientation() }
             val previewSize = nullablePreviewSize?.await() ?: return@launch
-            val rawResult = withContext(DefaultDispatcher) {
-                decoder.decode(data, previewOrientation, previewSize)
-            }
+            val rawResult = GlobalScope.async(Dispatchers.IO) {
+                decoder.decode(data, previewOrientation.await(), previewSize)
+            }.await()
 
             /* Wait result in the UI thread */
             rawResult?.text?.let { text ->
@@ -113,6 +113,6 @@ internal class OMGQRScannerPreview(
     override fun isCached(payload: String) = qrPayloadCache.contains(payload)
 
     override fun stopCamera() {
-        previewJob?.cancel(null)
+        previewJob?.cancel()
     }
 }

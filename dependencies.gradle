@@ -7,9 +7,9 @@ allprojects {
 }
 
 ext {
-    kotlinVersion = '1.2.61'
-    retrofitVersion = '2.4.0'
-    coroutinesVersion = '0.25.0'
+    coroutinesVersion = '1.0.0'
+    kotlinVersion = '1.3.10'
+    retrofitVersion = '2.5.0'
     deps = [
         kotlin     : [
             "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
@@ -22,22 +22,22 @@ ext {
             "com.squareup.okhttp3:logging-interceptor:3.9.1",
         ],
         scanner    : [
-            "com.google.zxing:core:3.3.0",
-            "com.android.support:appcompat-v7:27.1.1",
+            "com.google.zxing:core:3.3.0"
         ],
         test       : [
             "org.json:json:20160810",
+            "androidx.test.espresso:espresso-core:3.1.0",
             "junit:junit:4.12",
             "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion",
             "org.amshove.kluent:kluent-android:1.30",
-            "org.robolectric:robolectric:3.5.1",
+            "org.robolectric:robolectric:4.0.2",
             "com.squareup.okhttp3:mockwebserver:3.9.1",
             "com.squareup.retrofit2:retrofit-mock:$retrofitVersion",
-            "com.android.support.test:runner:1.0.2",
+            "androidx.test:core:1.0.0",
+            "androidx.test:runner:1.1.0",
         ],
-        androidTest: [
-            "com.android.support.test.espresso:espresso-core:3.0.2",
-            "com.android.support.test:rules:1.0.2",
+        appCompat: [
+            "androidx.appcompat:appcompat:1.0.2"
         ]
     ]
 }

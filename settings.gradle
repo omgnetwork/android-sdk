@@ -1,6 +1,5 @@
 include ':omisego-core',
         ':omisego-admin',
-        ':omisego-client',
-        ':app'
+        ':omisego-client'
 
-project(':app').projectDir = new File('sample-android/app')
+//project(':app').projectDir = new File('sample-android/app')

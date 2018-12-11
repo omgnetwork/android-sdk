@@ -7,11 +7,12 @@ package co.omisego.omisego.security
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import java.security.Key
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -39,6 +40,7 @@ internal class KeyManagerMarshmallow(
     }
 
     // Generate key function for Android version 6.0 Marshmallow or above
+    @TargetApi(Build.VERSION_CODES.M)
     override fun generateKey(context: Context) {
         val keyGenerator = KeyGenerator.getInstance(
             KeyProperties.KEY_ALGORITHM_AES,

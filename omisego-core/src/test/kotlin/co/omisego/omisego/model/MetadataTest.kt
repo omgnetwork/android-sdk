@@ -10,6 +10,7 @@ package co.omisego.omisego.model
 import co.omisego.omisego.helpers.delegation.GsonDelegator
 import co.omisego.omisego.helpers.delegation.ResourceFile
 import org.amshove.kluent.shouldBe
+import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
 
@@ -31,9 +32,12 @@ class MetadataTest : GsonDelegator() {
             val nestedObject = customObject["a_nested_object"] as Map<*, *>
             nestedObject["a_nested_key"] shouldEqual "a_nested_value"
 
-            val customArray = this["an_array"] as List<String>
-            customArray[0] shouldEqual "value_1"
-            customArray[1] shouldEqual "value_2"
+            this["an_array"] shouldBeInstanceOf List::class.java
+            val customArray = this["an_array"]
+            if (customArray is List<*>) {
+                customArray[0] shouldEqual "value_1"
+                customArray[1] shouldEqual "value_2"
+            }
 
             this["a_null_key"] shouldBe null
         }

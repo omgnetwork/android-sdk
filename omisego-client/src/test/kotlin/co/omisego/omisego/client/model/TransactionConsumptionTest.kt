@@ -7,7 +7,6 @@ package co.omisego.omisego.client.model
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import android.support.test.runner.AndroidJUnit4
 import co.omisego.omisego.OMGAPIClient
 import co.omisego.omisego.client.util.DateConverter
 import co.omisego.omisego.client.util.GsonDelegator
@@ -32,9 +31,10 @@ import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotBe
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 @Config(sdk = [23])
 class TransactionConsumptionTest : GsonDelegator() {
     private val dateConverter by lazy { DateConverter() }

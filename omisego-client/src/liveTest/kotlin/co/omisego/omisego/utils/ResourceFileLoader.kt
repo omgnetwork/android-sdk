@@ -12,10 +12,10 @@ import java.io.File
 
 open class ResourceFileLoader {
     fun loadSecretFile(filename: String): JSONObject {
-        val resourceUserURL = javaClass.classLoader.getResource(filename) // This is invisible because it's stored in local ("secret").
+        val resourceUserURL = javaClass.classLoader?.getResource(filename) // This is invisible because it's stored in local ("secret").
 
         return try {
-            val secretFile = File(resourceUserURL.path)
+            val secretFile = File(resourceUserURL?.path)
             JSONObject(secretFile.readText())
         } catch (e: IllegalStateException) {
             throw IllegalStateException("Please create the file $filename. See the file secret.example.json for the reference.")

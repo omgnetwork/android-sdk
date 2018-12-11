@@ -25,8 +25,8 @@ class AuthenticationTokenInterceptor(
             // Cannot directly read the body response, since the body can be consumed only once.
             val body = it.peekBody(Long.MAX_VALUE)
 
-            val bufferedResponse = body?.source()?.buffer()?.clone()?.readUtf8()
-            val bodyResponse = body?.source()?.readUtf8()
+            val bufferedResponse = body.source().buffer()?.clone()?.readUtf8()
+            val bodyResponse = body.source().readUtf8()
 
             val rawBody = when {
                 // When perform request asynchronously, the raw body was put in the buffer.

@@ -14,7 +14,7 @@ cache:
 env:
   global:
     - ANDROID_API=28
-    - ANDROID_BUILD_TOOLS=27.0.3
+    - ANDROID_BUILD_TOOLS=28.0.3
     - ADB_INSTALL_TIMEOUT=5 # minutes
 
 android:
@@ -39,10 +39,7 @@ before_script:
 script:
   - ./gradlew lint # android lint
   - ./gradlew ktlintCheck # kotlin lint
-  - ./gradlew clean omisego-core:testDebugUnitTest # unit test for omisego-core module
-  - ./gradlew clean omisego-client:testDebugUnitTest # unit test for omisego-client module
-  - ./gradlew clean omisego-admin:testDebugUnitTest # unit test for omisego-admin module
-  - ./gradlew dokka > /dev/null # generate kotlin doc
+  - ./gradlew clean testDebugUnitTest # unit test for all modules in parallel
 
 before_deploy:
   - touch $CODE_DOCUMENTATION_LOCATION/.nojekyll

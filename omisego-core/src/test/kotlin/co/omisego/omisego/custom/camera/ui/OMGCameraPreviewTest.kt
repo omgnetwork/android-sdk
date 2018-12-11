@@ -9,7 +9,6 @@ package co.omisego.omisego.custom.camera.ui
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
-import android.content.Context
 import android.hardware.Camera
 import android.view.WindowManager
 import co.omisego.omisego.custom.camera.CameraWrapper
@@ -17,10 +16,11 @@ import com.nhaarman.mockito_kotlin.timeout
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.any
 import org.amshove.kluent.mock
-import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldBeInstanceOf
+import org.amshove.kluent.shouldNotBe
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
@@ -44,19 +44,19 @@ class OMGCameraPreviewTest {
     private val spyOMGCameraPreview by lazy { Mockito.spy(omgCameraPreview) }
 
     @Test
-    fun `OMGCameraPreview should be retrieve previewWidth properly`() {
+    fun `OMGCameraPreview should get previewWidth properly`() {
         spyOMGCameraPreview.previewWidth
         verify(spyOMGCameraPreview, times(1)).width
     }
 
     @Test
-    fun `OMGCameraPreview should be retrieve previewHeight properly`() {
+    fun `OMGCameraPreview should get previewHeight properly`() {
         spyOMGCameraPreview.previewHeight
         verify(spyOMGCameraPreview, times(1)).height
     }
 
     @Test
-    fun `OMGCameraPreview should be retrieve displayOrientation properly`() {
+    fun `OMGCameraPreview should get displayOrientation properly`() {
         omgCameraPreview.mOMGCameraLogic = mock()
 
         omgCameraPreview.displayOrientation
@@ -67,13 +67,13 @@ class OMGCameraPreviewTest {
     }
 
     @Test
-    fun `OMGCameraPreview should be retrieve windowManager properly`() {
-        omgCameraPreview.windowManager shouldEqual
-            RuntimeEnvironment.application.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    fun `OMGCameraPreview should get windowManager properly`() {
+        omgCameraPreview.windowManager shouldNotBe null
+        omgCameraPreview.windowManager shouldBeInstanceOf WindowManager::class.java
     }
 
     @Test
-    fun `OMGCameraPreview should be retrieve previewLayoutParams properly`() {
+    fun `OMGCameraPreview should get previewLayoutParams properly`() {
         spyOMGCameraPreview
             .apply { layoutParams = mock() }
             .previewLayoutParams
@@ -81,7 +81,7 @@ class OMGCameraPreviewTest {
     }
 
     @Test
-    fun `OMGCameraPreview should be retrieve supportPreviewSizes properly`() {
+    fun `OMGCameraPreview should get supportPreviewSizes properly`() {
         whenever(mockCameraWrapper.camera).thenReturn(mock())
         whenever(mockCameraWrapper.camera?.parameters).thenReturn(mock())
 
@@ -91,7 +91,7 @@ class OMGCameraPreviewTest {
     }
 
     @Test
-    fun `OMGCameraPreview should be stopCameraPreview properly`() {
+    fun `OMGCameraPreview should stopCameraPreview properly`() {
         whenever(mockCameraWrapper.camera).thenReturn(mock())
 
         omgCameraPreview.stopCameraPreview()
@@ -101,7 +101,7 @@ class OMGCameraPreviewTest {
     }
 
     @Test
-    fun `OMGCameraPreview should be call showCameraPreview properly`() = runBlocking {
+    fun `OMGCameraPreview should call showCameraPreview properly`() = runBlocking {
         ShadowCamera.addCameraInfo(Camera.CameraInfo.CAMERA_FACING_BACK, Camera.CameraInfo())
         val mockCamera = mock<Camera>()
         whenever(mockCameraWrapper.camera).thenReturn(mockCamera)

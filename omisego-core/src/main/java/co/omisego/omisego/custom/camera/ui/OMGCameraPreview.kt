@@ -21,10 +21,11 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import co.omisego.omisego.custom.camera.AutoFocusManager
 import co.omisego.omisego.custom.camera.CameraWrapper
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
-import java.lang.Exception
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 @SuppressLint("ViewConstructor")
 class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
@@ -86,13 +87,16 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
 
             setupCameraParameters()
 
+            /* Make sure we're cancel any pending work first */
+            GlobalScope.coroutineContext.cancel()
+
             /* Setup camera display */
             cameraWrapper?.camera?.let {
-                launch(UI) {
-                    async { it.setDisplayOrientation(mOMGCameraLogic.getDisplayOrientation(cameraWrapper != null)) }
-                    async { it.setPreviewDisplay(holder) }
-                    async { it.setPreviewCallback(mPreviewCallback) }
-                    async { it.startPreview() }
+                GlobalScope.launch(Dispatchers.Main) {
+                    it.setDisplayOrientation(mOMGCameraLogic.getDisplayOrientation(cameraWrapper != null))
+                    it.setPreviewDisplay(holder)
+                    it.setPreviewCallback(mPreviewCallback)
+                    it.startPreview()
                 }
             }
 
@@ -110,8 +114,12 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
             mPreviewing = false
             holder.removeCallback(this)
             mFocusManager.stop()
-            async { cameraWrapper?.camera?.stopPreview() }
             cameraWrapper?.camera?.setPreviewCallback(null)
+            GlobalScope.launch(Dispatchers.Main) {
+                GlobalScope.async(Dispatchers.IO) {
+                    cameraWrapper?.camera?.stopPreview()
+                }
+            }
         } catch (e: Exception) {
             Log.d(OMGCameraPreview.TAG, e.toString(), e)
         }
@@ -153,7 +161,6 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
 
     /* Override surface callback */
     override fun surfaceChanged(surfaceHolder: SurfaceHolder?, format: Int, width: Int, height: Int) {
-        Log.d("OMGCameraPreview", "surfaceChanged")
         surfaceHolder?.surface.let {
             if (!mPreviewing) {
                 stopCameraPreview()
@@ -163,13 +170,11 @@ class OMGCameraPreview : SurfaceView, CameraPreviewContract.View {
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
-        Log.d("OMGCameraPreview", "surfaceDestroyed")
         mSurfaceCreated = false
         stopCameraPreview()
     }
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
-        Log.d("OMGCameraPreview", "surfaceCreated")
         mSurfaceCreated = true
     }
 }

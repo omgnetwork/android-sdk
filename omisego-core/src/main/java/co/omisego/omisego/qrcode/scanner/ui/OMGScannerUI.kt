@@ -15,10 +15,10 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Point
 import android.graphics.Rect
-import android.support.annotation.ColorInt
-import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
 import co.omisego.omisego.R
 import co.omisego.omisego.custom.camera.utils.DisplayUtils
 import co.omisego.omisego.extension.dp
