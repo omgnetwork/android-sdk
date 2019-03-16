@@ -11,8 +11,10 @@ import co.omisego.omisego.constant.ClientAPIEndpoints.GET_WALLETS
 import co.omisego.omisego.constant.ClientAPIEndpoints.LOGIN
 import co.omisego.omisego.constant.ClientAPIEndpoints.LOGOUT
 import co.omisego.omisego.constant.ClientAPIEndpoints.REJECT_TRANSACTION
+import co.omisego.omisego.constant.ClientAPIEndpoints.RESET_PASSWORD
 import co.omisego.omisego.constant.ClientAPIEndpoints.RETRIEVE_TRANSACTION_REQUEST
 import co.omisego.omisego.constant.ClientAPIEndpoints.SIGN_UP
+import co.omisego.omisego.constant.ClientAPIEndpoints.UPDATE_PASSWORD
 import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
 import co.omisego.omisego.model.ClientAuthenticationToken
 import co.omisego.omisego.model.Empty
@@ -24,9 +26,11 @@ import co.omisego.omisego.model.User
 import co.omisego.omisego.model.WalletList
 import co.omisego.omisego.model.pagination.PaginationList
 import co.omisego.omisego.model.params.LoginParams
+import co.omisego.omisego.model.params.ResetPasswordParams
 import co.omisego.omisego.model.params.SignUpParams
 import co.omisego.omisego.model.params.TransactionConsumptionActionParams
 import co.omisego.omisego.model.params.TransactionRequestParams
+import co.omisego.omisego.model.params.UpdatePasswordParams
 import co.omisego.omisego.model.params.client.TransactionConsumptionParams
 import co.omisego.omisego.model.params.client.TransactionCreateParams
 import co.omisego.omisego.model.params.client.TransactionListParams
@@ -50,6 +54,12 @@ interface EWalletClientAPI {
 
     @POST(SIGN_UP)
     fun signup(@Body params: SignUpParams): OMGCall<Empty>
+
+    @POST(RESET_PASSWORD)
+    fun resetPassword(@Body params: ResetPasswordParams): OMGCall<Empty>
+
+    @POST(UPDATE_PASSWORD)
+    fun updatePassword(@Body params: UpdatePasswordParams): OMGCall<Empty>
 
     @POST(LOGOUT)
     fun logout(): OMGCall<Empty>

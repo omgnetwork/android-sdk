@@ -7,11 +7,15 @@ package co.omisego.omisego
  * Copyright © 2017-2018 OmiseGO. All rights reserved.
  */
 
+import co.omisego.omisego.custom.retrofit2.adapter.OMGCall
+import co.omisego.omisego.model.Empty
 import co.omisego.omisego.model.User
 import co.omisego.omisego.model.params.LoginParams
+import co.omisego.omisego.model.params.ResetPasswordParams
 import co.omisego.omisego.model.params.SignUpParams
 import co.omisego.omisego.model.params.TransactionConsumptionActionParams
 import co.omisego.omisego.model.params.TransactionRequestParams
+import co.omisego.omisego.model.params.UpdatePasswordParams
 import co.omisego.omisego.model.params.client.TransactionConsumptionParams
 import co.omisego.omisego.model.params.client.TransactionCreateParams
 import co.omisego.omisego.model.params.client.TransactionListParams
@@ -78,6 +82,24 @@ class OMGAPIClient(private val eWalletClient: EWalletClient) {
      * @param params A set of parameters used for signup
      */
     fun signup(params: SignUpParams) = eWalletAPI.signup(params)
+
+    /**
+     * Asynchronously send the request to reset a password for user
+     * if *success* the `success` function will be invoked with the [OMGResponse<Empty>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     * @param params A set of parameters used for reset password
+     */
+    fun resetPassword(params: ResetPasswordParams): OMGCall<Empty> = eWalletAPI.resetPassword(params)
+
+    /**
+     * Asynchronously send the request to update a password for user
+     * if *success* the `success` function will be invoked with the [OMGResponse<User>] parameter.
+     * if *fail* the `fail` function will be invoked with the [OMGResponse<APIError>] parameter.
+     *
+     * @param params A set of parameters used for update password
+     */
+    fun updatePassword(params: UpdatePasswordParams): OMGCall<Empty> = eWalletAPI.updatePassword(params)
 
     /**
      * Asynchronously send the request to expire a user's authentication_token.
