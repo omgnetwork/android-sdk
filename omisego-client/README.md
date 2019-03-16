@@ -20,6 +20,9 @@ The SDK will work with 2 different schemes: [HTTP Requests](#http-requests) and 
     - [QR codes](#qr-codes)
       - [Generate a QR code](#generate-qr-code-bitmap-representation-of-a-transaction-request)
       - [Scan a QR code](#scan-a-qr-code)
+    - [Reset user password](#reset-user-password)
+      - [Reset password](#reset-password)
+      - [Update password](#update-password)
   - [Websocket](#websocket)
     - [Websocket Initialization](#websocket-initialization)
     - [Listen for the system event](#listen-for-system-events)
@@ -495,6 +498,62 @@ When the scanner successfully decodes a `TransactionRequest` it will call its de
     </application>
 </manifest>
 ```
+
+## Reset user password
+
+> Note: Only available if the eWallet is running in standalone mode.
+If a user forget his password, he will be able to reset it by requesting  a reset password link.
+This link will contain a unique token that will need to be submitted along with the updated password chosen by the user.
+
+### Reset password
+To get a password reset link, you can call:
+
+```kotlin
+val params = ResetPasswordParams("email@example.com", "uri://redirect.url")
+
+omgAPIClient.resetPassword(params).enqueue(object : OMGCallback<Empty>{
+    override fun success(response: OMGResponse<Empty>) {
+        // Do something
+    }
+
+    override fun fail(response: OMGResponse<APIError>) {
+        // Handle error
+    }
+})
+```
+
+Where `params` is a `ResetPasswordParams` data class constructed using:
+- `email`: The email of the user (ie: email@example.com)
+- `redirectURL`: A redirect URL that will be built on the server by replacing the `{email}` and `{token}` params.
+For example, if you provide this url: `my-app-scheme-uri://user/reset_password?email={email}&token={token}`, the user will receive a link by email that will look like this: `my-app-scheme-uri://user/reset_password?email=email@example.com&token=XXXXXXXXXXXXXXXXXXXXXX`.
+You can then handle the params passed to your application upon launch from this deep link and pass them to the `omgAPIClient.updatePassword` method.
+
+### Update password
+To update the user with a new password, you can call:
+
+```kotlin
+val params = UpdatePasswordParams(
+    "email@example.com",
+    "your_token",
+    "password",
+    "new_password"
+)
+
+omgAPIClient.updatePassword(params).enqueue(object : OMGCallback<Empty>{
+    override fun success(response: OMGResponse<Empty>) {
+        // Do something
+    }
+
+    override fun fail(response: OMGResponse<APIError>) {
+        // Handle error
+    }
+})
+```
+Where `params` is a `UpdatePasswordParams` data class constructed using:
+- `email`: The email obtained in the previous step
+- `token`: The token obtained in the previous step
+- `password`: The updated user's password
+- `passwordConfirmation`: The updated user's password
 
 # Websocket
 
