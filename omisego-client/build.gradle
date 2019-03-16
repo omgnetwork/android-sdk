@@ -33,6 +33,9 @@ android {
         unitTests {
             includeAndroidResources = true
             all {
+                // Prevent mockito eror
+                jvmArgs '-noverify'
+
                 if (it.name == "testReleaseUnitTest") return
                 if (project.hasProperty('live') && project.live.toBoolean() == true) {
                     it.include 'co/omisego/omisego/live/**'
