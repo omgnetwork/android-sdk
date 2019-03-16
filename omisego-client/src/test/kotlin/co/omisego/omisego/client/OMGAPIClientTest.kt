@@ -17,6 +17,7 @@ import co.omisego.omisego.custom.OMGCallback
 import co.omisego.omisego.exception.OMGAPIErrorException
 import co.omisego.omisego.model.APIError
 import co.omisego.omisego.model.ClientConfiguration
+import co.omisego.omisego.model.Empty
 import co.omisego.omisego.model.OMGResponse
 import co.omisego.omisego.model.Setting
 import co.omisego.omisego.model.Transaction
@@ -52,6 +53,8 @@ class OMGAPIClientTest : GsonDelegator() {
     private val getWalletsFile: File by ResourceFile("get_wallets.json")
     private val transactionFile: File by ResourceFile("transaction.json")
     private val userFile: File by ResourceFile("user.json")
+    private val resetPasswordFile: File by ResourceFile("reset_password.json")
+    private val updatePasswordFile: File by ResourceFile("update_password.json")
     private val getTransactionsFile: File by ResourceFile("get_transactions.json")
     private val transactionRequestFile: File by ResourceFile("transaction_request.json")
     private val consumeTransactionRequestFile: File by ResourceFile("transaction_consumption.json")
@@ -136,6 +139,52 @@ class OMGAPIClientTest : GsonDelegator() {
             Versions.EWALLET_API,
             true,
             transactionRequest
+        )
+
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
+    }
+
+    @Test
+    fun `OMGAPIClient should call reset_password successfully`() {
+        val element = gson.fromJson(resetPasswordFile.readText(), JsonElement::class.java)
+        val result = Response.success(element)
+        resetPasswordFile.mockEnqueueWithHttpCode(mockWebServer)
+
+        val callback: OMGCallback<Empty> = mock()
+
+        omgAPIClient.resetPassword(mock()).enqueue(callback)
+
+        val data = result.body()!!.asJsonObject.getAsJsonObject("data")
+
+        val emptyData = gson.fromJson<Empty>(data, object : TypeToken<Empty>() {}.type)
+
+        val expected = OMGResponse(
+            Versions.EWALLET_API,
+            true,
+            emptyData
+        )
+
+        verify(callback, timeout(connectionTimeout).times(1)).success(expected)
+    }
+
+    @Test
+    fun `OMGAPIClient should call update_password successfully`() {
+        val element = gson.fromJson(updatePasswordFile.readText(), JsonElement::class.java)
+        val result = Response.success(element)
+        updatePasswordFile.mockEnqueueWithHttpCode(mockWebServer)
+
+        val callback: OMGCallback<Empty> = mock()
+
+        omgAPIClient.updatePassword(mock()).enqueue(callback)
+
+        val data = result.body()!!.asJsonObject.getAsJsonObject("data")
+
+        val emptyData = gson.fromJson<Empty>(data, object : TypeToken<Empty>() {}.type)
+
+        val expected = OMGResponse(
+            Versions.EWALLET_API,
+            true,
+            emptyData
         )
 
         verify(callback, timeout(connectionTimeout).times(1)).success(expected)
