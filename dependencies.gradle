@@ -28,6 +28,7 @@ ext {
             "org.json:json:20160810",
             "androidx.test.espresso:espresso-core:3.1.0",
             "junit:junit:4.12",
+            "org.mockito:mockito-core:2.25.0",
             "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion",
             "org.amshove.kluent:kluent-android:1.30",
             "org.robolectric:robolectric:4.0.2",
